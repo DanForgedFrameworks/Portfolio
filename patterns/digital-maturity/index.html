@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Digital Maturity Diagnostic</title>
+    <style>
+        :root {
+            --brand-purple: #691eda;
+            --brand-orange: #f08838;
+            /* Enhanced Glassmorphism Variables */
+            --glass-bg: rgba(255, 255, 255, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.7);
+            --shadow: 0 16px 40px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            color: #2c3e50;
+            display: flex;
+            justify-content: center;
+            background-color: #f8f9fa;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Futuristic Misty Node Background */
+        .digital-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: 
+                /* Subtle geometric dot grid */
+                radial-gradient(rgba(105, 30, 218, 0.1) 2px, transparent 2px),
+                radial-gradient(rgba(105, 30, 218, 0.1) 2px, transparent 2px);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+            overflow: hidden;
+        }
+
+        /* Moving Glowing Orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px); /* Creates the misty, blurred effect */
+            opacity: 0.6;
+            animation: drift 25s infinite alternate ease-in-out;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: rgba(105, 30, 218, 0.3);
+            top: -10%;
+            left: -10%;
+        }
+
+        .orb-2 {
+            width: 600px;
+            height: 600px;
+            background: rgba(240, 136, 56, 0.25);
+            bottom: -20%;
+            right: -10%;
+            animation-delay: -5s;
+        }
+
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            background: rgba(105, 30, 218, 0.2);
+            top: 40%;
+            left: 50%;
+            animation-delay: -12s;
+        }
+
+        @keyframes drift {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(10%, 15%) scale(1.1); }
+            100% { transform: translate(-10%, 5%) scale(0.9); }
+        }
+
+        /* Widened Framework Block Constraint */
+        .diagnostic-wrapper {
+            width: 100%;
+            max-width: 1024px;
+            min-height: 950px; 
+            height: auto;
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px); /* Stronger glass blur */
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-top: 2px solid rgba(255, 255, 255, 0.9); /* Inner light catch */
+            border-left: 2px solid rgba(255, 255, 255, 0.9);
+            border-radius: 24px;
+            padding: 50px 40px;
+            box-shadow: var(--shadow);
+            box-sizing: border-box;
+            overflow-y: auto; 
+            position: relative;
+        }
+
+        h2 {
+            color: var(--brand-purple);
+            margin-top: 0;
+            font-size: 1.8em;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+
+        .intro-text {
+            font-size: 1.05em;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .header-directions {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            padding: 18px 25px;
+            border-radius: 12px;
+            margin-bottom: 45px;
+            font-size: 0.95em;
+            text-align: center;
+            color: #333;
+            backdrop-filter: blur(10px);
+        }
+
+        /* 2x2 Grid Layout */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 45px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+            .diagnostic-wrapper {
+                padding: 30px 20px;
+                min-height: 1100px;
+            }
+        }
+
+        .category-block {
+            background: rgba(255, 255, 255, 0.35); /* More transparent for glass effect */
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-top: 1px solid #ffffff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+        }
+
+        .category-block:hover {
+            box-shadow: 0 15px 40px rgba(105, 30, 218, 0.12);
+            transform: translateY(-4px);
+        }
+
+        .category-title {
+            font-weight: 700;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+            border-bottom: 2px solid rgba(105, 30, 218, 0.15);
+            padding-bottom: 12px;
+            text-align: center; 
+        }
+
+        /* Custom Checkbox Buttons */
+        .option-label {
+            display: flex;
+            align-items: center;
+            justify-content: center; 
+            text-align: center;
+            padding: 14px 15px;
+            margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .option-label:hover {
+            background: rgba(240, 136, 56, 0.12); 
+            border-color: rgba(240, 136, 56, 0.4);
+            color: #b35f20;
+            transform: scale(1.01);
+        }
+
+        .option-label input[type="checkbox"] {
+            display: none;
+        }
+
+        .option-label.selected {
+            background: linear-gradient(135deg, var(--brand-purple) 0%, #8a4be2 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 6px 15px rgba(105, 30, 218, 0.35);
+        }
+
+        /* Analysis Action Area */
+        .action-area {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-top: 10px;
+        }
+
+        .analyse-btn {
+            background: linear-gradient(135deg, var(--brand-orange), #ff9f59);
+            color: white;
+            border: none;
+            padding: 18px 45px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(240, 136, 56, 0.35);
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .analyse-btn:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 12px 30px rgba(240, 136, 56, 0.45);
+        }
+
+        .analyse-btn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+            color: #64748b;
+        }
+
+        /* Terminal Animation Element */
+        .terminal-loader {
+            display: none;
+            font-family: 'Courier New', Courier, monospace;
+            background: rgba(15, 23, 42, 0.95);
+            color: #38bdf8;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px auto 10px;
+            max-width: 450px;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2), inset 0 0 15px rgba(0,0,0,0.8);
+            border: 1px solid #334155;
+            backdrop-filter: blur(10px);
+        }
+
+        .scanner-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--brand-orange);
+            box-shadow: 0 0 15px var(--brand-orange), 0 0 5px var(--brand-orange);
+            animation: scan 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        @keyframes scan {
+            0% { top: 0; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        /* Roller Blind Results Section */
+        #results-container {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 1.2s cubic-bezier(0.25, 1, 0.5, 1), padding 0.5s ease;
+            padding-top: 0;
+            border-top: 2px dashed transparent;
+        }
+
+        #results-container.revealed {
+            max-height: 2000px; 
+            padding-top: 40px;
+            border-top: 2px dashed rgba(105, 30, 218, 0.25);
+        }
+
+        .result-card {
+            display: none;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 35px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+            border-left: 6px solid var(--brand-orange);
+            border-top: 1px solid #fff;
+            border-right: 1px solid #fff;
+        }
+
+        .result-card.active {
+            display: block;
+            animation: fadeIn 0.8s ease forwards;
+            animation-delay: 0.3s;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .meter-container {
+            width: 100%;
+            height: 16px;
+            background: rgba(226, 232, 240, 0.8);
+            border-radius: 8px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .meter-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e74c3c, var(--brand-orange), var(--brand-purple));
+            width: 0%;
+            transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+            border-radius: 8px;
+        }
+
+        h3.result-title {
+            color: var(--brand-purple);
+            font-size: 1.6em;
+            margin-top: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            letter-spacing: 0.3px;
+        }
+        .tag-high { background: #fee2e2; color: #991b1b; }
+        .tag-mod { background: #fef3c7; color: #92400e; }
+        .tag-low { background: #dcfce7; color: #166534; }
+
+        .guidance-list {
+            margin-top: 20px;
+            padding-left: 20px;
+            font-size: 1.05em;
+            line-height: 1.7;
+        }
+
+        .guidance-list li {
+            margin-bottom: 12px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="digital-background">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+</div>
+
+<div class="diagnostic-wrapper">
+    <h2>The Digital Maturity Diagnostic</h2>
+    
+    <div class="intro-text">
+        <p>Before you can lead a transformation, you must understand your starting point. A digital bottleneck in one area can render high-tech automation in another area useless.</p>
+        <p>Becoming "Digital Conversant" means being able to evaluate your laboratory's current state and identify where vertical bottlenecks are occurring.</p>
+    </div>
+
+    <div class="header-directions">
+        <strong>Navigation Directions:</strong> Select all the systems and processes that currently apply to your laboratory across the four domains below, then press "Analyse" to generate your transformation profile.
+    </div>
+
+    <div class="grid-container">
+        <div class="category-block">
+            <div class="category-title">Sample Receipt</div>
+            <label class="option-label">
+                <input type="checkbox" value="1" class="maturity-checkbox">
+                Paper logs
+            </label>
+            <label class="option-label">
+                <input type="checkbox" value="2" class="maturity-checkbox">
+                Electronic logs
+            </label>
+            <label class="option-label">
+                <input type="checkbox" value="3" class="maturity-checkbox">
+                Automated barcode scanning
+            </label>
+        </div>
+
+        <div class="category-block">
+            <div class="category-title">Sample Preparation</div>
+            <label class="option-label">
+                <input type="checkbox" value="1" class="maturity-checkbox">
+                Manual preperation and reagent logs
+            </label>
+            <label class="option-label">
+                <input type="checkbox" value="2" class="maturity-checkbox">
+                Electronic spreadsheets
+            </label>
+            <label class="option-label">
+                <input type="checkbox" value="3" class="maturity-checkbox">
+                Robotic prep linked to LIMS
+            </label>
+        </div>
+
+        <div class="category-block">
+            <div class="category-title">Data Analysis</div>
+            <label class="option-label">
+                <input type="checkbox" value="1" class="maturity-checkbox">
+                Manual peak integration
+            </label>
+            <label class="option-label">
+                <input type="checkbox" value="2" class="maturity-checkbox">
+                Digital software with manual exports
+            </label>
+            <label class="option-label">
+                <input type="checkbox" value="3" class="maturity-checkbox">
+                Automated data-historian flow
+            </label>
+        </div>
+
+        <div class="category-block">
+            <div class="category-title">Reporting & Archiving</div>
+            <label class="option-label">
+                <input type="checkbox" value="1" class="maturity-checkbox">
+                Handwritten reports and physical boxes
+            </label>
+            <label class="option-label">
+                <input type="checkbox" value="2" class="maturity-checkbox">
+                Digital PDF reports
+            </label>
+            <label class="option-label">
+                <input type="checkbox" value="3" class="maturity-checkbox">
+                Automated data-centric repository
+            </label>
+        </div>
+    </div>
+
+    <div class="action-area" id="actionArea">
+        <button id="analyseBtn" class="analyse-btn">Analyse Laboratory Profile</button>
+        
+        <div id="terminalLoader" class="terminal-loader">
+            <div class="scanner-line"></div>
+            <div id="codeLines">Initialising data stream...</div>
+        </div>
+    </div>
+
+    <div id="results-container">
+        <h3>Your Transformation Profile</h3>
+        
+        <div class="meter-container" id="meter-wrapper">
+            <div class="meter-fill" id="overall-meter"></div>
+        </div>
+
+        <div class="result-card" id="res-high">
+            <h3 class="result-title">High Effort Digital Transformation</h3>
+            <span class="tag tag-high">Foundational Digitisation Required</span>
+            <p><strong>Evaluation:</strong> Your laboratory relies heavily on manual processes and physical records. Transitioning to a digital model will require significant effort, focusing first on cultural change and building a foundational infrastructure to eliminate paper-based traps.</p>
+            <p><strong>Transformation Guidance & Next Steps:</strong></p>
+            <ul class="guidance-list">
+                <li>Conduct a full audit to map out every paper-based process currently in use.</li>
+                <li>Implement basic Electronic Laboratory Notebooks (ELNs) to capture raw data digitally at the source.</li>
+                <li>Standardise your data naming conventions and entry formats across all teams.</li>
+                <li>Prioritise training staff on basic digital hygiene and new software workflows before introducing physical automation.</li>
+            </ul>
+        </div>
+
+        <div class="result-card" id="res-mod">
+            <h3 class="result-title">Moderate Effort Digital Transformation</h3>
+            <span class="tag tag-mod">Integration & Connectivity Focus</span>
+            <p><strong>Evaluation:</strong> Your laboratory has successfully adopted digital tools, but they likely operate as "Digital Silos." The effort required now shifts from basic digitisation to complex integration, ensuring your isolated software systems can communicate without manual intervention.</p>
+            <p><strong>Transformation Guidance & Next Steps:</strong></p>
+            <ul class="guidance-list">
+                <li>Audit your current software and instrumentation for API capabilities and connectivity options.</li>
+                <li>Establish or upgrade a central Laboratory Information Management System (LIMS) to act as your single source of truth.</li>
+                <li>Identify points where data is manually exported and imported (e.g., CSV transfers) and replace them with automated data flows.</li>
+                <li>Begin phasing out isolated spreadsheets used for calculations or tracking.</li>
+            </ul>
+        </div>
+
+        <div class="result-card" id="res-low">
+            <h3 class="result-title">Low Effort Digital Transformation</h3>
+            <span class="tag tag-low">Strategic Optimisation Focus</span>
+            <p><strong>Evaluation:</strong> Your laboratory operates within a highly connected, fully digital ecosystem. Future transformation efforts will require lower foundational legwork but high strategic oversight, focusing on data governance, predictive analytics, and process optimisation.</p>
+            <p><strong>Transformation Guidance & Next Steps:</strong></p>
+            <ul class="guidance-list">
+                <li>Explore the implementation of advanced analytics or predictive maintenance for your automated instrumentation.</li>
+                <li>Review and harden your cybersecurity measures, ensuring robust protection across your connected laboratory network.</li>
+                <li>Implement continuous, automated audit trail reviews to monitor data integrity and compliance proactively.</li>
+                <li>Investigate how Artificial Intelligence (AI) could be leveraged to trend your historical data for operational insights.</li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const checkboxes = document.querySelectorAll('.maturity-checkbox');
+    const analyseBtn = document.getElementById('analyseBtn');
+    const terminalLoader = document.getElementById('terminalLoader');
+    const codeLines = document.getElementById('codeLines');
+    const resultsContainer = document.getElementById('results-container');
+    const meterFill = document.getElementById('overall-meter');
+    const actionArea = document.getElementById('actionArea');
+
+    checkboxes.forEach(box => {
+        box.addEventListener('change', function() {
+            if (this.checked) {
+                this.parentElement.classList.add('selected');
+            } else {
+                this.parentElement.classList.remove('selected');
+            }
+            
+            analyseBtn.disabled = false;
+            analyseBtn.textContent = "Analyse Laboratory Profile";
+            resultsContainer.classList.remove('revealed');
+        });
+    });
+
+    analyseBtn.addEventListener('click', function() {
+        const checkedBoxes = document.querySelectorAll('.maturity-checkbox:checked');
+        
+        if (checkedBoxes.length === 0) {
+            alert("Please select at least one option from the categories above to evaluate your laboratory.");
+            return;
+        }
+
+        // Lock UI and start animation
+        analyseBtn.disabled = true;
+        analyseBtn.textContent = "Processing...";
+        terminalLoader.style.display = "block";
+        resultsContainer.classList.remove('revealed'); 
+
+        // Auto-scroll down to focus the user's view on the animation and incoming results
+        actionArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        let fakeCode = [
+            "Analysing Vertical Workflows...",
+            "Compiling Matrix Data [0x8A4B]...",
+            "Evaluating Interoperability Gaps...",
+            "Calculating Maturity Velocity...",
+            "Profile Generated."
+        ];
+        
+        let i = 0;
+        let codeInterval = setInterval(() => {
+            codeLines.innerHTML += "<br>> " + fakeCode[i];
+            i++;
+            if (i >= fakeCode.length) clearInterval(codeInterval);
+        }, 400);
+
+        setTimeout(() => {
+            terminalLoader.style.display = "none";
+            codeLines.innerHTML = "> Initialising data stream..."; 
+            analyseBtn.textContent = "Evaluation Complete";
+            
+            processResults(checkedBoxes);
+        }, 2500);
+    });
+
+    function processResults(checkedBoxes) {
+        document.querySelectorAll('.result-card').forEach(card => card.classList.remove('active'));
+
+        let totalScore = 0;
+        checkedBoxes.forEach(box => {
+            totalScore += parseInt(box.value);
+        });
+
+        const avg = totalScore / checkedBoxes.length;
+        
+        resultsContainer.classList.add('revealed');
+
+        setTimeout(() => {
+            let percentage = ((avg - 1) / 2) * 100; 
+            meterFill.style.width = `${percentage}%`;
+        }, 300);
+
+        if (avg < 1.7) {
+            document.getElementById('res-high').classList.add('active');
+        } else if (avg >= 1.7 && avg <= 2.4) {
+            document.getElementById('res-mod').classList.add('active');
+        } else {
+            document.getElementById('res-low').classList.add('active');
+        }
+    }
+
+</script>
+</body>
+</html>

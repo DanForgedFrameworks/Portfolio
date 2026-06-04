@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confidence Self-Check Builder (Dual-Exporter)</title>
+  <style>
+/*
+============================================================
+PROJECT: Confidence Self-Check (TAC6101 Organic Synthesis)
+VERSION: 2.0
+DATE: 2026-01-28
+AUTHOR: Adapted by Daniel Boyland (Forged Frameworks / Tiro Training)
+BASE CONCEPT: "Perpetual Notepad for Storyline" by JoeDey
+SOURCE: https://community.articulate.com/discussions/rise-code-block-525/javascript-notepad/1240910
+
+DESCRIPTION:
+Integrates a self-check benchmark into a Storyline Lightbox slide.
+Updated for Level 6 Laboratory Scientist competencies.
+Features:
+- 5 weighted questions (0-15 max score)
+- Before/After checkpoint dropdowns
+- LocalStorage persistence for progress comparison
+- Colour-coded feedback bands for Organic Synthesis proficiency
+
+This header is for version control and attribution only.
+It is non-display and does not affect the learner experience.
+============================================================
+*/
+    :root {
+      --brand-purple: #691eda;
+      --brand-purple-hover: #5816bb;
+      --brand-orange: #f08838;
+      --glass-bg: rgba(255, 255, 255, 0.65);
+      --glass-border: rgba(255, 255, 255, 0.8);
+      --shadow: 0 16px 40px 0 rgba(31, 38, 135, 0.15);
+      --text-main: #1f2937;
+      --text-muted: #4b5563;
+      --radius: 16px;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --info: #3b82f6;
+    }
+
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+    body {
+      margin: 0; padding: 20px; color: var(--text-main);
+      display: flex; justify-content: center; align-items: center; min-height: 100vh;
+      background-color: #f8f9fa; position: relative; overflow-x: hidden;
+    }
+
+    .digital-background {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+      background: radial-gradient(rgba(105, 30, 218, 0.08) 2px, transparent 2px), radial-gradient(rgba(105, 30, 218, 0.08) 2px, transparent 2px);
+      background-size: 60px 60px; background-position: 0 0, 30px 30px;
+    }
+
+    .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.6; animation: drift 25s infinite alternate ease-in-out; }
+    .orb-1 { width: 50vw; height: 50vw; background: rgba(105, 30, 218, 0.25); top: -10%; left: -10%; }
+    .orb-2 { width: 60vw; height: 60vw; background: rgba(240, 136, 56, 0.2); bottom: -20%; right: -10%; animation-delay: -5s; }
+    @keyframes drift { 0% { transform: translate(0, 0) scale(1); } 50% { transform: translate(10%, 15%) scale(1.1); } 100% { transform: translate(-10%, 5%) scale(0.9); } }
+
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .top-controls { position: absolute; top: 20px; right: 20px; z-index: 100; display: flex; gap: 10px; background: rgba(255,255,255,0.9); padding: 5px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    .mode-btn { padding: 8px 16px; border: none; border-radius: 6px; font-weight: bold; font-size: 13px; cursor: pointer; background: transparent; color: var(--text-muted); transition: all 0.2s; }
+    .mode-btn.active { background: var(--brand-purple); color: #fff; box-shadow: 0 2px 4px rgba(105,30,218,0.3); }
+
+    .app-container { width: 100%; max-width: 1200px; height: 750px; position: relative; z-index: 5; }
+
+    .learner-view { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+    .glass-card { background: var(--glass-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid var(--glass-border); border-top: 2px solid rgba(255, 255, 255, 0.9); border-left: 2px solid rgba(255, 255, 255, 0.9); border-radius: var(--radius); box-shadow: var(--shadow); padding: 40px; width: 100%; max-width: 720px; transition: all 0.3s ease; position: relative; }
+    .glass-header h2 { margin: 0 0 10px 0; color: var(--brand-purple); font-size: 24px; text-align: center; }
+    .glass-header p { margin: 0 0 20px 0; color: var(--text-muted); font-size: 15px; line-height: 1.5; text-align: center; }
+    
+    .checkpoint-selector { background: rgba(255,255,255,0.7); padding: 20px; border-radius: 12px; margin-bottom: 30px; border: 1px solid #e2e8f0; }
+    .checkpoint-selector label { font-weight: bold; font-size: 14px; display: block; margin-bottom: 10px; }
+    .checkpoint-selector select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 15px; margin-bottom: 10px; background: #fff; }
+    .checkpoint-hint { font-size: 13px; color: var(--text-muted); font-style: italic; }
+
+    .question-block { margin-bottom: 30px; background: rgba(255,255,255,0.8); padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; display: none; }
+    .question-block.active { display: block; animation: fadeIn 0.4s ease forwards; }
+    .q-image { width: 100%; max-height: 250px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; display: none; }
+    .q-text { font-size: 16px; font-weight: 600; margin: 0 0 15px 0; line-height: 1.4; }
+    .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+    .option-label { display: flex; align-items: center; padding: 12px 15px; background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; transition: all 0.2s; font-size: 14px; }
+    .option-label:hover { border-color: var(--brand-purple); background: #faf5ff; }
+    .option-label input { margin-right: 12px; accent-color: var(--brand-purple); width: 18px; height: 18px; cursor: pointer;}
+    
+    .nav-buttons { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; width: 100%; }
+    .nav-left-cluster { display: flex; flex: 1; justify-content: flex-start; }
+    .nav-right-cluster { display: flex; flex: 1; justify-content: flex-end; flex-direction: column; align-items: flex-end; }
+    
+    .btn { padding: 12px 24px; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+    .btn-primary { background: var(--brand-purple); color: #fff; box-shadow: 0 4px 12px rgba(105,30,218,0.3); }
+    .btn-primary:hover { background: var(--brand-purple-hover); }
+    .btn-secondary { background: #e2e8f0; color: var(--text-main); }
+    .btn-secondary:hover { background: #cbd5e1; }
+    .btn-danger { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
+    .btn-danger:hover { background: #fecaca; }
+    
+    .progress-tracker { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-size: 13px; color: var(--text-muted); font-weight: bold;}
+    .progress-bar { flex: 1; height: 6px; background: #e2e8f0; border-radius: 3px; margin: 0 15px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--brand-orange); transition: width 0.3s ease; }
+
+    .compiling-screen { display: none; text-align: center; padding: 60px 20px; }
+    .dot-pulse { display: inline-block; width: 14px; height: 14px; background: var(--brand-purple); border-radius: 50%; margin: 0 6px; animation: pulse 1.4s infinite ease-in-out both; }
+    .dot-pulse:nth-child(1) { animation-delay: -0.32s; }
+    .dot-pulse:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes pulse { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+
+    .results-panel { display: none; text-align: center; }
+    .spectrum-container { position: relative; width: 100%; max-width: 400px; margin: 0 auto 35px auto; padding-top: 15px; }
+    .spectrum-bar-bg { height: 14px; border-radius: 7px; background: linear-gradient(to right, var(--danger), var(--warning), var(--info), var(--success)); width: 100%; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.15); }
+    .spectrum-marker { position: absolute; top: -12px; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 12px solid var(--text-main); transform: translateX(-50%); transition: left 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 10;}
+    .spectrum-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-top: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;}
+
+    .score-circle { width: 120px; height: 120px; border-radius: 50%; background: #fff; border: 6px solid var(--brand-purple); display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; color: var(--brand-purple); margin: 0 auto 20px auto; box-shadow: 0 8px 16px rgba(105,30,218,0.2);}
+    .band-title { font-size: 22px; font-weight: bold; margin-bottom: 10px; }
+    .band-message { font-size: 15px; line-height: 1.6; color: var(--text-muted); margin-bottom: 20px; background: #fff; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; text-align: left;}
+    .distance-panel { background: rgba(240, 136, 56, 0.1); border: 1px solid rgba(240, 136, 56, 0.3); padding: 15px; border-radius: 8px; font-size: 14px; line-height: 1.5; color: #9c5014; text-align: left; }
+
+    .distance-visual { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.7); border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);}
+    .dist-node { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 65px; height: 65px; border-radius: 50%; background: #fff; border: 2px solid #e2e8f0; font-size: 14px; font-weight: bold; color: var(--text-muted); box-shadow: 0 4px 6px rgba(0,0,0,0.05);}
+    .dist-node.active { border-color: var(--brand-purple); color: var(--brand-purple); background: #faf5ff; transform: scale(1.1); box-shadow: 0 6px 12px rgba(105,30,218,0.2);}
+    .dist-arrow { color: #cbd5e1; font-weight: bold; font-size: 18px; }
+
+    .band-1 { border-color: var(--danger); color: var(--danger); }
+    .band-2 { border-color: var(--warning); color: var(--warning); }
+    .band-3 { border-color: var(--info); color: var(--info); }
+    .band-4 { border-color: var(--success); color: var(--success); }
+
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
+    .modal-overlay.active { opacity: 1; }
+    .modal-content { max-width: 400px; text-align: center; padding: 30px; }
+    .modal-content h3 { color: var(--danger); margin-top: 0; font-size: 22px; }
+    .modal-content p { color: var(--text-muted); font-size: 15px; line-height: 1.5; margin-bottom: 25px; }
+
+    /* --- DESIGNER SPLIT PANEL --- */
+    .designer-view { display: none; width: 100%; height: 100%; background: #ffffff; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; border: 1px solid var(--glass-border); }
+    .designer-layout { display: flex; height: 100%; }
+    .editor-panel { width: 50%; border-right: 1px solid #e2e8f0; padding: 30px; overflow-y: auto; background: #fafafa; }
+    .export-panel { width: 50%; background: #1e293b; display: flex; flex-direction: column; border-left: 4px solid var(--brand-orange); }
+    
+    .attribution-block { background: #e0e7ff; border-left: 4px solid var(--brand-purple); padding: 15px; border-radius: 0 8px 8px 0; margin-bottom: 30px; font-size: 13px; color: #1e3a8a; line-height: 1.6; }
+    
+    /* Tabs System */
+    .export-tabs { display: flex; background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .export-tab { flex: 1; padding: 15px; text-align: center; color: #94a3b8; cursor: pointer; font-weight: bold; font-size: 13px; text-transform: uppercase; border-bottom: 3px solid transparent; transition: all 0.2s; }
+    .export-tab:hover { background: rgba(255,255,255,0.05); color: #fff; }
+    .export-tab.active { color: #fff; border-bottom-color: var(--brand-orange); background: rgba(255,255,255,0.05); }
+    
+    .export-content { display: none; flex-direction: column; flex: 1; min-height: 0; }
+    .export-content.active { display: flex; }
+
+    .export-header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.15); border-bottom: 1px solid rgba(255,255,255,0.05);}
+    .export-header p { margin: 0; color: #cbd5e1; font-size: 13px; }
+    .html-output { flex: 1; width: 100%; background: transparent; color: #38bdf8; border: none; padding: 15px; font-family: monospace; resize: none; font-size: 11px; white-space: pre; min-height: 0; overflow-y: auto;}
+    .html-output:focus { outline: none; }
+
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 6px; font-size: 13px; font-weight: bold; color: var(--text-muted); }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; }
+    
+    .section-title { font-size: 18px; color: var(--brand-purple); border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px;}
+    .editor-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 15px; position: relative; }
+    .editor-card-title { font-weight: bold; font-size: 14px; margin-bottom: 10px; color: var(--brand-orange);}
+    .btn-remove { position: absolute; top: 15px; right: 15px; background: #fee2e2; color: #dc2626; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: bold;}
+    .btn-add { background: var(--text-muted); color: #fff; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; font-size: 13px; margin-bottom: 20px;}
+    .options-editor { display: grid; grid-template-columns: 1fr 60px; gap: 10px; margin-top: 5px; align-items: center;}
+    .options-editor-header { font-size: 11px; font-weight: bold; color: #94a3b8; text-transform: uppercase;}
+  </style>
+</head>
+<body>
+
+  <div class="digital-background"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+
+  <div class="top-controls" id="mode-controls">
+    <button class="mode-btn active" id="btn-learner" onclick="switchMode('learner')">Learner Mode</button>
+    <button class="mode-btn" id="btn-designer" onclick="switchMode('designer')">Designer Mode</button>
+  </div>
+
+  <div class="app-container" id="app-wrapper">
+    
+    <div class="learner-view" id="learner-view">
+      <div class="glass-card">
+        <div id="screen-intro">
+          <div class="glass-header"><h2 id="ui-title"></h2><p id="ui-subtitle"></p></div>
+          <div class="checkpoint-selector">
+            <label for="cw-stage">Select your current stage:</label>
+            <select id="cw-stage">
+              <option value="pre" id="opt-pre">Before this module</option>
+              <option value="mid" id="opt-mid">Mid-way through module</option>
+              <option value="post" id="opt-post">After this module</option>
+            </select>
+            <div class="checkpoint-hint" id="cw-stage-hint"></div>
+          </div>
+          <button class="btn btn-primary" style="width:100%" onclick="startQuizInit()">Begin Self-Check</button>
+          <div id="reset-container" style="margin-top: 20px; text-align: center; display: none;">
+            <button class="btn btn-danger" style="width: 100%; font-size: 13px; padding: 10px;" onclick="showResetModal()">Reset My Progress</button>
+          </div>
+        </div>
+
+        <div id="screen-quiz" style="display:none;">
+          <div class="progress-tracker"><span id="prog-text"></span><div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div></div>
+          <div id="questions-container"></div>
+          <div class="nav-buttons">
+            <div class="nav-left-cluster">
+                <button class="btn btn-secondary" id="btn-prev" onclick="navQuiz(-1)">Previous</button>
+                <button class="btn btn-secondary" id="btn-back-start" onclick="resetToStart()">Back to Confidence Check</button>
+            </div>
+            <div class="nav-right-cluster">
+                <div id="submit-error" style="display:none; color:var(--danger); font-size:13px; margin-bottom:8px; font-weight:bold;"></div>
+                <button class="btn btn-primary" id="btn-next" onclick="navQuiz(1)">Next</button>
+                <button class="btn btn-primary" id="btn-submit" onclick="attemptSubmit()" style="display:none; background: var(--success)">Submit Answers</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="screen-compiling" class="compiling-screen">
+            <h2 style="color: var(--brand-purple); margin-bottom: 30px;">Compiling your confidence profile...</h2>
+            <div><span class="dot-pulse"></span><span class="dot-pulse"></span><span class="dot-pulse"></span></div>
+        </div>
+        
+        <div id="screen-resetting" class="compiling-screen">
+            <h2 style="color: var(--brand-purple); margin-bottom: 30px;">Returning to Confidence Check...</h2>
+            <div><span class="dot-pulse"></span><span class="dot-pulse"></span><span class="dot-pulse"></span></div>
+        </div>
+
+        <div id="screen-results" class="results-panel">
+          <div class="glass-header"><h2 id="res-header-title">Check-in Complete</h2></div>
+          <div class="spectrum-container">
+            <div class="spectrum-marker" id="spectrum-marker"></div>
+            <div class="spectrum-bar-bg"></div>
+            <div class="spectrum-label"><span>Low Confidence</span><span>High Confidence</span></div>
+          </div>
+          <div class="score-circle" id="res-score">0%</div>
+          <div class="band-title" id="res-band">Evaluating...</div>
+          <div class="band-message" id="res-message"></div>
+          <div class="distance-panel" id="res-distance"></div>
+          <div id="visual-tracker-container"></div>
+          <br>
+          <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;">
+              <button class="btn btn-secondary" onclick="resetToStart()">Return to Confidence Check</button>
+              <button class="btn btn-primary" onclick="printResults()">Print My Results</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="reset-modal">
+      <div class="glass-card modal-content">
+        <h3>Warning!</h3>
+        <p>This will permanently delete your saved benchmark data. You will not be able to track your distance travelled. This cannot be undone.</p>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+          <button class="btn btn-secondary" onclick="hideResetModal()">Cancel</button>
+          <button class="btn" style="background: var(--danger); color: #fff;" onclick="executeReset()">Yes, Delete Data</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal-overlay" id="overwrite-modal">
+      <div class="glass-card modal-content">
+        <h3 style="color: var(--brand-orange)">Overwrite Warning</h3>
+        <p>You already have a saved score for this stage. Proceeding and submitting new answers will overwrite your previous benchmark.</p>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+          <button class="btn btn-secondary" onclick="cancelOverwrite()">Cancel</button>
+          <button class="btn" style="background: var(--brand-orange); color: #fff;" onclick="confirmOverwrite()">Proceed</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="designer-view" id="designer-view">
+      <div class="designer-layout">
+        <div class="editor-panel">
+          <div class="attribution-block">
+            <strong>PROJECT:</strong> Confidence Self-Check Framework Builder<br>
+            <strong>AUTHOR:</strong> Daniel Boyland (Forged Frameworks)<br>
+            <strong>VERSION:</strong> v9.7 (Print PDF & Smart Logic Update)
+          </div>
+          <div class="section-title" style="margin-top:0;">Global Configuration</div>
+          <div class="form-group"><label>Unique ID</label><input type="text" id="cfg-id" oninput="updateConfig('quizId', this.value)"></div>
+          <div class="form-group"><label>Main Title</label><input type="text" id="cfg-title" oninput="updateConfig('title', this.value)"></div>
+          <div class="form-group"><label>Subtitle</label><textarea id="cfg-sub" oninput="updateConfig('subtitle', this.value)"></textarea></div>
+          <div class="form-group"><label>Layout</label><select id="cfg-layout" onchange="updateConfig('layout', this.value)"><option value="carousel">Carousel</option><option value="list">List</option></select></div>
+          <div class="form-group"><label>Enable 'Mid-way' Checkpoint?</label><select id="cfg-mid" onchange="updateConfig('enableMid', this.value === 'true')"><option value="true">Yes</option><option value="false">No</option></select></div>
+          <div class="section-title">Question Repository</div><div id="editor-questions"></div><button class="btn-add" onclick="addQuestion()">+ Add Question</button>
+          <div class="section-title">Feedback Bands</div><div id="editor-bands"></div>
+        </div>
+        
+        <div class="export-panel">
+          <div class="export-tabs">
+             <div class="export-tab active" onclick="switchExportTab('html')">Standalone HTML</div>
+             <div class="export-tab" onclick="switchExportTab('js')">Storyline JS Trigger</div>
+          </div>
+          
+          <div class="export-content active" id="export-html-view">
+             <div class="export-header">
+                <p>Ready for web deployment.</p>
+                <button class="btn btn-primary" style="padding:5px 12px; font-size:12px;" onclick="copyHTML()">Copy HTML Code</button>
+             </div>
+             <textarea class="html-output" id="html-output" readonly></textarea>
+          </div>
+
+          <div class="export-content" id="export-js-view">
+             <div class="export-header">
+                <p>Ready for an "Execute JavaScript" trigger.</p>
+                <button class="btn btn-primary" style="padding:5px 12px; font-size:12px; background:var(--brand-orange);" onclick="copyJS()">Copy JS Code</button>
+             </div>
+             <textarea class="html-output" id="js-output" readonly></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+<script id="app-data-script">
+  let appState = {
+    "config": { "quizId": "tac6101", "title": "Module Baseline: Organic Synthesis Confidence", "subtitle": "Use this self-check to benchmark your readiness for Level 6 Laboratory Scientist competencies. Your answers are private.", "layout": "carousel", "enableMid": true },
+    "questions": [
+      { "id": 1, "text": "1. I can explain how organic synthesis acts as the 'engine room' of high-value UK sectors such as pharmaceuticals and materials science.", "imageAsset": "", "options": [{ "label": "Confident", "weight": 3 }, { "label": "Somewhat", "weight": 2 }, { "label": "Not at all", "weight": 1 }, { "label": "Never heard of it", "weight": 0 }] },
+      { "id": 2, "text": "2. I feel confident applying retrosynthetic logic to mentally deconstruct a target molecule into simpler precursors through disconnection.", "imageAsset": "", "options": [{ "label": "Yes, clearly", "weight": 3 }, { "label": "I think so", "weight": 2 }, { "label": "Vaguely", "weight": 1 }, { "label": "No idea", "weight": 0 }] },
+      { "id": 3, "text": "3. I can justify a synthetic route based on strategic factors such as safety (COSHH/DSEAR), scalability, and commercial viability.", "imageAsset": "", "options": [{ "label": "Confident", "weight": 3 }, { "label": "Somewhat", "weight": 2 }, { "label": "Not at all", "weight": 1 }, { "label": "Never considered these", "weight": 0 }] },
+      { "id": 4, "text": "4. I know how to identify functional groups and select the appropriate transformations, such as oxidation or reduction, to manipulate them.", "imageAsset": "", "options": [{ "label": "Yes, routinely", "weight": 3 }, { "label": "I have some knowledge", "weight": 2 }, { "label": "I would need an SOP", "weight": 1 }, { "label": "No idea", "weight": 0 }] },
+      { "id": 5, "text": "5. I understand how to evaluate chemo, regio, and stereoselectivity when planning a multi-step synthesis.", "imageAsset": "", "options": [{ "label": "Confident", "weight": 3 }, { "label": "Somewhat", "weight": 2 }, { "label": "Not at all", "weight": 1 }, { "label": "Unaware of these terms", "weight": 0 }] }
+    ],
+    "bands": [
+      { "maxPct": 25, "title": "Low Confidence", "message": "You are right at the beginning of your journey into professional organic synthesis. This is a positive starting point. This module is designed to move you from following a recipe to understanding the strategic 'why' behind molecular construction." },
+      { "maxPct": 50, "title": "Building Foundations", "message": "You have some awareness of synthesis, but there are gaps in your strategic planning skills. Focus on how technical transformations link to real-world industrial outcomes and workplace quality standards like GMP." },
+      { "maxPct": 75, "title": "Medium Confidence", "message": "You are starting from solid ground. Use this module to sharpen your professional judgement, particularly regarding route optimisation and the use of digital tools like SciFinder-n to justify your decisions." },
+      { "maxPct": 100, "title": "High Confidence", "message": "You possess a strong baseline in synthetic principles. Your challenge is to look for subtle nuances in selectivity and process safety that can be shared with colleagues. You are well positioned to pursue recognitions such as Chartered Chemist (CChem) status." }
+    ]
+  };
+</script>
+
+<script id="app-logic-script">
+  let state = JSON.parse(JSON.stringify(appState));
+  if(localStorage.getItem('forgedQuizState')) { state = JSON.parse(localStorage.getItem('forgedQuizState')); }
+
+  let currentStep = 0; let userAnswers = {};
+
+  const attributionHeader = `/*
+============================================================
+PROJECT: Confidence Self-Check (TAC6101 Organic Synthesis)
+VERSION: 2.0
+DATE: 2026-01-28
+AUTHOR: Adapted by Daniel Boyland (Forged Frameworks / Tiro Training)
+BASE CONCEPT: "Perpetual Notepad for Storyline" by JoeDey
+SOURCE: https://community.articulate.com/discussions/rise-code-block-525/javascript-notepad/1240910
+
+DESCRIPTION:
+Integrates a self-check benchmark into a Storyline Lightbox slide.
+Updated for Level 6 Laboratory Scientist competencies.
+Features:
+- 5 weighted questions (0-15 max score)
+- Before/After checkpoint dropdowns
+- LocalStorage persistence for progress comparison
+- Colour-coded feedback bands for Organic Synthesis proficiency
+
+This header is for version control and attribution only.
+It is non-display and does not affect the learner experience.
+============================================================
+*/\n`;
+
+  function initUI() {
+    document.getElementById('ui-title').innerText = state.config.title;
+    document.getElementById('ui-subtitle').innerText = state.config.subtitle;
+    document.getElementById('opt-mid').style.display = state.config.enableMid ? 'block' : 'none';
+    let stageSel = document.getElementById('cw-stage');
+    if(!state.config.enableMid && stageSel.value === 'mid') stageSel.value = 'pre';
+    updateDropdownLabels(); updateStageHint();
+    document.getElementById('cw-stage').addEventListener('change', updateStageHint);
+  }
+
+  function getStorageKey(stage) { return `${state.config.quizId}_${stage}`; }
+
+  function updateDropdownLabels() {
+    const pre = localStorage.getItem(getStorageKey('pre'));
+    const mid = localStorage.getItem(getStorageKey('mid'));
+    const post = localStorage.getItem(getStorageKey('post'));
+    document.getElementById('opt-pre').innerText = pre ? "Before this module (Saved ✓)" : "Before this module";
+    document.getElementById('opt-mid').innerText = mid ? "Mid-way through module (Saved ✓)" : "Mid-way through module";
+    document.getElementById('opt-post').innerText = post ? "After this module (Saved ✓)" : "After this module";
+    document.getElementById('reset-container').style.display = (pre !== null || mid !== null || post !== null) ? 'block' : 'none';
+  }
+
+  function updateStageHint() {
+    const stage = document.getElementById('cw-stage').value;
+    const pre = localStorage.getItem(getStorageKey('pre'));
+    const mid = localStorage.getItem(getStorageKey('mid'));
+    const hintEl = document.getElementById('cw-stage-hint');
+    if (stage === "pre") { txt = pre ? `You have a saved 'before' score of ${pre}%. Continuing will overwrite it.` : "Capture your baseline confidence at the start."; }
+    else if (stage === "mid") { txt = pre ? "We'll compare this against your baseline score." : "You have no baseline, but you can save a mid-point score."; }
+    else { txt = (pre || mid) ? "We will calculate your distance travelled based on previous checkpoints." : "Complete the final check."; }
+    hintEl.innerText = txt;
+  }
+
+  function showResetModal() { const m = document.getElementById('reset-modal'); m.style.display = 'flex'; setTimeout(() => m.classList.add('active'), 10); }
+  function hideResetModal() { const m = document.getElementById('reset-modal'); m.classList.remove('active'); setTimeout(() => m.style.display = 'none', 300); }
+  function executeReset() { localStorage.removeItem(getStorageKey('pre')); localStorage.removeItem(getStorageKey('mid')); localStorage.removeItem(getStorageKey('post')); hideResetModal(); initUI(); }
+
+  // Check for overwrite
+  function startQuizInit() {
+      const stage = document.getElementById('cw-stage').value;
+      if (localStorage.getItem(getStorageKey(stage)) !== null) {
+          const m = document.getElementById('overwrite-modal');
+          m.style.display = 'flex'; setTimeout(() => m.classList.add('active'), 10);
+      } else {
+          startQuizExec();
+      }
+  }
+  function cancelOverwrite() { const m = document.getElementById('overwrite-modal'); m.classList.remove('active'); setTimeout(() => m.style.display = 'none', 300); }
+  function confirmOverwrite() { const m = document.getElementById('overwrite-modal'); m.classList.remove('active'); setTimeout(() => m.style.display = 'none', 300); startQuizExec(); }
+
+  function startQuizExec() {
+    currentStep = 0; userAnswers = {};
+    document.getElementById('screen-intro').style.display = 'none';
+    document.getElementById('submit-error').style.display = 'none';
+    const q = document.getElementById('screen-quiz'); q.style.display = 'block'; q.classList.add('fade-in');
+    renderQuestions(); updateNavigation();
+  }
+
+  function renderQuestions() {
+    const container = document.getElementById('questions-container'); let html = '';
+    state.questions.forEach((q, index) => {
+      let imgHtml = (q.imageAsset && q.imageAsset.trim() !== '') ? `<img src="${q.imageAsset}" class="q-image" style="display:block;">` : '';
+      let optsHtml = '';
+      q.options.forEach(opt => {
+        optsHtml += `<label class="option-label"><input type="radio" name="q_${q.id}" value="${opt.weight}" onchange="recordAnswer(${q.id}, ${opt.weight})">${opt.label}</label>`;
+      });
+      html += `<div class="question-block" id="qb_${index}">${imgHtml}<div class="q-text">${q.text}</div><div class="options-grid">${optsHtml}</div></div>`;
+    });
+    container.innerHTML = html;
+  }
+
+  function recordAnswer(qId, weight) { userAnswers[qId] = weight; document.getElementById('submit-error').style.display = 'none'; updateNavigation(); }
+
+  function updateNavigation() {
+    const total = state.questions.length; const isList = state.config.layout === 'list';
+    for(let i=0; i<total; i++) {
+      let qb = document.getElementById('qb_'+i);
+      if(qb) { if(isList) { qb.classList.add('active'); } else { i === currentStep ? qb.classList.add('active') : qb.classList.remove('active'); } }
+    }
+    
+    if (isList) {
+        document.getElementById('btn-prev').style.display = 'none';
+        document.getElementById('btn-back-start').style.display = 'block';
+    } else {
+        if(currentStep === 0) {
+            document.getElementById('btn-prev').style.display = 'none';
+            document.getElementById('btn-back-start').style.display = 'block';
+        } else {
+            document.getElementById('btn-prev').style.display = 'block';
+            document.getElementById('btn-back-start').style.display = 'none';
+        }
+    }
+
+    document.getElementById('btn-next').style.display = (isList || currentStep === total - 1) ? 'none' : 'block';
+    const submitBtn = document.getElementById('btn-submit');
+    submitBtn.style.display = (isList || currentStep === total - 1) ? 'block' : 'none';
+    
+    document.getElementById('prog-text').innerText = isList ? "All Questions" : `Question ${currentStep + 1} of ${total}`;
+    document.getElementById('prog-fill').style.width = isList ? (Object.keys(userAnswers).length / total * 100) + '%' : ((currentStep + 1) / total * 100) + '%';
+  }
+
+  function navQuiz(dir) { currentStep += dir; document.getElementById('submit-error').style.display = 'none'; updateNavigation(); }
+  
+  function attemptSubmit() {
+      const total = state.questions.length;
+      if (Object.keys(userAnswers).length < total) {
+          let missing = [];
+          state.questions.forEach((q, i) => { if(userAnswers[q.id] === undefined) missing.push(i + 1); });
+          const errEl = document.getElementById('submit-error');
+          errEl.innerText = "Please answer all questions. Missing: Q" + missing.join(", Q");
+          errEl.style.display = 'block';
+          return;
+      }
+      showCompilingOverlay();
+  }
+
+  function showCompilingOverlay() { document.getElementById('screen-quiz').style.display = 'none'; const c = document.getElementById('screen-compiling'); c.style.display = 'block'; c.classList.add('fade-in'); setTimeout(executeSubmission, 1800); }
+
+  function executeSubmission() {
+    document.getElementById('screen-compiling').style.display = 'none';
+    let totalScore = 0; let maxScore = 0;
+    state.questions.forEach(q => {
+      totalScore += parseInt(userAnswers[q.id]);
+      let maxW = 0; q.options.forEach(o => { if(parseInt(o.weight) > maxW) maxW = parseInt(o.weight); });
+      maxScore += maxW;
+    });
+    const pct = Math.round((totalScore / maxScore) * 100); const stage = document.getElementById('cw-stage').value;
+    localStorage.setItem(getStorageKey(stage), pct);
+
+    const headerEl = document.getElementById('res-header-title');
+    if (stage === 'pre') headerEl.innerText = "Check-in: First Start of Module";
+    else if (stage === 'mid') headerEl.innerText = "Check-in: Midpoint";
+    else headerEl.innerText = "Checkout: End of Module";
+
+    let finalBand = state.bands[state.bands.length - 1];
+    for(let i=0; i<state.bands.length; i++) { if(pct <= state.bands[i].maxPct) { finalBand = state.bands[i]; break; } }
+
+    const sc = document.getElementById('res-score'); sc.innerText = pct + '%';
+    sc.className = 'score-circle'; document.getElementById('res-band').className = 'band-title';
+    let styleClass = 'band-4'; if(pct <= 25) styleClass = 'band-1'; else if(pct <= 50) styleClass = 'band-2'; else if(pct <= 75) styleClass = 'band-3';
+    sc.classList.add(styleClass); document.getElementById('res-band').classList.add(styleClass);
+    document.getElementById('res-band').innerText = finalBand.title; document.getElementById('res-message').innerText = finalBand.message;
+
+    setTimeout(() => { document.getElementById('spectrum-marker').style.left = pct + '%'; }, 100);
+
+    const pre = localStorage.getItem(getStorageKey('pre')); const mid = localStorage.getItem(getStorageKey('mid'));
+    let distText = "";
+    if(stage === 'mid' || stage === 'post') {
+        let compScore = null; let compLabel = "";
+        if (stage === 'post' && mid !== null) { compScore = mid; compLabel = "mid-way"; }
+        else if (pre !== null) { compScore = pre; compLabel = "baseline"; }
+        if(compScore !== null) {
+            let diff = pct - parseInt(compScore);
+            if(diff > 0) distText = `You've increased your confidence by <strong>${diff} percentage points</strong> compared to your ${compLabel} score.`;
+            else if(diff < 0) distText = `Your confidence is <strong>${Math.abs(diff)} percentage points lower</strong> than your ${compLabel} score. Keep building on this awareness.`;
+            else distText = `Your confidence remains identical to your ${compLabel} score.`;
+        } else { distText = "We don't have a previous score to compare against, but your current checkpoint is saved."; }
+        if(stage === 'mid') distText += " Return to the start screen to complete the end of module checkout when you are ready.";
+    } else { distText = state.config.enableMid ? "Baseline captured. Return to the start screen to complete the midpoint or end of module checkout to measure your progress." : "Baseline captured. Return to the start screen to complete the end of module checkout to measure your progress."; }
+    document.getElementById('res-distance').innerHTML = distText;
+
+    let visualHtml = '<div class="distance-visual">';
+    if (pre !== null && stage !== 'pre') visualHtml += `<div class="dist-node">Start<br>${pre}%</div><div class="dist-arrow">→</div>`;
+    if (mid !== null && stage === 'post') visualHtml += `<div class="dist-node">Mid<br>${mid}%</div><div class="dist-arrow">→</div>`;
+    visualHtml += `<div class="dist-node active">${stage==='pre'?'Start':(stage==='mid'?'Mid':'End')}<br>${pct}%</div></div>`;
+    document.getElementById('visual-tracker-container').innerHTML = visualHtml;
+
+    const r = document.getElementById('screen-results'); r.style.display = 'block'; r.classList.add('fade-in');
+  }
+
+  function resetToStart() { 
+      document.getElementById('screen-quiz').style.display = 'none'; 
+      document.getElementById('screen-results').style.display = 'none'; 
+      const res = document.getElementById('screen-resetting');
+      res.style.display = 'block'; res.classList.add('fade-in');
+      setTimeout(() => {
+          res.style.display = 'none'; res.classList.remove('fade-in');
+          const intro = document.getElementById('screen-intro');
+          intro.style.display = 'block'; intro.classList.remove('fade-in'); void intro.offsetWidth; intro.classList.add('fade-in');
+          initUI();
+      }, 1200);
+  }
+  
+  function printResults() {
+      const stageSelect = document.getElementById('cw-stage');
+      const stageText = stageSelect.options[stageSelect.selectedIndex].text;
+      const pct = document.getElementById('res-score').innerText;
+      const band = document.getElementById('res-band').innerText;
+      const msg = document.getElementById('res-message').innerText;
+      const dist = document.getElementById('res-distance').innerHTML;
+
+      const printWin = window.open('', '_blank');
+      if (!printWin) {
+          alert("Please allow pop-ups for this site to generate your PDF/Print view.");
+          return;
+      }
+      
+      let html = '<!DOCTYPE html><html lang="en-GB"><head><title>Confidence Check Results</title>';
+      html += '<style>body{font-family:system-ui,-apple-system,sans-serif; color:#1f2937; padding:40px; max-width:800px; margin:0 auto; line-height:1.6;} h1{color:#691eda; border-bottom:2px solid #e2e8f0; padding-bottom:10px; margin-bottom:30px;} .score{font-size:32px; font-weight:bold; color:#691eda; margin-bottom:5px;} .band{font-size:20px; font-weight:bold; margin-bottom:20px;} .box{background:#f8f9fa; border:1px solid #e2e8f0; padding:25px; border-radius:12px; margin-bottom:30px;} p{margin-top:0;} @media print { body{padding:0;} .box{border:1px solid #ccc; background:#fff;} }</style></head><body>';
+      html += '<h1>Confidence Check Results</h1>';
+      html += '<p><strong>Saved Checkpoint:</strong> ' + stageText + '</p>';
+      html += '<div class="box"><div class="score">' + pct + '</div><div class="band">' + band + '</div><p>' + msg + '</p></div>';
+      html += '<h2 style="font-size:20px; margin-bottom:15px; color:#1f2937;">Distance Travelled</h2><div class="box" style="font-size:15px;">' + dist + '</div>';
+      html += '<script>window.onload = function() { window.print(); };</scr'+'ipt>';
+      html += '</body></html>';
+      
+      printWin.document.write(html);
+      printWin.document.close();
+  }
+
+  function renderEditorUI() {
+    document.getElementById('cfg-id').value = state.config.quizId; document.getElementById('cfg-title').value = state.config.title; document.getElementById('cfg-sub').value = state.config.subtitle; document.getElementById('cfg-layout').value = state.config.layout; document.getElementById('cfg-mid').value = state.config.enableMid.toString();
+    const qContainer = document.getElementById('editor-questions'); let qHtml = '';
+    state.questions.forEach((q, i) => {
+      let optsHtml = ''; q.options.forEach((opt, oIdx) => { optsHtml += `<input type="text" value="${opt.label.replace(/"/g, '&quot;')}" onchange="updateOption(${q.id}, ${oIdx}, 'label', this.value)"><input type="number" value="${opt.weight}" onchange="updateOption(${q.id}, ${oIdx}, 'weight', this.value)">`; });
+      qHtml += `<div class="editor-card"><div class="editor-card-title">Question ${i + 1}</div><button class="btn-remove" onclick="removeQuestion(${q.id})">Remove</button><div class="form-group"><label>Question Text</label><textarea onchange="updateQuestion(${q.id}, 'text', this.value)">${q.text}</textarea></div><div class="form-group"><label>Image URL</label><input type="text" value="${q.imageAsset}" onchange="updateQuestion(${q.id}, 'imageAsset', this.value)"></div><div class="form-group"><label>Answers & Weights</label><div class="options-editor">${optsHtml}</div></div></div>`;
+    });
+    qContainer.innerHTML = qHtml;
+    const bContainer = document.getElementById('editor-bands'); let bHtml = '';
+    state.bands.forEach((b, i) => { bHtml += `<div class="editor-card"><div class="editor-card-title">Band ${i + 1}</div><button class="btn-remove" onclick="removeBand(${i})">Remove</button><div class="form-group"><label>Max Percentage (%)</label><input type="number" value="${b.maxPct}" onchange="updateBand(${i}, 'maxPct', this.value)"></div><div class="form-group"><label>Band Title</label><input type="text" value="${b.title.replace(/"/g, '&quot;')}" onchange="updateBand(${i}, 'title', this.value)"></div><div class="form-group"><label>Message</label><textarea onchange="updateBand(${i}, 'message', this.value)">${b.message}</textarea></div></div>`; });
+    bContainer.innerHTML = bHtml + `<button class="btn-add" style="margin-bottom:0;" onclick="addBand()">+ Add Band</button>`;
+  }
+
+  function saveAndRender() { localStorage.setItem('forgedQuizState', JSON.stringify(state)); initUI(); renderEditorUI(); updateHTMLOutput(); }
+  function updateConfig(key, val) { state.config[key] = val; saveAndRender(); }
+  function updateQuestion(id, key, val) { const q = state.questions.find(x => x.id === id); if(q) { q[key] = val; saveAndRender(); } }
+  function updateOption(qId, oIdx, key, val) { const q = state.questions.find(x => x.id === qId); if(q) { q.options[oIdx][key] = (key==='weight') ? parseInt(val) : val; saveAndRender(); } }
+  function removeQuestion(id) { state.questions = state.questions.filter(x => x.id !== id); saveAndRender(); }
+  function addQuestion() { state.questions.push({ id: Date.now(), text: "New Question Text", imageAsset: "", options: [ {label:"Excellent", weight:3}, {label:"Good", weight:2}, {label:"Poor", weight:1}, {label:"None", weight:0} ] }); saveAndRender(); }
+  function updateBand(idx, key, val) { state.bands[idx][key] = (key==='maxPct') ? parseInt(val) : val; saveAndRender(); }
+  function removeBand(idx) { state.bands.splice(idx, 1); saveAndRender(); }
+  function addBand() { state.bands.push({ maxPct: 100, title: "New Band", message: "Feedback" }); saveAndRender(); }
+
+  // --- TAB LOGIC ---
+  function switchExportTab(tab) {
+    const htmlTab = document.querySelector('.export-tab:nth-child(1)');
+    const jsTab = document.querySelector('.export-tab:nth-child(2)');
+    const htmlView = document.getElementById('export-html-view');
+    const jsView = document.getElementById('export-js-view');
+
+    if (tab === 'html') {
+        htmlTab.classList.add('active'); jsTab.classList.remove('active');
+        htmlView.classList.add('active'); jsView.classList.remove('active');
+    } else {
+        jsTab.classList.add('active'); htmlTab.classList.remove('active');
+        jsView.classList.add('active'); htmlView.classList.remove('active');
+    }
+  }
+
+  // --- DUAL EXPORT COMPILERS ---
+  function updateHTMLOutput() {
+    const clone = document.documentElement.cloneNode(true);
+    
+    clone.querySelector('#mode-controls')?.remove();
+    clone.querySelector('#designer-view')?.remove();
+    clone.querySelector('#questions-container').innerHTML = '';
+    clone.querySelector('#visual-tracker-container').innerHTML = '';
+    
+    const styleBlock = clone.querySelector('head style');
+    if (styleBlock) {
+        let cleanStyle = styleBlock.innerHTML.replace(/\/\*[\s\S]*?============================================================\s*\*\//g, '');
+        styleBlock.innerHTML = '\n' + attributionHeader + cleanStyle;
+    }
+
+    clone.querySelector('#app-data-script').textContent = `\n  let appState = ${JSON.stringify(state, null, 2)};\n`;
+    document.getElementById('html-output').value = "<!DOCTYPE html>\n" + clone.outerHTML;
+
+    // --- STORYLINE JS TRIGGER COMPILE ---
+    let jsCode = `(function () {
+    if (document.getElementById("forged-quiz-root")) return;
+    var container = document.createElement("div");
+    container.id = "forged-quiz-root";
+    container.style = "position:absolute; top:0; left:0; width:100%; height:100%; overflow-y:auto; z-index:999990; background:#f8f9fa;";
+    
+    container.innerHTML = \`
+      <div class="digital-background"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+      <div class="app-container" style="margin:40px auto; padding:0 20px;">
+        <div class="glass-card">
+          <div id="screen-intro">
+            <div class="glass-header"><h2 id="ui-title"></h2><p id="ui-subtitle"></p></div>
+            <div class="checkpoint-selector">
+              <label for="cw-stage">Select your current stage:</label>
+              <select id="cw-stage">
+                <option value="pre" id="opt-pre">Before this module</option>
+                <option value="mid" id="opt-mid">Mid-way through module</option>
+                <option value="post" id="opt-post">After this module</option>
+              </select>
+              <div class="checkpoint-hint" id="cw-stage-hint"></div>
+            </div>
+            <button class="btn btn-primary" style="width:100%" onclick="window.forgedQuiz.startQuizInit()">Begin Self-Check</button>
+            <div id="reset-container" style="margin-top:20px; text-align:center; display:none;"><button class="btn btn-danger" style="width:100%; font-size:13px; padding:10px;" onclick="window.forgedQuiz.showResetModal()">Reset My Progress</button></div>
+          </div>
+          <div id="screen-quiz" style="display:none;">
+            <div class="progress-tracker"><span id="prog-text"></span><div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div></div>
+            <div id="questions-container"></div>
+            <div class="nav-buttons">
+              <div class="nav-left-cluster"><button class="btn btn-secondary" id="btn-prev" onclick="window.forgedQuiz.navQuiz(-1)">Previous</button><button class="btn btn-secondary" id="btn-back-start" onclick="window.forgedQuiz.resetToStart()">Back to Confidence Check</button></div>
+              <div class="nav-right-cluster"><div id="submit-error" style="display:none; color:#dc2626; font-size:13px; margin-bottom:8px; font-weight:bold;"></div><button class="btn btn-primary" id="btn-next" onclick="window.forgedQuiz.navQuiz(1)">Next</button><button class="btn btn-primary" id="btn-submit" onclick="window.forgedQuiz.attemptSubmit()" style="display:none; background:#10b981">Submit Answers</button></div>
+            </div>
+          </div>
+          <div id="screen-compiling" style="display:none; text-align:center; padding:60px 20px;"><h2 style="color:#691eda; margin-bottom:30px;">Compiling your confidence profile...</h2><div><span class="dot-pulse"></span><span class="dot-pulse"></span><span class="dot-pulse"></span></div></div>
+          <div id="screen-resetting" style="display:none; text-align:center; padding:60px 20px;"><h2 style="color:#691eda; margin-bottom:30px;">Returning to Confidence Check...</h2><div><span class="dot-pulse"></span><span class="dot-pulse"></span><span class="dot-pulse"></span></div></div>
+          <div id="screen-results" style="display:none; text-align:center;">
+            <div class="glass-header"><h2 id="res-header-title">Check-in Complete</h2></div>
+            <div class="spectrum-container"><div class="spectrum-marker" id="spectrum-marker" style="left:0%;"></div><div class="spectrum-bar-bg"></div><div class="spectrum-label"><span>Low Confidence</span><span>High Confidence</span></div></div>
+            <div class="score-circle" id="res-score">0%</div><div class="band-title" id="res-band">Evaluating...</div><div class="band-message" id="res-message" style="text-align:left;"></div><div class="distance-panel" id="res-distance" style="text-align:left;"></div><div id="visual-tracker-container"></div>
+            <br><div style="display:flex; gap:10px; justify-content:center; margin-top:10px;"><button class="btn btn-secondary" onclick="window.forgedQuiz.resetToStart()">Return to Confidence Check</button><button class="btn btn-primary" onclick="window.forgedQuiz.printResults()">Print My Results</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-overlay" id="reset-modal"><div class="glass-card" style="max-width:400px; text-align:center; padding:30px; margin:100px auto;"><h3>Warning!</h3><p>Permanent reset actions take effect on current metrics.</p><div style="display:flex; gap:10px; justify-content:center;"><button class="btn btn-secondary" onclick="window.forgedQuiz.hideResetModal()">Cancel</button><button class="btn" style="background:#ef4444; color:#fff;" onclick="window.forgedQuiz.executeReset()">Yes, Delete Data</button></div></div></div>
+      <div class="modal-overlay" id="overwrite-modal"><div class="glass-card" style="max-width:400px; text-align:center; padding:30px; margin:100px auto;"><h3 style="color:#f08838">Overwrite Warning</h3><p>You already have a saved score for this stage. Proceeding and submitting new answers will overwrite your previous benchmark.</p><div style="display:flex; gap:10px; justify-content:center;"><button class="btn btn-secondary" onclick="window.forgedQuiz.cancelOverwrite()">Cancel</button><button class="btn" style="background:#f08838; color:#fff;" onclick="window.forgedQuiz.confirmOverwrite()">Proceed</button></div></div></div>
+    \`;
+    var style = document.createElement("style"); 
+    style.type = "text/css";
+    style.innerHTML = \`
+${attributionHeader}
+        :root { --brand-purple:#691eda; --brand-purple-hover:#5816bb; --brand-orange:#f08838; --glass-bg:rgba(255,255,255,0.65); --glass-border:rgba(255,255,255,0.8); --shadow:0 16px 40px 0 rgba(31,38,135,0.15); --text-main:#1f2937; --text-muted:#4b5563; --radius:16px; --success:#10b981; --warning:#f59e0b; --danger:#ef4444; --info:#3b82f6; }
+        .digital-background { position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1; background:radial-gradient(rgba(105,30,218,0.08) 2px,transparent 2px),radial-gradient(rgba(105,30,218,0.08) 2px,transparent 2px); background-size:60px 60px; background-position:0 0, 30px 30px; }
+        .orb { position:absolute; border-radius:50%; filter:blur(80px); opacity:0.6; animation:drift 25s infinite alternate ease-in-out; }
+        .orb-1 { width:50vw; height:50vw; background:rgba(105,30,218,0.25); top:-10%; left:-10%; } .orb-2 { width:60vw; height:60vw; background:rgba(240,136,56,0.2); bottom:-20%; right:-10%; animation-delay:-5s; }
+        @keyframes drift { 0% { transform:translate(0,0) scale(1); } 50% { transform:translate(10%,15%) scale(1.1); } 100% { transform:translate(-10%,5%) scale(0.9); } }
+        .fade-in { animation:f_fi 0.4s ease forwards; } @keyframes f_fi { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+        .glass-card { background:var(--glass-bg); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border:1px solid var(--glass-border); border-top:2px solid rgba(255,255,255,0.9); border-left:2px solid rgba(255,255,255,0.9); border-radius:var(--radius); box-shadow:var(--shadow); padding:40px; width:100%; max-width:720px; transition:all 0.3s ease; position:relative; margin:0 auto; }
+        .glass-header h2 { margin:0 0 10px 0; color:var(--brand-purple); font-size:24px; text-align:center; } .glass-header p { margin:0 0 20px 0; color:var(--text-muted); font-size:15px; line-height:1.5; text-align:center; }
+        .checkpoint-selector { background:rgba(255,255,255,0.7); padding:20px; border-radius:12px; margin-bottom:30px; border:1px solid #e2e8f0; }
+        .checkpoint-selector label { font-weight:bold; font-size:14px; display:block; margin-bottom:10px; } .checkpoint-selector select { width:100%; padding:12px; border-radius:8px; border:1px solid #cbd5e1; font-size:15px; margin-bottom:10px; background:#fff; color:var(--text-main); }
+        .checkpoint-hint { font-size:13px; color:var(--text-muted); font-style:italic; }
+        .question-block { margin-bottom:30px; background:rgba(255,255,255,0.8); padding:20px; border-radius:12px; border:1px solid #e2e8f0; display:none; text-align:left; }
+        .question-block.active { display:block; animation:f_fi 0.4s ease forwards; } .q-image { width:100%; max-height:250px; object-fit:cover; border-radius:8px; margin-bottom:15px; display:none; } .q-text { font-size:16px; font-weight:600; margin:0 0 15px 0; line-height:1.4; color:var(--text-main); }
+        .options-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; } .option-label { display:flex; align-items:center; padding:12px 15px; background:#fff; border:1px solid #cbd5e1; border-radius:8px; cursor:pointer; transition:all 0.2s; font-size:14px; color:var(--text-main); } .option-label:hover { border-color:var(--brand-purple); background:#faf5ff; } .option-label input { margin-right:12px; accent-color:var(--brand-purple); width:18px; height:18px; cursor:pointer; }
+        .nav-buttons { display:flex; justify-content:space-between; align-items:center; margin-top:20px; width:100%; } .nav-left-cluster { display:flex; flex:1; justify-content:flex-start; } .nav-right-cluster { display:flex; flex:1; justify-content:flex-end; flex-direction:column; align-items:flex-end; }
+        .btn { padding:12px 24px; border:none; border-radius:8px; font-size:15px; font-weight:bold; cursor:pointer; transition:all 0.2s; } .btn-primary { background:var(--brand-purple); color:#fff; box-shadow:0 4px 12px rgba(105,30,218,0.3); } .btn-primary:hover { background:var(--brand-purple-hover); } .btn-secondary { background:#e2e8f0; color:var(--text-main); } .btn-secondary:hover { background:#cbd5e1; } .btn-danger { background:#fee2e2; color:#dc2626; border:1px solid #fecaca; } .btn-danger:hover { background:#fecaca; }
+        .progress-tracker { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; font-size:13px; color:var(--text-muted); font-weight:bold; width:100%; } .progress-bar { flex:1; height:6px; background:#e2e8f0; border-radius:3px; margin:0 15px; overflow:hidden; } .progress-fill { height:100%; background:var(--brand-orange); transition:width 0.3s ease; width:0%; }
+        .dot-pulse { display:inline-block; width:14px; height:14px; background:var(--brand-purple); border-radius:50%; margin:0 6px; animation:f_p 1.4s infinite ease-in-out both; } .dot-pulse:nth-child(1) { animation-delay:-0.32s; } .dot-pulse:nth-child(2) { animation-delay:-0.16s; } @keyframes f_p { 0%,80%,100% { transform:scale(0); } 40% { transform:scale(1); } }
+        .spectrum-container { position:relative; width:100%; max-width:400px; margin:0 auto 35px auto; padding-top:15px; } .spectrum-bar-bg { height:14px; border-radius:7px; background:linear-gradient(to right, #ef4444, #f59e0b, #3b82f6, #10b981); width:100%; position:relative; box-shadow:inset 0 2px 4px rgba(0,0,0,0.15); } .spectrum-marker { position:absolute; top:-12px; width:0; height:0; border-left:10px solid transparent; border-right:10px solid transparent; border-top:12px solid #1f2937; transform:translateX(-50%); transition:left 1s cubic-bezier(0.175,0.885,0.32,1.275); z-index:10; } .spectrum-label { display:flex; justify-content:space-between; font-size:12px; color:var(--text-muted); margin-top:8px; font-weight:bold; text-transform:uppercase; letter-spacing:0.5px; }
+        .score-circle { width:120px; height:120px; border-radius:50%; background:#fff; border:6px solid var(--brand-purple); display:flex; align-items:center; justify-content:center; font-size:32px; font-weight:bold; color:var(--brand-purple); margin:0 auto 20px auto; box-shadow:0 8px 16px rgba(105,30,218,0.2); }
+        .band-title { font-size:22px; font-weight:bold; margin-bottom:10px; text-align:center; } .band-message { font-size:15px; line-height:1.6; color:var(--text-muted); margin-bottom:20px; background:#fff; padding:20px; border-radius:12px; border:1px solid #e2e8f0; text-align:left; } .distance-panel { background:rgba(240,136,56,0.1); border:1px solid rgba(240,136,56,0.3); padding:15px; border-radius:8px; font-size:14px; line-height:1.5; color:#9c5014; text-align:left; }
+        .distance-visual { display:flex; align-items:center; justify-content:center; gap:12px; margin-top:20px; padding:15px; background:rgba(255,255,255,0.7); border-radius:12px; border:1px solid rgba(0,0,0,0.05); } .dist-node { display:flex; flex-direction:column; align-items:center; justify-content:center; width:65px; height:65px; border-radius:50%; background:#fff; border:2px solid #e2e8f0; font-size:14px; font-weight:bold; color:var(--text-muted); box-shadow:0 4px 6px rgba(0,0,0,0.05); } .dist-node.active { border-color:var(--brand-purple); color:var(--brand-purple); background:#faf5ff; transform:scale(1.1); box-shadow:0 6px 12px rgba(105,30,218,0.2); } .dist-arrow { color:#cbd5e1; font-weight:bold; font-size:18px; }
+        .modal-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.6); backdrop-filter:blur(4px); z-index:100000; align-items:center; justify-content:center; opacity:0; transition:opacity 0.3s ease; } .modal-overlay.active { opacity:1; display:flex !important; }
+        .band-1 { border-color:var(--danger); color:var(--danger); } .band-2 { border-color:var(--warning); color:var(--warning); } .band-3 { border-color:var(--info); color:var(--info); } .band-4 { border-color:var(--success); color:var(--success); }
+    \`;
+    document.head.appendChild(style); document.body.appendChild(container);
+
+    var quizState = ${JSON.stringify(state, null, 2)};
+    var currentStep = 0; var userAnswers = {};
+
+    window.forgedQuiz = {
+      init: function() {
+        document.getElementById('ui-title').innerText = quizState.config.title;
+        document.getElementById('ui-subtitle').innerText = quizState.config.subtitle;
+        document.getElementById('opt-mid').style.display = quizState.config.enableMid ? 'block' : 'none';
+        this.updateDropdownLabels(); this.updateStageHint();
+        document.getElementById('cw-stage').addEventListener('change', this.updateStageHint.bind(this));
+      },
+      getStorageKey: function(stage) { return quizState.config.quizId + "_" + stage; },
+      updateDropdownLabels: function() {
+        var pre = localStorage.getItem(this.getStorageKey('pre')); var mid = localStorage.getItem(this.getStorageKey('mid')); var post = localStorage.getItem(this.getStorageKey('post'));
+        document.getElementById('opt-pre').innerText = pre ? "Before this module (Saved ✓)" : "Before this module";
+        document.getElementById('opt-mid').innerText = mid ? "Mid-way through module (Saved ✓)" : "Mid-way through module";
+        document.getElementById('opt-post').innerText = post ? "After this module (Saved ✓)" : "After this module";
+        document.getElementById('reset-container').style.display = (pre !== null || mid !== null || post !== null) ? 'block' : 'none';
+      },
+      updateStageHint: function() {
+        var stage = document.getElementById('cw-stage').value;
+        var pre = localStorage.getItem(this.getStorageKey('pre')); var mid = localStorage.getItem(this.getStorageKey('mid')); var hintEl = document.getElementById('cw-stage-hint');
+        if (stage === "pre") { hintEl.innerText = pre ? "You have a saved 'before' score of " + pre + "%. Continuing will overwrite it." : "Capture your baseline confidence at the start."; }
+        else if (stage === "mid") { hintEl.innerText = pre ? "We'll compare this against your baseline score." : "You have no baseline, but you can save a mid-point score."; }
+        else { hintEl.innerText = (pre || mid) ? "We will calculate your distance travelled based on previous checkpoints." : "Complete the final check."; }
+      },
+      showResetModal: function() { var modal = document.getElementById('reset-modal'); modal.style.display = 'flex'; setTimeout(function() { modal.classList.add('active'); }, 10); },
+      hideResetModal: function() { var modal = document.getElementById('reset-modal'); modal.classList.remove('active'); setTimeout(function() { modal.style.display = 'none'; }, 300); },
+      executeReset: function() { localStorage.removeItem(this.getStorageKey('pre')); localStorage.removeItem(this.getStorageKey('mid')); localStorage.removeItem(this.getStorageKey('post')); this.hideResetModal(); this.updateDropdownLabels(); this.updateStageHint(); },
+      
+      startQuizInit: function() {
+          var stage = document.getElementById('cw-stage').value;
+          if (localStorage.getItem(this.getStorageKey(stage)) !== null) {
+              var m = document.getElementById('overwrite-modal');
+              m.style.display = 'flex'; setTimeout(function(){ m.classList.add('active'); }, 10);
+          } else { this.startQuizExec(); }
+      },
+      cancelOverwrite: function() { var m = document.getElementById('overwrite-modal'); m.classList.remove('active'); setTimeout(function(){ m.style.display = 'none'; }, 300); },
+      confirmOverwrite: function() { var m = document.getElementById('overwrite-modal'); m.classList.remove('active'); setTimeout(function(){ m.style.display = 'none'; }, 300); this.startQuizExec(); },
+      
+      startQuizExec: function() { currentStep = 0; userAnswers = {}; document.getElementById('screen-intro').style.display = 'none'; document.getElementById('submit-error').style.display = 'none'; var qScreen = document.getElementById('screen-quiz'); qScreen.style.display = 'block'; qScreen.classList.add('fade-in'); this.renderQuestions(); this.updateNavigation(); },
+      renderQuestions: function() {
+        var container = document.getElementById('questions-container'); var html = '';
+        quizState.questions.forEach(function(q, index) {
+          var imgHtml = (q.imageAsset && q.imageAsset.trim() !== '') ? '<img src="'+q.imageAsset+'" class="q-image" style="display:block;">' : '';
+          var optsHtml = '';
+          q.options.forEach(function(opt) { optsHtml += '<label class="option-label"><input type="radio" name="forged_q_'+q.id+'" value="'+opt.weight+'" onchange="window.forgedQuiz.recordAnswer('+q.id+','+opt.weight+')">'+opt.label+'</label>'; });
+          html += '<div class="question-block" id="forged_qb_'+index+'">'+imgHtml+'<div class="q-text">'+q.text+'</div><div class="options-grid">'+optsHtml+'</div></div>';
+        });
+        container.innerHTML = html;
+      },
+      recordAnswer: function(qId, weight) { userAnswers[qId] = weight; document.getElementById('submit-error').style.display = 'none'; this.updateNavigation(); },
+      updateNavigation: function() {
+        var total = quizState.questions.length; var isList = quizState.config.layout === 'list';
+        for(var i=0; i<total; i++) { var qb = document.getElementById('forged_qb_'+i); if(qb) { if(isList){ qb.classList.add('active'); } else { i === currentStep ? qb.classList.add('active') : qb.classList.remove('active'); } } }
+        if(isList){ document.getElementById('btn-prev').style.display = 'none'; document.getElementById('btn-back-start').style.display = 'block'; }
+        else { if(currentStep === 0) { document.getElementById('btn-prev').style.display = 'none'; document.getElementById('btn-back-start').style.display = 'block'; } else { document.getElementById('btn-prev').style.display = 'block'; document.getElementById('btn-back-start').style.display = 'none'; } }
+        document.getElementById('btn-next').style.display = (isList || currentStep === total - 1) ? 'none' : 'block';
+        var submitBtn = document.getElementById('btn-submit'); submitBtn.style.display = (isList || currentStep === total - 1) ? 'block' : 'none';
+        document.getElementById('prog-text').innerText = isList ? "All Questions" : "Question " + (currentStep + 1) + " of " + total;
+        document.getElementById('prog-fill').style.width = isList ? (Object.keys(userAnswers).length / total * 100) + '%' : ((currentStep + 1) / total * 100) + '%';
+      },
+      navQuiz: function(dir) { currentStep += dir; document.getElementById('submit-error').style.display = 'none'; this.updateNavigation(); },
+      attemptSubmit: function() {
+          var total = quizState.questions.length;
+          if (Object.keys(userAnswers).length < total) {
+              var missing = []; quizState.questions.forEach(function(q, i) { if(userAnswers[q.id] === undefined) missing.push(i + 1); });
+              var errEl = document.getElementById('submit-error'); errEl.innerText = "Please answer all questions. Missing: Q" + missing.join(", Q"); errEl.style.display = 'block'; return;
+          }
+          this.showCompilingOverlay();
+      },
+      showCompilingOverlay: function() { document.getElementById('screen-quiz').style.display = 'none'; var comp = document.getElementById('screen-compiling'); comp.style.display = 'block'; comp.classList.add('fade-in'); setTimeout(this.executeSubmission.bind(this), 1800); },
+      executeSubmission: function() {
+        document.getElementById('screen-compiling').style.display = 'none'; var totalScore = 0, maxScore = 0;
+        quizState.questions.forEach(function(q) { totalScore += parseInt(userAnswers[q.id]); var maxW = 0; q.options.forEach(function(o) { if(parseInt(o.weight) > maxW) maxW = parseInt(o.weight); }); maxScore += maxW; });
+        var pct = Math.round((totalScore / maxScore) * 100); var stage = document.getElementById('cw-stage').value;
+        localStorage.setItem(this.getStorageKey(stage), pct);
+        var headerEl = document.getElementById('res-header-title');
+        if (stage === 'pre') headerEl.innerText = "Check-in: First Start of Module"; else if (stage === 'mid') headerEl.innerText = "Check-in: Midpoint"; else headerEl.innerText = "Checkout: End of Module";
+        var finalBand = quizState.bands[quizState.bands.length - 1]; for(var i=0; i<quizState.bands.length; i++) { if(pct <= quizState.bands[i].maxPct) { finalBand = quizState.bands[i]; break; } }
+        var sc = document.getElementById('res-score'); sc.innerText = pct + '%'; sc.className = 'score-circle'; document.getElementById('res-band').className = 'band-title';
+        var styleClass = 'band-4'; if(pct <= 25) styleClass = 'band-1'; else if(pct <= 50) styleClass = 'band-2'; else if(pct <= 75) styleClass = 'band-3';
+        sc.classList.add(styleClass); document.getElementById('res-band').classList.add(styleClass);
+        document.getElementById('res-band').innerText = finalBand.title; document.getElementById('res-message').innerText = finalBand.message;
+        setTimeout(function() { document.getElementById('spectrum-marker').style.left = pct + '%'; }, 100);
+        var pre = localStorage.getItem(this.getStorageKey('pre')); var mid = localStorage.getItem(this.getStorageKey('mid')); var distText = "";
+        if(stage === 'mid' || stage === 'post') {
+            var compScore = null, compLabel = ""; if (stage === 'post' && mid !== null) { compScore = mid; compLabel = "mid-way"; } else if (pre !== null) { compScore = pre; compLabel = "baseline"; }
+            if(compScore !== null) { var diff = pct - parseInt(compScore); if(diff > 0) distText = "You've increased your confidence by <strong>" + diff + " percentage points</strong> compared to your " + compLabel + " score."; else if(diff < 0) distText = "Your confidence is <strong>" + Math.abs(diff) + " percentage points lower</strong> than your " + compLabel + " score. Keep building on this awareness."; else distText = "Your confidence remains identical to your " + compLabel + " score."; }
+            else { distText = "We don't have a previous score to compare against, but your current checkpoint is saved."; }
+            if(stage === 'mid') distText += " Return to the start screen to complete the end of module checkout when you are ready.";
+        } else { distText = quizState.config.enableMid ? "Baseline captured. Return to the start screen to complete the midpoint or end of module checkout to measure your progress." : "Baseline captured. Return to the start screen to complete the end of module checkout to measure your progress."; }
+        document.getElementById('res-distance').innerHTML = distText;
+        var visualHtml = '<div class="distance-visual">'; if (pre !== null && stage !== 'pre') visualHtml += '<div class="dist-node">Start<br>'+pre+'%</div><div class="dist-arrow">→</div>'; if (mid !== null && stage === 'post') visualHtml += '<div class="dist-node">Mid<br>'+mid+'%</div><div class="dist-arrow">→</div>';
+        visualHtml += '<div class="dist-node active">'+(stage==='pre'?'Start':(stage==='mid'?'Mid':'End'))+'<br>'+pct+'%</div></div>'; document.getElementById('visual-tracker-container').innerHTML = visualHtml;
+        var rPanel = document.getElementById('screen-results'); rPanel.style.display = 'block'; rPanel.classList.add('fade-in');
+      },
+      resetToStart: function() {
+          document.getElementById('screen-quiz').style.display = 'none'; document.getElementById('screen-results').style.display = 'none';
+          var res = document.getElementById('screen-resetting'); res.style.display = 'block'; res.classList.add('fade-in');
+          var self = this;
+          setTimeout(function() {
+              res.style.display = 'none'; res.classList.remove('fade-in');
+              var intro = document.getElementById('screen-intro'); intro.style.display = 'block'; intro.classList.remove('fade-in'); void intro.offsetWidth; intro.classList.add('fade-in');
+              self.init();
+          }, 1200);
+      },
+      printResults: function() {
+          var stageSel = document.getElementById('cw-stage'); var stageText = stageSel.options[stageSel.selectedIndex].text;
+          var pct = document.getElementById('res-score').innerText; var band = document.getElementById('res-band').innerText;
+          var msg = document.getElementById('res-message').innerText; var dist = document.getElementById('res-distance').innerHTML;
+          var printWin = window.open('', '_blank');
+          if (!printWin) { alert("Please allow pop-ups for this site to generate your PDF/Print view."); return; }
+          var html = '<!DOCTYPE html><html lang="en-GB"><head><title>Confidence Check Results</title>';
+          html += '<style>body{font-family:system-ui,-apple-system,sans-serif; color:#1f2937; padding:40px; max-width:800px; margin:0 auto; line-height:1.6;} h1{color:#691eda; border-bottom:2px solid #e2e8f0; padding-bottom:10px; margin-bottom:30px;} .score{font-size:32px; font-weight:bold; color:#691eda; margin-bottom:5px;} .band{font-size:20px; font-weight:bold; margin-bottom:20px;} .box{background:#f8f9fa; border:1px solid #e2e8f0; padding:25px; border-radius:12px; margin-bottom:30px;} p{margin-top:0;} @media print { body{padding:0;} .box{border:1px solid #ccc; background:#fff;} }</style></head><body>';
+          html += '<h1>Confidence Check Results</h1><p><strong>Saved Checkpoint:</strong> ' + stageText + '</p>';
+          html += '<div class="box"><div class="score">' + pct + '</div><div class="band">' + band + '</div><p>' + msg + '</p></div>';
+          html += '<h2 style="font-size:20px; margin-bottom:15px; color:#1f2937;">Distance Travelled</h2><div class="box" style="font-size:15px;">' + dist + '</div>';
+          html += '<script>window.onload = function() { window.print(); };</scr'+'ipt></body></html>';
+          printWin.document.write(html); printWin.document.close();
+      }
+    };
+    window.forgedQuiz.init();
+})();`;
+    
+    document.getElementById('js-output').value = jsCode;
+  }
+
+  function switchMode(mode) {
+    const isLearner = mode === 'learner';
+    document.getElementById('btn-learner').classList.toggle('active', isLearner);
+    document.getElementById('btn-designer').classList.toggle('active', !isLearner);
+    document.getElementById('learner-view').style.display = isLearner ? 'flex' : 'none';
+    document.getElementById('designer-view').style.display = isLearner ? 'none' : 'block';
+    if(isLearner) resetToStart();
+  }
+
+  function copyHTML() { const o = document.getElementById('html-output'); o.select(); document.execCommand('copy'); alert('HTML Payload Copied!'); }
+  function copyJS() { const o = document.getElementById('js-output'); o.select(); document.execCommand('copy'); alert('Storyline Trigger Script Copied!'); }
+
+  function initApp() {
+    const isDesignerApp = document.getElementById('mode-controls');
+    if (isDesignerApp) { renderEditorUI(); saveAndRender(); } else { state = appState; initUI(); }
+  }
+  initApp();
+</script>
+</body>
+</html>

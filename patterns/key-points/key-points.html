@@ -1,0 +1,481 @@
+<!--
+==============================================================================
+PROJECT: Forged Frameworks - VLE Automated Curriculum Pipeline (vC4)
+AUTHOR: Daniel Boyland
+ORGANISATION: Forged Frameworks
+DESCRIPTION: Key Critical Takeaways (Designer Engine)
+VERSION: v2.1 (Contemporary Kinesthetic UI Update)
+==============================================================================
+-->
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Takeaways Revealer Master</title>
+  <style>
+    /* --- GLOBAL & DESIGNER CSS --- */
+    :root {
+      --bg-main: #f8fafc;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --primary-colour: #8a2be2;
+      --accent-colour: #7721c5;
+      --danger: #e11d48;
+      --border: #e2e8f0;
+      --bg-colour: #f8f4fc; 
+      --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    * { box-sizing: border-box; font-family: var(--font); }
+    body { margin: 0; background: var(--bg-main); color: var(--text-main); }
+
+    /* Top Navigation / Mode Toggle */
+    .app-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 24px; border-bottom: 1px solid var(--border); background: #f1f5f9;
+    }
+    .app-title { font-size: 16px; font-weight: bold; color: var(--text-main); margin: 0; }
+    
+    .toggle-group { display: flex; gap: 10px; background: #e2e8f0; padding: 4px; border-radius: 8px; }
+    .mode-btn {
+      padding: 8px 16px; border: none; border-radius: 6px; font-weight: bold; font-size: 14px;
+      cursor: pointer; background: transparent; color: var(--text-muted); transition: all 0.2s;
+    }
+    .mode-btn.active { background: #fff; color: var(--primary-colour); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .btn-reset { background: #cbd5e1; color: #334155; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+    .btn-reset:hover { background: #94a3b8; }
+
+    /* --- LEARNER MODE (The View) --- */
+    .learner-view { padding: 40px 20px; display: flex; justify-content: center; min-height: calc(100vh - 70px); }
+    .widget-wrapper { width: 100%; max-width: 900px; display: flex; flex-direction: column; align-items: center; }
+
+    /* --- WIDGET CORE CSS (Used in preview and export) --- */
+    .interactive-container { position: relative; width: 100%; display: flex; flex-direction: column; align-items: center; min-height: 450px; }
+    
+    .unlock-pill {
+      background-color: var(--primary-colour); color: #ffffff; padding: 16px 44px; border-radius: 50px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 20px;
+      box-shadow: 0 4px 6px -1px rgba(138, 43, 226, 0.2), 0 2px 4px -1px rgba(138, 43, 226, 0.1); 
+      transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); position: absolute; z-index: 10;
+    }
+    .unlock-pill:hover { 
+      transform: translateY(-2px) scale(1.02); background-color: var(--accent-colour); 
+      box-shadow: 0 20px 25px -5px rgba(138, 43, 226, 0.25), 0 10px 10px -5px rgba(138, 43, 226, 0.1);
+    }
+    .pill-text { font-size: 18px; font-weight: 600; letter-spacing: 0.5px; }
+    
+    .icon-container { display: flex; align-items: center; position: relative; width: 100px; height: 48px; perspective: 400px; }
+    
+    /* Success Ripple Effect */
+    .icon-container::after {
+      content: ''; position: absolute; top: 50%; left: 75%; transform: translate(-50%, -50%) scale(0);
+      width: 60px; height: 60px; border-radius: 50%; background: rgba(255, 255, 255, 0.5);
+      opacity: 0; pointer-events: none; z-index: 1;
+    }
+    .unlock-pill.unlocked .icon-container::after { animation: unlockRipple 0.8s ease-out 0.4s forwards; }
+    
+    @keyframes unlockRipple {
+      0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+    }
+
+    .hand-key-wrapper { position: absolute; left: -15px; width: 44px; height: 44px; transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 3; }
+    .hand-key-svg { width: 100%; height: 100%; fill: #f1c40f; transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); transform-style: preserve-3d; transform-origin: center right; }
+    
+    .lock-icon { width: 48px; height: 48px; fill: #ffffff; position: absolute; right: 0; overflow: visible; z-index: 2; transition: transform 0.3s ease; }
+    
+    /* Exaggerated spring bounce for the shackle */
+    .shackle { transform-origin: 16px 10px; transform-box: view-box; transition: transform 0.6s cubic-bezier(0.5, 2.5, 0.4, 1); }
+    
+    .unlock-pill:hover .hand-key-wrapper { transform: translateX(40px); }
+    .unlock-pill.unlocked .hand-key-wrapper { transform: translateX(40px); }
+    
+    /* Simulate pushing the key in slightly while twisting */
+    .unlock-pill.unlocked .hand-key-svg { transform: rotateX(180deg) scale(0.92); }
+    
+    /* Lock body jolts down slightly when opened */
+    .unlock-pill.unlocked .lock-icon { transform: translateY(2px); transition-delay: 0.4s; }
+    .unlock-pill.unlocked .shackle { transition-delay: 0.4s; transform: translateY(-5px) rotate(35deg); }
+    
+    .unlock-pill.fade-out { opacity: 0; transform: translateY(10px) scale(0.9); pointer-events: none; }
+    
+    .cards-wrapper { display: flex; gap: 20px; width: 100%; position: relative; z-index: 5; flex-wrap: wrap; justify-content: center; padding-top: 80px; }
+    
+    /* Contemporary Card Reveal with spatial scaling */
+    .card { 
+      flex: 1; min-width: 250px; background: #ffffff; border-radius: 16px; 
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025); 
+      overflow: hidden; border-top: 5px solid var(--primary-colour); 
+      opacity: 0; transform: translateY(30px) scale(0.95); 
+      transition: opacity 0.7s cubic-bezier(0.25, 1, 0.5, 1), transform 0.7s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease; 
+    }
+    .card:hover { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04); transform: translateY(-4px); }
+    
+    .card.visible { opacity: 1; transform: translateY(0) scale(1); }
+    .card-header { padding: 22px; background-color: var(--bg-colour); border-bottom: 1px solid #edf2f7; text-align: center; }
+    .card-header h3 { margin: 0; font-size: 17px; color: var(--primary-colour); font-weight: 800; letter-spacing: -0.3px; }
+    .card-body { max-height: 0; overflow: hidden; transition: max-height 0.8s cubic-bezier(0.25, 1, 0.5, 1), padding 0.8s ease; background-color: #ffffff; text-align: center; }
+    .card.expanded .card-body { max-height: 350px; padding: 24px; }
+    .card-body p { margin: 0; font-size: 15px; line-height: 1.65; color: #334155; font-weight: 400; }
+
+    /* --- DESIGNER MODE (The Editor) --- */
+    .designer-view { display: none; flex-direction: row; height: calc(100vh - 65px); }
+    .editor-panel { width: 45%; border-right: 1px solid var(--border); padding: 30px; overflow-y: auto; background: #fafafa; }
+    .preview-panel { width: 55%; display: flex; flex-direction: column; background: #f8fafc; }
+    .live-preview { flex: 1; padding: 20px; overflow-y: auto; display: flex; align-items: center; justify-content: center; }
+    
+    /* Attribution Block */
+    .attribution-block { background: #f3e8ff; border-left: 4px solid var(--primary-colour); padding: 15px; border-radius: 0 8px 8px 0; margin-bottom: 30px; font-size: 13px; color: #4c1d95; line-height: 1.6; }
+    .attribution-block strong { color: var(--primary-colour); }
+
+    /* Code Export Section */
+    .code-panel { height: 350px; background: #1e293b; color: #a5b4fc; padding: 16px; border-top: 1px solid var(--border); display: flex; flex-direction: column; }
+    .code-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .code-header span { font-weight: bold; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: #fff;}
+    .btn-export { background: #10b981; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; font-size: 13px; cursor: pointer; font-weight: bold; transition: opacity 0.2s;}
+    .btn-export:hover { opacity: 0.9; }
+    #code-output { width: 100%; height: 100%; background: #0f172a; color: #38bdf8; border: none; padding: 12px; font-family: monospace; border-radius: 6px; resize: none; font-size: 12px; white-space: pre;}
+
+    /* Form Controls */
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; margin-bottom: 4px; font-size: 14px; font-weight: bold; color: var(--text-main); }
+    .helper-text { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-style: italic; }
+    .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; transition: border 0.2s; background: #fff; }
+    .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary-colour); box-shadow: 0 0 0 2px rgba(138, 43, 226, 0.2); }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    
+    .item-editor { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; position: relative; border-left: 5px solid var(--primary-colour); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    .item-header { font-weight: bold; margin-bottom: 15px; color: var(--primary-colour); border-bottom: 1px solid var(--border); padding-bottom: 10px; font-size: 16px;}
+    
+    .btn-add { background: var(--primary-colour); color: #fff; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; font-size: 15px;}
+    .btn-add:hover { background: var(--accent-colour); }
+    .btn-delete { position: absolute; top: 16px; right: 16px; background: #fee2e2; color: var(--danger); border: none; padding: 6px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; font-weight: bold;}
+    .btn-delete:hover { background: var(--danger); color: #fff; }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header & State Controls -->
+  <div class="app-header">
+    <h2 class="app-title">Forged Frameworks UI Engine</h2>
+    <div style="display:flex; gap: 15px; align-items: center;">
+      <button class="btn-reset" onclick="resetAllLocks()">🔄 Reset Lock Interaction</button>
+      <div class="toggle-group">
+        <button class="mode-btn active" id="btn-learner" onclick="switchMode('learner')">Learner Mode</button>
+        <button class="mode-btn" id="btn-designer" onclick="switchMode('designer')">Designer Mode</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATE A: LEARNER VIEW -->
+  <div class="learner-view" id="learner-view">
+    <div class="widget-wrapper" id="learner-content"></div>
+  </div>
+
+  <!-- STATE B: DESIGNER VIEW -->
+  <div class="designer-view" id="designer-view">
+    <div class="editor-panel">
+      <div class="attribution-block">
+        <strong>PROJECT:</strong> Interactive Revealer Layout<br>
+        <strong>AUTHOR:</strong> Daniel Boyland<br>
+        <strong>ORGANISATION:</strong> Forged Frameworks<br>
+        <strong>VERSION:</strong> v2.1 (Contemporary Kinesthetic UI Update)<br><br>
+        <em>Update the cards below. The system automatically manages the responsive grid, accordion animation, and the 3D lock sequence. Click Export to grab the standalone HTML.</em>
+      </div>
+
+      <div id="items-editor-container"></div>
+      <button class="btn-add" onclick="addNewItem()">➕ Add New Takeaway Card</button>
+      <br><br><br>
+    </div>
+
+    <!-- Right: Live Preview & Export -->
+    <div class="preview-panel">
+      <div class="live-preview">
+        <div class="widget-wrapper" id="live-preview-content" style="transform: scale(0.85); transform-origin: top center;"></div>
+      </div>
+      <div class="code-panel">
+        <div class="code-header">
+          <span>Publish-Ready HTML</span>
+          <button class="btn-export" onclick="copyFullCode()">📋 Copy Clean HTML</button>
+        </div>
+        <textarea id="code-output" readonly></textarea>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // =====================================================================
+  // 1. THE DATA (Default: 3 Takeaway Cards)
+  // =====================================================================
+  let defaultData = {
+    "cards": [
+      {
+        "id": 1,
+        "header": "Total Cost of Ownership",
+        "body": "Total Cost of Ownership must encompass the full five-year lifecycle, including licensing, hardware, and the significant internal resource cost of regulatory validation."
+      },
+      {
+        "id": 2,
+        "header": "Technical Debt Accumulation",
+        "body": "Technical Debt is the cumulative future cost of maintaining non-scalable or poorly integrated quick-fix solutions that fail to meet ALCOA+ data integrity standards."
+      },
+      {
+        "id": 3,
+        "header": "ROI of Validated Tools",
+        "body": "High-quality, validated digital tools provide a measurable ROI by mitigating the financial risk of Out of Specification (OOS) investigations and potential regulatory fines."
+      }
+    ]
+  };
+
+  let appState = JSON.parse(localStorage.getItem('forgedTakeawaysState')) || defaultData;
+
+  // =====================================================================
+  // 2. THE ENGINE (The Rendering Logic)
+  // =====================================================================
+  function renderViewUI(containerId) {
+    const container = document.getElementById(containerId);
+    let html = `
+      <div class="interactive-container">
+        <div class="unlock-pill" onclick="triggerUnlock(this, '${containerId}')">
+          <span class="pill-text">Reveal Critical Takeaways</span>
+          <div class="icon-container">
+            <div class="hand-key-wrapper">
+              <svg class="hand-key-svg" viewBox="0 0 24 24">
+                <path d="M12.65 10A5.99 5.99 0 0 0 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6a5.99 5.99 0 0 0 5.65-4H17v4h4v-4h2v-4h-10.35zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
+                <path d="M4 12c1.5 0 3-1 5-1" stroke="#2c3e50" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <path d="M5 14c1 0 2-0.5 4-0.5" stroke="#2c3e50" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <svg class="lock-icon" viewBox="0 0 24 24">
+              <path class="shackle" d="M7 10V6c0-2.76 2.24-5 5-5s5 2.24 5 5v4h-2V6c0-1.66-1.34-3-3-3S9 4.34 9 6v4H7z" fill="#ffffff" />
+              <path d="M4 10h16v12H4V10zm8 3c-.83 0-1.5.67-1.5 1.5 0 .53.28 1 .7 1.28l-.7 2.72h3l-.7-2.72c.42-.28.7-.75.7-1.28 0-.83-.67-1.5-1.5-1.5z" fill="#ffffff" fill-rule="evenodd" />
+            </svg>
+          </div>
+        </div>
+        <div class="cards-wrapper" id="cardsArea_${containerId}">
+    `;
+
+    appState.cards.forEach(card => {
+      html += `
+        <div class="card">
+          <div class="card-header"><h3>${card.header}</h3></div>
+          <div class="card-body"><p>${card.body}</p></div>
+        </div>
+      `;
+    });
+
+    html += `</div></div>`;
+    container.innerHTML = html;
+  }
+
+  function triggerUnlock(pillElement, containerId) {
+    if (pillElement.classList.contains('unlocked')) return;
+    pillElement.classList.add('unlocked');
+    setTimeout(() => {
+      pillElement.classList.add('fade-out');
+      setTimeout(() => {
+        pillElement.style.display = 'none';
+        const cardsArea = document.getElementById(`cardsArea_${containerId}`);
+        const cards = cardsArea.querySelectorAll('.card');
+        cards.forEach((card, index) => {
+          setTimeout(() => { card.classList.add('visible', 'expanded'); }, index * 300); 
+        });
+      }, 500); 
+    }, 1400); // Extended delay to allow full snap and ripple animations to play
+  }
+
+  function resetAllLocks() {
+    renderViewUI('learner-content');
+    renderViewUI('live-preview-content');
+  }
+
+  function renderEditorUI() {
+    const container = document.getElementById('items-editor-container');
+    let html = '';
+    appState.cards.forEach((card, index) => {
+      let safeHeader = card.header.replace(/"/g, '&quot;');
+      html += `
+        <div class="item-editor">
+          <div class="item-header">Takeaway Panel ${index + 1}</div>
+          <button class="btn-delete" onclick="deleteItem(${card.id})">🗑️ Remove</button>
+          <div class="form-group">
+            <label>Header Title</label>
+            <input type="text" value="${safeHeader}" oninput="updateItem(${card.id}, 'header', this.value)">
+          </div>
+          <div class="form-group">
+            <label>Key Takeaway Text</label>
+            <textarea oninput="updateItem(${card.id}, 'body', this.value)">${card.body}</textarea>
+          </div>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+  }
+
+  // =====================================================================
+  // 3. THE COMPILER (Generates CLEAN Payload HTML with requested Header)
+  // =====================================================================
+  function generateCleanHTML() {
+    const cleanJSON = JSON.stringify(appState, null, 4);
+    
+    return `<!--
+==============================================================================
+PROJECT: Forged Frameworks - VLE Automated Curriculum Pipeline (vC4)
+AUTHOR: Daniel Boyland
+ORGANISATION: Forged Frameworks
+DESCRIPTION: Key Critical Takeaways (Standalone Learner Payload)
+==============================================================================
+-->
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Key Takeaways Revealer</title>
+  <style>
+    :root {
+      --primary-colour: #8a2be2;
+      --accent-colour: #7721c5;
+      --bg-colour: #f8f4fc; 
+    }
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 450px; }
+    .interactive-container { position: relative; width: 100%; max-width: 900px; display: flex; flex-direction: column; align-items: center; }
+    
+    .unlock-pill { background-color: var(--primary-colour); color: #ffffff; padding: 16px 44px; border-radius: 50px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 20px; box-shadow: 0 4px 6px -1px rgba(138, 43, 226, 0.2), 0 2px 4px -1px rgba(138, 43, 226, 0.1); transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); position: absolute; z-index: 10; }
+    .unlock-pill:hover { transform: translateY(-2px) scale(1.02); background-color: var(--accent-colour); box-shadow: 0 20px 25px -5px rgba(138, 43, 226, 0.25), 0 10px 10px -5px rgba(138, 43, 226, 0.1); }
+    .pill-text { font-size: 18px; font-weight: 600; letter-spacing: 0.5px; }
+    
+    .icon-container { display: flex; align-items: center; position: relative; width: 100px; height: 48px; perspective: 400px; }
+    .icon-container::after { content: ''; position: absolute; top: 50%; left: 75%; transform: translate(-50%, -50%) scale(0); width: 60px; height: 60px; border-radius: 50%; background: rgba(255, 255, 255, 0.5); opacity: 0; pointer-events: none; z-index: 1; }
+    .unlock-pill.unlocked .icon-container::after { animation: unlockRipple 0.8s ease-out 0.4s forwards; }
+    @keyframes unlockRipple { 0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; } }
+    
+    .hand-key-wrapper { position: absolute; left: -15px; width: 44px; height: 44px; transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 3; }
+    .hand-key-svg { width: 100%; height: 100%; fill: #f1c40f; transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); transform-style: preserve-3d; transform-origin: center right; }
+    .lock-icon { width: 48px; height: 48px; fill: #ffffff; position: absolute; right: 0; overflow: visible; z-index: 2; transition: transform 0.3s ease; }
+    .shackle { transform-origin: 16px 10px; transform-box: view-box; transition: transform 0.6s cubic-bezier(0.5, 2.5, 0.4, 1); }
+    
+    .unlock-pill:hover .hand-key-wrapper { transform: translateX(40px); }
+    .unlock-pill.unlocked .hand-key-wrapper { transform: translateX(40px); }
+    .unlock-pill.unlocked .hand-key-svg { transform: rotateX(180deg) scale(0.92); }
+    .unlock-pill.unlocked .lock-icon { transform: translateY(2px); transition-delay: 0.4s; }
+    .unlock-pill.unlocked .shackle { transition-delay: 0.4s; transform: translateY(-5px) rotate(35deg); }
+    .unlock-pill.fade-out { opacity: 0; transform: translateY(10px) scale(0.9); pointer-events: none; }
+    
+    .cards-wrapper { display: flex; gap: 20px; width: 100%; position: relative; z-index: 5; flex-wrap: wrap; justify-content: center; padding-top: 80px; }
+    .card { flex: 1; min-width: 250px; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025); overflow: hidden; border-top: 5px solid var(--primary-colour); opacity: 0; transform: translateY(30px) scale(0.95); transition: opacity 0.7s cubic-bezier(0.25, 1, 0.5, 1), transform 0.7s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease; }
+    .card:hover { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04); transform: translateY(-4px); }
+    .card.visible { opacity: 1; transform: translateY(0) scale(1); }
+    .card-header { padding: 22px; background-color: var(--bg-colour); border-bottom: 1px solid #edf2f7; text-align: center; }
+    .card-header h3 { margin: 0; font-size: 17px; color: var(--primary-colour); font-weight: 800; letter-spacing: -0.3px; }
+    .card-body { max-height: 0; overflow: hidden; transition: max-height 0.8s cubic-bezier(0.25, 1, 0.5, 1), padding 0.8s ease; background-color: #ffffff; text-align: center; }
+    .card.expanded .card-body { max-height: 350px; padding: 24px; }
+    .card-body p { margin: 0; font-size: 15px; line-height: 1.65; color: #334155; font-weight: 400; }
+  </style>
+</head>
+<body>
+  <div class="interactive-container" id="app-root"></div>
+  <script>
+    const appState = ${cleanJSON};
+    function renderUI() {
+      const container = document.getElementById('app-root');
+      let html = \`
+        <div class="unlock-pill" id="pillButton" onclick="triggerUnlock()">
+          <span class="pill-text">Reveal Critical Takeaways</span>
+          <div class="icon-container">
+            <div class="hand-key-wrapper">
+              <svg class="hand-key-svg" viewBox="0 0 24 24">
+                <path d="M12.65 10A5.99 5.99 0 0 0 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6a5.99 5.99 0 0 0 5.65-4H17v4h4v-4h2v-4h-10.35zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
+                <path d="M4 12c1.5 0 3-1 5-1" stroke="#2c3e50" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <path d="M5 14c1 0 2-0.5 4-0.5" stroke="#2c3e50" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <svg class="lock-icon" viewBox="0 0 24 24">
+              <path class="shackle" d="M7 10V6c0-2.76 2.24-5 5-5s5 2.24 5 5v4h-2V6c0-1.66-1.34-3-3-3S9 4.34 9 6v4H7z" fill="#ffffff" />
+              <path d="M4 10h16v12H4V10zm8 3c-.83 0-1.5.67-1.5 1.5 0 .53.28 1 .7 1.28l-.7 2.72h3l-.7-2.72c.42-.28.7-.75.7-1.28 0-.83-.67-1.5-1.5-1.5z" fill="#ffffff" fill-rule="evenodd" />
+            </svg>
+          </div>
+        </div>
+        <div class="cards-wrapper" id="cardsArea">
+      \`;
+      appState.cards.forEach(card => {
+        html += \`
+          <div class="card">
+            <div class="card-header"><h3>\${card.header}</h3></div>
+            <div class="card-body"><p>\${card.body}</p></div>
+          </div>
+        \`;
+      });
+      html += \`</div>\`;
+      container.innerHTML = html;
+    }
+    function triggerUnlock() {
+      const pill = document.getElementById('pillButton');
+      if (pill.classList.contains('unlocked')) return;
+      pill.classList.add('unlocked');
+      setTimeout(() => {
+        pill.classList.add('fade-out');
+        setTimeout(() => {
+          pill.style.display = 'none';
+          const cards = document.querySelectorAll('.card');
+          cards.forEach((card, index) => {
+            setTimeout(() => card.classList.add('visible', 'expanded'), index * 300); 
+          });
+        }, 500); 
+      }, 1400); 
+    }
+    renderUI();
+  <\/script>
+</body>
+</html>`;
+  }
+
+  function updateCodeOutput() {
+    document.getElementById('code-output').value = generateCleanHTML();
+  }
+
+  function saveAndRender() {
+    localStorage.setItem('forgedTakeawaysState', JSON.stringify(appState));
+    renderViewUI('learner-content');
+    renderViewUI('live-preview-content');
+    updateCodeOutput();
+  }
+
+  function updateItem(id, key, value) {
+    const item = appState.cards.find(i => i.id === id);
+    if (item) { item[key] = value; saveAndRender(); }
+  }
+
+  function addNewItem() {
+    appState.cards.push({ id: Date.now(), header: "New Key Takeaway", body: "Detailed statement goes here." });
+    renderEditorUI(); saveAndRender();
+  }
+
+  function deleteItem(id) {
+    if(confirm("Remove this panel?")) { 
+      appState.cards = appState.cards.filter(i => i.id !== id); 
+      renderEditorUI(); saveAndRender(); 
+    }
+  }
+
+  function switchMode(mode) {
+    document.getElementById('btn-learner').className = 'mode-btn' + (mode === 'learner' ? ' active' : '');
+    document.getElementById('btn-designer').className = 'mode-btn' + (mode === 'designer' ? ' active' : '');
+    document.getElementById('learner-view').style.display = mode === 'learner' ? 'flex' : 'none';
+    document.getElementById('designer-view').style.display = mode === 'designer' ? 'flex' : 'none';
+  }
+
+  function copyFullCode() {
+    const output = document.getElementById('code-output');
+    output.select();
+    document.execCommand('copy');
+    alert('✅ Clean Learner HTML copied!');
+  }
+
+  function initApp() { renderEditorUI(); saveAndRender(); }
+  initApp();
+
+</script>
+</body>
+</html>

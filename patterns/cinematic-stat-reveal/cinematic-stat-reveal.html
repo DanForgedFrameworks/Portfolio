@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cinematic Stat Reveal — RiseBlocks</title>
+<style>
+  /* ============================================================
+     CINEMATIC STAT REVEAL — RiseBlocks
+     Version 2.0
+
+     HOW TO CUSTOMISE:
+     1. Update stats, labels and reflection prompts below
+        (search for CUSTOMISE HERE)
+     2. Change accent colour: replace all #8C395C with your hex
+        and update the matching rgba() values in :root
+     3. Update the intro/title card text
+     4. Update the source note at the bottom
+     See the included Customisation Guide for full instructions.
+  ============================================================ */
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* --- Accent colour — change these to retheme everything --- */
+  :root {
+    --accent:        #bc6c3c;
+    --accent-light:  #e09a6b;
+    --accent-glow:   rgba(188, 108, 60, 0.15);
+    --accent-border: rgba(188, 108, 60, 0.25);
+    --accent-hover:  rgba(188, 108, 60, 0.20);
+    --accent-shadow: rgba(188, 108, 60, 0.50);
+  }
+
+  .csrb-scene {
+    background: #080808;
+    min-height: 680px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 32px 48px;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  /* --- Title card overlay --- */
+  .csrb-title-card {
+    position: absolute;
+    inset: 0;
+    background: #080808;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    opacity: 1;
+    transition: opacity 0.9s ease;
+    pointer-events: none;
+  }
+  .csrb-title-card.gone { opacity: 0; pointer-events: none; }
+
+  .csrb-title-eyebrow {
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.2);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    margin-bottom: 20px;
+  }
+  .csrb-title-eyebrow.show { opacity: 1; transform: translateY(0); }
+
+  .csrb-title-main {
+    font-family: 'Bebas Neue', Impact, 'Arial Narrow', Arial, sans-serif;
+    font-size: 52px;
+    color: #ffffff;
+    letter-spacing: 0.04em;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
+    line-height: 1;
+  }
+  .csrb-title-main.show { opacity: 1; transform: translateY(0); }
+
+  .csrb-title-rule {
+    width: 0;
+    height: 2px;
+    background: var(--accent);
+    margin-top: 20px;
+    transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s;
+  }
+  .csrb-title-rule.show { width: 80px; }
+
+  /* --- Scan line wipe --- */
+  .csrb-scanline {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    z-index: 10;
+    opacity: 0;
+    box-shadow: 0 0 12px var(--accent-shadow), 0 0 40px var(--accent-glow);
+  }
+
+  /* --- Stats stack --- */
+  .csrb-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 100%;
+    max-width: 700px;
+    opacity: 0;
+    transition: opacity 0.01s;
+  }
+  .csrb-stack.ready { opacity: 1; }
+
+  /* --- Individual stat row --- */
+  .csrb-row {
+    display: flex;
+    align-items: stretch;
+    background: #111111;
+    border-radius: 6px;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateX(-24px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    position: relative;
+  }
+  .csrb-row.animate { opacity: 1; transform: translateX(0); }
+  .csrb-row.flash   { background: #1e1218; }
+
+  /* Left accent bar */
+  .csrb-row::before {
+    content: '';
+    width: 4px;
+    background: var(--accent);
+    flex-shrink: 0;
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .csrb-row.animate::before  { transform: scaleY(1); }
+  .csrb-row:nth-child(2)::before { background: var(--accent-light); }
+
+  /* Pulse on arrival */
+  @keyframes csrb-pulse {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.015); }
+    100% { transform: scale(1); }
+  }
+  .csrb-row.pulse { animation: csrb-pulse 0.5s ease forwards; }
+
+  /* Number column */
+  .csrb-num-col {
+    padding: 32px 28px;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    flex-shrink: 0;
+    min-width: 200px;
+  }
+
+  .csrb-number {
+    font-family: 'Bebas Neue', Impact, 'Arial Narrow', Arial, sans-serif;
+    font-size: 120px;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+  }
+
+  .csrb-suffix {
+    font-family: 'Bebas Neue', Impact, 'Arial Narrow', Arial, sans-serif;
+    font-size: 48px;
+    color: var(--accent);
+    line-height: 1;
+    align-self: flex-start;
+    padding-top: 14px;
+  }
+  .csrb-row:nth-child(2) .csrb-suffix { color: var(--accent-light); }
+
+  /* Content column */
+  .csrb-content-col {
+    padding: 32px 28px 28px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+    flex: 1;
+    min-width: 0;
+  }
+
+  .csrb-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.35);
+    margin-bottom: 8px;
+    opacity: 0;
+    transition: opacity 0.5s ease 0.3s;
+  }
+  .csrb-row.animate .csrb-label { opacity: 1; }
+
+  .csrb-desc {
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.6;
+    opacity: 0;
+    transition: opacity 0.5s ease 0.4s;
+  }
+  .csrb-row.animate .csrb-desc { opacity: 1; }
+
+  /* Learn more button */
+  .csrb-learn-btn {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(188, 108, 60, 0.95);
+    background: transparent;
+    border: 1px solid var(--accent-border);
+    border-radius: 4px;
+    padding: 6px 14px;
+    cursor: pointer;
+    margin-top: 14px;
+    align-self: flex-start;
+    opacity: 0;
+    transition:
+      opacity 0.5s ease 0.55s,
+      background 0.2s ease,
+      color 0.2s ease,
+      border-color 0.2s ease;
+  }
+  .csrb-row.animate .csrb-learn-btn { opacity: 1; }
+  .csrb-learn-btn:hover { background: var(--accent-hover); color: #fff; border-color: var(--accent); }
+  .csrb-learn-btn.open  { background: var(--accent-hover); color: #fff; border-color: var(--accent); }
+
+  /* Reflection panel */
+  .csrb-reflect-wrap {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+  }
+  .csrb-reflect-wrap.open { max-height: 400px; opacity: 1; }
+
+  .csrb-reflect-inner {
+    margin-top: 14px;
+    background: var(--accent-glow);
+    border: 1px solid var(--accent-border);
+    border-radius: 5px;
+    padding: 14px 16px;
+  }
+  .csrb-reflect-tag {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .csrb-reflect-text {
+    font-size: 13px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.72);
+    line-height: 1.7;
+  }
+
+  /* Footer */
+  .csrb-footer {
+    margin-top: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 700px;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+  .csrb-footer.show { opacity: 1; }
+
+  .csrb-replay-btn {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.25);
+    background: transparent;
+    border: 1px solid rgba(188, 108, 60, 0.3);
+    border-radius: 4px;
+    padding: 8px 20px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+  }
+  .csrb-replay-btn:hover { color: #fff; border-color: var(--accent); background: var(--accent-hover); }
+
+  .csrb-source {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.12);
+    letter-spacing: 0.04em;
+  }
+
+  /* Start button on title card */
+  .csrb-start-btn {
+    margin-top: 32px;
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    background: transparent;
+    border: 1px solid rgba(188,108,60,0.5);
+    border-radius: 4px;
+    padding: 10px 28px;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.8s ease 0.9s, transform 0.8s ease 0.9s, background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .csrb-start-btn.show { opacity: 1; transform: translateY(0); }
+  .csrb-start-btn:hover { color: #fff; border-color: var(--accent); background: var(--accent-hover); }
+
+  /* Responsive */
+  @media (max-width: 560px) {
+    .csrb-num-col  { min-width: 140px; padding: 24px 16px; }
+    .csrb-number   { font-size: 80px; }
+    .csrb-suffix   { font-size: 32px; }
+    .csrb-scene    { padding: 40px 16px 36px; }
+    .csrb-title-main { font-size: 36px; }
+  }
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap">
+
+</head>
+<body>
+
+<!-- ============================================================
+     CINEMATIC STAT REVEAL v2.0
+     Paste everything from <div class="csrb-scene"> to its
+     closing </div> into your Articulate Rise Custom HTML block.
+============================================================ -->
+
+<div class="csrb-scene" id="csrb-scene">
+
+  <!-- Title card (fades out before stats appear) -->
+  <div class="csrb-title-card" id="csrb-title-card">
+    <!-- CUSTOMISE HERE: eyebrow line above the title -->
+    <div class="csrb-title-eyebrow" id="csrb-title-eye">Impact across L3–L6 builds</div>
+    <!-- CUSTOMISE HERE: main title card headline -->
+    <div class="csrb-title-main" id="csrb-title-main">The numbers that matter</div>
+    <div class="csrb-title-rule" id="csrb-title-rule"></div>
+    <button class="csrb-start-btn" id="csrb-start-btn">Begin</button>
+  </div>
+
+  <!-- Scan line wipe effect -->
+  <div class="csrb-scanline" id="csrb-scanline"></div>
+
+  <!-- Stats stack -->
+  <div class="csrb-stack" id="csrb-stack">
+
+    <!-- ── STAT 1 ── -->
+    <div class="csrb-row" id="csrb-row-0">
+      <div class="csrb-num-col">
+        <!-- CUSTOMISE HERE:
+             data-target = the final number displayed
+             data-over   = the overshoot value (slightly above target for impact)
+             Recommended overshoot: target + 3 to 5 -->
+        <div class="csrb-number"><span class="csrb-count" data-target="100" data-over="100">0</span></div>
+        <!-- CUSTOMISE HERE: suffix symbol (%, x, in 8, etc.) -->
+        <div class="csrb-suffix">%</div>
+      </div>
+      <div class="csrb-content-col">
+        <!-- CUSTOMISE HERE: short label (2–5 words) -->
+        <div class="csrb-label">Learner pass rate · up from 50%</div>
+        <!-- CUSTOMISE HERE: one-line description -->
+        <div class="csrb-desc">A specialist module redesigned accessibility-first took apprentice pass rates from 50% to a full 100%.</div>
+        <button class="csrb-learn-btn" data-idx="0">Learn more</button>
+        <div class="csrb-reflect-wrap" id="csrb-rw-0">
+          <div class="csrb-reflect-inner">
+            <!-- CUSTOMISE HERE: panel tag label -->
+            <span class="csrb-reflect-tag">How</span>
+            <!-- CUSTOMISE HERE: fuller explanation or reflection prompt -->
+            <p class="csrb-reflect-text">Rebuilt around clear learning objectives, inclusive design and interactive checks for understanding — so every learner could reach the standard, not just pass on average.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── STAT 2 ── -->
+    <div class="csrb-row" id="csrb-row-1">
+      <div class="csrb-num-col">
+        <div class="csrb-number"><span class="csrb-count" data-target="30" data-over="34">0</span></div>
+        <!-- Text suffix example — adjust font-size to fit longer text -->
+        <div class="csrb-suffix">%</div>
+      </div>
+      <div class="csrb-content-col">
+        <div class="csrb-label">SME time saved per module</div>
+        <div class="csrb-desc">The Catalyst GenAI pipeline cuts subject-matter-expert authoring time by around 30% on every module.</div>
+        <button class="csrb-learn-btn" data-idx="1">Learn more</button>
+        <div class="csrb-reflect-wrap" id="csrb-rw-1">
+          <div class="csrb-reflect-inner">
+            <span class="csrb-reflect-tag">How</span>
+            <p class="csrb-reflect-text">An agentic, human-assured pipeline drafts, levels and QA-checks a full document set from a single scheme of work — freeing experts to review rather than write from scratch.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── STAT 3 ── -->
+    <div class="csrb-row" id="csrb-row-2">
+      <div class="csrb-num-col">
+        <div class="csrb-number"><span class="csrb-count" data-target="95" data-over="99">0</span></div>
+        <div class="csrb-suffix">%+</div>
+      </div>
+      <div class="csrb-content-col">
+        <div class="csrb-label">Module completion rate</div>
+        <div class="csrb-desc">Engagement bookends and interactive blocks keep module completion rates above 95%.</div>
+        <button class="csrb-learn-btn" data-idx="2">Learn more</button>
+        <div class="csrb-reflect-wrap" id="csrb-rw-2">
+          <div class="csrb-reflect-inner">
+            <span class="csrb-reflect-tag">How</span>
+            <p class="csrb-reflect-text">Reflective bookends, self-checks and varied interactions give learners reasons to keep going — turning passive content into a journey they finish.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="csrb-footer" id="csrb-footer">
+    <button class="csrb-replay-btn" id="csrb-replay">Replay</button>
+    <!-- CUSTOMISE HERE: source attribution -->
+    <span class="csrb-source">Forged Frameworks — outcomes across L3–L6 builds</span>
+  </div>
+
+</div>
+
+<script>
+(function () {
+
+  function easeOutExpo(t) {
+    return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+  }
+
+  /* Smooth count-up: eases 0 → target. p is hard-clamped to [0,1] so the
+     output can never be negative, decimal, Infinity, or above target —
+     regardless of any timing/cache oddities. */
+  function countUp(el, target, overshoot, duration, delay) {
+    setTimeout(function () {
+      var start = performance.now();
+      var done = false;
+      function finish() { if (!done) { done = true; el.textContent = target; } }
+      function tick(now) {
+        if (done) return;
+        var p = (now - start) / duration;
+        if (!(p > 0)) p = 0;            /* catches negative AND NaN */
+        if (p > 1) p = 1;
+        var eased = 1 - Math.pow(2, -10 * p);   /* p∈[0,1] ⇒ eased∈[0,~1) */
+        el.textContent = Math.round(eased * target);
+        if (p < 1) requestAnimationFrame(tick);
+        else finish();
+      }
+      requestAnimationFrame(tick);
+      /* Safety net: rAF is throttled/paused inside off-screen or embedded
+         iframes, which can leave the counter stuck at 0. Guarantee the final
+         value lands regardless. */
+      setTimeout(finish, duration + 300);
+    }, delay);
+  }
+
+  /* Scan line sweeps top to bottom */
+  function runScanline() {
+    var sl     = document.getElementById('csrb-scanline');
+    var sceneH = document.getElementById('csrb-scene').offsetHeight;
+    sl.style.transition = 'none';
+    sl.style.transform  = 'translateY(0)';
+    sl.style.opacity    = '1';
+    requestAnimationFrame(function () {
+      sl.style.transition = 'transform 1.1s cubic-bezier(0.4, 0, 0.2, 1)';
+      sl.style.transform  = 'translateY(' + sceneH + 'px)';
+      setTimeout(function () { sl.style.opacity = '0'; }, 1100);
+    });
+  }
+
+  function showTitleCard() {
+    var sb = document.getElementById('csrb-start-btn');
+    sb.style.pointerEvents = 'auto';
+    setTimeout(function () { document.getElementById('csrb-title-eye').classList.add('show'); }, 300);
+    setTimeout(function () { document.getElementById('csrb-title-main').classList.add('show'); }, 600);
+    setTimeout(function () { document.getElementById('csrb-title-rule').classList.add('show'); }, 800);
+    setTimeout(function () { sb.classList.add('show'); }, 1000);
+  }
+
+  function resetAll() {
+    var tc = document.getElementById('csrb-title-card');
+    tc.classList.remove('gone');
+    tc.style.transition = 'none';
+    tc.style.opacity = '';
+    void tc.offsetWidth; /* force reflow so transition:none takes effect */
+
+    ['csrb-title-eye', 'csrb-title-main', 'csrb-title-rule', 'csrb-start-btn'].forEach(function (id) {
+      document.getElementById(id).classList.remove('show');
+    });
+
+    document.getElementById('csrb-stack').classList.remove('ready');
+    document.getElementById('csrb-footer').classList.remove('show');
+
+    var sl = document.getElementById('csrb-scanline');
+    sl.style.transition = 'none';
+    sl.style.opacity = '0';
+    sl.style.transform = 'translateY(0)';
+
+    document.querySelectorAll('.csrb-row').forEach(function (row) {
+      row.classList.remove('animate', 'pulse', 'flash');
+      row.querySelector('.csrb-count').textContent = '0';
+      var btn = row.querySelector('.csrb-learn-btn');
+      btn.classList.remove('open');
+      btn.textContent = 'Learn more';
+      row.querySelector('.csrb-reflect-wrap').classList.remove('open');
+    });
+  }
+
+  function playStats() {
+    var tc = document.getElementById('csrb-title-card');
+    tc.style.transition = 'opacity 0.9s ease';
+    tc.classList.add('gone');
+    setTimeout(function () { tc.style.transition = ''; }, 950);
+    document.getElementById('csrb-stack').classList.add('ready');
+    runScanline();
+
+    var rows = document.querySelectorAll('.csrb-row');
+    var rowDelays = [700, 1250, 1800];
+    rows.forEach(function (row, i) {
+      setTimeout(function () {
+        row.classList.add('animate');
+        var counter   = row.querySelector('.csrb-count');
+        var target    = parseInt(counter.dataset.target, 10);
+        var overshoot = parseInt(counter.dataset.over, 10);
+        countUp(counter, target, overshoot, 900, 80);
+        setTimeout(function () {
+          row.classList.add('pulse');
+          row.classList.add('flash');
+          setTimeout(function () { row.classList.remove('flash'); }, 300);
+        }, 200);
+      }, rowDelays[i]);
+    });
+
+    setTimeout(function () { document.getElementById('csrb-footer').classList.add('show'); }, 3000);
+  }
+
+  /* Start button */
+  document.getElementById('csrb-start-btn').addEventListener('click', function () {
+    this.style.pointerEvents = 'none';
+    playStats();
+  });
+
+  /* Replay button */
+  document.getElementById('csrb-replay').addEventListener('click', function () {
+    resetAll();
+    setTimeout(showTitleCard, 50);
+  });
+
+  /* Learn more toggles */
+  document.querySelectorAll('.csrb-learn-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var idx  = this.dataset.idx;
+      var rw   = document.getElementById('csrb-rw-' + idx);
+      var open = rw.classList.contains('open');
+      rw.classList.toggle('open', !open);
+      this.classList.toggle('open', !open);
+      this.textContent = open ? 'Learn more' : 'Close';
+    });
+  });
+
+  /* Kick off title card immediately on script execution */
+  showTitleCard();
+
+}());
+</script>
+
+</body>
+</html>

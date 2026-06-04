@@ -1,0 +1,406 @@
+
+<!--
+==============================================================================
+PROJECT: Forged Frameworks - VLE Automated Curriculum Pipeline (vC4)
+AUTHOR: Daniel Boyland
+ORGANISATION: Forged Frameworks
+DESCRIPTION: Interactive Strategic Communication Workbook.
+VERSION: v1.0.0 (Chiral Analysis & Racemic Mixtures)
+==============================================================================
+SCRIPT ROLE: THE COMMUNICATOR
+FUNCTION: Renders an interactive side-by-side comparison tool for drafting
+and evaluating technical project justifications, using analogies
+to explain complex chirality concepts to non-scientific stakeholders.
+==============================================================================
+-->
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Strategic Communication | Interactive Workbook</title>
+
+  <style>
+    :root {
+      --bg1: #f3e8ff;
+      --bg2: #faf5ff;
+      --bg3: #ffffff;
+      --text: #111827;
+      --muted: #4b5563;
+      --accent: #7c3aed;
+      --accent-dark: #6d28d9;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --border: rgba(109, 40, 217, 0.28);
+      --shadow: 0 12px 30px rgba(0,0,0,0.1);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 20px 24px 100px;
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(180deg, var(--bg1), var(--bg2) 40%, var(--bg3));
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* FLUID BACKGROUND ANIMATION */
+    .bg-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+    .bg-layer svg {
+      position: absolute;
+      width: 150%; height: 150%;
+      top: -25%; left: -25%;
+      opacity: 0.4;
+      filter: blur(2px);
+    }
+    .wave-path {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 2;
+      stroke-dasharray: 15 25;
+      opacity: 0.3;
+      animation: flowWave 25s linear infinite;
+    }
+    @keyframes flowWave { from { stroke-dashoffset: 1000; } to { stroke-dashoffset: 0; } }
+    .particle {
+      position: absolute;
+      width: 14px; height: 14px;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      opacity: 0.4;
+      animation: drift 20s linear infinite;
+    }
+    @keyframes drift {
+      from { transform: translate3d(-10vw, 80vh, 0) rotate(0deg); }
+      to   { transform: translate3d(110vw, 10vh, 0) rotate(360deg); }
+    }
+
+    .wrap { width: 100%; max-width: 1100px; position: relative; z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 20px;}
+
+    .top-controls { display: flex; justify-content: flex-end; width: 100%; margin-bottom: -10px; }
+    .btn-toggle {
+      appearance: none;
+      background: var(--accent);
+      color: #ffffff;
+      border: 1px solid var(--accent-dark);
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-weight: bold;
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(124,58,237,0.25);
+    }
+
+    .header {
+      text-align: center;
+      padding: 24px;
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(12px);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      width: 100%;
+    }
+    .header h1 { font-size: 28px; color: #1e1b4b; margin: 0; }
+
+    .content-block {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 30px;
+      width: 100%;
+      backdrop-filter: blur(6px);
+      margin-bottom: 20px;
+    }
+
+    .stop-think {
+      background: #fffbeb;
+      border-left: 5px solid #f59e0b;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 20px 0;
+    }
+    .stop-think h3 { margin: 0 0 10px 0; color: #92400e; }
+
+    /* INPUT SECTION (FULL WIDTH) */
+    .input-section { margin: 25px 0; width: 100%; animation: fadeIn 0.5s ease; }
+    .input-section label { display: block; font-weight: bold; margin-bottom: 15px; color: #1e1b4b; font-size: 16px;}
+    .writing-textarea {
+      width: 100%;
+      min-height: 200px;
+      padding: 20px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-size: 15px;
+      font-family: inherit;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    /* SIDE BY SIDE COMPARISON */
+    .comparison-grid {
+      display: none; /* Hidden until saved */
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin: 25px 0;
+      align-items: start;
+      animation: fadeIn 0.8s ease;
+    }
+    .grid-panel { display: flex; flex-direction: column; }
+    .grid-panel label { font-weight: bold; margin-bottom: 12px; display: block; color: #1e1b4b; font-size: 16px; border-bottom: 2px solid rgba(124, 58, 237, 0.1); padding-bottom: 8px;}
+    
+    .user-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 20px;
+      font-size: 15px;
+      white-space: pre-wrap;
+      color: #334155;
+      min-height: 100%;
+    }
+
+    .model-box {
+      background: #f0fdf4;
+      border: 2px solid #16a34a;
+      border-radius: 12px;
+      padding: 20px;
+      font-size: 14.5px;
+      min-height: 100%;
+    }
+    .model-box strong { color: #166534; }
+
+    /* REFLECTION SECTION */
+    .reflection-block {
+      display: none;
+      margin-top: 30px;
+      animation: fadeIn 0.8s ease;
+      background: #f8fafc;
+      padding: 25px;
+      border-radius: 15px;
+      border: 1px solid #e2e8f0;
+    }
+
+    /* DISCUSSION HEADER */
+    .discussion-header {
+      background: #eff6ff;
+      border: 1px solid #3b82f6;
+      padding: 20px 25px;
+      border-radius: 15px;
+      margin-top: 30px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      animation: fadeIn 0.8s ease;
+    }
+    .discussion-header .icon { font-size: 28px; }
+    .discussion-header p { margin: 0; font-size: 15px; color: #1e3a8a; line-height: 1.5; }
+    .prompt-text { font-weight: bold; font-style: italic; display: block; margin-top: 8px; color: #1e40af;}
+
+    .btn {
+      padding: 14px 28px;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: var(--accent); color: white; margin-top: 15px; }
+    .btn-primary:hover:not(:disabled) { background: var(--accent-dark); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(124,58,237,0.3); }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .export-btn {
+      background: #111827;
+      color: #fff;
+      padding: 16px 36px;
+      border-radius: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 30px;
+      display: none;
+      transition: all 0.3s;
+    }
+    .export-btn:hover { background: #000; transform: translateY(-2px); }
+
+    .nav-hint-box {
+      margin-top: 20px;
+      padding: 12px 20px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-align: center;
+      width: 100%;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    
+    @media (max-width: 800px) {
+        .comparison-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-layer" id="bgLayer">
+    <svg viewBox="0 0 1200 800" preserveAspectRatio="none">
+        <path class="wave-path" d="M0,400 Q300,100 600,400 T1200,400" />
+        <path class="wave-path" d="M0,500 Q300,200 600,500 T1200,500" style="animation-delay: -5s;" />
+    </svg>
+    <span class="particle" style="top:20%; left:10%; animation-duration: 25s;"></span>
+    <span class="particle" style="top:60%; left:30%; animation-duration: 18s;"></span>
+    <span class="particle" style="top:40%; left:80%; animation-duration: 22s;"></span>
+  </div>
+
+  <div class="wrap">
+    <div class="top-controls">
+      <button class="btn-toggle" id="toggleBgBtn" onclick="toggleBg()">Background Animation: On</button>
+    </div>
+
+    <div class="header">
+      <h1>Technical Project Justification</h1>
+      <p>Explaining chiral analysis and racemic mixtures to non-scientific stakeholders.</p>
+    </div>
+
+    <div class="content-block">
+      <h2>The Scenario</h2>
+      <p>As a <strong>Laboratory Scientist</strong>, you must frequently justify the high costs of specialised analytical techniques to project managers who lack a scientific background. Clear communication ensures that necessary safety and regulatory steps remain in the project budget.</p>
+
+      <div class="stop-think">
+        <h3>🛑 Stop & Think: Framing the Problem</h3>
+        <p>Project managers focus on outcomes, budgets, and risks. When explaining <strong>racemic mixtures</strong>, how can you use a familiar everyday object to illustrate why 'half the batch' might be useless or even dangerous?</p>
+      </div>
+
+      <div id="initialDraftingBlock">
+          <div class="input-section">
+            <label>Task: Draft a one-paragraph summary for a non-scientist project manager explaining why the project budget needs specialised chiral analysis and purification. Use the analogy of 'a batch of right-handed gloves contaminated with left-handed ones'.</label>
+            <textarea class="writing-textarea" id="userDraft" placeholder="Draft your summary here..."></textarea>
+          </div>
+
+          <div style="text-align:center;">
+            <button class="btn btn-primary" onclick="revealModel()">Save & Compare Against Model Response</button>
+          </div>
+      </div>
+
+      <div class="comparison-grid" id="comparisonGrid">
+        <div class="grid-panel">
+          <label>Your Drafted Summary</label>
+          <div class="user-box" id="dispUserBox"></div>
+        </div>
+
+        <div class="grid-panel" id="modelStrategicResponse">
+          <label>Model Strategic Response</label>
+          <div class="model-box">
+            <p>In drug development, many molecules exist in two mirror-image forms, similar to <strong>right-handed and left-handed gloves</strong>. Although they look almost identical chemically, the human body can react very differently to each one.</p>
+            <p>If our manufacturing process produces a mixture of both forms (a <strong>racemic mixture</strong>), it is like shipping a batch of right-handed gloves contaminated with left-handed ones—half of the product may not fit the intended user. One form may provide the desired therapeutic effect while the other could be inactive or potentially harmful.</p>
+            <p>For this reason, regulators such as the European Medicines Agency and the Medicines and Healthcare products Regulatory Agency require companies to measure and tightly control these mirror-image impurities. This means the project budget must include specialised <strong>chiral analysis</strong> (to measure how much of each form is present) and <strong>purification steps</strong> (to remove the unwanted one) to ensure the medicine meets safety, quality, and regulatory standards before it can be approved.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reflection-block" id="reflectionBlock">
+        <label style="font-weight:bold; display:block; margin-bottom:12px; font-size:16px; color:#1e1b4b;">Compare your draft with the model answer above.</label>
+        <p style="margin-top:0; margin-bottom:15px; color:#4b5563;">Based on this review, identify any further comments, adjustments, or key learning points you wish to add to your notes:</p>
+        <textarea class="writing-textarea" id="userReflect" style="min-height: 120px;" placeholder="Record your additional reflections here..."></textarea>
+        <div style="text-align: center;">
+          <button class="btn btn-primary" id="saveRefBtn" onclick="revealDiscussion()">Submit Final Reflection</button>
+        </div>
+      </div>
+
+      <div id="discussionHeader" class="discussion-header" style="display:none;">
+        <span class="icon">🗣️</span>
+        <div>
+          <p><strong>Consider sharing your drafted summary with a mentor, peer, or colleague.</strong></p>
+          <span class="prompt-text">Ask them: "If you were a project manager, would this glove analogy clearly justify the extra cost of chiral purification?"</span>
+        </div>
+      </div>
+
+      <div style="text-align: center;">
+        <button class="export-btn" id="exportBtn" onclick="printNotes()">Export Reflections & Summary for Printing</button>
+      </div>
+    </div>
+
+    <div class="nav-hint-box">
+      <strong>Navigation Tips:</strong> Use <kbd>Tab</kbd> to focus on the input area. After saving, your text will lock and shift to the left, allowing you to directly compare it against the professional model on the right.
+    </div>
+  </div>
+
+  <script>
+    function toggleBg() {
+      const layer = document.getElementById('bgLayer');
+      const isActive = layer.style.opacity !== '0';
+      layer.style.opacity = isActive ? '0' : '1';
+      document.getElementById('toggleBgBtn').innerText = `Background Animation: ${isActive ? 'Off' : 'On'}`;
+    }
+
+    function revealModel() {
+      // Transfer text
+      const draft = document.getElementById('userDraft').value;
+      document.getElementById('dispUserBox').innerText = draft || "No summary was provided.";
+
+      // Hide initial drafting block
+      document.getElementById('initialDraftingBlock').style.display = 'none';
+      
+      // Reveal the side-by-side grid and the reflection block
+      const compGrid = document.getElementById('comparisonGrid');
+      compGrid.style.display = 'grid';
+      document.getElementById('reflectionBlock').style.display = 'block';
+      
+      // Focus strictly onto the model strategic response area
+      setTimeout(() => {
+        document.getElementById('modelStrategicResponse').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+
+    function revealDiscussion() {
+      document.getElementById('discussionHeader').style.display = 'flex';
+      document.getElementById('exportBtn').style.display = 'inline-block';
+      document.getElementById('saveRefBtn').disabled = true;
+      document.getElementById('saveRefBtn').innerText = "Reflection Submitted";
+      
+      setTimeout(() => {
+        document.getElementById('discussionHeader').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+    }
+
+    function printNotes() {
+      const draft = document.getElementById('userDraft').value;
+      const reflect = document.getElementById('userReflect').value;
+      const printWin = window.open('', '_blank');
+      printWin.document.write(`
+        <html><head><title>Project Justification Export</title><style>body{font-family:Arial;padding:40px;line-height:1.6;color:#111827;}h1{border-bottom:2px solid #7c3aed;padding-bottom:10px;}h2{margin-top:25px;color:#7c3aed;font-size:18px;}.box{background:#f0fdf4;border-left:5px solid #16a34a;padding:15px;margin:10px 0;font-size:14px;}</style></head>
+        <body>
+          <h1>Laboratory Investigation: Technical Communication</h1>
+          <p style="color:#6b7280; font-size:12px;">Exported: ${new Date().toLocaleString('en-GB')}</p>
+          
+          <h2>Your Drafted Summary</h2>
+          <p>${draft || 'No content provided.'}</p>
+          
+          <h2>Your Further Reflections</h2>
+          <p>${reflect || 'No additional reflections recorded.'}</p>
+          
+          <h2>Model Strategic Justification</h2>
+          <div class="box">
+            Many molecules exist in two mirror-image forms (racemic mixtures), behaving like right-handed and left-handed gloves. Regulators require strict control of these impurities because they have vastly different biological effects. Budgeting for chiral analysis and purification is a non-negotiable regulatory and safety necessity.
+          </div>
+          <script>window.onload = function(){ window.print(); };<\/script>
+        </body></html>
+      `);
+      printWin.document.close();
+    }
+  </script>
+</body>
+</html>

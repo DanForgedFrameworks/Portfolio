@@ -1,0 +1,681 @@
+<!--
+==============================================================================
+PROJECT: Forged Frameworks - VLE Automated Curriculum Pipeline (vC4)
+AUTHOR: Daniel Boyland
+ORGANISATION: Forged Frameworks
+DESCRIPTION: Interactive Data Analysis & Interpretation Workbook.
+VERSION: v1.0.0 (Enantiomeric Excess & API Specifications)
+==============================================================================
+SCRIPT ROLE: THE ANALYST
+FUNCTION: Renders an interactive calculation carousel for evaluating
+enantiomeric excess (e.e.) from HPLC chromatograms, interpreting
+regulatory API specifications, and delivering operational insights.
+==============================================================================
+-->
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Data Analysis: Enantiomeric Excess | Interactive Workbook</title>
+
+  <style>
+    :root {
+      --bg1: #f3e8ff;
+      --bg2: #faf5ff;
+      --bg3: #ffffff;
+      --text: #111827;
+      --muted: #4b5563;
+      --accent: #7c3aed;
+      --accent-dark: #6d28d9;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --border: rgba(109, 40, 217, 0.28);
+      --shadow: 0 12px 30px rgba(0,0,0,0.1);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 20px 24px 100px;
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(180deg, var(--bg1), var(--bg2) 40%, var(--bg3));
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* FLUID CHEMICAL WAVE BACKGROUND */
+    .bg-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+    .bg-layer svg {
+      position: absolute;
+      width: 150%; height: 150%;
+      top: -25%; left: -25%;
+      opacity: 0.4;
+      filter: blur(2px);
+    }
+    .wave-path {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 2;
+      stroke-dasharray: 15 25;
+      opacity: 0.3;
+      animation: flowWave 25s linear infinite;
+    }
+    @keyframes flowWave { from { stroke-dashoffset: 1000; } to { stroke-dashoffset: 0; } }
+    
+    .math-stream {
+      position: absolute;
+      inset: 0;
+      opacity: 0.85;
+      mix-blend-mode: multiply;
+    }
+    .math-stream span {
+      position: absolute;
+      font-family: monospace;
+      font-size: 14px;
+      color: rgba(17,24,39,0.52);
+      white-space: nowrap;
+      user-select: none;
+      animation: floatDown var(--dur) linear infinite;
+    }
+    @keyframes floatDown {
+      0%   { transform: translateY(-160px); opacity: 0; }
+      12%  { opacity: var(--op, 0.62); }
+      100% { transform: translateY(calc(100vh + 220px)); opacity: 0; }
+    }
+
+    .wrap { width: 100%; max-width: 1100px; position: relative; z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 20px;}
+
+    .top-controls { display: flex; justify-content: flex-end; width: 100%; margin-bottom: -10px; }
+    .btn-toggle {
+      appearance: none;
+      background: var(--accent);
+      color: #ffffff;
+      border: 1px solid var(--accent-dark);
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-weight: bold;
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(124,58,237,0.25);
+      transition: all 0.2s ease;
+    }
+
+    .header {
+      text-align: center;
+      padding: 24px;
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(12px);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      width: 100%;
+    }
+    .header h1 { font-size: 28px; color: #1e1b4b; margin: 0 0 8px 0; }
+
+    .content-block {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 30px;
+      width: 100%;
+      backdrop-filter: blur(6px);
+      margin-bottom: 20px;
+    }
+
+    .formula-card {
+      background: #1e1b4b;
+      color: #fff;
+      padding: 20px;
+      border-radius: 15px;
+      width: 100%;
+      text-align: center;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    .formula-card code { font-size: 18px; color: #a5b4fc; }
+
+    .stop-think {
+      background: #fffbeb;
+      border-left: 5px solid #f59e0b;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 20px 0;
+    }
+    .stop-think h3 { margin: 0 0 10px 0; color: #92400e; }
+
+    /* CAROUSEL */
+    .carousel-container { width: 100%; margin-top: 20px; }
+    .carousel-stage {
+      width: 100%;
+      min-height: 350px;
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius);
+      border: 2px solid var(--accent);
+      background: #ffffff;
+      transition: height 0.4s ease;
+    }
+    .slide {
+      position: absolute;
+      top: 0; left: 0; width: 100%;
+      padding: 30px;
+      display: none;
+      flex-direction: column;
+      animation: fadeIn 0.4s ease forwards;
+    }
+    .slide.active { display: flex; position: relative; }
+    .slide h3 { color: var(--accent-dark); margin: 0 0 15px 0; font-size: 20px; border-bottom: 1px solid rgba(124,58,237,0.1); padding-bottom: 8px; }
+    
+    .input-group { margin-bottom: 20px; }
+    .input-group label { display: block; font-weight: bold; margin-bottom: 8px; color: #1e1b4b; }
+    .math-input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 16px;
+      font-family: monospace;
+    }
+
+    .reveal-section {
+      display: none;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e2e8f0;
+      animation: fadeIn 0.5s ease;
+    }
+    .model-box {
+      background: #f0fdf4;
+      border-left: 4px solid #16a34a;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 0 8px 8px 0;
+    }
+    .pitfall-box {
+      background: #fff1f2;
+      border-left: 4px solid #ef4444;
+      padding: 15px;
+      border-radius: 0 8px 8px 0;
+      font-size: 14px;
+    }
+
+    .carousel-nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    /* SUMMARY & REFLECTION */
+    .summary-block {
+      display: none;
+      background: #f8fafc;
+      border: 2px solid #cbd5e1;
+      border-radius: var(--radius);
+      padding: 30px;
+      width: 100%;
+      margin-top: 20px;
+      animation: fadeIn 0.6s ease;
+    }
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      background: white;
+    }
+    .summary-table th, .summary-table td {
+      border: 1px solid #cbd5e1;
+      padding: 12px;
+      text-align: left;
+    }
+    .summary-table th { background: #e0e7ff; color: #1e3a8a; }
+
+    .reflection-area { margin-top: 20px; }
+    .reflection-area textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 15px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-family: inherit;
+      resize: vertical;
+    }
+
+    /* LIGHTER INSIGHT & DISCUSSION */
+    .insight-block {
+      display: none;
+      background: #f5f3ff;
+      border: 1px solid #ddd6fe;
+      color: var(--text);
+      border-radius: var(--radius);
+      padding: 35px;
+      width: 100%;
+      margin-top: 25px;
+      animation: fadeIn 0.8s ease;
+      box-shadow: var(--shadow);
+    }
+    .insight-block h2 { 
+      color: #1e1b4b; 
+      border-bottom: 2px solid var(--accent); 
+      padding-bottom: 10px; 
+      margin-top: 0; 
+    }
+    
+    .discussion-prompt {
+      background: #eff6ff;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid #bfdbfe;
+      border-left: 4px solid #3b82f6;
+      margin-top: 20px;
+    }
+    .discussion-prompt h3 { margin-top: 0; color: #1e40af; }
+
+    /* BUTTONS */
+    .btn {
+      padding: 14px 28px;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.2s;
+      display: inline-block;
+    }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover:not(:disabled) { background: var(--accent-dark); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(124,58,237,0.3); }
+    .btn-secondary { background: white; color: var(--accent); border: 2px solid var(--accent); }
+    .btn-secondary:hover:not(:disabled) { background: #f3e8ff; transform: translateY(-2px); }
+    
+    .nav-arrow { background: white; border: 1px solid #cbd5e1; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; transition: 0.2s; }
+    .nav-arrow:hover:not(:disabled) { background: var(--accent); color: white; border-color: var(--accent); }
+    .nav-arrow:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .export-btn {
+      background: #111827;
+      color: #ffffff;
+      padding: 16px 36px;
+      border-radius: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 25px;
+      border: none;
+      transition: all 0.3s;
+    }
+    .export-btn:hover { background: #000; transform: translateY(-2px); }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .nav-hint-box {
+      margin-top: 20px;
+      padding: 12px 20px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-align: center;
+      width: 100%;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    kbd { font-family: monospace; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; }
+  </style>
+</head>
+
+<body>
+  <div class="bg-layer" id="bgLayer">
+    <svg viewBox="0 0 1200 800" preserveAspectRatio="none">
+        <path class="wave-path" d="M0,400 Q300,100 600,400 T1200,400" />
+        <path class="wave-path" d="M0,500 Q300,200 600,500 T1200,500" style="animation-delay: -5s;" />
+    </svg>
+    <div class="math-stream" id="mathStream"></div>
+  </div>
+
+  <div class="wrap">
+    <div class="top-controls">
+      <button class="btn-toggle" id="toggleBgBtn" onclick="toggleBg()">Background Animation: On</button>
+    </div>
+
+    <div class="header">
+      <h1>Data Analysis & Interpretation</h1>
+      <p>Evaluating enantiomeric excess (e.e.) from chiral HPLC chromatograms in the <strong>laboratory</strong>.</p>
+    </div>
+
+    <div class="formula-card">
+      <strong>Enantiomeric Excess Formula:</strong><br>
+      <code>e.e. (%) = [ (Major Enantiomer Area - Minor Enantiomer Area) / (Major Enantiomer Area + Minor Enantiomer Area) ] × 100</code>
+    </div>
+
+    <div class="content-block">
+      <h2>The Scenario</h2>
+      <p>As a <strong>Laboratory Scientist</strong> in Quality Control, you are reviewing a chiral HPLC chromatogram report for a batch of Active Pharmaceutical Ingredient (API).</p>
+      <ul>
+        <li><strong>Major Enantiomer Peak Area:</strong> 2,850,000 units</li>
+        <li><strong>Minor Enantiomer Peak Area:</strong> 30,000 units</li>
+      </ul>
+
+      <div class="stop-think">
+        <h3>🛑 Stop & Think: Regulatory Precision</h3>
+        <p>In pharmaceutical manufacturing, a difference of 0.1% in optical purity can be the deciding factor between a batch that is released to patients and a batch that is quarantined. Precision in these calculations is non-negotiable.</p>
+      </div>
+
+      <div class="carousel-container" id="carouselBlock">
+        <div class="carousel-stage" id="cStage">
+          
+          <div class="slide active">
+            <h3>Step 1: Calculate the Variance and Total Area</h3>
+            <p>To correctly structure the equation, first establish the difference (numerator) and the sum (denominator) of the peak areas.</p>
+            <div class="input-group">
+              <label>A. Calculate the difference (Major - Minor):</label>
+              <input type="text" class="math-input" id="ans1a" placeholder="Difference in area units...">
+            </div>
+            <div class="input-group">
+              <label>B. Calculate the total area (Major + Minor):</label>
+              <input type="text" class="math-input" id="ans1b" placeholder="Total area units...">
+            </div>
+            <button class="btn btn-primary" id="btnCheck1" onclick="revealStep(1)">Check Working</button>
+            
+            <div class="reveal-section" id="rev1">
+              <div class="model-box">
+                <strong>Model Answer (Difference):</strong> 2,850,000 - 30,000 = <strong>2,820,000 units</strong><br><br>
+                <strong>Model Answer (Total):</strong> 2,850,000 + 30,000 = <strong>2,880,000 units</strong>
+              </div>
+              <div class="pitfall-box">
+                <strong>Common Pitfall:</strong> Accidentally dropping a zero when dealing with large numbers from integrators (e.g., writing 285,000 instead of 2,850,000). Always verify the order of magnitude.
+              </div>
+            </div>
+          </div>
+
+          <div class="slide">
+            <h3>Step 2: Calculate Enantiomeric Excess</h3>
+            <p>Using the values established in Step 1, compute the final e.e. percentage. <strong>State your answer to one decimal place.</strong></p>
+            <div class="input-group">
+              <label>Calculate the e.e. (%):</label>
+              <input type="text" class="math-input" id="ans2" placeholder="e.g. (Difference / Total) * 100 = ... %">
+            </div>
+            <button class="btn btn-primary" id="btnCheck2" onclick="revealStep(2)">Check Working</button>
+
+            <div class="reveal-section" id="rev2">
+              <div class="model-box">
+                <strong>Model Answer:</strong> (2,820,000 / 2,880,000) × 100 = 0.97916... × 100 = <strong>97.9% e.e.</strong>
+              </div>
+              <div class="pitfall-box">
+                <strong>Common Pitfall:</strong> Inverting the division (e.g., dividing the total by the difference) will yield a percentage over 100%, an impossible result for enantiomeric purity.
+              </div>
+            </div>
+          </div>
+
+          <div class="slide">
+            <h3>Step 3: Quality Control Interpretation</h3>
+            <p>Data analysis is only complete when applied to a specification limit.</p>
+            <div class="input-group">
+              <label>Briefly state whether this result of 97.9% would likely meet a typical final API specification:</label>
+              <textarea class="math-input" id="ans3" style="min-height: 80px; resize: vertical;" placeholder="Provide your regulatory interpretation..."></textarea>
+            </div>
+            <button class="btn btn-primary" id="btnCheck3" onclick="revealStep(3)">Check Working</button>
+
+            <div class="reveal-section" id="rev3">
+              <div class="model-box">
+                <strong>Model Answer:</strong> Typical final API specifications require <strong>≥ 98.0% e.e.</strong> to ensure safety and regulatory compliance. At 97.9% e.e., this result is close but slightly below the threshold, meaning it fails to meet the specification.
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="carousel-nav">
+          <button class="nav-arrow" id="prevBtn" onclick="moveSlide(-1)" disabled>❮</button>
+          <span id="slideIndicator" style="font-weight:bold; color:var(--accent-dark);">Step 1 of 3</span>
+          <button class="nav-arrow" id="nextBtn" onclick="moveSlide(1)" disabled>❯</button>
+        </div>
+        
+        <div style="text-align: center; margin-top: 15px;">
+           <button class="btn btn-secondary" id="finishCarouselBtn" style="display:none;" onclick="showSummary()">Review Full Calculation Summary</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="summary-block" id="summaryBlock">
+      <h2 style="color: #1e40af; margin-top: 0;">Data Review</h2>
+      <table class="summary-table">
+        <thead>
+          <tr>
+            <th>Parameter</th>
+            <th>Your Input</th>
+            <th>Model Answer</th>
+          </tr>
+        </thead>
+        <tbody id="summaryTableBody">
+          </tbody>
+      </table>
+
+      <div class="reflection-area">
+        <label style="font-weight:bold; color:#1e1b4b; display:block; margin-bottom:10px;">Reflection: Review your calculations and interpretation. Identify any areas where your process deviated from the model workflow.</label>
+        <textarea id="userReflect" placeholder="Record your reflections here..."></textarea>
+      </div>
+
+      <div style="text-align: center; margin-top: 20px;">
+        <button class="btn btn-primary" id="saveRefBtn" onclick="showInsight()">Save Reflection & Reveal Strategic Insight</button>
+      </div>
+    </div>
+
+    <div class="insight-block" id="insightBlock">
+      <h2>Process Chemist Strategic Insight</h2>
+      <p>An enantiomeric excess of <strong>97.9%</strong> represents an Out of Specification (OOS) result against a typical <strong>≥ 98.0%</strong> limit.</p>
+      <p>In a commercial <strong>laboratory</strong> environment, this minor deviation has major operational consequences. It indicates that the current synthetic pathway or purification protocol is insufficient.</p>
+      <ul>
+        <li><strong>Immediate Action:</strong> The batch cannot be released and must be quarantined.</li>
+        <li><strong>Process Optimisation:</strong> This result would trigger a mandatory investigation. The engineering team will need to apply further purification steps (such as recrystallisation) or optimise the upstream asymmetric synthesis to increase enantiomeric purity in future batches.</li>
+      </ul>
+      
+      <div class="discussion-prompt">
+        <h3>🗣️ Discussion Prompt</h3>
+        <p style="margin-bottom:0;">Share your calculation review and this insight with a mentor, peer, or colleague. Ask them: <em>"In our facility, what is the standard operating procedure (SOP) when a batch of API misses the enantiomeric purity target by just 0.1%?"</em></p>
+      </div>
+
+      <button class="export-btn" onclick="printNotes()">Export Calculations & Reflections for Printing</button>
+    </div>
+
+    <div class="nav-hint-box">
+      <strong>Navigation Tips:</strong> Use <kbd>Tab</kbd> to focus on inputs and <kbd>Enter</kbd> to check your working. You must check your working on each step to unlock the navigation arrows.
+    </div>
+  </div>
+
+  <script>
+    // --- Background Animation Logic ---
+    const stream = document.getElementById("mathStream");
+    const syms = ["e.e.%", "HPLC", "[α]", "R_t", "Area", "mAU", "OOS", "μg/mL"];
+    function makeToken(){
+      const el = document.createElement("span");
+      el.textContent = syms[Math.floor(Math.random() * syms.length)];
+      el.style.left = Math.random() * 100 + "vw";
+      el.style.top = "-50px";
+      const dur = 10 + Math.random() * 15;
+      el.style.setProperty("--dur", dur + "s");
+      el.style.setProperty("--op", 0.4 + Math.random() * 0.3);
+      stream.appendChild(el);
+      setTimeout(() => el.remove(), dur * 1000);
+    }
+    let tokenTimer = setInterval(makeToken, 1500);
+
+    let bgActive = true;
+    function toggleBg() {
+      const layer = document.getElementById('bgLayer');
+      const btn = document.getElementById('toggleBgBtn');
+      bgActive = !bgActive;
+      layer.style.opacity = bgActive ? '1' : '0';
+      btn.innerText = `Background Animation: ${bgActive ? 'On' : 'Off'}`;
+      if(!bgActive) { clearInterval(tokenTimer); stream.innerHTML = ""; }
+      else { tokenTimer = setInterval(makeToken, 1500); }
+    }
+
+    // --- Carousel Logic ---
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const indicator = document.getElementById('slideIndicator');
+    const finishBtn = document.getElementById('finishCarouselBtn');
+
+    // Tracks if a slide's "Check Working" has been clicked
+    let stepCleared = [false, false, false];
+
+    function setStageHeight() {
+      document.getElementById('cStage').style.height = slides[currentSlide].offsetHeight + "px";
+    }
+
+    function revealStep(step) {
+      document.getElementById(`rev${step}`).style.display = 'block';
+      document.getElementById(`btnCheck${step}`).style.display = 'none';
+      
+      stepCleared[step - 1] = true;
+      
+      if(currentSlide < slides.length - 1) {
+        nextBtn.disabled = false;
+      }
+      
+      if(currentSlide === slides.length - 1) {
+        finishBtn.style.display = 'inline-block';
+      }
+      
+      setTimeout(setStageHeight, 50);
+    }
+
+    function moveSlide(n) {
+      slides[currentSlide].classList.remove('active');
+      currentSlide += n;
+      slides[currentSlide].classList.add('active');
+      
+      indicator.innerText = `Step ${currentSlide + 1} of 3`;
+      
+      prevBtn.disabled = (currentSlide === 0);
+      
+      if (currentSlide < slides.length - 1) {
+        nextBtn.disabled = !stepCleared[currentSlide];
+        finishBtn.style.display = 'none';
+      } else {
+        nextBtn.disabled = true;
+        if(stepCleared[currentSlide]) {
+          finishBtn.style.display = 'inline-block';
+        }
+      }
+      
+      setTimeout(setStageHeight, 50);
+    }
+
+    // --- Transition to Summary ---
+    function showSummary() {
+      document.getElementById('carouselBlock').style.display = 'none';
+      
+      const tbody = document.getElementById('summaryTableBody');
+      tbody.innerHTML = `
+        <tr>
+          <td><strong>Area Difference</strong></td>
+          <td>${document.getElementById('ans1a').value || '<em>No input</em>'}</td>
+          <td>2,820,000</td>
+        </tr>
+        <tr>
+          <td><strong>Area Total</strong></td>
+          <td>${document.getElementById('ans1b').value || '<em>No input</em>'}</td>
+          <td>2,880,000</td>
+        </tr>
+        <tr>
+          <td><strong>Final e.e. (%)</strong></td>
+          <td>${document.getElementById('ans2').value || '<em>No input</em>'}</td>
+          <td>97.9%</td>
+        </tr>
+        <tr>
+          <td><strong>API Spec Check</strong></td>
+          <td>${document.getElementById('ans3').value || '<em>No input</em>'}</td>
+          <td>Fails to meet ≥ 98.0% spec</td>
+        </tr>
+      `;
+
+      document.getElementById('summaryBlock').style.display = 'block';
+      setTimeout(() => {
+        document.getElementById('summaryBlock').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+
+    // --- Transition to Insight ---
+    function showInsight() {
+      document.getElementById('saveRefBtn').disabled = true;
+      document.getElementById('saveRefBtn').innerText = "Reflection Saved";
+      
+      document.getElementById('insightBlock').style.display = 'block';
+      setTimeout(() => {
+        document.getElementById('insightBlock').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+
+    // --- Export Logic ---
+    function printNotes() {
+      const a1a = document.getElementById('ans1a').value || 'N/A';
+      const a1b = document.getElementById('ans1b').value || 'N/A';
+      const a2 = document.getElementById('ans2').value || 'N/A';
+      const a3 = document.getElementById('ans3').value || 'N/A';
+      const reflection = document.getElementById('userReflect').value || 'No reflection recorded.';
+
+      const printWin = window.open('', '_blank');
+      printWin.document.write(`
+        <html><head><title>Enantiomeric Excess Export</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 40px; line-height: 1.6; color: #111827; }
+          h1 { border-bottom: 2px solid #7c3aed; padding-bottom: 10px; }
+          h2 { color: #7c3aed; margin-top: 25px; font-size: 18px; }
+          table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+          th, td { border: 1px solid #cbd5e1; padding: 10px; text-align: left; }
+          th { background: #f8fafc; }
+          .box { background: #f0fdf4; border-left: 5px solid #16a34a; padding: 20px; margin: 20px 0; }
+          ul { margin-top: 10px; }
+          li { margin-bottom: 10px; }
+        </style></head>
+        <body>
+          <h1>Laboratory Investigation: Data Analysis & Interpretation</h1>
+          <p style="color:#6b7280; font-size:12px;">Exported: ${new Date().toLocaleString('en-GB')}</p>
+          
+          <h2>Calculation Review</h2>
+          <table>
+            <tr><th>Parameter</th><th>Your Input</th><th>Model Value</th></tr>
+            <tr><td>Area Difference (Maj - Min)</td><td>${a1a}</td><td>2,820,000 units</td></tr>
+            <tr><td>Area Total (Maj + Min)</td><td>${a1b}</td><td>2,880,000 units</td></tr>
+            <tr><td>Enantiomeric Excess (e.e.)</td><td>${a2}</td><td>97.9%</td></tr>
+            <tr><td>API Specification Interpretation</td><td>${a3}</td><td>Fails specification (≥ 98.0%)</td></tr>
+          </table>
+
+          <h2>Your Mathematical Reflection</h2>
+          <p>${reflection}</p>
+
+          <h2>Strategic Process Insight</h2>
+          <div class="box">
+            <p>An enantiomeric excess of <strong>97.9%</strong> represents an Out of Specification (OOS) result against a typical <strong>≥ 98.0%</strong> limit.</p>
+            <p>In a commercial laboratory environment, this minor deviation has major operational consequences:</p>
+            <ul>
+              <li><strong>Immediate Action:</strong> The batch cannot be released and must be quarantined.</li>
+              <li><strong>Process Optimisation:</strong> This triggers a mandatory investigation, requiring further purification steps (such as recrystallisation) or upstream optimisation to ensure the asymmetric synthesis hits the required purity threshold.</li>
+            </ul>
+          </div>
+          <script>window.onload = function(){ window.print(); };<\/script>
+        </body></html>
+      `);
+      printWin.document.close();
+    }
+    
+    window.onload = function() {
+        setTimeout(setStageHeight, 100);
+    }
+  </script>
+</body>
+</html>

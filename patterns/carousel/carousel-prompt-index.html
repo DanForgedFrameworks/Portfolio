@@ -1,0 +1,384 @@
+<!--
+==============================================================================
+PROJECT: Forged Frameworks - VLE Automated Curriculum Pipeline (vC4)
+AUTHOR: Daniel Boyland
+ORGANISATION: Forged Frameworks
+DESCRIPTION: Pharmacological Chirality - Interactive Chiral Viewer.
+VERSION: v2.7.0 (Distomer Biological Effects & Interconversion Profile)
+==============================================================================
+SCRIPT ROLE: THE VISUALISER
+FUNCTION: Renders interactive biological impact profiles for Ibuprofen,
+Propoxyphene, and Thalidomide with modal zoom integration.
+==============================================================================
+-->
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pharmacological Chirality | Level 6 HE Viewer</title>
+
+  <style>
+    :root {
+      --bg1: #f3e8ff;
+      --bg2: #faf5ff;
+      --bg3: #ffffff;
+      --text: #111827;
+      --muted: #4b5563;
+      --accent: #7c3aed;
+      --accent-dark: #1e1b4b;
+      --card-bg: rgba(255, 255, 255, 0.98);
+      --border: rgba(109, 40, 217, 0.28);
+      --shadow: 0 12px 30px rgba(0,0,0,0.1);
+      --radius: 20px;
+      --insight-bg: #e0f2fe;
+      --insight-border: #7dd3fc;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 20px 24px 60px;
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(180deg, var(--bg1), var(--bg2) 40%, var(--bg3));
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* --- SOURCE BACKGROUND ANIMATION --- */
+    .bg-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+    .bg-layer svg {
+      position: absolute;
+      inset: -8% -8%;
+      width: 116%;
+      height: 116%;
+      opacity: 0.5;
+    }
+    .particle {
+      position: absolute;
+      width: 12px; height: 12px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 35% 35%, rgba(124,58,237,.65), rgba(124,58,237,.10));
+      opacity: .6;
+      animation: drift 18s linear infinite;
+    }
+    @keyframes drift {
+      from { transform: translate3d(-10vw, 20vh, 0); }
+      to   { transform: translate3d(110vw, -10vh, 0); }
+    }
+
+    .wrap { width: 100%; max-width: 1100px; position: relative; z-index: 5; display: flex; flex-direction: column; align-items: center; }
+
+    .header {
+      text-align: center;
+      padding: 24px;
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(12px);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      width: 100%;
+      margin-bottom: 30px;
+    }
+    .header h1 { font-size: 28px; color: var(--accent-dark); margin: 0 0 8px 0; }
+    .header p { font-size: 15px; color: var(--muted); margin: 0; }
+
+    .carousel-container {
+      position: relative;
+      width: 100%;
+      height: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1200px;
+      margin-bottom: 20px;
+    }
+
+    .slide {
+      position: absolute;
+      width: 380px;
+      height: 420px;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      backdrop-filter: blur(8px);
+      text-align: center;
+      justify-content: center;
+    }
+
+    .slide.prev { transform: translateX(-80%) scale(0.85); opacity: 0.3; filter: blur(2px); pointer-events: auto; cursor: pointer; }
+    .slide.active { transform: translateX(0) scale(1); opacity: 1; z-index: 10; pointer-events: auto; }
+    .slide.next { transform: translateX(80%) scale(0.85); opacity: 0.3; filter: blur(2px); pointer-events: auto; cursor: pointer; }
+
+    .slide h3 { margin: 0 0 15px; color: var(--accent); font-size: 20px; font-weight: 800; }
+    
+    .img-frame {
+      width: 100%;
+      height: 180px;
+      overflow: hidden;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #e2e8f0;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-in;
+    }
+    .slide img { max-width: 100%; max-height: 100%; display: block; }
+
+    .slide p { font-size: 14px; color: var(--text); margin: 0 0 10px; }
+
+    /* Vertically Centralised Insight Box (No Title) */
+    .expected-box {
+      position: absolute;
+      top: 50%;
+      right: -230px;
+      width: 210px;
+      background: var(--insight-bg);
+      border: 1px solid var(--insight-border);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(-50%) translateX(-20px);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 5;
+    }
+    .slide.active .expected-box { opacity: 1; transform: translateY(-50%) translateX(0); transition-delay: 0.4s; }
+    .expected-box p { margin: 0; font-size: 12px; line-height: 1.4; color: #0f172a; }
+
+    /* Modal Zoom with Smooth Transition */
+    .modal-zoom {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.0);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      cursor: zoom-out;
+      padding: 40px;
+      transition: background 0.4s ease;
+    }
+    .modal-zoom img { 
+      max-width: 90%; 
+      max-height: 90%; 
+      border-radius: 8px; 
+      box-shadow: 0 0 50px rgba(0,0,0,0.5); 
+      transform: scale(0.7); 
+      opacity: 0;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+    }
+    .modal-zoom.active { display: flex; background: rgba(15, 23, 42, 0.9); }
+    .modal-zoom.active img { transform: scale(1); opacity: 1; }
+
+    .controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .btn-nav {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .btn-toggle {
+      background: #1e1b4b;
+      color: #ffffff;
+      border: none;
+      border-radius: 999px;
+      padding: 12px 20px;
+      font-weight: bold;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .nav-hint-box {
+      margin-top: 30px;
+      padding: 15px 25px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-align: center;
+      width: 100%;
+      max-width: 550px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    @media (max-width: 950px) {
+      .expected-box { position: relative; top: 0; right: 0; transform: none; width: 100%; margin-top: 15px; }
+      .slide.active .expected-box { transform: none; }
+      .slide { width: 320px; height: auto; position: relative; opacity: 1; transform: none; display: none; }
+      .slide.active { display: flex; }
+      .carousel-container { height: auto; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-layer" id="bgLayer">
+    <svg viewBox="0 0 1200 700" preserveAspectRatio="none">
+      <path d="M-50,520 C250,410 380,610 680,470 C880,380 980,520 1280,390" fill="none" stroke="rgba(124,58,237,.35)" stroke-width="3" stroke-dasharray="10 16">
+        <animate attributeName="stroke-dashoffset" values="0; -260" dur="12s" repeatCount="indefinite" />
+      </path>
+    </svg>
+    <span class="particle" style="top:15%; left:5%;"></span>
+    <span class="particle" style="top:70%; left:20%;"></span>
+    <span class="particle" style="top:40%; left:85%;"></span>
+  </div>
+
+  <div class="modal-zoom" id="modalZoom" onclick="closeZoom()">
+    <img id="zoomImg" src="" alt="Larger image view">
+  </div>
+
+  <div class="wrap">
+    <div class="header">
+      <h1>What Can the Distomer Do?</h1>
+      <p>Technical principles of chirality and its biological implications.</p>
+    </div>
+
+    <div class="carousel-container">
+      <div class="slide">
+        <h3>Inactive Ballast</h3>
+        <div class="img-frame" onclick="zoomImage('TAC6101 Ibuprofen S0901.png')">
+          <img src="TAC6101 Ibuprofen S0901.png" alt="Ibuprofen enantiomers structural comparison">
+        </div>
+        <p>The distomer may provide no therapeutic benefit while still placing a metabolic burden on the body.</p>
+        <p>In Ibuprofen, <strong>(S)-ibuprofen</strong> acts as the active pain reliever, while <strong>(R)-ibuprofen</strong> is slowly converted in the body to the active form.</p>
+        
+        <div class="expected-box">
+          <p>Requires analysis of metabolic delay and the liver's capacity to handle inactive ballast conversion.</p>
+        </div>
+      </div>
+
+      <div class="slide">
+        <h3>Different Biological Effect</h3>
+        <div class="img-frame" onclick="zoomImage('TAC6101 Bio Effect S0901.png')">
+          <img src="TAC6101 Bio Effect S0901.png" alt="Enantiomers of Propoxyphene: Darvon and Novrad">
+        </div>
+        <p>The unwanted enantiomer can possess an entirely different therapeutic value.</p>
+        <p>One enantiomer of Propoxyphene acts as an analgesic, while the other functions as an antitussive for cough suppression.</p>
+
+        <div class="expected-box">
+          <p>Necessitates discrete clinical trials and regulatory approval for each enantiomer as separate drug products.</p>
+        </div>
+      </div>
+
+      <div class="slide">
+        <h3>Toxic Effects</h3>
+        <div class="img-frame" onclick="zoomImage('TAC6101 Toxic Effect S0901.png')">
+          <img src="TAC6101 Toxic Effect S0901.png" alt="Thalidomide enantiomer interconversion diagram">
+        </div>
+        <p>Thalidomide represents the most critical example of enantiomeric toxicity.</p>
+        <p>The <strong>R-enantiomer</strong> is a sedative, while the <strong>S-enantiomer</strong> is teratogenic; crucially, the forms interconvert in the body.</p>
+
+        <div class="expected-box">
+          <p><em>In vivo</em> interconversion means isolated enantiomer administration cannot mitigate toxicity risks.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls-row">
+      <button class="btn-nav" onclick="moveSlide(-1)">❮ Previous</button>
+      <button class="btn-toggle" id="toggleBgBtn" onclick="toggleBg()">Background Animation: On</button>
+      <button class="btn-nav" onclick="moveSlide(1)">Next ❯</button>
+    </div>
+
+    <div class="nav-hint-box">
+      <strong>Mobile Users:</strong> Swipe left or right on the cards.<br>
+      <strong>Desktop Users:</strong> Use buttons, click side cards, or use <strong>Arrow Keys</strong>.<br>
+      Select an image for a larger image.
+    </div>
+  </div>
+
+  <script>
+    let bgActive = true;
+    function toggleBg() {
+      bgActive = !bgActive;
+      const layer = document.getElementById('bgLayer');
+      const btn = document.getElementById('toggleBgBtn');
+      layer.style.opacity = bgActive ? '1' : '0';
+      btn.innerText = `Background Animation: ${bgActive ? 'On' : 'Off'}`;
+    }
+
+    function zoomImage(src) {
+      const modal = document.getElementById('modalZoom');
+      const img = document.getElementById('zoomImg');
+      img.src = src;
+      modal.style.display = 'flex';
+      setTimeout(() => {
+        modal.classList.add('active');
+      }, 10);
+    }
+
+    function closeZoom() {
+      const modal = document.getElementById('modalZoom');
+      modal.classList.remove('active');
+      setTimeout(() => {
+        modal.style.display = 'none';
+      }, 400);
+    }
+
+    let currentIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+
+    function updateCarousel() {
+      slides.forEach((slide, index) => {
+        slide.classList.remove('active', 'prev', 'next');
+        if (index === currentIndex) slide.classList.add('active');
+        else if (index === (currentIndex - 1 + slides.length) % slides.length) slide.classList.add('prev');
+        else if (index === (currentIndex + 1) % slides.length) slide.classList.add('next');
+      });
+    }
+
+    function moveSlide(dir) {
+      currentIndex = (currentIndex + dir + slides.length) % slides.length;
+      updateCarousel();
+    }
+
+    slides.forEach((slide) => {
+      slide.addEventListener('click', () => {
+        if (slide.classList.contains('prev')) moveSlide(-1);
+        if (slide.classList.contains('next')) moveSlide(1);
+      });
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === "ArrowLeft") moveSlide(-1);
+      if (e.key === "ArrowRight") moveSlide(1);
+    });
+
+    updateCarousel();
+  </script>
+</body>
+</html>

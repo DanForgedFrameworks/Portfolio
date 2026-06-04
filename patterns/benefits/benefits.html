@@ -1,0 +1,587 @@
+<!--
+==============================================================================
+PROJECT: Forged Frameworks - VLE Automated Curriculum Pipeline
+AUTHOR: Daniel Boyland
+ORGANISATION: Forged Frameworks
+VERSION: v8.6 (Responsive Architecture & Z-Index Fix)
+DESCRIPTION: State-driven UI with a glassmorphism aesthetic. Radial pentagram layout. 
+             Now features Pointer-Event Ghosting on the central hub to prevent 
+             mobile z-index fighting, along with responsive media queries for 
+             smaller devices. Maintains standalone Learner HTML export.
+==============================================================================
+-->
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML Benefits Master</title>
+  <style>
+    :root {
+      --brand-purple: #691eda;
+      --brand-orange: #f08838;
+      --glass-bg: rgba(255, 255, 255, 0.45);
+      --glass-border: rgba(255, 255, 255, 0.7);
+      --shadow: 0 16px 40px 0 rgba(31, 38, 135, 0.15);
+      --text-main: #1f2937;
+      --text-muted: #4b5563;
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+    body {
+      margin: 0; padding: 20px; color: var(--text-main);
+      display: flex; justify-content: center; align-items: center; min-height: 100vh;
+      background-color: #f8f9fa; position: relative; overflow-x: hidden;
+    }
+
+    /* --- BACKGROUND ANIMATION --- */
+    .digital-background {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+      background: 
+        radial-gradient(rgba(105, 30, 218, 0.08) 2px, transparent 2px),
+        radial-gradient(rgba(105, 30, 218, 0.08) 2px, transparent 2px);
+      background-size: 60px 60px; background-position: 0 0, 30px 30px;
+    }
+
+    .orb {
+      position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.6;
+      animation: drift 25s infinite alternate ease-in-out;
+    }
+    .orb-1 { width: 50vw; height: 50vw; background: rgba(105, 30, 218, 0.25); top: -10%; left: -10%; }
+    .orb-2 { width: 60vw; height: 60vw; background: rgba(240, 136, 56, 0.2); bottom: -20%; right: -10%; animation-delay: -5s; }
+
+    @keyframes drift {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(10%, 15%) scale(1.1); }
+      100% { transform: translate(-10%, 5%) scale(0.9); }
+    }
+
+    /* --- TOP CONTROLS (Only visible in Designer App) --- */
+    .top-controls {
+      position: absolute; top: 20px; right: 20px; z-index: 100;
+      display: flex; gap: 10px; background: rgba(255,255,255,0.8); padding: 5px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    .mode-btn {
+      padding: 8px 16px; border: none; border-radius: 6px; font-weight: bold; font-size: 13px;
+      cursor: pointer; background: transparent; color: var(--text-muted); transition: all 0.2s;
+    }
+    .mode-btn.active { background: var(--brand-purple); color: #fff; box-shadow: 0 2px 4px rgba(105,30,218,0.3); }
+
+    /* --- MAIN APP CONTAINER --- */
+    .app-container {
+      width: 100%; max-width: 1100px; height: 750px;
+      position: relative; z-index: 5;
+    }
+
+    /* --- LEARNER MODE (Radial View) --- */
+    .learner-view {
+      width: 100%; height: 100%; position: relative; display: block;
+    }
+
+    /* Central Hub */
+    .central-hub {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 90%; max-width: 420px; padding: 40px; text-align: center;
+      background: var(--glass-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-border); border-top: 2px solid rgba(255, 255, 255, 0.9); border-left: 2px solid rgba(255, 255, 255, 0.9);
+      border-radius: 24px; box-shadow: var(--shadow);
+      
+      /* CRITICAL MOBILE FIXES */
+      z-index: 30; /* Keep strictly above nodes */
+      pointer-events: none; /* Allows hover/tap to pass THROUGH the hub to the overlapping circles underneath */
+      transition: all 0.3s ease;
+    }
+    
+    .hub-content {
+      opacity: 1; transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .hub-content.fade { opacity: 0; transform: scale(0.98); }
+
+    .hub-title { font-size: 24px; color: var(--brand-purple); margin: 0 0 15px 0; font-weight: bold; }
+    .hub-divider { border: 0; border-top: 2px dashed rgba(105, 30, 218, 0.2); margin: 20px 0; }
+    .hub-detail { font-size: 16px; line-height: 1.6; margin: 0; color: var(--text-main); }
+    .hub-outcome { 
+      font-size: 15px; font-weight: bold; color: var(--brand-orange); 
+      margin-top: 20px; display: block; letter-spacing: 0.5px;
+    }
+
+    .placeholder-text { color: var(--text-muted); font-size: 16px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; }
+
+    /* Radial Nodes */
+    .radial-node {
+      position: absolute; width: 180px; 
+      transform: translate(-50%, -50%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      cursor: pointer; z-index: 20; text-align: center;
+    }
+    
+    .node-icon-wrapper {
+      width: 100px; height: 100px; border-radius: 50%; 
+      background: #ffffff; border: 2px solid rgba(105, 30, 218, 0.2);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.06); margin-bottom: 12px;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+      overflow: hidden; position: relative;
+      color: var(--brand-purple); 
+    }
+    .radial-node:hover .node-icon-wrapper {
+      border-color: var(--brand-orange); box-shadow: 0 12px 24px rgba(240, 136, 56, 0.25);
+      color: var(--brand-orange); 
+      transform: scale(1.1); 
+    }
+    
+    /* SVG Styling - Unified Fill */
+    .node-icon-wrapper svg { 
+      width: 50px; height: 50px; 
+      transition: transform 0.3s ease; 
+    }
+    
+    /* Image Override Styling */
+    .node-icon-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+
+    .node-title {
+      font-size: 16px; font-weight: bold; color: var(--text-main); 
+      background: rgba(255,255,255,0.8); padding: 8px 16px; border-radius: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05); backdrop-filter: blur(4px);
+      transition: all 0.3s;
+    }
+    .radial-node:hover .node-title {
+      background: #ffffff; color: var(--brand-orange); box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    /* --- RESPONSIVE MOBILE ADJUSTMENTS --- */
+    @media (max-width: 768px) {
+      .app-container { height: 600px; }
+      .central-hub { padding: 25px; max-width: 340px; }
+      .hub-title { font-size: 20px; margin-bottom: 10px; }
+      .hub-detail { font-size: 14px; }
+      .hub-outcome { font-size: 13px; }
+      .placeholder-text { font-size: 14px; }
+      
+      .radial-node { width: 120px; }
+      .node-icon-wrapper { width: 75px; height: 75px; }
+      .node-icon-wrapper svg { width: 38px; height: 38px; }
+      .node-title { font-size: 13px; padding: 4px 10px; }
+    }
+
+    /* --- DESIGNER MODE (Form & HTML Output) --- */
+    .designer-view {
+      display: none; width: 100%; height: 100%; background: #ffffff;
+      border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden;
+      border: 1px solid var(--glass-border);
+    }
+    .designer-layout { display: flex; height: 100%; }
+    .editor-panel {
+      width: 50%; border-right: 1px solid #e2e8f0; padding: 30px; overflow-y: auto; background: #fafafa;
+    }
+    
+    /* Attribution Block */
+    .attribution-block { 
+      background: #e0e7ff; border-left: 4px solid var(--brand-purple); padding: 15px; 
+      border-radius: 0 8px 8px 0; margin-bottom: 30px; font-size: 13px; color: #1e3a8a; line-height: 1.6; 
+    }
+    .attribution-block strong { color: var(--brand-purple); }
+
+    .export-panel {
+      width: 50%; background: #1e293b; display: flex; flex-direction: column;
+    }
+    .export-header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;}
+    .export-header h3 { margin: 0; color: #fff; font-size: 16px; }
+    .btn-export { background: var(--brand-orange); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer;}
+    .html-output { flex: 1; width: 100%; background: transparent; color: #38bdf8; border: none; padding: 20px; font-family: monospace; resize: none; font-size: 12px; white-space: pre;}
+    .html-output:focus { outline: none; }
+
+    /* Form Styles */
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: bold; color: var(--text-muted); }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px;
+    }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .help-text { font-size: 11px; color: #94a3b8; font-weight: normal; margin-left: 5px; }
+    
+    .item-editor { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 20px; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+    .item-header { font-weight: bold; margin-bottom: 15px; color: var(--brand-purple); font-size: 16px;}
+    
+    .btn-add { background: var(--brand-purple); color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 15px;}
+    .btn-delete { position: absolute; top: 15px; right: 15px; background: #fee2e2; color: #dc2626; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: bold;}
+
+  </style>
+</head>
+<body>
+
+  <!-- Animated Background -->
+  <div class="digital-background">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <!-- State Toggle -->
+  <div class="top-controls" id="mode-controls">
+    <button class="mode-btn active" id="btn-learner" onclick="switchMode('learner')">Learner Mode</button>
+    <button class="mode-btn" id="btn-designer" onclick="switchMode('designer')">Designer Mode</button>
+  </div>
+
+  <div class="app-container" id="app-wrapper">
+    
+    <!-- STATE A: LEARNER VIEW -->
+    <div class="learner-view" id="learner-view">
+      <div class="central-hub" id="central-hub">
+        <div id="hub-content" class="hub-content">
+          <!-- Default State -->
+          <div class="placeholder-text">Hover over a stakeholder<br>to view strategic impact</div>
+        </div>
+      </div>
+      <!-- Nodes injected here via JS -->
+      <div id="radial-container"></div>
+    </div>
+
+    <!-- STATE B: DESIGNER VIEW -->
+    <div class="designer-view" id="designer-view">
+      <div class="designer-layout">
+        <div class="editor-panel">
+          
+          <div class="attribution-block">
+            <strong>PROJECT:</strong> Strategic Impact Dashboard<br>
+            <strong>AUTHOR:</strong> Daniel Boyland<br>
+            <strong>ORGANISATION:</strong> Forged Frameworks<br>
+            <strong>VERSION:</strong> v8.6 (Payload Generator)<br><br>
+            <em>Update the fields below to preview your changes. Once complete, click export to generate a clean, standalone HTML file that ONLY contains the final interactive dashboard.</em>
+          </div>
+
+          <h2 style="margin-top:0; color:var(--text-main);">Data Logic Engine</h2>
+          <p style="color:var(--text-muted); font-size:14px; margin-bottom: 30px;">Edit the fields below. The system automatically handles radial spacing and image fallbacks.</p>
+          
+          <div id="items-editor-container"></div>
+          <button class="btn-add" onclick="addNewItem()">+ Add Stakeholder Node</button>
+        </div>
+        
+        <div class="export-panel">
+          <div class="export-header">
+            <h3>Clean Output (Standalone Learner HTML)</h3>
+            <button class="btn-export" onclick="copyHTML()">Copy Source Code</button>
+          </div>
+          <textarea class="html-output" id="html-output" readonly></textarea>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+<!-- ===================================================================== -->
+<!-- DATA SCRIPT: This block is actively overwritten by the Exporter     -->
+<!-- ===================================================================== -->
+<script id="app-data-script">
+  let appState = {
+    "items": [
+      {
+        "id": 1,
+        "iconKey": "learner",
+        "imageAsset": "",
+        "title": "The Learner",
+        "detail": "Develops the financial literacy required to secure funding for critical laboratory improvements and manages budgets with greater strategic foresight.",
+        "outcome": "Outcome: Strategic budget management"
+      },
+      {
+        "id": 2,
+        "iconKey": "org",
+        "imageAsset": "",
+        "title": "The Organisation",
+        "detail": "Gains a sustainable digital infrastructure that balances innovation with cost-control and reduces the risk of expensive compliance failures.",
+        "outcome": "Outcome: Sustainable infrastructure"
+      },
+      {
+        "id": 3,
+        "iconKey": "team",
+        "imageAsset": "",
+        "title": "The Team",
+        "detail": "Benefits from more reliable, better-supported digital tools that reduce manual administrative burdens and improve daily operational workflow.",
+        "outcome": "Outcome: Operational workflow"
+      },
+      {
+        "id": 4,
+        "iconKey": "industry",
+        "imageAsset": "",
+        "title": "The Industry",
+        "detail": "Drives higher standards of digital maturity and financial accountability across the UK scientific sector, fostering a culture of sustainable innovation.",
+        "outcome": "Outcome: Financial accountability"
+      },
+      {
+        "id": 5,
+        "iconKey": "public",
+        "imageAsset": "",
+        "title": "The Public",
+        "detail": "Receives faster, more accurate diagnostic or testing results supported by robust, well-funded, and validated digital quality management systems.",
+        "outcome": "Outcome: Validated quality management"
+      }
+    ]
+  };
+</script>
+
+<!-- ===================================================================== -->
+<!-- LOGIC SCRIPT: Core Engine                                           -->
+<!-- ===================================================================== -->
+<script id="app-logic-script">
+  // SVG Icon Dictionary - Inherits CSS color (currentColor)
+  const ICON_LIBRARY = {
+    learner: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 11c2.2 0 4-1.8 4-4s-1.8-4-4-4-4 1.8-4 4 1.8 4 4 4zm0 2c-3.3 0-10 1.7-10 5v2h20v-2c0-3.3-6.7-5-10-5z M4 18h16v2H4z"/></svg>`,
+    org: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/></svg>`,
+    team: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>`,
+    industry: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 10h-2V3H3v18h18V10zm-4-5h2v3h-2V5zm0 5h2v3h-2v-3zm0 5h2v3h-2v-3zM5 5h6v14H5V5zm8 9h2v3h-2v-3zm0-5h2v3h-2V9z"/></svg>`,
+    public: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`
+  };
+
+  // Create a working copy of the state
+  let activeState = JSON.parse(JSON.stringify(appState)); 
+
+  // Load from local storage if exists (persists edits during the session)
+  if(localStorage.getItem('forgedRadialState')) {
+      activeState = JSON.parse(localStorage.getItem('forgedRadialState'));
+  }
+
+  // --- RENDERING ENGINE ---
+  
+  function renderLearnerView() {
+    const container = document.getElementById('radial-container');
+    const total = activeState.items.length;
+    let html = '';
+
+    // Calculate positions dynamically. -90deg puts the first item at 12 o'clock.
+    activeState.items.forEach((item, index) => {
+      const angle = (index / total) * (2 * Math.PI) - (Math.PI / 2);
+      // Radius pulled in to 35% for better responsive spacing
+      const x = 50 + 35 * Math.cos(angle);
+      const y = 50 + 35 * Math.sin(angle);
+      
+      // SMART FALLBACK LOGIC
+      const hasImage = item.imageAsset && item.imageAsset.trim() !== "";
+      const visualElement = hasImage 
+          ? `<img src="${item.imageAsset}" alt="${item.title}">` 
+          : (ICON_LIBRARY[item.iconKey] || ICON_LIBRARY['learner']);
+
+      // Inject hover event with safe data strings
+      const safeTitle = item.title.replace(/'/g, "\\'");
+      const safeDetail = item.detail.replace(/'/g, "\\'");
+      const safeOutcome = item.outcome.replace(/'/g, "\\'");
+
+      html += `
+        <div class="radial-node" style="left: ${x}%; top: ${y}%;" 
+             onmouseenter="updateHub('${safeTitle}', '${safeDetail}', '${safeOutcome}')"
+             onmouseleave="resetHub()">
+          <div class="node-icon-wrapper">${visualElement}</div>
+          <div class="node-title">${item.title}</div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+  }
+
+  // Hover Interaction Logic
+  const hubContent = document.getElementById('hub-content');
+  
+  function updateHub(title, detail, outcome) {
+    hubContent.classList.add('fade');
+    setTimeout(() => {
+      hubContent.innerHTML = `
+        <div class="hub-title">${title}</div>
+        <hr class="hub-divider">
+        <p class="hub-detail">${detail}</p>
+        <span class="hub-outcome">${outcome}</span>
+      `;
+      hubContent.classList.remove('fade');
+    }, 150);
+  }
+
+  function resetHub() {
+    hubContent.classList.add('fade');
+    setTimeout(() => {
+      hubContent.innerHTML = `<div class="placeholder-text">Hover over a stakeholder<br>to view strategic impact</div>`;
+      hubContent.classList.remove('fade');
+    }, 150);
+  }
+
+  function renderEditorUI() {
+    const container = document.getElementById('items-editor-container');
+    let html = '';
+
+    activeState.items.forEach((item, index) => {
+      html += `
+        <div class="item-editor">
+          <div class="item-header">Stakeholder Node [${index + 1}]</div>
+          <button class="btn-delete" onclick="deleteItem(${item.id})">Delete</button>
+          
+          <div class="form-group">
+            <label>Stakeholder Title</label>
+            <input type="text" value="${item.title}" oninput="updateItem(${item.id}, 'title', this.value)">
+          </div>
+
+          <div class="form-group">
+            <label>Image Override URL <span class="help-text">(Leave blank to use default icon below)</span></label>
+            <input type="text" value="${item.imageAsset || ''}" placeholder="https://..." oninput="updateItem(${item.id}, 'imageAsset', this.value)">
+          </div>
+
+          <div class="form-group">
+            <label>Default SVG Icon Style</label>
+            <select onchange="updateItem(${item.id}, 'iconKey', this.value)">
+              <option value="learner" ${item.iconKey === 'learner' ? 'selected' : ''}>Person (Learner)</option>
+              <option value="team" ${item.iconKey === 'team' ? 'selected' : ''}>People (Team)</option>
+              <option value="org" ${item.iconKey === 'org' ? 'selected' : ''}>Network Node (Organisation)</option>
+              <option value="industry" ${item.iconKey === 'industry' ? 'selected' : ''}>Factory (Industry)</option>
+              <option value="public" ${item.iconKey === 'public' ? 'selected' : ''}>Globe (Public)</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label>Impact Detail (Centrally Justified)</label>
+            <textarea oninput="updateItem(${item.id}, 'detail', this.value)">${item.detail}</textarea>
+          </div>
+          <div class="form-group">
+            <label>Outcome Line (Highlight Colour)</label>
+            <input type="text" value="${item.outcome}" oninput="updateItem(${item.id}, 'outcome', this.value)">
+          </div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+  }
+
+  // --- CLEAN HTML EXPORT ENGINE ---
+  function updateHTMLOutput() {
+    // 1. Clone the entire document DOM
+    const clone = document.documentElement.cloneNode(true);
+    
+    // 2. STRIP ADMIN CONTROLS for clean export
+    const topControls = clone.querySelector('#mode-controls');
+    if (topControls) topControls.remove();
+    
+    const designerView = clone.querySelector('#designer-view');
+    if (designerView) designerView.remove();
+    
+    // Ensure learner view is active and visible
+    const learnerView = clone.querySelector('#learner-view');
+    if (learnerView) learnerView.style.display = 'block';
+    
+    // Clean up dynamic UI elements to ensure a pristine boot state
+    const radialContainer = clone.querySelector('#radial-container');
+    if (radialContainer) radialContainer.innerHTML = '';
+    
+    const hubContentClone = clone.querySelector('#hub-content');
+    if (hubContentClone) {
+        hubContentClone.innerHTML = '<div class="placeholder-text">Hover over a stakeholder<br>to view strategic impact</div>';
+        hubContentClone.className = 'hub-content';
+    }
+    
+    // 3. Inject the new JSON state securely into the data script block
+    const dataScript = clone.querySelector('#app-data-script');
+    if (dataScript) {
+        dataScript.textContent = `\n  let appState = ${JSON.stringify(activeState, null, 2)};\n`;
+    }
+
+    // 4. Construct the final string with the requested HTML comment attribution header
+    const header = `<!--
+==============================================================================
+PROJECT: Forged Frameworks - VLE Automated Curriculum Pipeline
+AUTHOR: Daniel Boyland
+ORGANISATION: Forged Frameworks
+VERSION: v8.6 (Responsive Architecture & Z-Index Fix)
+DESCRIPTION: State-driven UI with a glassmorphism aesthetic. Radial pentagram layout. 
+             Now features Pointer-Event Ghosting on the central hub to prevent 
+             mobile z-index fighting, along with responsive media queries for 
+             smaller devices. Maintains standalone Learner HTML export.
+==============================================================================
+-->\n<!DOCTYPE html>\n`;
+    
+    const finalHTML = header + clone.outerHTML;
+    document.getElementById('html-output').value = finalHTML;
+  }
+
+  // --- DATA MUTATIONS ---
+  
+  function saveAndRender() {
+    localStorage.setItem('forgedRadialState', JSON.stringify(activeState));
+    renderLearnerView();
+    updateHTMLOutput();
+  }
+
+  function updateItem(id, key, value) {
+    const item = activeState.items.find(i => i.id === id);
+    if (item) {
+      item[key] = value;
+      saveAndRender();
+    }
+  }
+
+  function addNewItem() {
+    const newItem = {
+      id: Date.now(),
+      iconKey: "learner",
+      imageAsset: "",
+      title: "New Stakeholder",
+      detail: "Enter the detailed impact here. It will be centrally justified.",
+      outcome: "Outcome: New defined metric"
+    };
+    activeState.items.push(newItem);
+    renderEditorUI(); 
+    saveAndRender();
+  }
+
+  function deleteItem(id) {
+    activeState.items = activeState.items.filter(i => i.id !== id);
+    renderEditorUI();
+    saveAndRender();
+  }
+
+  // --- UTILITIES ---
+
+  function switchMode(mode) {
+    const btnLearner = document.getElementById('btn-learner');
+    const btnDesigner = document.getElementById('btn-designer');
+    const viewLearner = document.getElementById('learner-view');
+    const viewDesigner = document.getElementById('designer-view');
+
+    if (mode === 'learner') {
+      btnLearner.classList.add('active');
+      btnDesigner.classList.remove('active');
+      viewLearner.style.display = 'block';
+      viewDesigner.style.display = 'none';
+      resetHub();
+    } else {
+      btnDesigner.classList.add('active');
+      btnLearner.classList.remove('active');
+      viewDesigner.style.display = 'block';
+      viewLearner.style.display = 'none';
+    }
+  }
+
+  function copyHTML() {
+    const output = document.getElementById('html-output');
+    output.select();
+    document.execCommand('copy');
+    alert('Standalone HTML Copied! Drop this directly into an index.html file.');
+  }
+
+  // Boot
+  function initApp() {
+    // Determine if we are in "Standalone" mode (mode-controls removed)
+    const hasControls = document.getElementById('mode-controls');
+    
+    if (hasControls) {
+        // We are in the Designer App
+        renderEditorUI();
+        saveAndRender();
+    } else {
+        // We are in the Exported Learner View
+        activeState = appState; // Use hardcoded state
+        renderLearnerView();
+    }
+  }
+
+  initApp();
+
+</script>
+</body>
+</html>

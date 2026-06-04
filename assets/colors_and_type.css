@@ -1,0 +1,262 @@
+/* ============================================================
+   FORGED FRAMEWORKS — DESIGN TOKENS
+   Colors + Type, both base (tokens) and semantic (usage).
+   Sourced from the Catalyst Pipeline Dashboard (Flask/Jinja).
+   ============================================================ */
+
+/* ---------- FONTS ----------
+   ACCESSIBILITY-FIRST STACK (dyslexic-friendly).
+   - Atkinson Hyperlegible — primary UI sans; designed by the Braille
+     Institute for high letter-differentiation (mirror characters like
+     b/d/p/q/i/l/1 are drawn to be distinguishable).
+   - Lexend — reserved as an optional display/reading alternative;
+     weights loaded for future use.
+   - JetBrains Mono — monospace for terminal / telemetry (open apertures,
+     distinct I/l/1 and 0/O; friendlier than Courier for dyslexic readers).
+*/
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+  /* ============================================================
+     COLOR TOKENS — raw palette
+     ============================================================ */
+
+  /* Paper / background neutrals — warm cream, never pure white */
+  --ff-paper:        #fcfbf9;   /* canvas background */
+  --ff-paper-warm:   #f5ede6;   /* drop-zone, subtle fills */
+  --ff-paper-hover:  #ebdacf;   /* dragover, hover wash */
+  --ff-paper-edge:   #e0e0e0;   /* 1px borders on cards */
+  --ff-paper-rule:   #eeeeee;   /* soft hairlines inside cards */
+
+  /* Copper / Forge Orange — the signature brand color.
+     Named for the hammer-head in the logo. */
+  --ff-copper:          #bc6c3c;   /* primary action, accents */
+  --ff-copper-hot:      #a05b32;   /* hover / pressed copper */
+  --ff-copper-wash:     rgba(188, 108, 60, 0.10);  /* tinted bg */
+  --ff-copper-glow:     rgba(188, 108, 60, 0.40);  /* pulse / focus ring */
+
+  /* Ink / Navy — the handle of the pen, body text, headings */
+  --ff-ink:          #2c3e50;   /* primary text + headings */
+  --ff-ink-muted:    #7f8c8d;   /* secondary text, hints */
+  --ff-ink-faint:    #bdc3c7;   /* disabled, placeholder icons */
+
+  /* Terminal — the "Live Telemetry Feed" surface */
+  --ff-term-bg:      #1e1e1e;   /* terminal background */
+  --ff-term-rule:    #333333;   /* terminal divider */
+  --ff-term-text:    #a9b7c6;   /* monospace log text */
+  --ff-term-accent:  var(--ff-copper); /* section headers in log */
+
+  /* Status / Semantic — from the pipeline step tracker */
+  --ff-success:      #27ae60;
+  --ff-success-wash: #d5f5e3;   /* "ready" status pill bg */
+  --ff-warning:      #f39c12;   /* RESUME action */
+  --ff-danger:       #c0392b;   /* Kill switch, errors */
+  --ff-info:         #8e44ad;   /* POLISH action */
+  --ff-neutral:      #ecf0f1;   /* idle step-icon fill */
+
+  /* Shadow tokens — all warm-tinted blacks */
+  --ff-shadow-card:    0 2px 10px rgba(0, 0, 0, 0.05);
+  --ff-shadow-modal:   0 10px 30px rgba(0, 0, 0, 0.15);
+  --ff-shadow-terminal:0 4px 15px rgba(0, 0, 0, 0.20);
+  --ff-shadow-fab:     0 4px 10px rgba(0, 0, 0, 0.20);
+  --ff-glow-active:    0 0 10px var(--ff-copper-glow);
+
+  /* ============================================================
+     SEMANTIC COLOR TOKENS — usage layer
+     ============================================================ */
+  --color-bg:            var(--ff-paper);
+  --color-surface:       #ffffff;
+  --color-surface-soft:  var(--ff-paper-warm);
+  --color-border:        var(--ff-paper-edge);
+  --color-rule:          var(--ff-paper-rule);
+
+  --color-fg:            var(--ff-ink);
+  --color-fg-muted:      var(--ff-ink-muted);
+  --color-fg-faint:      var(--ff-ink-faint);
+  --color-fg-on-copper:  #ffffff;
+  --color-fg-on-term:    var(--ff-term-text);
+
+  --color-accent:        var(--ff-copper);
+  --color-accent-hot:    var(--ff-copper-hot);
+  --color-accent-wash:   var(--ff-copper-wash);
+
+  --color-success:       var(--ff-success);
+  --color-warning:       var(--ff-warning);
+  --color-danger:        var(--ff-danger);
+  --color-info:          var(--ff-info);
+
+  /* ============================================================
+     TYPE TOKENS
+     ============================================================ */
+  --font-sans:    'Atkinson Hyperlegible', 'Segoe UI', Tahoma, Verdana, sans-serif;
+  --font-reading: 'Lexend', 'Atkinson Hyperlegible', sans-serif;
+  --font-mono:    'JetBrains Mono', 'Courier New', Courier, monospace;
+
+  /* Weights (copper titles in app are 700; body 400) */
+  --fw-regular:  400;
+  --fw-medium:   500;
+  --fw-semibold: 600;
+  --fw-bold:     700;
+  --fw-black:    800;
+
+  /* Sizes — matching the app's literal px values */
+  --fs-xs:   12px;   /* stage hints, small captions */
+  --fs-sm:   13px;   /* file-status, modal selects, terminal text */
+  --fs-base: 14px;   /* secondary body */
+  --fs-body: 16px;   /* standard body */
+  --fs-md:   18px;   /* tracker h2, drop-zone CTA */
+  --fs-lg:   24px;   /* page H1 */
+  --fs-xl:   32px;   /* hero / marketing */
+  --fs-2xl:  48px;   /* display */
+
+  /* Line heights */
+  --lh-tight:   1.2;
+  --lh-snug:    1.3;
+  --lh-normal:  1.4;   /* terminal log */
+  --lh-relaxed: 1.6;
+
+  /* Tracking — the brand likes uppercase + letter-spacing */
+  --ls-tight:   -0.01em;
+  --ls-normal:   0;
+  --ls-wide:     1px;      /* button CAPS */
+  --ls-widest:   2px;      /* page H1 CAPS */
+
+  /* ============================================================
+     SPACING / RADIUS / MOTION
+     ============================================================ */
+  --radius-sm:   5px;   /* buttons, selects */
+  --radius-md:   8px;   /* cards, drop-zone, terminal */
+  --radius-pill: 999px;
+  --radius-circle: 50%;
+
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:   10px;
+  --space-4:   15px;
+  --space-5:   20px;
+  --space-6:   30px;
+  --space-7:   40px;
+
+  --border-hairline: 1px solid var(--color-border);
+  --border-accent:   3px solid var(--color-accent);   /* header underline */
+  --border-accent-soft: 4px solid var(--color-accent); /* modal top-border */
+  --border-dashed:   2px dashed var(--color-accent);  /* drop-zone */
+
+  --dur-fast:    150ms;
+  --dur-base:    300ms;    /* .3s — the house transition */
+  --dur-slideDown: 300ms;
+  --dur-pulse:   1500ms;
+  --ease-standard: ease;
+  --ease-out:      ease-out;
+}
+
+/* ============================================================
+   BASE / RESET
+   ============================================================ */
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-relaxed);
+  color: var(--color-fg);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+   SEMANTIC TYPE CLASSES  (use as utility classes OR copy props)
+   ============================================================ */
+
+.ff-h1, h1.ff {
+  font-family: var(--font-sans);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-tight);
+  color: var(--color-fg);
+  margin: 0;
+}
+
+.ff-h2, h2.ff {
+  font-family: var(--font-sans);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  color: var(--color-fg);
+  margin: 0;
+}
+
+.ff-h3, h3.ff {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-bold);
+  color: var(--color-fg);
+  margin: 0;
+}
+
+.ff-body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-relaxed);
+  color: var(--color-fg);
+}
+
+.ff-small {
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  color: var(--color-fg-muted);
+}
+
+.ff-caption {
+  font-family: var(--font-sans);
+  font-size: var(--fs-xs);
+  color: var(--color-fg-muted);
+}
+
+/* Copper call-out — used for the drop-zone prompt */
+.ff-prompt {
+  font-family: var(--font-sans);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  color: var(--color-accent-hot);
+}
+
+/* Primary button / action label — sentence case, no uppercase.
+   Dyslexia guidance: avoid ALL-CAPS; use weight + size for emphasis. */
+.ff-action {
+  font-family: var(--font-sans);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-normal);
+}
+
+/* Small utility label (modal action chips).
+   Still sentence case; rely on color + weight, not uppercase. */
+.ff-action-sm {
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-normal);
+}
+
+/* Terminal / telemetry feed */
+.ff-code, pre.ff, code.ff {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: var(--color-fg-on-term);
+  background: var(--ff-term-bg);
+}
+
+/* Stage header stripe inside the terminal */
+.ff-stage-header {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--color-accent);
+  background: var(--color-accent-wash);
+  border-left: 3px solid var(--color-accent);
+  padding: 2px var(--space-3);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wide);
+}

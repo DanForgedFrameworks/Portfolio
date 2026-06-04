@@ -1,0 +1,1126 @@
+<!--
+==============================================================================
+PROJECT: Forged Frameworks - VLE Automated Curriculum Pipeline
+AUTHOR: Daniel Boyland
+ORGANISATION: Forged Frameworks
+VERSION: v9.8 (Odd One Out Designer Engine - Default 3:2 Export)
+DESCRIPTION: State-driven UI with Horizontal Card Plane.
+             Updated CSS calc() to ensure 3 cards per row, forcing a perfect
+             equidistant 3:2 layout for 5-card quizzes.
+==============================================================================
+-->
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Odd One Out: Designer Engine v10.2</title>
+  <style>
+    :root {
+      --bg-main: #f8fafc;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --primary-colour: #6221f1;
+      --accent-colour: #501ad9;
+      --danger: #e11d48;
+      --border: #e2e8f0;
+      --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    * { box-sizing: border-box; font-family: var(--font); }
+    body { margin: 0; background: var(--bg-main); color: var(--text-main); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+    /* --- APP HEADER --- */
+    .app-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 24px; border-bottom: 1px solid var(--border); background: #ffffff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 100;
+    }
+    .app-title { font-size: 18px; font-weight: 800; color: var(--primary-colour); margin: 0; }
+    
+    .toggle-group { display: flex; gap: 10px; background: #e2e8f0; padding: 4px; border-radius: 8px; }
+    .mode-btn {
+      padding: 8px 16px; border: none; border-radius: 6px; font-weight: bold; font-size: 14px;
+      cursor: pointer; background: transparent; color: var(--text-muted); transition: all 0.2s;
+    }
+    .mode-btn.active { background: #fff; color: var(--primary-colour); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .btn-reset { background: #cbd5e1; color: #334155; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+    .btn-reset:hover { background: #94a3b8; }
+
+    /* --- LAYOUT --- */
+    .view-container { flex: 1; overflow: hidden; display: none; }
+    .view-container.active { display: flex; }
+
+    #learner-view { background: linear-gradient(180deg, #f4f0ff, #e6dff9); overflow-y: auto; width: 100%; justify-content: center; }
+    .learner-wrapper { width: 100%; max-width: 1300px; padding: 40px 20px; position: relative; margin: 0 auto; }
+
+    #designer-view { flex-direction: row; background: #ffffff; }
+    .editor-panel { width: 50%; border-right: 1px solid var(--border); padding: 30px; overflow-y: auto; background: #fafafa; }
+    .export-panel { width: 50%; display: flex; flex-direction: column; background: #f8fafc; padding: 30px; }
+
+    /* --- EDITOR STYLES --- */
+    .attribution-block { background: #f3e8ff; border-left: 4px solid var(--primary-colour); padding: 15px; border-radius: 0 8px 8px 0; margin-bottom: 30px; font-size: 13px; color: #4c1d95; line-height: 1.6; }
+    .code-panel { height: 100%; background: #1e293b; color: #a5b4fc; padding: 16px; border-radius: 12px; display: flex; flex-direction: column; }
+    #code-output { width: 100%; height: 100%; background: #0f172a; color: #38bdf8; border: none; padding: 12px; font-family: monospace; border-radius: 6px; resize: none; font-size: 12px; white-space: pre;}
+
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 4px; font-size: 13px; font-weight: bold; color: var(--text-main); }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; }
+
+    details { background: #fff; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; }
+    summary { padding: 12px; font-weight: bold; background: #f1f5f9; cursor: pointer; color: var(--primary-colour); display: flex; justify-content: space-between; align-items: center; }
+    .details-content { padding: 15px; border-top: 1px solid var(--border); }
+    
+    .toggle-switch { display: flex; align-items: center; gap: 10px; background: #e0f2fe; padding: 10px; border-radius: 8px; margin-bottom: 15px; cursor: pointer; border: 1px solid #bae6fd; }
+    .toggle-switch.active { background: #d1fae5; border-color: #a7f3d0; color: #065f46; font-weight: bold; }
+
+    .btn-add { background: var(--primary-colour); color: #fff; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+    .btn-delete { background: #fee2e2; color: var(--danger); border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; }
+    
+    /* Toast Notification */
+    .toast-alert { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--danger); color: white; padding: 15px 30px; border-radius: 30px; font-weight: bold; box-shadow: 0 10px 25px rgba(225, 29, 72, 0.3); z-index: 2000; opacity: 0; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+    .toast-alert.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  </style>
+
+  <style id="learner-css">
+    .ouo-app { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #2d3748; width: 100%; }
+    .ouo-app * { box-sizing: border-box; } 
+    .ouo-screen { opacity: 1; transform: translateY(0); transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease; display: block; text-align: center; }
+    .ouo-screen.roll-out-up { transform: translateY(-50px); opacity: 0; pointer-events: none; position: absolute; width: 100%; }
+    .ouo-screen.roll-in-up { animation: rollIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+    .ouo-hidden { display: none !important; }
+    @keyframes rollIn { 0% { transform: translateY(100px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+
+    .ouo-intro { text-align: center; margin-bottom: 40px; }
+    .ouo-eyebrow { color: #6221f1; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; font-size: 0.85rem; margin-bottom: 12px; }
+    .ouo-title { font-size: 2.6rem; font-weight: 800; margin-bottom: 16px; color: #1a202c; line-height: 1.2; }
+    .ouo-text { font-size: 1.15rem; color: #4a5568; max-width: 800px; margin: 0 auto; line-height: 1.6; }
+
+    .ouo-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; margin-bottom: 40px; width: 100%; }
+    
+    .ouo-card {
+      box-sizing: border-box; 
+      background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 2px solid transparent; border-radius: 20px; padding: 25px; 
+      display: flex; flex-direction: column; cursor: pointer; position: relative;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 8px 24px rgba(0,0,0,0.06); text-align: left;
+    }
+
+    .ouo-grid[data-total="4"] .ouo-card { flex: 0 1 calc(25% - 18px); min-width: 220px; max-width: 300px; min-height: 250px; }
+    .ouo-grid[data-total="5"] .ouo-card, .ouo-grid[data-total="6"] .ouo-card, .ouo-grid[data-total="7"] .ouo-card, .ouo-grid[data-total="8"] .ouo-card { flex: 0 1 calc(33.333% - 16px); min-width: 280px; max-width: 360px; min-height: 250px; }
+    .ouo-grid:not([data-total="4"]):not([data-total="5"]):not([data-total="6"]):not([data-total="7"]):not([data-total="8"]) .ouo-card { flex: 0 1 calc(33.333% - 16px); min-width: 280px; max-width: 360px; min-height: 250px; }
+
+    .ouo-card:hover { transform: translateY(-8px); box-shadow: 0 16px 32px rgba(98, 33, 241, 0.15); border-color: rgba(98, 33, 241, 0.2); }
+    
+    .ouo-bg-clip { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; border-radius: 20px; z-index: 0; pointer-events: none; }
+    .ouo-bg-mark { position: absolute; top: -10px; right: 10px; font-size: 7rem; font-weight: 900; color: rgba(98, 33, 241, 0.04); z-index: 0; line-height: 1; user-select: none;}
+    
+    .ouo-card.selected { border-color: #6221f1; box-shadow: 0 0 0 3px rgba(98,33,241,0.2), 0 16px 32px rgba(98,33,241,0.15); background: #ffffff; }
+    .ouo-badge {
+      position: absolute; top: -14px; right: 20px; background: #6221f1; color: white; font-weight: 700;
+      font-size: 0.85rem; padding: 6px 16px; border-radius: 20px; text-transform: uppercase; opacity: 0;
+      transform: translateY(10px); transition: all 0.3s ease; pointer-events: none; z-index: 5; box-shadow: 0 4px 10px rgba(98,33,241,0.3);
+    }
+    .ouo-card.selected .ouo-badge { opacity: 1; transform: translateY(0); }
+
+    .ouo-card.is-correct { z-index: 10; background: #f0fff4; border-color: #38a169; box-shadow: 0 0 0 3px rgba(56,161,105,0.3), 0 20px 40px rgba(56,161,105,0.2); animation: popUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+    .ouo-card.is-correct .ouo-badge { background: #38a169; opacity: 1; transform: translateY(0); }
+    .ouo-card.is-incorrect { z-index: 10; background: #fff5f5; border-color: #e53e3e; box-shadow: 0 0 0 3px rgba(229,62,62,0.3), 0 16px 32px rgba(229,62,62,0.15); animation: popAndShake 0.6s ease-in-out forwards; }
+    .ouo-card.is-incorrect .ouo-badge { background: #e53e3e; opacity: 1; transform: translateY(0); }
+
+    @keyframes popUp { 0% { transform: scale(1); } 100% { transform: scale(1.05) translateY(-5px); } }
+    @keyframes popAndShake { 0% { transform: scale(1) translateX(0); } 20% { transform: scale(1.05) translateX(-8px); } 40% { transform: scale(1.05) translateX(8px); } 60% { transform: scale(1.05) translateX(-6px); } 80% { transform: scale(1.05) translateX(6px); } 100% { transform: scale(1.05) translateX(0); } }
+
+    .ouo-card-img-wrapper { width: 100%; height: 130px; border-radius: 12px; margin-bottom: 15px; position: relative; z-index: 1; overflow: hidden; cursor: zoom-in; }
+    .ouo-card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+    .ouo-card-img-wrapper:hover .ouo-card-img { transform: scale(1.05); }
+    .ouo-card-img-wrapper::after { content: '🔍 Expand'; position: absolute; bottom: 5px; right: 5px; background: rgba(0,0,0,0.6); color: white; font-size: 0.7rem; padding: 3px 8px; border-radius: 10px; font-weight: bold; pointer-events: none; opacity: 0; transition: opacity 0.2s; }
+    .ouo-card-img-wrapper:hover::after { opacity: 1; }
+
+    .ouo-content-wrapper { flex-grow: 1; display: flex; flex-direction: column; position: relative; z-index: 1; }
+    .ouo-content-wrapper.no-img { justify-content: center; }
+    
+    .ouo-card-title { color: #6221f1; font-weight: 700; font-size: 1.25rem; margin-bottom: 15px; line-height: 1.3; text-align: center; }
+    .ouo-card-body { color: #4a5568; font-size: 1.05rem; line-height: 1.5; margin: 0; text-align: center; }
+
+    .ouo-explore { color: #6221f1; font-weight: 700; font-size: 0.95rem; text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px dashed rgba(98,33,241,0.2); transition: color 0.2s; position: relative; z-index: 1; }
+    .ouo-explore:hover { color: #501ad9; text-decoration: underline; }
+
+    .ouo-action { display: flex; justify-content: center; margin-top: 20px; flex-direction: column; align-items: center; gap: 10px; }
+    .ouo-btn { background: #6221f1; color: #ffffff; border: none; border-radius: 30px; padding: 16px 40px; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 14px rgba(98,33,241,0.3); }
+    .ouo-btn:hover:not(:disabled) { background: #501ad9; transform: translateY(-4px); box-shadow: 0 8px 24px rgba(98,33,241,0.4); }
+    .ouo-btn:disabled { background: #cbd5e0; box-shadow: none; cursor: not-allowed; transform: none; }
+
+    .ouo-feedback-panel { background: #ffffff; border-radius: 20px; padding: 50px; margin: 20px auto 40px auto; box-shadow: 0 8px 24px rgba(0,0,0,0.06); max-width: 900px; text-align: center; }
+    .ouo-result-title { font-size: 2.2rem; font-weight: 800; margin-bottom: 25px; }
+    .ouo-correct-col { color: #38a169; } .ouo-incorrect-col { color: #e53e3e; }
+    .ouo-feedback-text p { font-size: 1.15rem; line-height: 1.7; margin-bottom: 20px; color: #4a5568; text-align: left; }
+    .ouo-feedback-text strong { color: #0f172a; }
+
+    /* New Styling for Dynamic Feedback Elements */
+    .misconception-block { background: #f3f0ff; border-left: 4px solid #6221f1; padding: 20px; margin-top: 20px; border-radius: 0 8px 8px 0; text-align: left; }
+    .misconception-title { font-weight: 800; color: #501ad9; margin-bottom: 10px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .correction-block { background: #fff5f5; border-left: 4px solid #e53e3e; padding: 20px; margin-top: 20px; border-radius: 0 8px 8px 0; text-align: left; }
+    .correction-title { font-weight: 800; color: #c53030; margin-bottom: 10px; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .correction-card-title { font-weight: 700; color: #1a202c; font-size: 1.1rem; margin-bottom: 6px;}
+
+    .ouo-modal-bg { position: fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); display:none; justify-content:center; align-items:center; z-index:2000; opacity: 0; transition: opacity 0.3s ease; }
+    .ouo-modal-bg.active { display:flex; opacity: 1; }
+    .ouo-modal { background:#fff; padding:40px; border-radius:24px; max-width:600px; width:90%; position:relative; text-align: left; transform: translateY(20px) scale(0.95); transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+    .ouo-modal-bg.active .ouo-modal { transform: translateY(0) scale(1); }
+    .ouo-close { position:absolute; top:20px; right:20px; font-size:1.5rem; cursor:pointer; background:#f1f5f9; color: #64748b; border-radius:50%; width:35px; height:35px; display:flex; align-items:center; justify-content:center; border: none; transition: background 0.2s;}
+    .ouo-close:hover { background: #e2e8f0; color: #0f172a; }
+    
+    .ouo-modal.lightbox-modal { padding: 10px; max-width: 90vw; background: transparent; box-shadow: none; text-align: center; }
+    .ouo-modal.lightbox-modal img { max-height: 85vh; max-width: 100%; border-radius: 16px; box-shadow: 0 25px 50px rgba(0,0,0,0.5); object-fit: contain; }
+    .ouo-modal.lightbox-modal .ouo-close { top: -20px; right: -20px; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+
+    .ouo-loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 1500; flex-direction: column; justify-content: center; align-items: center; }
+    .ouo-shuffle { position: relative; width: 160px; height: 100px; margin-bottom: 30px; }
+    .ouo-scard { position: absolute; width: 45px; height: 70px; background: white; border: 3px solid #6221f1; border-radius: 6px; top: 15px; box-shadow: 0 4px 10px rgba(98,33,241,0.2); }
+    .ouo-scard::after { content: '?'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #6221f1; font-weight: bold; font-size: 1.5rem; opacity: 0.3; }
+    .ouo-c1 { animation: sLeft 1.2s infinite cubic-bezier(0.4,0,0.2,1); } .ouo-c2 { left: 57px; animation: sCenter 1.2s infinite cubic-bezier(0.4,0,0.2,1); } .ouo-c3 { animation: sRight 1.2s infinite cubic-bezier(0.4,0,0.2,1); }
+    @keyframes sLeft { 0% { left: 0; z-index: 1; transform: scale(1); } 50% { left: 115px; z-index: 10; transform: scale(1.1) rotate(5deg); } 100% { left: 0; z-index: 1; transform: scale(1); } }
+    @keyframes sRight { 0% { left: 115px; z-index: 2; transform: scale(1); } 50% { left: 0; z-index: 0; transform: scale(0.9) rotate(-5deg); } 100% { left: 115px; z-index: 2; transform: scale(1); } }
+    @keyframes sCenter { 0% { transform: translateY(0); } 25% { transform: translateY(-15px); } 50% { transform: translateY(0); } 75% { transform: translateY(15px); } 100% { transform: translateY(0); } }
+    .ouo-ltext { color: #6221f1; font-size: 1.5rem; font-weight: 700; }
+
+    .ouo-confetti { position: fixed; top: -15px; width: 10px; height: 10px; z-index: 2000; animation: cFall linear forwards; }
+    @keyframes cFall { to { transform: translateY(105vh) rotate(720deg); } }
+  </style>
+</head>
+<body>
+
+  <div class="app-header">
+    <h2 class="app-title">Forged Frameworks UI Engine: Odd One Out</h2>
+    <div style="display:flex; gap: 15px; align-items: center;">
+      <button class="btn-reset" onclick="resetApp()">🔄 Restart Quizzes</button>
+      <div class="toggle-group">
+        <button class="mode-btn active" id="btn-designer" onclick="switchMode('designer')">Designer Mode</button>
+        <button class="mode-btn" id="btn-learner" onclick="switchMode('learner')">Learner Mode</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="view-container" id="learner-view">
+    <div class="learner-wrapper" id="learner-root"></div>
+  </div>
+
+  <div class="view-container active" id="designer-view">
+    <div class="editor-panel">
+      <div class="attribution-block">
+        <strong>PROJECT:</strong> Odd One Out Interactive Check<br>
+        <strong>AUTHOR:</strong> Daniel Boyland<br>
+        <strong>ORGANISATION:</strong> Forged Frameworks<br>
+        <strong>VERSION:</strong> v10.2 (Builder Engine)<br><br>
+        <em>Build multiple quiz stages, inject image URLs, and select your distractors. The engine now automatically builds misconception and correction feedback layers. Focus bug resolved.</em>
+      </div>
+
+      <div id="editor-container"></div>
+      <button class="btn-add" style="margin-top: 20px; padding: 15px;" onclick="addQuiz()">➕ Add Another Quiz Stage</button>
+      <br><br><br>
+    </div>
+
+    <div class="export-panel">
+      <div class="code-panel">
+        <div style="display:flex; justify-content:space-between; margin-bottom:15px; align-items:center;">
+          <h3 style="margin:0; font-size:14px; text-transform:uppercase; letter-spacing:1px; color:#fff;">Publish-Ready HTML</h3>
+          <button style="background:#10b981; color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:bold;" onclick="copyCode()">📋 Copy Source Code</button>
+        </div>
+        <textarea id="code-output" readonly></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast-alert">⚠️ Error: A Distractor is missing! Please select an "Odd One Out" for every quiz before testing.</div>
+
+<script>
+  // =====================================================================
+  // 1. DATA STATE MANAGEMENT 
+  // =====================================================================
+  let defaultData = [
+    {
+      id: 1,
+      title: "The 5 Principles of AI Ethics",
+      instruction: "Identify the card that does NOT belong to the core ethical framework for laboratories.",
+      watermark: "letter",
+      showDetails: false,
+      feedbackCorrect: "<p><strong>Correct! You identified the deviation.</strong></p><p>While machine speed is an asset, Algorithmic Autonomy (letting the system rule) is the exact opposite of ethical governance. Floridi’s true fifth principle is Autonomy, but it refers to the right of the human scientist to remain in control.</p>",
+      feedbackIncorrect: "<p><strong>Incorrect. That principle is a core pillar of the framework.</strong></p><p>You selected a principle that is mandatory for ethical AI adoption. Look for the card that sacrifices human oversight.</p>",
+      feedbackMisconception: "<p>It is a common error to assume that 'Autonomy' in AI ethics refers to granting the machine independence. In strict regulatory frameworks, 'Autonomy' always refers to preserving human control over the system.</p>",
+      cards: [
+        { id: 101, title: "Beneficence", front: "Ensuring the AI development promotes the wellbeing of the public and accelerates positive scientific outcomes.", back: "", image: "", isDistractor: false },
+        { id: 102, title: "Non-Maleficence", front: "Actively preventing the 'AI' from introducing systemic errors, data leaks, or discriminatory biases into the lab's output.", back: "", image: "", isDistractor: false },
+        { id: 103, title: "Algorithmic Autonomy", front: "Granting the 'AI' full independence to make final scientific decisions without the need for human verification.", back: "", image: "", isDistractor: true },
+        { id: 104, title: "Justice", front: "Ensuring the benefits of 'AI' are distributed equitably and that models do not discriminate against specific sample origins.", back: "", image: "", isDistractor: false },
+        { id: 105, title: "Explicability", front: "Maintaining the ability to explain 'how' and 'why' an 'AI' reached a specific conclusion in human-readable terms.", back: "", image: "", isDistractor: false }
+      ]
+    }
+  ];
+
+  let appState = JSON.parse(localStorage.getItem('forgedOddOneOutState_v102')) || defaultData;
+
+  // =====================================================================
+  // 2. BACKGROUND UPDATE ENGINE
+  // =====================================================================
+  
+  function updatePreviewOnly() {
+    localStorage.setItem('forgedOddOneOutState_v102', JSON.stringify(appState));
+    document.getElementById('code-output').value = generateCleanHTML();
+    if(document.getElementById('learner-root') && document.getElementById('learner-view').style.display === 'flex') {
+      document.getElementById('learner-root').innerHTML = '';
+      activeLearnerApp = new OddOneOutApp('learner-root', appState);
+    }
+  }
+
+  function fullSaveAndRender() {
+    renderEditorUI();
+    updatePreviewOnly();
+  }
+
+  // Text Handlers (No focus loss)
+  function updateQuizText(id, key, val) { 
+    appState.find(q => q.id === id)[key] = val; 
+    updatePreviewOnly(); 
+  }
+  function updateCardText(qId, cId, key, val) { 
+    appState.find(q => q.id === qId).cards.find(c => c.id === cId)[key] = val; 
+    updatePreviewOnly(); 
+  }
+
+  // Structural Handlers
+  function updateQuizDropdown(id, key, val) { 
+    appState.find(q => q.id === id)[key] = val; 
+    fullSaveAndRender(); 
+  }
+  function toggleDetails(id) { 
+    let q = appState.find(q => q.id === id); q.showDetails = !q.showDetails; 
+    fullSaveAndRender(); 
+  }
+  function setDistractor(qId, cId) { 
+    appState.find(q => q.id === qId).cards.forEach(c => c.isDistractor = (c.id === cId)); 
+    fullSaveAndRender(); 
+  }
+  function addQuiz() {
+    appState.push({
+      id: Date.now(), title: "New Module Section", instruction: "Identify the distractor.", watermark: "letter", showDetails: false, feedbackCorrect: "<p>Correct feedback.</p>", feedbackIncorrect: "<p>Incorrect feedback.</p>", feedbackMisconception: "<p>Explain the common misunderstanding here.</p>",
+      cards: [
+        { id: Date.now()+1, title: "Concept 1", front: "...", back: "...", image: "", isDistractor: false },
+        { id: Date.now()+2, title: "Distractor Concept", front: "...", back: "...", image: "", isDistractor: true }
+      ]
+    });
+    fullSaveAndRender();
+  }
+  function deleteQuiz(e, id) { 
+    e.preventDefault(); 
+    if(confirm("Delete entire quiz?")) { appState = appState.filter(q => q.id !== id); fullSaveAndRender(); } 
+  }
+  function addCard(qId) {
+    const q = appState.find(q => q.id === qId);
+    q.cards.push({ id: Date.now(), title: "New Card", front: "Front text", back: "Details", image: "", isDistractor: false });
+    fullSaveAndRender();
+  }
+  function deleteCard(e, qId, cId) { 
+    e.preventDefault(); 
+    const q = appState.find(q => q.id === qId); 
+    if(q.cards.length > 2) { q.cards = q.cards.filter(c => c.id !== cId); fullSaveAndRender(); } else { alert("A quiz needs at least 2 cards."); } 
+  }
+
+  // =====================================================================
+  // 3. DESIGNER UI RENDERER
+  // =====================================================================
+  function renderEditorUI() {
+    const container = document.getElementById('editor-container');
+    let html = '';
+
+    appState.forEach((quiz, qIndex) => {
+      let safeTitle = quiz.title.replace(/"/g, '&quot;');
+      let safeInst = quiz.instruction.replace(/"/g, '&quot;');
+      
+      html += `
+        <details class="quiz-editor" ${qIndex === 0 ? 'open' : ''}>
+          <summary>Quiz ${qIndex + 1}: ${safeTitle} <button class="btn-delete" style="margin:0;" onclick="deleteQuiz(event, ${quiz.id})">Delete</button></summary>
+          <div class="details-content">
+            
+            <div class="form-group">
+              <label>Quiz Title</label>
+              <input type="text" value="${safeTitle}" oninput="updateQuizText(${quiz.id}, 'title', this.value)">
+            </div>
+            <div class="form-group">
+              <label>Instruction Text</label>
+              <textarea oninput="updateQuizText(${quiz.id}, 'instruction', this.value)">${quiz.instruction}</textarea>
+            </div>
+            <div class="form-group">
+              <label>Background Watermark</label>
+              <select onchange="updateQuizDropdown(${quiz.id}, 'watermark', this.value)">
+                <option value="letter" ${quiz.watermark === 'letter' ? 'selected' : ''}>Letters (A, B, C...)</option>
+                <option value="number" ${quiz.watermark === 'number' ? 'selected' : ''}>Numbers (01, 02, 03...)</option>
+                <option value="roman" ${quiz.watermark === 'roman' ? 'selected' : ''}>Roman Numerals (I, II, III...)</option>
+                <option value="none" ${quiz.watermark === 'none' ? 'selected' : ''}>None</option>
+              </select>
+            </div>
+
+            <div class="toggle-switch ${quiz.showDetails ? 'active' : ''}" onclick="toggleDetails(${quiz.id})">
+              ${quiz.showDetails ? '✅ Technical Details ON' : '❌ Technical Details OFF'}
+            </div>
+
+            <div class="form-group">
+              <label>Feedback (If Learner is Correct)</label>
+              <textarea style="min-height: 80px;" oninput="updateQuizText(${quiz.id}, 'feedbackCorrect', this.value)">${quiz.feedbackCorrect || ''}</textarea>
+            </div>
+            
+            <div class="form-group" style="background: #f3f0ff; padding: 10px; border-radius: 6px; border: 1px dashed #6221f1;">
+              <label style="color: #501ad9;">Misconception Analysis (Shown when Correct)</label>
+              <textarea style="min-height: 60px;" oninput="updateQuizText(${quiz.id}, 'feedbackMisconception', this.value)">${quiz.feedbackMisconception || ''}</textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Feedback (If Learner is Incorrect)</label>
+              <textarea style="min-height: 80px;" oninput="updateQuizText(${quiz.id}, 'feedbackIncorrect', this.value)">${quiz.feedbackIncorrect || ''}</textarea>
+              <small style="color:var(--text-muted);">Note: The app will automatically display the correct card details below this text.</small>
+            </div>
+
+            <h4 style="color:var(--text-muted); margin-bottom: 10px;">Cards List</h4>
+            <div id="cards-container-${quiz.id}">
+      `;
+
+      quiz.cards.forEach((card, cIndex) => {
+        let safeCardTitle = card.title.replace(/"/g, '&quot;');
+        let isDis = card.isDistractor;
+        html += `
+          <details class="card-editor ${isDis ? 'is-distractor' : ''}">
+            <summary>Card ${cIndex + 1}: ${safeCardTitle} <button class="btn-delete" style="margin:0; padding: 4px 8px;" onclick="deleteCard(event, ${quiz.id}, ${card.id})">X</button></summary>
+            <div class="details-content" style="position:relative;">
+              
+              <div style="position:absolute; top:15px; right:15px;">
+                <label style="font-size:12px; font-weight:bold; cursor:pointer; color: ${isDis ? '#10b981' : '#64748b'};">
+                  <input type="radio" name="distractor_${quiz.id}" ${isDis ? 'checked' : ''} onchange="setDistractor(${quiz.id}, ${card.id})">
+                  ${isDis ? '⭐ DISTRACTOR' : 'Mark as Distractor'}
+                </label>
+              </div>
+
+              <div class="form-group" style="width:70%;">
+                <label>Card Title</label>
+                <input type="text" value="${safeCardTitle}" oninput="updateCardText(${quiz.id}, ${card.id}, 'title', this.value)">
+              </div>
+              <div class="form-group">
+                <label>Front Text</label>
+                <textarea oninput="updateCardText(${quiz.id}, ${card.id}, 'front', this.value)">${card.front}</textarea>
+              </div>
+              ${quiz.showDetails ? `
+              <div class="form-group">
+                <label>Back Text (Explore Detail)</label>
+                <textarea oninput="updateCardText(${quiz.id}, ${card.id}, 'back', this.value)">${card.back}</textarea>
+              </div>` : ''}
+              <div class="form-group">
+                <label>Image URL (Optional Override)</label>
+                <input type="text" placeholder="https://..." value="${card.image || ''}" oninput="updateCardText(${quiz.id}, ${card.id}, 'image', this.value)">
+              </div>
+            </div>
+          </details>
+        `;
+      });
+
+      html += `
+            </div>
+            <button class="btn-add" onclick="addCard(${quiz.id})">+ Add Card</button>
+          </div>
+        </details>
+      `;
+    });
+
+    container.innerHTML = html;
+  }
+
+  function copyCode() {
+    const output = document.getElementById('code-output');
+    output.select();
+    document.execCommand('copy');
+    alert('Code copied successfully!');
+  }
+
+  function validateDistractors() {
+    let isValid = true;
+    appState.forEach(quiz => {
+      const hasDistractor = quiz.cards.some(c => c.isDistractor);
+      if(!hasDistractor) isValid = false;
+    });
+    return isValid;
+  }
+
+  // =====================================================================
+  // 4. LEARNER APP ENGINE (Live preview)
+  // =====================================================================
+  class OddOneOutApp {
+    constructor(containerId, stateData) {
+      this.container = document.getElementById(containerId);
+      this.data = stateData;
+      this.currentIndex = 0;
+      this.selectedCardIndex = null;
+      this.score = 0;
+      this.buildDOM();
+      this.renderChallenge(0);
+    }
+
+    toRoman(num) {
+      const roman = {M:1000, CM:900, D:500, CD:400, C:100, XC:90, L:50, XL:40, X:10, IX:9, V:5, IV:4, I:1};
+      let str = '';
+      for (let i of Object.keys(roman)) {
+        let q = Math.floor(num / roman[i]);
+        num -= q * roman[i];
+        str += i.repeat(q);
+      }
+      return str;
+    }
+
+    buildDOM() {
+      this.container.innerHTML = `
+        <div class="ouo-app">
+          <div class="ouo-screen" id="quizScreen_${this.container.id}">
+            <div class="ouo-intro">
+              <p class="ouo-eyebrow" id="eyebrow_${this.container.id}"></p>
+              <h1 class="ouo-title" id="title_${this.container.id}"></h1>
+              <p class="ouo-text" id="inst_${this.container.id}"></p>
+            </div>
+            <div class="ouo-grid" id="grid_${this.container.id}"></div>
+            <div class="ouo-action">
+              <button class="ouo-btn" id="submit_${this.container.id}" disabled>Lock in Selection</button>
+            </div>
+          </div>
+
+          <div class="ouo-screen ouo-hidden" id="fbScreen_${this.container.id}">
+            <div class="ouo-intro">
+              <p class="ouo-eyebrow">Detailed Feedback</p>
+              <h1 class="ouo-title" id="fbTitle_${this.container.id}">Check results</h1>
+            </div>
+            <div class="ouo-feedback-panel">
+              <div class="ouo-result-title" id="fbStatus_${this.container.id}"></div>
+              <div class="ouo-feedback-text" id="fbBody_${this.container.id}"></div>
+            </div>
+            <div class="ouo-action">
+              <button class="ouo-btn" id="next_${this.container.id}"></button>
+            </div>
+          </div>
+
+          <div class="ouo-screen ouo-hidden" id="endScreen_${this.container.id}">
+            <div class="ouo-intro">
+              <h1 class="ouo-title">Quiz Complete!</h1>
+              <p class="ouo-text" id="score_${this.container.id}" style="font-size:1.3rem; font-weight:600; color:#6221f1;"></p>
+            </div>
+            <div class="ouo-action">
+              <button class="ouo-btn" id="reload_${this.container.id}">Reload Quizzes</button>
+              <div style="margin-top:15px; color:#64748b; font-weight:600;">or continue with your learning.</div>
+            </div>
+          </div>
+
+          <div class="ouo-modal-bg" id="modalBg_${this.container.id}">
+            <div class="ouo-modal" id="modalContent_${this.container.id}">
+              <button class="ouo-close" id="close_${this.container.id}">&times;</button>
+              <div id="mImg_${this.container.id}"></div>
+              <h2 id="mTitle_${this.container.id}"></h2>
+              <p id="mBody_${this.container.id}"></p>
+            </div>
+          </div>
+
+          <div class="ouo-loader" id="loader_${this.container.id}">
+            <div class="ouo-shuffle">
+              <div class="ouo-scard ouo-c1"></div><div class="ouo-scard ouo-c2"></div><div class="ouo-scard ouo-c3"></div>
+            </div>
+            <div class="ouo-ltext">Shuffling concepts...</div>
+          </div>
+        </div>
+      `;
+
+      this.container.querySelector(`#submit_${this.container.id}`).onclick = () => this.submit();
+      this.container.querySelector(`#next_${this.container.id}`).onclick = () => this.next();
+      this.container.querySelector(`#reload_${this.container.id}`).onclick = () => this.restart();
+      
+      const modalBg = this.container.querySelector(`#modalBg_${this.container.id}`);
+      this.container.querySelector(`#close_${this.container.id}`).onclick = () => modalBg.classList.remove('active');
+      modalBg.onclick = (e) => { if(e.target === modalBg) modalBg.classList.remove('active'); };
+    }
+
+    renderChallenge(index) {
+      if(!this.data || this.data.length === 0) return;
+      const quiz = this.data[index];
+      this.container.querySelector(`#eyebrow_${this.container.id}`).innerText = `Challenge ${index + 1} of ${this.data.length}`;
+      this.container.querySelector(`#title_${this.container.id}`).innerText = quiz.title;
+      this.container.querySelector(`#inst_${this.container.id}`).innerText = quiz.instruction;
+
+      const grid = this.container.querySelector(`#grid_${this.container.id}`);
+      grid.innerHTML = '';
+      
+      grid.setAttribute('data-total', quiz.cards.length);
+      
+      this.selectedCardIndex = null;
+      this.container.querySelector(`#submit_${this.container.id}`).disabled = true;
+
+      quiz.cards.forEach((card, idx) => {
+        const el = document.createElement('div');
+        el.className = 'ouo-card';
+        
+        let mark = '';
+        if(quiz.watermark === 'letter') mark = String.fromCharCode(65 + idx);
+        if(quiz.watermark === 'number') mark = String(idx + 1).padStart(2, '0');
+        if(quiz.watermark === 'roman') mark = this.toRoman(idx + 1);
+        
+        let imgHtml = card.image && card.image.trim() !== '' ? `
+          <div class="ouo-card-img-wrapper" onclick="event.stopPropagation(); window['appInstance_${this.container.id}'].openLightbox('${card.image}')">
+            <img src="${card.image}" class="ouo-card-img" />
+          </div>` : '';
+          
+        let noImgClass = !imgHtml ? 'no-img' : '';
+
+        el.innerHTML = `
+          <div class="ouo-bg-clip"><div class="ouo-bg-mark">${mark}</div></div>
+          <div class="ouo-badge">Selected</div>
+          ${imgHtml}
+          <div class="ouo-content-wrapper ${noImgClass}">
+            <div class="ouo-card-title">${card.title}</div>
+            <div class="ouo-card-body">${card.front}</div>
+          </div>
+          ${quiz.showDetails ? `<div class="ouo-explore" onclick="event.stopPropagation(); window['appInstance_${this.container.id}'].showDetail(${idx})">Tap for more details</div>` : ''}
+        `;
+
+        el.onclick = () => this.selectCard(idx, el);
+        grid.appendChild(el);
+      });
+
+      window[`appInstance_${this.container.id}`] = this;
+    }
+
+    selectCard(idx, el) {
+      if(el.classList.contains('is-correct') || el.classList.contains('is-incorrect')) return;
+      const all = this.container.querySelectorAll('.ouo-card');
+      const subBtn = this.container.querySelector(`#submit_${this.container.id}`);
+      
+      if(this.selectedCardIndex === idx) {
+        this.selectedCardIndex = null;
+        el.classList.remove('selected');
+        subBtn.disabled = true;
+      } else {
+        all.forEach(c => c.classList.remove('selected'));
+        this.selectedCardIndex = idx;
+        el.classList.add('selected');
+        subBtn.disabled = false;
+      }
+    }
+
+    showDetail(i) {
+      const c = this.data[this.currentIndex].cards[i];
+      const modal = this.container.querySelector(`#modalContent_${this.container.id}`);
+      modal.className = 'ouo-modal';
+      this.container.querySelector(`#mImg_${this.container.id}`).innerHTML = '';
+      this.container.querySelector(`#mTitle_${this.container.id}`).innerText = c.title;
+      this.container.querySelector(`#mBody_${this.container.id}`).innerText = c.back;
+      this.container.querySelector(`#modalBg_${this.container.id}`).classList.add('active');
+    }
+
+    openLightbox(imgSrc) {
+      const modal = this.container.querySelector(`#modalContent_${this.container.id}`);
+      modal.className = 'ouo-modal lightbox-modal';
+      this.container.querySelector(`#mImg_${this.container.id}`).innerHTML = `<img src="${imgSrc}" />`;
+      this.container.querySelector(`#mTitle_${this.container.id}`).innerText = '';
+      this.container.querySelector(`#mBody_${this.container.id}`).innerText = '';
+      this.container.querySelector(`#modalBg_${this.container.id}`).classList.add('active');
+    }
+
+    fireConfetti() {
+      const colors = ['#6221f1', '#38a169', '#3498db', '#f6ad55', '#e53e3e'];
+      for (let i = 0; i < 50; i++) {
+        const c = document.createElement('div');
+        c.className = 'ouo-confetti';
+        c.style.left = Math.random() * 100 + 'vw';
+        c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        c.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        c.style.animationDelay = (Math.random() * 0.5) + 's';
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 4000);
+      }
+    }
+
+    submit() {
+      if(this.selectedCardIndex === null) return;
+      const subBtn = this.container.querySelector(`#submit_${this.container.id}`);
+      const loader = this.container.querySelector(`#loader_${this.container.id}`);
+      subBtn.disabled = true;
+      loader.style.display = 'flex';
+
+      setTimeout(() => {
+        loader.style.display = 'none';
+        
+        const quiz = this.data[this.currentIndex];
+        const cardsNode = this.container.querySelectorAll('.ouo-card');
+        const selectedEl = cardsNode[this.selectedCardIndex];
+        
+        const correctIndex = quiz.cards.findIndex(c => c.isDistractor);
+        const isCorrect = (this.selectedCardIndex === correctIndex);
+
+        if(isCorrect) {
+          selectedEl.classList.add('is-correct');
+          this.score++;
+          this.fireConfetti();
+        } else {
+          selectedEl.classList.add('is-incorrect');
+        }
+
+        setTimeout(() => {
+          this.showFeedback(isCorrect, quiz);
+          this.transitionScreen(`quizScreen_${this.container.id}`, `fbScreen_${this.container.id}`);
+        }, 1600);
+
+      }, 1500);
+    }
+
+    showFeedback(isCorrect, quiz) {
+      const fbTitle = this.container.querySelector(`#fbTitle_${this.container.id}`);
+      const fbStatus = this.container.querySelector(`#fbStatus_${this.container.id}`);
+      const fbBody = this.container.querySelector(`#fbBody_${this.container.id}`);
+      const nxtBtn = this.container.querySelector(`#next_${this.container.id}`);
+
+      fbTitle.innerText = `${quiz.title} Results`;
+      
+      let feedbackHTML = "";
+
+      if(isCorrect) {
+        fbStatus.innerText = "Correct! You identified the deviation.";
+        fbStatus.className = "ouo-result-title ouo-correct-col";
+        
+        feedbackHTML = quiz.feedbackCorrect || "";
+        if(quiz.feedbackMisconception && quiz.feedbackMisconception.trim() !== "") {
+           feedbackHTML += `
+            <div class="misconception-block">
+              <div class="misconception-title">Misconception Analysis</div>
+              <div style="font-size: 0.95rem; color: #4a5568;">${quiz.feedbackMisconception}</div>
+            </div>
+           `;
+        }
+
+      } else {
+        fbStatus.innerText = "Incorrect. Let's review why.";
+        fbStatus.className = "ouo-result-title ouo-incorrect-col";
+        
+        const correctCard = quiz.cards.find(c => c.isDistractor);
+        feedbackHTML = (quiz.feedbackIncorrect || "") + `
+          <div class="correction-block">
+            <div class="correction-title">The Correct Odd One Out</div>
+            <div class="correction-card-title">${correctCard.title}</div>
+            <div style="font-size: 0.95rem; color: #4a5568;">${correctCard.front}</div>
+          </div>
+        `;
+      }
+
+      fbBody.innerHTML = feedbackHTML;
+
+      if (this.currentIndex === this.data.length - 1) {
+        nxtBtn.innerText = "All mismatches completed";
+      } else {
+        nxtBtn.innerText = "Next Challenge";
+      }
+    }
+
+    next() {
+      if (this.currentIndex < this.data.length - 1) {
+        this.currentIndex++;
+        this.renderChallenge(this.currentIndex);
+        this.transitionScreen(`fbScreen_${this.container.id}`, `quizScreen_${this.container.id}`);
+      } else {
+        this.container.querySelector(`#score_${this.container.id}`).innerText = `You scored ${this.score} out of ${this.data.length}.`;
+        this.transitionScreen(`fbScreen_${this.container.id}`, `endScreen_${this.container.id}`);
+      }
+    }
+
+    restart() {
+      this.currentIndex = 0;
+      this.score = 0;
+      this.renderChallenge(0);
+      this.transitionScreen(`endScreen_${this.container.id}`, `quizScreen_${this.container.id}`);
+    }
+
+    transitionScreen(outId, inId) {
+      const outEl = this.container.querySelector(`#${outId}`);
+      const inEl = this.container.querySelector(`#${inId}`);
+      outEl.classList.add('roll-out-up');
+      setTimeout(() => {
+        outEl.classList.add('ouo-hidden');
+        outEl.classList.remove('roll-out-up');
+        inEl.classList.remove('ouo-hidden');
+        inEl.classList.add('roll-in-up');
+        setTimeout(() => inEl.classList.remove('roll-in-up'), 600);
+      }, 500);
+    }
+  }
+
+  // =====================================================================
+  // 5. COMPILER ENGINE
+  // =====================================================================
+  function generateCleanHTML() {
+    const cleanJSON = JSON.stringify(appState, null, 4);
+    const cssStyles = document.getElementById('learner-css').innerText;
+
+    return `<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Odd One Out: Knowledge Checks</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { background: linear-gradient(180deg, #f4f0ff, #e6dff9); min-height: 100vh; margin: 0; padding: 40px 20px; display: flex; justify-content: center; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;}
+    .learner-wrapper { width: 100%; max-width: 1300px; position: relative; margin: 0 auto; }
+    ${cssStyles}
+  </style>
+</head>
+<body>
+  <div class="learner-wrapper" id="standalone-root"></div>
+  
+  <script>
+    const payloadData = ${cleanJSON};
+
+    class StandaloneOUOApp {
+      constructor(containerId, stateData) {
+        this.container = document.getElementById(containerId);
+        this.data = stateData;
+        this.currentIndex = 0;
+        this.selectedCardIndex = null;
+        this.score = 0;
+        this.buildDOM();
+        this.renderChallenge(0);
+      }
+      toRoman(num) {
+        const roman = {M:1000, CM:900, D:500, CD:400, C:100, XC:90, L:50, XL:40, X:10, IX:9, V:5, IV:4, I:1};
+        let str = '';
+        for (let i of Object.keys(roman)) {
+          let q = Math.floor(num / roman[i]);
+          num -= q * roman[i];
+          str += i.repeat(q);
+        }
+        return str;
+      }
+      buildDOM() {
+        this.container.innerHTML = \`
+          <div class="ouo-app">
+            <div class="ouo-screen" id="quizScreen_\${this.container.id}">
+              <div class="ouo-intro">
+                <p class="ouo-eyebrow" id="eyebrow_\${this.container.id}"></p>
+                <h1 class="ouo-title" id="title_\${this.container.id}"></h1>
+                <p class="ouo-text" id="inst_\${this.container.id}"></p>
+              </div>
+              <div class="ouo-grid" id="grid_\${this.container.id}"></div>
+              <div class="ouo-action">
+                <button class="ouo-btn" id="submit_\${this.container.id}" disabled>Lock in Selection</button>
+              </div>
+            </div>
+
+            <div class="ouo-screen ouo-hidden" id="fbScreen_\${this.container.id}">
+              <div class="ouo-intro">
+                <p class="ouo-eyebrow">Detailed Feedback</p>
+                <h1 class="ouo-title" id="fbTitle_\${this.container.id}">Check results</h1>
+              </div>
+              <div class="ouo-feedback-panel">
+                <div class="ouo-result-title" id="fbStatus_\${this.container.id}"></div>
+                <div class="ouo-feedback-text" id="fbBody_\${this.container.id}"></div>
+              </div>
+              <div class="ouo-action">
+                <button class="ouo-btn" id="next_\${this.container.id}"></button>
+              </div>
+            </div>
+
+            <div class="ouo-screen ouo-hidden" id="endScreen_\${this.container.id}">
+              <div class="ouo-intro">
+                <h1 class="ouo-title">Quiz Complete!</h1>
+                <p class="ouo-text" id="score_\${this.container.id}" style="font-size:1.3rem; font-weight:600; color:#6221f1;"></p>
+              </div>
+              <div class="ouo-action">
+                <button class="ouo-btn" id="reload_\${this.container.id}">Reload Quizzes</button>
+                <div style="margin-top:15px; color:#64748b; font-weight:600;">or continue with your learning.</div>
+              </div>
+            </div>
+
+            <div class="ouo-modal-bg" id="modalBg_\${this.container.id}">
+              <div class="ouo-modal" id="modalContent_\${this.container.id}">
+                <button class="ouo-close" id="close_\${this.container.id}">&times;</button>
+                <div id="mImg_\${this.container.id}"></div>
+                <h2 id="mTitle_\${this.container.id}"></h2>
+                <p id="mBody_\${this.container.id}"></p>
+              </div>
+            </div>
+
+            <div class="ouo-loader" id="loader_\${this.container.id}">
+              <div class="ouo-shuffle">
+                <div class="ouo-scard ouo-c1"></div><div class="ouo-scard ouo-c2"></div><div class="ouo-scard ouo-c3"></div>
+              </div>
+              <div class="ouo-ltext">Shuffling concepts...</div>
+            </div>
+          </div>
+        \`;
+
+        this.container.querySelector(\`#submit_\${this.container.id}\`).onclick = () => this.submit();
+        this.container.querySelector(\`#next_\${this.container.id}\`).onclick = () => this.next();
+        this.container.querySelector(\`#reload_\${this.container.id}\`).onclick = () => this.restart();
+        
+        const modalBg = this.container.querySelector(\`#modalBg_\${this.container.id}\`);
+        this.container.querySelector(\`#close_\${this.container.id}\`).onclick = () => modalBg.classList.remove('active');
+        modalBg.onclick = (e) => { if(e.target === modalBg) modalBg.classList.remove('active'); };
+      }
+
+      renderChallenge(index) {
+        if(!this.data || this.data.length === 0) return;
+        const quiz = this.data[index];
+        this.container.querySelector(\`#eyebrow_\${this.container.id}\`).innerText = \`Challenge \${index + 1} of \${this.data.length}\`;
+        this.container.querySelector(\`#title_\${this.container.id}\`).innerText = quiz.title;
+        this.container.querySelector(\`#inst_\${this.container.id}\`).innerText = quiz.instruction;
+
+        const grid = this.container.querySelector(\`#grid_\${this.container.id}\`);
+        grid.innerHTML = '';
+        
+        grid.setAttribute('data-total', quiz.cards.length);
+
+        this.selectedCardIndex = null;
+        this.container.querySelector(\`#submit_\${this.container.id}\`).disabled = true;
+
+        quiz.cards.forEach((card, idx) => {
+          const el = document.createElement('div');
+          el.className = 'ouo-card';
+          
+          let mark = '';
+          if(quiz.watermark === 'letter') mark = String.fromCharCode(65 + idx);
+          if(quiz.watermark === 'number') mark = String(idx + 1).padStart(2, '0');
+          if(quiz.watermark === 'roman') mark = this.toRoman(idx + 1);
+          
+          let imgHtml = card.image && card.image.trim() !== '' ? \`
+            <div class="ouo-card-img-wrapper" onclick="event.stopPropagation(); window['appInstance_\${this.container.id}'].openLightbox('\${card.image}')">
+              <img src="\${card.image}" class="ouo-card-img" />
+            </div>\` : '';
+            
+          let noImgClass = !imgHtml ? 'no-img' : '';
+
+          el.innerHTML = \`
+            <div class="ouo-bg-clip"><div class="ouo-bg-mark">\${mark}</div></div>
+            <div class="ouo-badge">Selected</div>
+            \${imgHtml}
+            <div class="ouo-content-wrapper \${noImgClass}">
+              <div class="ouo-card-title">\${card.title}</div>
+              <div class="ouo-card-body">\${card.front}</div>
+            </div>
+            \${quiz.showDetails ? \`<div class="ouo-explore" onclick="event.stopPropagation(); window['appInstance_\${this.container.id}'].showDetail(\${idx})">Tap for more details</div>\` : ''}
+          \`;
+
+          el.onclick = () => this.selectCard(idx, el);
+          grid.appendChild(el);
+        });
+
+        window[\`appInstance_\${this.container.id}\`] = this;
+      }
+
+      selectCard(idx, el) {
+        if(el.classList.contains('is-correct') || el.classList.contains('is-incorrect')) return;
+        const all = this.container.querySelectorAll('.ouo-card');
+        const subBtn = this.container.querySelector(\`#submit_\${this.container.id}\`);
+        
+        if(this.selectedCardIndex === idx) {
+          this.selectedCardIndex = null;
+          el.classList.remove('selected');
+          subBtn.disabled = true;
+        } else {
+          all.forEach(c => c.classList.remove('selected'));
+          this.selectedCardIndex = idx;
+          el.classList.add('selected');
+          subBtn.disabled = false;
+        }
+      }
+
+      showDetail(i) {
+        const c = this.data[this.currentIndex].cards[i];
+        const modal = this.container.querySelector(\`#modalContent_\${this.container.id}\`);
+        modal.className = 'ouo-modal';
+        this.container.querySelector(\`#mImg_\${this.container.id}\`).innerHTML = '';
+        this.container.querySelector(\`#mTitle_\${this.container.id}\`).innerText = c.title;
+        this.container.querySelector(\`#mBody_\${this.container.id}\`).innerText = c.back;
+        this.container.querySelector(\`#modalBg_\${this.container.id}\`).classList.add('active');
+      }
+
+      openLightbox(imgSrc) {
+        const modal = this.container.querySelector(\`#modalContent_\${this.container.id}\`);
+        modal.className = 'ouo-modal lightbox-modal';
+        this.container.querySelector(\`#mImg_\${this.container.id}\`).innerHTML = \`<img src="\${imgSrc}" />\`;
+        this.container.querySelector(\`#mTitle_\${this.container.id}\`).innerText = '';
+        this.container.querySelector(\`#mBody_\${this.container.id}\`).innerText = '';
+        this.container.querySelector(\`#modalBg_\${this.container.id}\`).classList.add('active');
+      }
+
+      fireConfetti() {
+        const colors = ['#6221f1', '#38a169', '#3498db', '#f6ad55', '#e53e3e'];
+        for (let i = 0; i < 50; i++) {
+          const c = document.createElement('div');
+          c.className = 'ouo-confetti';
+          c.style.left = Math.random() * 100 + 'vw';
+          c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+          c.style.animationDuration = (Math.random() * 2 + 2) + 's';
+          c.style.animationDelay = (Math.random() * 0.5) + 's';
+          document.body.appendChild(c);
+          setTimeout(() => c.remove(), 4000);
+        }
+      }
+
+      submit() {
+        if(this.selectedCardIndex === null) return;
+        const subBtn = this.container.querySelector(\`#submit_\${this.container.id}\`);
+        const loader = this.container.querySelector(\`#loader_\${this.container.id}\`);
+        subBtn.disabled = true;
+        loader.style.display = 'flex';
+
+        setTimeout(() => {
+          loader.style.display = 'none';
+          
+          const quiz = this.data[this.currentIndex];
+          const cardsNode = this.container.querySelectorAll('.ouo-card');
+          const selectedEl = cardsNode[this.selectedCardIndex];
+          
+          const correctIndex = quiz.cards.findIndex(c => c.isDistractor);
+          const isCorrect = (this.selectedCardIndex === correctIndex);
+
+          if(isCorrect) {
+            selectedEl.classList.add('is-correct');
+            this.score++;
+            this.fireConfetti();
+          } else {
+            selectedEl.classList.add('is-incorrect');
+          }
+
+          setTimeout(() => {
+            this.showFeedback(isCorrect, quiz);
+            this.transitionScreen(\`quizScreen_\${this.container.id}\`, \`fbScreen_\${this.container.id}\`);
+          }, 1600);
+
+        }, 1500);
+      }
+
+      showFeedback(isCorrect, quiz) {
+        const fbTitle = this.container.querySelector(\`#fbTitle_\${this.container.id}\`);
+        const fbStatus = this.container.querySelector(\`#fbStatus_\${this.container.id}\`);
+        const fbBody = this.container.querySelector(\`#fbBody_\${this.container.id}\`);
+        const nxtBtn = this.container.querySelector(\`#next_\${this.container.id}\`);
+
+        fbTitle.innerText = \`\${quiz.title} Results\`;
+        
+        let feedbackHTML = "";
+
+        if(isCorrect) {
+          fbStatus.innerText = "Correct! You found the odd one out.";
+          fbStatus.className = "ouo-result-title ouo-correct-col";
+          
+          feedbackHTML = quiz.feedbackCorrect || "";
+          if(quiz.feedbackMisconception && quiz.feedbackMisconception.trim() !== "") {
+             feedbackHTML += \`
+              <div class="misconception-block">
+                <div class="misconception-title">Misconception Analysis</div>
+                <div style="font-size: 0.95rem; color: #4a5568;">\${quiz.feedbackMisconception}</div>
+              </div>
+             \`;
+          }
+
+        } else {
+          fbStatus.innerText = "Incorrect. Let's review why.";
+          fbStatus.className = "ouo-result-title ouo-incorrect-col";
+          
+          const correctCard = quiz.cards.find(c => c.isDistractor);
+          feedbackHTML = (quiz.feedbackIncorrect || "") + \`
+            <div class="correction-block">
+              <div class="correction-title">The Correct Odd One Out</div>
+              <div class="correction-card-title">\${correctCard.title}</div>
+              <div style="font-size: 0.95rem; color: #4a5568;">\${correctCard.front}</div>
+            </div>
+          \`;
+        }
+
+        fbBody.innerHTML = feedbackHTML;
+
+        if (this.currentIndex === this.data.length - 1) {
+          nxtBtn.innerText = "All mismatches completed";
+        } else {
+          nxtBtn.innerText = "Next Challenge";
+        }
+      }
+
+      next() {
+        if (this.currentIndex < this.data.length - 1) {
+          this.currentIndex++;
+          this.renderChallenge(this.currentIndex);
+          this.transitionScreen(\`fbScreen_\${this.container.id}\`, \`quizScreen_\${this.container.id}\`);
+        } else {
+          this.container.querySelector(\`#score_\${this.container.id}\`).innerText = \`You scored \${this.score} out of \${this.data.length}.\`;
+          this.transitionScreen(\`fbScreen_\${this.container.id}\`, \`endScreen_\${this.container.id}\`);
+        }
+      }
+
+      restart() {
+        this.currentIndex = 0;
+        this.score = 0;
+        this.renderChallenge(0);
+        this.transitionScreen(\`endScreen_\${this.container.id}\`, \`quizScreen_\${this.container.id}\`);
+      }
+
+      transitionScreen(outId, inId) {
+        const outEl = this.container.querySelector(\`#\${outId}\`);
+        const inEl = this.container.querySelector(\`#\${inId}\`);
+        outEl.classList.add('roll-out-up');
+        setTimeout(() => {
+          outEl.classList.add('ouo-hidden');
+          outEl.classList.remove('roll-out-up');
+          inEl.classList.remove('ouo-hidden');
+          inEl.classList.add('roll-in-up');
+          setTimeout(() => inEl.classList.remove('roll-in-up'), 600);
+        }, 500);
+      }
+    }
+
+    new StandaloneOUOApp('standalone-root', payloadData);
+  <\/script>
+</body>
+</html>`;
+  }
+
+  // =====================================================================
+  // 6. INITIALISATION & MODE SWITCHING
+  // =====================================================================
+  let activeLearnerApp = null;
+
+  function switchMode(m) {
+    if(m === 'learner') {
+      if(!validateDistractors()) {
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 4000);
+        return; 
+      }
+      document.getElementById('learner-root').innerHTML = ''; 
+      activeLearnerApp = new OddOneOutApp('learner-root', appState);
+    }
+
+    document.getElementById('btn-designer').className = 'mode-btn' + (m === 'designer' ? ' active' : '');
+    document.getElementById('btn-learner').className = 'mode-btn' + (m === 'learner' ? ' active' : '');
+    document.getElementById('designer-view').style.display = m === 'designer' ? 'flex' : 'none';
+    document.getElementById('learner-view').style.display = m === 'learner' ? 'flex' : 'none';
+  }
+
+  function resetApp() { 
+    if(document.getElementById('learner-view').style.display === 'flex') {
+      document.getElementById('learner-root').innerHTML = ''; 
+      activeLearnerApp = new OddOneOutApp('learner-root', appState); 
+    } else {
+      switchMode('learner');
+    }
+  }
+
+  function boot() {
+    renderEditorUI();
+    document.getElementById('code-output').value = generateCleanHTML();
+    activeLearnerApp = new OddOneOutApp('learner-root', appState);
+  }
+  
+  boot();
+
+</script>
+</body>
+</html>

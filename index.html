@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Daniel 'Wig' Boyland — Forged Frameworks Portfolio</title>
+<meta name="description" content="Forged Frameworks — a portfolio by Daniel 'Wig' Boyland: digital learning content design, GenAI content pipelines, and accessibility-first instructional design." />
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="assets/colors_and_type.css" />
+<link rel="stylesheet" href="site.css" />
+</head>
+<body>
+<canvas id="matrix" aria-hidden="true"></canvas>
+<a class="skip-link" href="#about">Skip to content</a>
+<button class="bg-fab" id="bgToggle" type="button" aria-pressed="false" title="Toggle the background forge-rain animation">◍ Background: on</button>
+
+<!-- ===================== NAV ===================== -->
+<header class="nav">
+  <div class="wrap-wide nav__inner">
+    <a class="brand" href="#top" aria-label="Forged Frameworks — home">
+      <svg viewBox="0 0 100 132" aria-hidden="true">
+        <path d="M30 14 L74 14 Q80 14 80 20 L80 40 Q80 46 74 46 L30 46 L12 30 Z" fill="#bc6c3c"/>
+        <rect x="45" y="46" width="10" height="46" fill="#2c3e50"/>
+        <rect x="40" y="90" width="20" height="9" rx="2" fill="#2c3e50"/>
+        <path d="M40 99 L60 99 L51 128 Z" fill="#2c3e50"/>
+        <line x1="50" y1="103" x2="50" y2="118" stroke="#bc6c3c" stroke-width="1.6"/>
+        <circle cx="50" cy="112" r="2.6" fill="#fcfbf9"/>
+      </svg>
+      <span class="brand__name">Forged Frameworks<small>Daniel 'Wig' Boyland</small></span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#about">About</a>
+      <a href="#pipeline">Pipeline</a>
+      <div class="nav__dd">
+        <button class="nav__ddbtn" aria-expanded="false" aria-haspopup="true">Work <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="nav__menu" role="menu">
+          <a href="#work" role="menuitem">All selected work</a>
+          <a href="#prevent" role="menuitem">Modules &amp; compliance<small>Prevent Duty, Asbestos ITM</small></a>
+          <a href="#codex" role="menuitem">Interactive blocks<small>Codex HTML library</small></a>
+          <a href="#vibe" role="menuitem">Bespoke tools<small>Diagnostics &amp; decision engines</small></a>
+          <a href="#modules" role="menuitem">Level-specific modules<small>L3 · L5 · L6 show &amp; tell</small></a>
+          <a href="#creative" role="menuitem">Creative &amp; CPD<small>Wonky Forge, Canva</small></a>
+        </div>
+      </div>
+      <a href="#reviews">Reviews</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#contact" class="nav__cta">Let's work together</a>
+    </nav>
+    <button class="nav__toggle" aria-label="Menu" aria-expanded="false" aria-controls="primary-menu">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ===================== HERO ===================== -->
+<section class="hero" data-screen-label="Hero">
+  <div class="wrap-wide hero__grid">
+    <div class="reveal in">
+      <span class="hero__eyebrow">Portfolio &amp; me · forging learning</span>
+      <h1 class="h-display">Daniel <span class="accent">'Wig' Boyland</span></h1>
+      <p class="hero__roles">Digital Learning Content Designer <span>·</span> Learning Experience Curator <span>·</span> Forged Frameworks Founder</p>
+      <p class="lead">Forging engaging, accessible learning experiences across science, technology, and higher education — with creativity, precision, and a dash of blacksmith's grit.</p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="#work">See my work</a>
+        <a class="btn btn--ghost" href="#contact">Let's work together</a>
+      </div>
+      <a class="hero__nudge" href="Accreditation-Quality.html">
+        <i data-lucide="shield-check"></i>
+        <span>Here for <strong>ISO, QMS or accreditation</strong> support? See the accreditation &amp; quality background <span class="hero__nudge-arrow">&rarr;</span></span>
+      </a>
+      <p class="bg-note">The background is a live "forge-rain" of copper glyphs — toggle it any time with the button in the corner.</p>
+    </div>
+    <div class="hero__mark hero__mark--logo reveal in">
+      <img class="hero__logo-big" src="assets/logo-animated.gif" alt="Forged Frameworks — animated hammer-and-nib mark" />
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ABOUT ===================== -->
+<section id="about" class="band" data-screen-label="About me">
+  <div class="wrap">
+    <div class="about-intro reveal">
+      <img class="about-portrait" src="assets/me-portrait.jpg" alt="Daniel 'Wig' Boyland" />
+      <div>
+        <p class="kicker"><i data-lucide="user-round"></i>about me</p>
+        <h2 class="h1">Hi, I'm Dan — AKA Wig.</h2>
+        <p class="lead" style="max-width:60ch;">Amongst other things, I'm a digital learning content designer and learning experience curator — and the founder of Forged Frameworks. Past the job titles: I take complex, regulated subject matter and forge it into learning people actually enjoy.</p>
+        <p>From transforming complex ISO standards into practical tools to building industry-specific courses that boost learner pass rates from 50% to 100%, I bring creativity, precision, and a dash of blacksmith's grit to every project. Whether working with GenAI, developing LMS platforms, or collaborating with SMEs, my focus is always on making learning clear, impactful, and genuinely enjoyable.</p>
+      </div>
+    </div>
+    <aside class="card card--accent reveal" aria-label="At a glance" style="margin-top:var(--space-7);">
+      <p class="card__title">At a glance</p>
+      <ul class="ticks">
+        <li>Specialising in digital learning ecosystems that blend human expertise with AI innovation</li>
+        <li>Accessibility-first design, multi-platform authoring, and compliance alignment</li>
+        <li>Learning structured to meet sector, regulatory, and learner needs</li>
+      </ul>
+      <p class="muted" style="margin-top:var(--space-5); font-size:var(--fs-base);">Digital Learning Content Designer | Learning Experience Curator | Forged Frameworks Founder</p>
+    </aside>
+
+    <div class="reveal" style="margin-top:var(--space-7);">
+      <p class="kicker"><i data-lucide="trending-up"></i>impact, in numbers</p>
+      <h3 class="h2" style="margin-bottom:var(--space-3);">The numbers that matter</h3>
+      <p class="muted" style="max-width:62ch; margin-bottom:var(--space-5);">A quick cinematic read on the outcomes — built, fittingly, with one of my own reusable interactive blocks. The full library is further down. <a href="#codex">Jump to the interactive blocks ↓</a></p>
+      <div class="demo">
+        <div class="demo__bar">
+          <span class="demo__title">cinematic-stat-reveal.html · live from the Codex library</span>
+          <a class="demo__open" href="patterns/cinematic-stat-reveal/cinematic-stat-reveal.html" target="_blank" rel="noopener">Open full screen ↗</a>
+        </div>
+        <iframe title="Cinematic Stat Reveal — live interactive demo" src="patterns/cinematic-stat-reveal/cinematic-stat-reveal.html?v=2" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== STAGE DIVIDER (about → skills) ===================== -->
+<div class="stage-divider stage-divider--light" role="separator" aria-label="From who I am to what I do">
+  <div class="stage-divider__inner">
+    <span class="stage-divider__rule"></span>
+    <span class="stage-divider__label">
+      <svg class="stage-divider__mark" viewBox="0 0 100 132" aria-hidden="true">
+        <path d="M30 14 L74 14 Q80 14 80 20 L80 40 Q80 46 74 46 L30 46 L12 30 Z" fill="#bc6c3c"/>
+        <rect x="45" y="46" width="10" height="46" fill="#2c3e50"/>
+        <rect x="40" y="90" width="20" height="9" rx="2" fill="#2c3e50"/>
+        <path d="M40 99 L60 99 L51 128 Z" fill="#2c3e50"/>
+      </svg>
+      <span class="stage-divider__text"><strong>What I do</strong> — from the person to the practice</span>
+    </span>
+    <span class="stage-divider__rule is-right"></span>
+  </div>
+</div>
+
+<!-- ===================== SUMMARY & SKILLS ===================== -->
+<section id="skills" class="band band--warm" data-screen-label="Summary & skills">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="kicker"><i data-lucide="list-checks"></i>summary &amp; skills</p>
+      <h2 class="h1">What I do</h2>
+      <p class="lead">Specialising in digital learning ecosystems, I develop and optimise content pipelines that blend human expertise with AI innovation. Skilled in accessibility-first design, multi-platform authoring, and compliance alignment, I ensure learning is not only visually engaging but also strategically structured to meet sector, regulatory, and learner needs.</p>
+    </div>
+    <div class="grid grid-2">
+      <a class="card card--link reveal" href="#work">
+        <span class="card__arrow" aria-hidden="true">→</span>
+        <p class="card__title"><i data-lucide="monitor"></i>Digital Learning Content Creation</p>
+        <p>Rise360, Moodle, FutureLearn, proprietary LMS builds</p>
+      </a>
+      <a class="card card--link reveal" href="#modules">
+        <span class="card__arrow" aria-hidden="true">→</span>
+        <p class="card__title"><i data-lucide="route"></i>Instructional &amp; Learning Experience Design</p>
+        <p>Learning pathways, activity design, assessment planning</p>
+      </a>
+      <a class="card card--link reveal" href="#vibe">
+        <span class="card__arrow" aria-hidden="true">→</span>
+        <p class="card__title"><i data-lucide="sparkles"></i>AI-Assisted Development</p>
+        <p>GenAI frameworks, SME support tools, automated content bookending. Vibe-coding with agentic code platforms — Codex (OpenAI), Claude Code &amp; Gemini — to build, localise and re-spec learning assets.</p>
+      </a>
+      <a class="card card--link reveal" href="#codex">
+        <span class="card__arrow" aria-hidden="true">→</span>
+        <p class="card__title"><i data-lucide="wrench"></i>Technical Tools</p>
+        <p>HTML, Markdown, SQL reporting, GitHub version control, Miro boards, Microsoft 365, SharePoint collaboration</p>
+      </a>
+      <a class="card card--link reveal" href="#work">
+        <span class="card__arrow" aria-hidden="true">→</span>
+        <p class="card__title"><i data-lucide="heart-handshake"></i>Accessibility &amp; Inclusive Design</p>
+        <p>WCAG compliance, alternative navigation, plain language principles</p>
+      </a>
+      <a class="card card--link reveal" href="#pricing">
+        <span class="card__arrow" aria-hidden="true">→</span>
+        <p class="card__title"><i data-lucide="users-round"></i>Project &amp; Contractor Management</p>
+        <p>Scoping, costing, contracting, and resourcing SMEs/LCDs</p>
+      </a>
+      <a class="card card--link reveal" href="#modules" style="grid-column:1/-1;">
+        <span class="card__arrow" aria-hidden="true">→</span>
+        <p class="card__title"><i data-lucide="shield-check"></i>Quality, Curriculum &amp; Compliance Assurance</p>
+        <p>Aligning content with sector standards, HE validated narratives, defined schemes of work, VLE content plans, safeguarding, Prevent Duty, and apprenticeship standards.</p>
+      </a>
+    </div>
+    <p style="margin-top:var(--space-6);"><a class="btn btn--ghost" href="#core-skills">See a detailed breakdown of what I can do to support you</a></p>
+  </div>
+</section>
+
+<!-- ===================== REVIEWS ===================== -->
+<section id="reviews" class="band band--ink" data-screen-label="Testimonials">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="kicker"><i data-lucide="quote"></i>let's work together</p>
+      <h2 class="h1">Read what others think</h2>
+      <p class="lead" style="color:#d7dee3;">LinkedIn recommendations spanning learning design and pedagogy, project management and HE, content-pipeline work from Level 3 to Level 6, and quality, accreditation &amp; QMS from my UKAS years. <a href="https://www.linkedin.com/in/daniel-boyland-577b6476/?locale=details" target="_blank" rel="noopener">See all my recommendations on LinkedIn ↗</a></p>
+    </div>
+    <div class="quote-river reveal" aria-label="LinkedIn recommendations — auto-scrolling">
+      <div class="quote-track">
+      <figure class="quote">
+        <div class="quote__mark">&ldquo;</div>
+        <blockquote><p>I've had the pleasure of working with Dan on a number of projects and always admire his integrity, autonomy and trust-centric ways of working, coupled with his humility and constant drive to learn, grow, and help others do the same. Work with Dan never felt like 'work'. He has a flair for managing projects with perceived effortlessness, but there's a tremendous amount of thought and care that goes into his leadership of projects. His client and user-centric approach means he fits like a glove in whichever team he works in, and I cannot recommend him highly enough.</p></blockquote>
+        <figcaption class="quote__who"><strong><a href="https://www.linkedin.com/in/vashishtbhatt/" target="_blank" rel="noopener">Vashisht Bhatt</a></strong><span>Digital / Productivity — Commercial option</span></figcaption>
+      </figure>
+      <figure class="quote">
+        <div class="quote__mark">&ldquo;</div>
+        <blockquote><p>It was such a pleasure working with Dan during my time at Tiro, where he was my direct manager and Learning Content lead. Together, we developed a Project Management module for Level 5 degree apprentices, from initial concept through to delivery. This was my first time working in the learning design space, and Dan made the experience both enjoyable and hugely rewarding. His depth of knowledge in content and learning development is exceptional, and his ability to transform raw material into captivating, learner-friendly content and UX was second to none. Dan's guidance, patience, and creative input helped me navigate a completely new field with confidence. I felt supported every step of the way, and the result was an engaging, well-received module that helped learners apply project management principles in their real-world roles. He's a brilliant collaborator, insightful, encouraging, and genuinely invested in helping others succeed. I'd happily work with him again in a heartbeat.</p></blockquote>
+        <figcaption class="quote__who"><strong><a href="https://www.linkedin.com/in/cathycoulthard/" target="_blank" rel="noopener">Cathy Coulthard</a></strong><span>Project Management — HE option</span></figcaption>
+      </figure>
+      <figure class="quote">
+        <div class="quote__mark">&ldquo;</div>
+        <blockquote><p>I really enjoyed working with Daniel, he's collaborative, grounded, and brings a clear sense of purpose to every project. He has a great eye for learning design, and his project management skills keep everything running smoothly. What stands out most is his calm, supportive approach and genuine willingness to share knowledge. Daniel is one of those people who makes teamwork both easy and enjoyable.</p></blockquote>
+        <figcaption class="quote__who"><strong><a href="https://www.linkedin.com/in/deborah-ogbeni-3aa5aa90/" target="_blank" rel="noopener">Deborah Ogbeni</a></strong><span>Content pipeline — Biosciences &amp; L5 Lab Management</span></figcaption>
+      </figure>
+      <figure class="quote">
+        <div class="quote__mark">&ldquo;</div>
+        <blockquote><p>I've been fortunate to work with Daniel on multiple digital learning modules for a growing training provider in a fast-paced environment. During the projects, it became clear that Daniel has a strong understanding of all aspects of high-quality learning content development, including accessibility, multimedia use, pedagogy, quality assurance, curriculum alignment at both national and course levels, and the overall learner experience. He consistently demonstrated a high level of professionalism, balancing project management with a strong focus on both learner experience and stakeholder needs, while also being open to exploring new creative ways of delivering learning content. Daniel developed one of the most efficient workflows I've seen in the industry and ensured everyone felt supported throughout. I'm confident that his framework-oriented approach to learning design and project management would be a tremendous asset to any Learning and Development team.</p></blockquote>
+        <figcaption class="quote__who"><strong><a href="https://www.linkedin.com/in/zsolt-barath-8aa3aa140/" target="_blank" rel="noopener">Zsolt Barath</a></strong><span>Content pipeline — L3 Specialist FE options</span></figcaption>
+      </figure>
+      <figure class="quote">
+        <div class="quote__mark">&ldquo;</div>
+        <blockquote><p>Dan is a first rate Learning Designer. He has a deep understanding of accessibility and online pedagogy. He makes really engaging, high quality content that encourage deep learning.</p></blockquote>
+        <figcaption class="quote__who"><strong>Paul Wakeling</strong><span>Founder &amp; CEO, Assynt Lead &amp; Learn · Learning design</span></figcaption>
+      </figure>
+      <figure class="quote">
+        <div class="quote__mark">&ldquo;</div>
+        <blockquote><p>I've had the privilege of working closely with Dan at Tiro, and he is one of those colleagues who makes a real difference. Dan has an incredible talent for turning complex ideas into engaging, accessible learning content that really lands with learners and employers alike. He does not just design curriculum and training, he makes sure it is embedded properly so it actually works in practice and delivers results.</p></blockquote>
+        <figcaption class="quote__who"><strong>Ash Backhouse</strong><span>Programme Director IFLP, SECBE · Learning design</span></figcaption>
+      </figure>
+      <figure class="quote">
+        <div class="quote__mark">&ldquo;</div>
+        <blockquote><p>We worked together at UKAS as fellow assessment managers for several years. Dan is great communicator and motivator with a solid background in Pathology and Quality Management. A brilliant team player who is always at the forefront of discussion, innovation and an enthusiastic advocate of effective quality improvement. Able to work well with personnel at all levels with a skill for tailored communication style and building effective rapport.</p></blockquote>
+        <figcaption class="quote__who"><strong>Gary Bateman</strong><span>Scientific Laboratory Manager, UHL NHS Trust · UKAS &amp; quality management</span></figcaption>
+      </figure>
+      <figure class="quote">
+        <div class="quote__mark">&ldquo;</div>
+        <blockquote><p>I'm very fortunate to have worked with Dan as both a Technical Assessor and a Training Specialist. Whatever he does, he gives his all! Fast thinking and an eye for detail. Whatever Dan chooses to do he will succeed due to his grit, determination, professionalism and his developmental approach. I thoroughly enjoy working with you Dan.</p></blockquote>
+        <figcaption class="quote__who"><strong>Rachel Boyer-Blanchard CDLP</strong><span>Senior Commercial Training Specialist, UKAS · Accreditation &amp; training</span></figcaption>
+      </figure>
+      <figure class="quote">
+        <div class="quote__mark">&ldquo;</div>
+        <blockquote><p>Dan is dedicated, enthusiastic, knowledgeable and will work tirelessly to get the job done.</p></blockquote>
+        <figcaption class="quote__who"><strong>Kristel Smith</strong><span>Accreditation Specialist Development · Accreditation</span></figcaption>
+      </figure>
+      <figure class="quote">
+        <div class="quote__mark">&ldquo;</div>
+        <blockquote><p>Dan is very knowledgeable, highly professional and personable. I found him extremely supportive in the growth of our quality management system and a positive influence in the strive for continual improvement. Highly recommended.</p></blockquote>
+        <figcaption class="quote__who"><strong>Katie Berger</strong><span>Chief Healthcare Scientist &amp; Pathology Practice Educator, UHNM NHS Trust · QMS client</span></figcaption>
+      </figure>
+      <figure class="quote">
+        <div class="quote__mark">&ldquo;</div>
+        <blockquote><p>I have only worked with Daniel for a short period of time, but he is a pleasure to work with. He is knowledgeable, hard working, approachable, helpful and a great communicator. He is definitely not one to back down from a challenge, and he will always puts a great deal of enthusiasm into everything that he does.</p></blockquote>
+        <figcaption class="quote__who"><strong>Emma Palmer</strong><span>Customer Liaison Officer, UKAS · Accreditation</span></figcaption>
+      </figure>
+      <figure class="quote">
+        <div class="quote__mark">&ldquo;</div>
+        <blockquote><p>Dan is very efficient, always striving to improve efficiencies and support others in their role. Dan is someone I can approach with any work related or personal endeavours and know I can move forward with the advice. Strong team member, great communication, self motivated with strong leadership skills.</p></blockquote>
+        <figcaption class="quote__who"><strong>Nathan Saghdaoui</strong><span>Customer Liaison Officer, UKAS · Accreditation</span></figcaption>
+      </figure>
+      <figure class="quote">
+        <div class="quote__mark">&ldquo;</div>
+        <blockquote><p>Fantastic trainer. Great assessment managed. Nice bloke.</p></blockquote>
+        <figcaption class="quote__who"><strong>Christopher Kettle</strong><span>Operational Manager, NovoPath &amp; NEHODS, Newcastle upon Tyne Hospitals NHS FT · Pathology</span></figcaption>
+      </figure>
+      <figure class="quote">
+        <div class="quote__mark">&ldquo;</div>
+        <blockquote><p>Dan is the consummate professional. His technical and subject matter knowledge of haematology and blood transfusion is second to none. He provides a fair, honest and thorough assessment to his customers without compromising UKAS neutrality. I have worked with Dan on numerous occasions and never found him to be lacking in his professional knowledge whatsoever. He has been full of advice to me to enable me to improve my understanding of haematology and related subjects. On a personal level Dan is a generous kind hearted man who has a great sense of humour.</p></blockquote>
+        <figcaption class="quote__who"><strong>Victoria Fereday Brown</strong><span>Head of Pathology, phlebotomy &amp; POCT, South London &amp; Maudsley NHS FT · UKAS &amp; pathology</span></figcaption>
+      </figure>
+      <figure class="quote">
+        <div class="quote__mark">&ldquo;</div>
+        <blockquote><p>I've been fortunate enough to have worked alongside Dan for the last couple of years because not only does Dan bring a real depth and breadth of technical knowledge to our team, he has an uncompromising drive to continually improve not only his own performance, but that of the organisation we work in and the medical labs he works with in accreditation. He has time for, and engages with all colleagues whilst being an excellent motivator and team player. I know he will continue to be successful in his career, and deserves to be!</p></blockquote>
+        <figcaption class="quote__who"><strong>Gavin Dickinson</strong><span>Quality &amp; Improvement Manager · Quality improvement</span></figcaption>
+      </figure>
+      <figure class="quote">
+        <div class="quote__mark">&ldquo;</div>
+        <blockquote><p>Dan was a great colleague to work with, enthusiastic and involves himself wholeheartedly in his roles and responsibilities. I haven't worked with many similar thinking colleagues, who consider elements of a challenge, which are not the most obvious, but produces more effective solutions. This level of critical thinking and self awareness are rare traits and Dan has these in regular use.</p></blockquote>
+        <figcaption class="quote__who"><strong>Ryan Cooper</strong><span>Point of Care Testing Programme Lead · Accreditation</span></figcaption>
+      </figure>
+      </div>
+    </div>
+    <div class="quote-controls reveal" role="group" aria-label="Reviews controls">
+      <button class="qbtn" type="button" data-q="prev" aria-label="Previous review">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <button class="qbtn qbtn--pp" type="button" data-q="toggle" aria-pressed="false">
+        <span class="qbtn__ico" aria-hidden="true">❚❚</span><span class="qbtn__lbl">Pause</span>
+      </button>
+      <button class="qbtn" type="button" data-q="next" aria-label="Next review">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== STAGE DIVIDER (reviews → work) ===================== -->
+<div class="stage-divider stage-divider--light" role="separator" aria-label="From the kind words to the work itself">
+  <div class="stage-divider__inner">
+    <span class="stage-divider__rule"></span>
+    <span class="stage-divider__label">
+      <svg class="stage-divider__mark" viewBox="0 0 100 132" aria-hidden="true">
+        <path d="M30 14 L74 14 Q80 14 80 20 L80 40 Q80 46 74 46 L30 46 L12 30 Z" fill="#bc6c3c"/>
+        <rect x="45" y="46" width="10" height="46" fill="#2c3e50"/>
+        <rect x="40" y="90" width="20" height="9" rx="2" fill="#2c3e50"/>
+        <path d="M40 99 L60 99 L51 128 Z" fill="#2c3e50"/>
+      </svg>
+      <span class="stage-divider__text"><strong>The work itself</strong> — beyond the kind words, here is the evidence</span>
+    </span>
+    <span class="stage-divider__rule is-right"></span>
+  </div>
+</div>
+
+<!-- ===================== WORK ===================== -->
+<section id="work" class="band" data-screen-label="Portfolio / work">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="kicker"><i data-lucide="folder-open"></i>portfolio</p>
+      <h2 class="h1">Selected work</h2>
+      <p class="lead">A mix of compliance-critical modules, interactive learning tools, and creative experiments — all built accessibility-first.</p>
+    </div>
+
+    <div class="work-stats reveal" aria-label="Impact at a glance">
+      <div class="wstat"><span class="wstat__num">50→100%</span><span class="wstat__label">learner pass-rate lift</span></div>
+      <div class="wstat"><span class="wstat__num">~30%</span><span class="wstat__label">SME time saved per module</span></div>
+      <div class="wstat"><span class="wstat__num">95%+</span><span class="wstat__label">module completion rates</span></div>
+    </div>
+
+    <div class="work">
+      <!-- Prevent -->
+      <article class="work-item reveal" id="prevent" data-screen-label="Prevent Duty Module">
+        <div class="work-item__media">
+          <div class="video-embed"><iframe src="https://drive.google.com/file/d/17ljVRnCzFZRxQsBIG4jol69VcADajPAA/preview" title="Prevent Duty Module walkthrough" allow="autoplay" allowfullscreen></iframe></div>
+        </div>
+        <div>
+          <p class="tag-row"><span class="tag">Prevent</span><span class="tag">Moodle</span><span class="tag">HTML coding</span></p>
+          <h3 class="h2">Prevent Duty Module</h3>
+          <p class="muted" style="margin:6px 0 var(--space-4);">Apprenticeship requirement</p>
+          <ul class="ticks">
+            <li>Mandatory for L3, NVQ &amp; HE apprentices</li>
+            <li>Built in response to radicalisation issues in the media/education</li>
+            <li>Designed with AI-supported tools (transcripts, HTML, podcast retention aides)</li>
+            <li>Delivered engaging, compliant, and accessible learning</li>
+            <li>Positive learner + <strong>Ofsted</strong> feedback</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Interactive learning tools (benchmarking + notepad) -->
+      <article class="reveal" data-screen-label="Interactive learning tools">
+        <p class="tag-row"><span class="tag">HTML / JS / CSS</span><span class="tag">educational blocks</span></p>
+        <h3 class="h2" style="margin-bottom:var(--space-3);">Interactive learning tools</h3>
+        <p class="muted" style="max-width:66ch; margin:0 0 var(--space-6);">Two of my interactive blocks, shown in full below — these are just samples. Many more live demos and snippets sit in the <a href="#codex">Codex interactive-block library ↓</a>.</p>
+
+        <!-- Benchmarking test — full width + live designer -->
+        <div class="card card--accent">
+          <p class="card__title">Benchmarking test</p>
+          <p class="muted" style="margin-top:-4px;">Confidence Self-Check Tool</p>
+          <ul class="ticks" style="margin-top:var(--space-4);">
+            <li>Supports experiential learning through pre-/post-reflection</li>
+            <li>Helps apprentices build metacognitive awareness of strengths and gaps</li>
+            <li>Built using custom HTML/JS/CSS with localStorage (no LMS data)</li>
+            <li>Modern, accessible UI design</li>
+            <li>Encourages learner self-regulation and confidence-tracking</li>
+          </ul>
+        </div>
+        <div class="demo reveal" style="margin-top:var(--space-5);">
+          <div class="demo__bar">
+            <span class="demo__title">benchmark-designer.html · live — switch to Designer mode to edit</span>
+            <a class="demo__open" href="https://360.articulate.com/review/content/d58cf155-636e-4f43-82c9-1832035cd504/review" target="_blank" rel="noopener">Backup: Review 360 ↗</a>
+          </div>
+          <iframe title="Confidence Self-Check Builder — live interactive demo" src="patterns/benchmark-designer/benchmark-designer.html" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+        </div>
+
+        <!-- Perpetual notepad — full width + Review 360 -->
+        <div class="card card--accent" style="margin-top:var(--space-6);">
+          <p class="card__title">Perpetual notepad</p>
+          <p class="muted" style="margin-top:-4px;">Reflective Learning &amp; Journaling Tool</p>
+          <ul class="ticks" style="margin-top:var(--space-4);">
+            <li>Created to deepen metacognition and reflective practice</li>
+            <li>Provides a private, device-stored journaling space for ongoing learning</li>
+            <li>Built with Storyline + JavaScript for continuous experiential learning</li>
+            <li>Accessible, contemporary UI and clear typography</li>
+            <li>Supports self-assessment, note-taking, and reflection across sessions</li>
+            <li>Includes weekly templates and a Starting note scaffold for ease of use</li>
+            <li>Designed for flexible integration inside Rise 360 modules</li>
+          </ul>
+          <p style="margin-top:var(--space-5);"><a class="btn btn--ghost" href="https://360.articulate.com/review/content/b9fdc4cf-8d53-4cf5-8200-828eba12524a/review" target="_blank" rel="noopener">Open the production build in Review 360 ↗</a></p>
+        </div>
+        <div class="callout reveal" style="margin-top:var(--space-5);">
+          <h4 class="callout__title">Built with you — and yours to keep</h4>
+          <p>I work alongside you to design and vibe-code each block, then hand it over <strong>editable and configurable locally</strong> — change copy, colours, scoring, branching or logic directly, <strong class="cost">with no further AI cost</strong>. I can also support your team to develop and re-spec their own elements, feeding the framework back into your model of choice (Codex, Claude or Gemini).</p>
+          <p>That matters now that platforms are shifting to time-limited prompt models and <strong>token costs and subscription tiers keep climbing</strong>: <strong>owning editable, standalone blocks</strong> means your learning assets <strong>keep working — and keep evolving</strong> — <strong class="cost">without an ongoing per-edit bill</strong>.</p>
+        </div>
+      </article>
+
+      <!-- Canva style video -->
+      <article class="work-item work-item--rev reveal" id="creative" data-screen-label="Canva style video">
+        <div class="work-item__media">
+          <div class="video-embed"><iframe src="https://drive.google.com/file/d/1_uKX2cGpkx46ta72kIURAIrdbpJxkxQw/preview" title="Canva-style learning video" allow="autoplay" allowfullscreen></iframe></div>
+        </div>
+        <div>
+          <p class="tag-row"><span class="tag">CPD</span><span class="tag">Canva</span><span class="tag">motion</span></p>
+          <h3 class="h2">Canva Style Video</h3>
+          <ul class="ticks" style="margin-top:var(--space-4);">
+            <li>Created as a CPD showcase</li>
+            <li>Explored Canva animation &amp; storytelling tools</li>
+            <li>Highlights branding, accessibility &amp; learner journey focus</li>
+            <li>Example of micro-content to support engagement</li>
+            <li>Subject-specific example</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Wonky Forge -->
+      <article class="work-item reveal" data-screen-label="Wonky Forge">
+        <div class="work-item__media">
+          <video class="media-fill" src="assets/wonky-story.mp4" controls preload="metadata" playsinline></video>
+        </div>
+        <div>
+          <p class="tag-row"><span class="tag">CPD passion project</span><span class="tag">branding</span><span class="tag">socials</span></p>
+          <h3 class="h2">Website &amp; Socials</h3>
+          <p class="muted" style="margin:6px 0 var(--space-4);">Forged Creative Showcase</p>
+          <ul class="ticks">
+            <li>Created as a CPD passion project</li>
+            <li>Explored Canva for storytelling &amp; visual design</li>
+            <li>Highlights creativity, accessibility, and branding skills</li>
+            <li>Example of wider creative content beyond learning design</li>
+            <li>Includes projects like a Wonky History social media story</li>
+          </ul>
+          <p style="margin-top:var(--space-5);"><a class="btn btn--ghost" href="https://wonkyforge.co.uk" target="_blank" rel="noopener">See more at wonkyforge.co.uk</a></p>
+        </div>
+      </article>
+
+      <!-- Branding & motion GIFs -->
+      <div class="reveal">
+        <p class="tag-row"><span class="tag">branding</span><span class="tag">motion</span><span class="tag">GIF</span></p>
+        <h3 class="h2" style="margin-bottom:var(--space-3);">Branding &amp; motion studies</h3>
+        <p class="muted" style="margin:0 0 var(--space-5); max-width:62ch;">Identity and motion experiments from the same CPD strand — looping logo forges and animated marks made for web, social and email.</p>
+        <div class="gif-strip">
+          <figure><img src="assets/gif-forge.gif" alt="Animated Forged Frameworks hammer-and-nib logo forging itself" loading="lazy" /><figcaption>The forge mark, animated</figcaption></figure>
+          <figure><img src="assets/gif-cpd-nature.gif" alt="Animated organic 'nature head' identity concept" loading="lazy" /><figcaption>Organic &lsquo;nature-head&rsquo; identity study</figcaption></figure>
+          <figure><img src="assets/gif-cpd-v1.gif" alt="Early CPD motion-branding identity study" loading="lazy" /><figcaption>Early CPD motion-branding study</figcaption></figure>
+          <figure><img src="assets/logo-animated.gif" alt="Animated Forged Frameworks logo from the top of the page" loading="lazy" /><figcaption>The Forged Frameworks animated mark</figcaption></figure>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== LEVEL-SPECIFIC MODULES ===================== -->
+<section id="modules" class="band band--ink" data-screen-label="Level-specific modules">
+  <div class="wrap">
+    <div class="sec-head reveal" style="max-width:64ch;">
+      <p class="kicker"><i data-lucide="graduation-cap"></i>level-specific modules</p>
+      <h2 class="h1">Show &amp; tell — by level</h2>
+      <p class="lead" style="color:#d7dee3;">Walkthroughs of full modules I've designed and built, from Level 3 to Level 6 — interactions, reflective bookends and engagement features shown in context.</p>
+    </div>
+    <div class="modules-grid">
+      <article class="module reveal">
+        <button class="module__poster" type="button" data-video="https://drive.google.com/file/d/1Bq1B1mp0Aw3J1Hm9RMb_wr0XA9nSf0bo/preview" data-title="Asbestos — show &amp; tell (Level 3)" aria-label="Play the Asbestos show &amp; tell walkthrough">
+          <span class="module__play" aria-hidden="true">▶</span>
+          <span class="module__hint">Play walkthrough</span>
+        </button>
+        <a class="module__watch" href="https://drive.google.com/file/d/1Bq1B1mp0Aw3J1Hm9RMb_wr0XA9nSf0bo/view" target="_blank" rel="noopener">Watch on Google Drive ↗</a>
+        <p class="module__lvl">Level 3 · Asbestos ITM</p>
+        <h3 class="h3">Asbestos — show &amp; tell</h3>
+        <p class="module__d">Enabling asbestos learners — Bulk &amp; Analysis and Air Analysts — toward the L3 lab-technician standard and RSPH qualifications. Interactive, compliance-ready and accessibility-first.</p>
+      </article>
+      <article class="module reveal">
+        <button class="module__poster" type="button" data-video="https://drive.google.com/file/d/11wAh8SvqFwidSCHySYg4kLKq22ytnrQs/preview" data-title="Lab Management — show &amp; tell (Level 5)" aria-label="Play the Lab Management show &amp; tell walkthrough">
+          <span class="module__play" aria-hidden="true">▶</span>
+          <span class="module__hint">Play walkthrough</span>
+        </button>
+        <a class="module__watch" href="https://drive.google.com/file/d/11wAh8SvqFwidSCHySYg4kLKq22ytnrQs/view" target="_blank" rel="noopener">Watch on Google Drive ↗</a>
+        <p class="module__lvl">Level 5 · Lab Management</p>
+        <h3 class="h3">Lab Management — show &amp; tell</h3>
+        <p class="module__d">A dual-role build for L5 Lab Management — strong reflective elements for self-directed learning and metacognition, plus engagement bookends to boost retention.</p>
+      </article>
+      <article class="module reveal">
+        <button class="module__poster" type="button" data-video="https://drive.google.com/file/d/1xb6TjhTQBSo0jhOVsL2eAsnPwa8dEdfz/preview" data-title="Microbiology — show &amp; tell (Level 6)" aria-label="Play the Microbiology show &amp; tell walkthrough">
+          <span class="module__play" aria-hidden="true">▶</span>
+          <span class="module__hint">Play walkthrough</span>
+        </button>
+        <a class="module__watch" href="https://drive.google.com/file/d/1xb6TjhTQBSo0jhOVsL2eAsnPwa8dEdfz/view" target="_blank" rel="noopener">Watch on Google Drive ↗</a>
+        <p class="module__lvl">Level 6 · Microbiology</p>
+        <h3 class="h3">Microbiology — show &amp; tell</h3>
+        <p class="module__d">Opening bookends and rich interactions alongside more traditional eLearning builds, for a Level 6 Microbiology programme.</p>
+      </article>
+    </div>
+    <div class="case-study reveal" style="margin-top:var(--space-7);">
+      <p class="kicker"><i data-lucide="clipboard-check"></i>case study · l3 asbestos itm</p>
+      <h3 class="h3" style="color:#fff;">A compliance-ready build, measured end to end</h3>
+      <figure class="shot-gallery reveal" aria-label="Screenshots from the Level 3 Asbestos Industry Technical Module in Rise 360" style="margin-top:var(--space-5);">
+        <img src="assets/itm-asb-1.jpg" alt="Asbestos ITM in Rise 360 — further reading, resources and next steps lesson" loading="lazy" />
+        <img src="assets/itm-asb-2.jpg" alt="Asbestos ITM — decontamination, PPE and Type-H vacuums lesson" loading="lazy" />
+        <img src="assets/itm-asb-3.jpg" alt="Asbestos ITM — reflection notebook guidance with downloadable PDF" loading="lazy" />
+      </figure>
+      <p class="muted" style="margin-top:var(--space-4); color:#aeb9c0;">Inside the Level&nbsp;3 Asbestos Industry Technical Module (<span class="term" tabindex="0">ITM<span class="term__pop"><strong>Industry Technical Module (ITM)</strong> — developed to support the specific Level&nbsp;3 Laboratory Technician Apprenticeship Standard (ST0248).<span class="term__codes"><span><strong>S17 (Skill)</strong> — identify relevant information from scientific sources (e.g. supervisors, literature, digital tools) in order to contribute to problem-solving.</span><span><strong>K21 (Knowledge)</strong> — demonstrate theoretical knowledge of a named or recognised scientific subject appropriate to the workplace sector (e.g. pharmacology, biotechnology, dental, or chemical).</span></span></span></span>, Rise 360) — enabling Bulk &amp; Analysis and Air Analysts toward the L3 lab-technician standard and RSPH qualifications.</p>
+      <div class="adv-grid" style="margin-top:var(--space-5);">
+        <div class="adv"><div class="adv__num">95%+</div><p class="adv__t">Completion rate across the first cohorts</p></div>
+        <div class="adv"><div class="adv__num">Pre/post</div><p class="adv__t">Objective knowledge-gain measures, not just averages</p></div>
+        <div class="adv"><div class="adv__num">L3</div><p class="adv__t">Aligned to lab-technician standard &amp; RSPH qualifications</p></div>
+      </div>
+      <div class="case" style="margin-top:var(--space-6);">
+        <div class="case__col">
+          <h3><span class="n">1</span>Challenge</h3>
+          <ul class="ticks">
+            <li>Asbestos is a high-risk material in construction and maintenance — L3 learners needed a module that was engaging, compliance-ready and measurable.</li>
+            <li>Previous training was inconsistent, with few interactive elements and no objective assessment data.</li>
+          </ul>
+        </div>
+        <div class="case__col">
+          <h3><span class="n">2</span>Actions</h3>
+          <ul class="ticks">
+            <li>Designed and authored a fully online ITM using structured frameworks.</li>
+            <li>Embedded AI-supported resources — transcripts, HTML coding, podcast-style retention tools.</li>
+            <li>Scenario-based formative assessments and knowledge checks aligned to apprenticeship standards.</li>
+            <li>Built accessibility-first — alt text, subtitles, screen-reader compatibility.</li>
+          </ul>
+        </div>
+        <div class="case__col">
+          <h3><span class="n">3</span>Outcomes</h3>
+          <ul class="ticks">
+            <li>High completion within the first cohorts — over 95%.</li>
+            <li>Clear knowledge gain through objective pre- and post-assessment measures.</li>
+            <li>Positive learner feedback; employers recognised improved compliance assurance.</li>
+            <li>Established as a model for future health &amp; safety ITMs.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CODEX LIBRARY ===================== -->
+<section id="codex" class="band band--warm" data-screen-label="Codex HTML library">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="kicker"><i data-lucide="library"></i>codex · html learning asset library</p>
+      <h2 class="h1">Reusable interactive learning blocks</h2>
+      <p class="lead">A growing, version-controlled library of self-contained HTML/CSS/JS learning interactions — built with Codex, Claude &amp; Gemini and dropped straight into Rise 360, Moodle or any VLE. Each one is accessible, responsive and customisable. Here are a few, live.</p>
+    </div>
+
+    <div class="demo reveal">
+      <div class="demo__bar">
+        <span class="demo__title">myths.html · live — Select a card to test the misconception</span>
+        <a class="demo__open" href="patterns/myths/myths.html" target="_blank" rel="noopener">Open full screen ↗</a>
+      </div>
+      <iframe title="Myth vs Fact — live interactive demo" src="patterns/myths/myths.html" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+    </div>
+
+    <h3 class="h3 reveal" style="margin:var(--space-7) 0 var(--space-5);">Browse the library</h3>
+
+    <div class="codex-group reveal">
+      <p class="codex-group__lead"><span class="codex-group__tag">How to read these</span> There are two kinds of card. <strong class="hot">Launch demo ↗</strong> opens a <strong>live, standalone block</strong> right here in your browser — and the ones tagged <strong>designer mode</strong> include a <strong>built-in back-office editor</strong>, so you can change copy, scoring and logic <strong>yourself, with no AI cost</strong>. <strong class="hot">Open in Review 360 ↗</strong> opens a <strong>finished production build</strong> in Articulate's review player — also the fallback for anything that won't render in-browser.</p>
+      <div class="codex-grid">
+        <a class="block-card reveal" href="patterns/odd-one-out/odd-one-out-quiz.html" target="_blank" rel="noopener">
+          <img class="block-card__thumb" src="assets/thumbs/odd-one-out.jpg" alt="Preview of the Odd One Out quiz engine" loading="lazy" />
+          <span class="block-card__kind">Quiz engine · designer mode</span>
+          <span class="block-card__title">Odd One Out</span>
+          <p class="block-card__meta">Digital Transformation · authorable knowledge-check with image options</p>
+          <span class="block-card__open">Launch demo ↗</span>
+        </a>
+        <a class="block-card reveal" href="patterns/key-points/key-points.html" target="_blank" rel="noopener">
+          <img class="block-card__thumb" src="assets/thumbs/key-points.jpg" alt="Preview of the Takeaways Revealer block" loading="lazy" />
+          <span class="block-card__kind">Reveal block · designer mode</span>
+          <span class="block-card__title">Takeaways Revealer</span>
+          <p class="block-card__meta">Progressive reveal of key learning points — editable in the built-in designer</p>
+          <span class="block-card__open">Launch demo ↗</span>
+        </a>
+        <a class="block-card reveal" href="patterns/benefits/benefits.html" target="_blank" rel="noopener">
+          <img class="block-card__thumb" src="assets/thumbs/benefits.jpg" alt="Preview of the Benefits Master block" loading="lazy" />
+          <span class="block-card__kind">Reveal block · designer mode</span>
+          <span class="block-card__title">Benefits Master</span>
+          <p class="block-card__meta">Card-based benefits explainer — editable in the built-in designer</p>
+          <span class="block-card__open">Launch demo ↗</span>
+        </a>
+        <a class="block-card reveal" href="patterns/myths/myths.html" target="_blank" rel="noopener">
+          <img class="block-card__thumb" src="assets/thumbs/myths.jpg" alt="Preview of the Myth vs Fact sorting block" loading="lazy" />
+          <span class="block-card__kind">Sorting block · designer mode</span>
+          <span class="block-card__title">Myth vs Fact</span>
+          <p class="block-card__meta">Misconception check with feedback — editable in the built-in designer</p>
+          <span class="block-card__open">Launch demo ↗</span>
+        </a>
+        <a class="block-card reveal" href="patterns/carousel/carousel-prompt-index.html" target="_blank" rel="noopener">
+          <img class="block-card__thumb" src="assets/thumbs/carousel.jpg" alt="Preview of the Pharmacological Chirality carousel" loading="lazy" />
+          <span class="block-card__kind">Carousel viewer</span>
+          <span class="block-card__title">Pharmacological Chirality</span>
+          <p class="block-card__meta">Level 6 HE · swipeable content carousel</p>
+          <span class="block-card__open">Launch demo ↗</span>
+        </a>
+        <a class="block-card reveal" href="patterns/reflection/writing-reflection-html-english.html" target="_blank" rel="noopener">
+          <img class="block-card__thumb" src="assets/thumbs/reflection-english.jpg" alt="Preview of the English Functional skills reflective notebook" loading="lazy" />
+          <span class="block-card__kind">Reflective workbook</span>
+          <span class="block-card__title">Reflective Notebook — English Functional skills</span>
+          <p class="block-card__meta">Strategic Communication · exportable reflection workbook</p>
+          <span class="block-card__open">Launch demo ↗</span>
+        </a>
+        <a class="block-card reveal" href="patterns/reflection/writing-reflection-html-index-maths.html" target="_blank" rel="noopener">
+          <img class="block-card__thumb" src="assets/thumbs/reflection-maths.jpg" alt="Preview of the Maths Functional skills reflective notebook" loading="lazy" />
+          <span class="block-card__kind">Reflective workbook</span>
+          <span class="block-card__title">Reflective Notebook — Maths Functional skills</span>
+          <p class="block-card__meta">Enantiomeric Excess · exportable reflection workbook</p>
+          <span class="block-card__open">Launch demo ↗</span>
+        </a>
+        <a class="block-card reveal" href="https://360.articulate.com/review/content/ce4bf4c4-569b-4952-a194-979d0c778cec/review" target="_blank" rel="noopener">
+          <span class="block-card__thumb--glyph"><i data-lucide="layers"></i></span>
+          <span class="block-card__kind">Reveal styles · Review 360</span>
+          <span class="block-card__title">Reveal Options</span>
+          <p class="block-card__meta">Reveal, flip and progressive-disclosure card styles</p>
+          <span class="block-card__open">Open in Review 360 ↗</span>
+        </a>
+        <a class="block-card reveal" href="https://360.articulate.com/review/content/52955237-15b1-4735-a948-9dd001060ae2/review" target="_blank" rel="noopener">
+          <span class="block-card__thumb--glyph"><i data-lucide="zoom-in"></i></span>
+          <span class="block-card__kind">Image tool · Review 360</span>
+          <span class="block-card__title">Magnify</span>
+          <p class="block-card__meta">Interactive zoom/magnifier for detailed imagery and diagrams</p>
+          <span class="block-card__open">Open in Review 360 ↗</span>
+        </a>
+        <a class="block-card reveal" href="https://360.articulate.com/review/content/f520b311-9cc7-49d2-aa67-f79c8dba84ff/review" target="_blank" rel="noopener">
+          <span class="block-card__thumb--glyph"><i data-lucide="shapes"></i></span>
+          <span class="block-card__kind">Graphics-in-code · Review 360</span>
+          <span class="block-card__title">SVG Pictograms</span>
+          <p class="block-card__meta">Scalable inline SVG pictograms coded for crisp, lightweight visuals</p>
+          <span class="block-card__open">Open in Review 360 ↗</span>
+        </a>
+        <a class="block-card reveal" href="https://360.articulate.com/review/content/438ac80f-37c1-4fc9-9e63-bf352321f713/review" target="_blank" rel="noopener">
+          <span class="block-card__thumb--glyph"><i data-lucide="atom"></i></span>
+          <span class="block-card__kind">3D viewer · Review 360</span>
+          <span class="block-card__title">3D Molecule Viewer</span>
+          <p class="block-card__meta">Interactive 3D molecule model embedded into a Review 360 lesson</p>
+          <span class="block-card__open">Open in Review 360 ↗</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== VIBE-CODED TOOLS ===================== -->
+<section id="vibe" class="band band--ink" data-screen-label="Bespoke vibe-coded tools">
+  <div class="wrap">
+    <div class="sec-head reveal" style="max-width:68ch;">
+      <p class="kicker"><i data-lucide="wand-sparkles"></i>vibe-coded · bespoke tools</p>
+      <h2 class="h1">Subject-specific tools, forged to spec</h2>
+      <p class="lead" style="color:#d7dee3;">Bespoke diagnostics and decision engines, vibe-coded around a single subject and learning outcome — then handed over editable. They work well beyond Rise 360: drop them into Storyline, Moodle or any VLE, run them standalone, wrap them with an API, and host them online or device-side.</p>
+    </div>
+
+    <div class="tools-grid">
+      <article class="tool reveal">
+        <div class="tool__media"><video class="tool__vid" src="assets/digital-maturity.mp4" controls preload="metadata" playsinline></video></div>
+        <div class="tool__body">
+          <p class="tool__lvl">Level 5 · Lab Management</p>
+          <h3 class="h3">Digital Maturity Diagnostic</h3>
+          <p class="tool__d">A self-scoring diagnostic that maps a lab's digital maturity, surfaces the vertical bottleneck holding back transformation, and returns tailored next steps — turning an abstract standard into a practical, personal action plan.</p>
+          <a class="tool__cta" href="patterns/digital-maturity/index.html" target="_blank" rel="noopener">Launch the live tool ↗</a>
+        </div>
+      </article>
+      <article class="tool reveal">
+        <div class="tool__media"><video class="tool__vid" src="assets/fibre-id.mp4" controls preload="metadata" playsinline></video></div>
+        <div class="tool__body">
+          <p class="tool__lvl">Level 3 · Asbestos</p>
+          <h3 class="h3">Asbestos Identification Matrix</h3>
+          <p class="tool__d">A gated decision engine that walks an analyst through physical fibre properties — colour, morphology, extinction — to identify the species, mirroring the logic of the Analyst Guide rather than asking learners to memorise it.</p>
+          <a class="tool__cta" href="patterns/fibre-id/index.html" target="_blank" rel="noopener">Launch the live tool ↗</a>
+        </div>
+      </article>
+    </div>
+
+    <div class="tool-bookend reveal">
+      <div>
+        <h3 class="h3" style="color:#fff;">Have a tricky concept in mind?</h3>
+        <p style="color:#d7dee3; margin:var(--space-3) 0 0; max-width:60ch;">If a subject has a decision, a diagnosis or a misconception at its heart, it can be forged into a tool. Built with you, handed over editable, and yours to keep — no ongoing per-edit AI bill.</p>
+      </div>
+      <a class="btn btn--on-ink" href="#contact">Forge one with me</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== STAGE DIVIDER (vibe → pipeline) ===================== -->
+<div class="stage-divider stage-divider--dark" role="separator" aria-label="From bespoke tools to the Catalyst pipeline">
+  <div class="stage-divider__inner">
+    <span class="stage-divider__rule"></span>
+    <span class="stage-divider__label">
+      <svg class="stage-divider__mark" viewBox="0 0 100 132" aria-hidden="true">
+        <path d="M30 14 L74 14 Q80 14 80 20 L80 40 Q80 46 74 46 L30 46 L12 30 Z" fill="#e09a6b"/>
+        <rect x="45" y="46" width="10" height="46" fill="#7f93a6"/>
+        <rect x="40" y="90" width="20" height="9" rx="2" fill="#7f93a6"/>
+        <path d="M40 99 L60 99 L51 128 Z" fill="#7f93a6"/>
+      </svg>
+      <span class="stage-divider__text"><strong>Scaling up</strong> — from bespoke tools to the pipeline that forges whole sets</span>
+    </span>
+    <span class="stage-divider__rule is-right"></span>
+  </div>
+</div>
+
+<!-- ===================== PIPELINE ===================== -->
+<section id="pipeline" class="band band--ink" data-screen-label="GenAI pipeline">
+  <div class="wrap">
+    <div class="sec-head reveal" style="max-width:70ch;">
+      <p class="kicker"><i data-lucide="workflow"></i>gen-ai pipeline</p>
+      <h2 class="h1">The Catalyst Pipeline</h2>
+      <p class="lead" style="color:#d7dee3;">An agentic, human-assured pipeline that turns a single curriculum platform document — a Digital Content Plan, Module Narrative or Scheme of Work — into a complete, level-calibrated set of ready-to-review learning documents — faster, more consistently, and without ever losing the subject expert's voice. The inner workings are the secret sauce; here's what it delivers.</p>
+    </div>
+    <div class="pipeline reveal">
+      <div class="stage"><div class="stage__n">1</div><p class="stage__t">Ingest</p><p class="stage__d">Your curriculum platform documents go in as-is — Digital Content Plans, Module Narratives or Schemes of Work — read and structured with no reformatting on your side.</p></div>
+      <div class="stage"><div class="stage__n">2</div><p class="stage__t">Generate</p><p class="stage__d">Builds a full, aligned document set for every session from that single source.</p></div>
+      <div class="stage"><div class="stage__n">3</div><p class="stage__t">Calibrate</p><p class="stage__d">Tunes tone, depth and professional context to the learner's level (L3–L6) and sector.</p></div>
+      <div class="stage"><div class="stage__n">4</div><p class="stage__t">Assure</p><p class="stage__d">Layered, human-aligned QA catches and auto-repairs issues before anything reaches you.</p></div>
+      <div class="stage"><div class="stage__n">5</div><p class="stage__t">Publish</p><p class="stage__d">Polished, branded Word outputs plus learner resources — consistent every time.</p></div>
+    </div>
+    <div class="adv-grid reveal" style="margin-top:var(--space-6);">
+      <div class="adv"><div class="adv__num">~30%</div><p class="adv__t">SME time saved per module</p></div>
+      <div class="adv"><div class="adv__num">L3–L6</div><p class="adv__t">Calibrated to learner level &amp; sector domain</p></div>
+      <div class="adv"><div class="adv__num">3-layer</div><p class="adv__t">Structural, levelling &amp; pedagogical QA — with auto-repair</p></div>
+      <div class="adv"><div class="adv__num">No repeats</div><p class="adv__t">Anti-repetition memory keeps a module fresh</p></div>
+    </div>
+    <figure class="pipe-figure reveal">
+      <img src="assets/ai-pipeline.gif" alt="Animated diagram of the Catalyst content pipeline stages" loading="lazy" />
+      <figcaption>The Catalyst pipeline, animated end to end.</figcaption>
+    </figure>
+    <p style="margin-top:var(--space-6);"><a class="btn btn--ghost-ink" href="#contact">Want to see this used on your content?</a></p>
+  </div>
+</section>
+
+<!-- ===================== STAGE DIVIDER (pipeline → pricing) ===================== -->
+<div class="stage-divider stage-divider--light" role="separator" aria-label="From how it is forged to working together">
+  <div class="stage-divider__inner">
+    <span class="stage-divider__rule"></span>
+    <span class="stage-divider__label">
+      <svg class="stage-divider__mark" viewBox="0 0 100 132" aria-hidden="true">
+        <path d="M30 14 L74 14 Q80 14 80 20 L80 40 Q80 46 74 46 L30 46 L12 30 Z" fill="#bc6c3c"/>
+        <rect x="45" y="46" width="10" height="46" fill="#2c3e50"/>
+        <rect x="40" y="90" width="20" height="9" rx="2" fill="#2c3e50"/>
+        <path d="M40 99 L60 99 L51 128 Z" fill="#2c3e50"/>
+      </svg>
+      <span class="stage-divider__text"><strong>Working together</strong> — from how it is forged to what it takes to commission</span>
+    </span>
+    <span class="stage-divider__rule is-right"></span>
+  </div>
+</div>
+
+<!-- ===================== PRICING ===================== -->
+<section id="pricing" class="band" data-screen-label="Pricing & timeframes">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="kicker"><i data-lucide="receipt-text"></i>prices &amp; timeframes</p>
+      <h2 class="h1">Pricelist &amp; example timeframes</h2>
+    </div>
+    <figure class="about-figure reveal" style="margin:0 auto var(--space-7);">
+      <img src="assets/me-ukas.jpg" alt="Daniel Boyland speaking on a microphone at a UKAS workshop" loading="lazy" />
+      <figcaption>Contributing at a UKAS workshop — working at the intersection of learning, quality and accreditation.</figcaption>
+    </figure>
+    <div class="price-grid">
+      <div class="grid reveal" style="gap:var(--space-5);">
+        <div class="card">
+          <p class="card__title">Services offered</p>
+          <ul class="ticks">
+            <li>Digital learning content design (VLE, Rise360, Storyline, Canva, SCORM packages)</li>
+            <li>Instructional design and learning experience curation</li>
+            <li>Accessibility and inclusive design reviews (WCAG, transcripts, alt text, navigation tools)</li>
+            <li>QA and copyproof</li>
+            <li>Beyond on-screen: curriculum design, documentation, schemes of work, and workshops</li>
+            <li>Graphic/icon/media design for learning assets</li>
+            <li>Curriculum mapping or VLE structuring</li>
+          </ul>
+        </div>
+        <div class="grid grid-2" style="gap:var(--space-5);">
+          <div class="card">
+            <p class="card__title">Consultancy / Workshops</p>
+            <p>1–4 hour SME workshop to align learning objectives, frameworks, and assessments.</p>
+          </div>
+          <div class="card">
+            <p class="card__title">Maintenance &amp; Updates</p>
+            <p>Ongoing updates and compliance checks available at a reduced hourly rate.</p>
+          </div>
+        </div>
+        <div class="card">
+          <p class="card__title">Pricing</p>
+          <ul class="ticks">
+            <li>Flexible, based on scope, format, and deliverables</li>
+            <li>Hourly or daily rates available</li>
+            <li>Fixed contract rates/hours are negotiable for long-term partnerships or bundles</li>
+          </ul>
+        </div>
+      </div>
+      <aside class="card card--accent reveal" aria-label="Example timeframes">
+        <p class="card__title">Example timeframes</p>
+        <div class="time-rows">
+          <div class="time-row"><span>5 mins ('Canva') video*</span><span class="est">~3 hrs</span></div>
+          <div class="time-row"><span>1 hour of learner-facing digital content</span><span class="est">~2–3 hrs</span></div>
+          <div class="time-row"><span>AI framework build (per session)*</span><span class="est">~3 hrs</span></div>
+          <div class="time-row"><span>15 mins video editing</span><span class="est">~2 hrs</span></div>
+          <div class="time-row"><span>1 page supporting material or GIF</span><span class="est">1 hr</span></div>
+          <div class="time-row"><span>Rates</span><span class="est">+£50–60</span></div>
+        </div>
+        <p class="card__title" style="margin-top:var(--space-5); border:0; padding:0;">Timeframes</p>
+        <ul class="ticks">
+          <li>Agile working style (iterative builds, stakeholder feedback loops)</li>
+          <li>Expedited delivery available with prior agreement</li>
+        </ul>
+        <p class="muted" style="margin-top:var(--space-5); font-size:var(--fs-base);">Note: I know every project is different — I'll work with you to scope the right balance of quality, budget, and impact.</p>
+      </aside>
+    </div>
+    <div class="price-bookend reveal">
+      <div>
+        <p class="price-bookend__t">Every project is scoped to you</p>
+        <p class="muted" style="margin:var(--space-2) 0 0;">No fixed packages by default — we'll balance quality, budget and impact together, and agree the right rate or bundle before any work begins.</p>
+      </div>
+      <a class="btn btn--primary" href="#contact">Let's scope yours</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CONTACT ===================== -->
+<section id="contact" class="band band--ink" data-screen-label="Contact">
+  <div class="wrap">
+    <div class="contact-grid">
+      <div class="reveal">
+        <p class="kicker"><i data-lucide="mail"></i>contact me</p>
+        <h2 class="h1">Let's shape meaningful experiences together.</h2>
+        <p class="lead" style="color:#d7dee3; margin-top:var(--space-5);">I'd love to hear from you and look forward to Forging Learning through design, innovation and creativity.</p>
+        <p class="muted" style="color:#aeb9c0; margin-top:var(--space-4);">Digital Learning Content Designer | Learning Experience Curator | Forged Frameworks Founder</p>
+      </div>
+      <div class="reveal">
+        <ul class="contact-list">
+          <li><a href="tel:+447878602772"><span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>(UK) +44 7878 602772</a></li>
+          <li><a href="mailto:dan.boyland@forgedframeworks.co.uk"><span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg></span>dan.boyland@forgedframeworks.co.uk</a></li>
+          <li><a href="https://www.linkedin.com/in/daniel-boyland-577b6476/?locale=details" target="_blank" rel="noopener"><span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></span>linkedin.com/in/daniel-boyland-577b6476</a></li>
+          <li><a href="https://maps.app.goo.gl/AVriBuwYmjrgjDxy9" target="_blank" rel="noopener"><span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>Remote — Cwmbran, S. Wales</a></li>
+        </ul>
+        <p style="margin-top:var(--space-6);"><a class="btn btn--on-ink" href="https://drive.google.com/file/d/18OwByuuvEyq-Q0ayyUqNTRUVAj3Olz3P/view?usp=sharing" target="_blank" rel="noopener">See an example onboarding pack</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SECRET / FULL SKILLS ===================== -->
+<section id="full-skills" class="band" data-screen-label="Secret pages — full skills">
+  <div class="secret-approach">
+    <p class="secret-step reveal">Thanks for visiting.</p>
+    <p class="secret-step reveal">Oh — you're still here? Much appreciated.</p>
+    <p class="secret-step reveal">No, nothing to see here.</p>
+    <p class="secret-step reveal">Turn back now… or face peril.</p>
+  </div>
+  <div class="wrap">
+    <div class="secret-banner reveal" style="margin-bottom:var(--space-7);">
+      <img class="waving-head" src="assets/waving-head.gif" alt="Daniel waving hello" style="margin:0 auto var(--space-4);" />
+      <p class="cy">Shwmae · Da Iawn</p>
+      <h2 class="h1" style="margin-top:var(--space-3);">Still here? These are my secret pages.</h2>
+      <p class="lead" style="margin:var(--space-4) auto 0;">The full skills inventory, the AI personas behind the pipeline, and the detail for the curious.</p>
+      <div class="reward">
+        <p class="reward__label">🥚 You made it — now smash the egg</p>
+        <div class="egg" id="egg" role="button" tabindex="0" aria-label="Crack the egg to reveal your reward">
+          <span class="egg__hammer" aria-hidden="true">🔨</span>
+          <span class="egg__emoji" aria-hidden="true">🥚</span>
+          <span class="egg__hint">Tap the egg…</span>
+        </div>
+        <div class="reward__options" id="rewardOptions" hidden>
+          <p class="reward__code">Your code word: "Show me the code"</p>
+          <div class="reward__btns">
+            <a class="btn btn--primary" href="mailto:dan.boyland@forgedframeworks.co.uk?subject=Show%20me%20the%20code&body=Hi%20Dan%2C%0A%0A%22Show%20me%20the%20code%22%20-%20I%20found%20your%20secret%20pages!%0A%0APlease%20could%20you%20send%20a%20sample%20HTML%20code%20block%3F%20A%20surprise%20is%20great%2C%20or%20I%27ll%20name%20one%20I%27d%20like%20here%3A%20___%0A%0A(I%20understand%20you%20won%27t%20store%20or%20save%20my%20email%20-%20you%27ll%20just%20reach%20out%20via%20LinkedIn%20if%20I%20have%20a%20profile.%20No%20obligation%20-%20happy%20to%20connect.)%0A%0AThanks!">Show me the code</a>
+            <a class="btn btn--ghost" href="mailto:dan.boyland@forgedframeworks.co.uk?subject=Show%20me%20the%20Framework&body=Hi%20Dan%2C%0A%0A%22Show%20me%20the%20Framework%22%20-%20I%20made%20it%20to%20your%20secret%20pages!%0A%0APlease%20could%20you%20send%20a%20sample%20of%20a%20completed%20Combined%20Forged%20Frameworks%20build.%20If%20there%27s%20a%20level%20or%20subject%20I%27d%20like%2C%20I%27ll%20note%20it%3A%0A-%20Framework%20level%3A%20___%0A-%20Subject%3A%20___%0A%0AI%20know%20an%20off-the-cuff%20sample%20is%20limited%20to%20one%20learning%20objective%20and%20one%20key%20topic.%20My%20details%3A%0A-%20Learning%20objective%3A%20___%0A-%20Key%20topic%3A%20___%0A-%20Learner%20persona%3A%20___%0A%0A(I%20understand%20you%20won%27t%20store%20or%20save%20my%20email%20-%20you%27ll%20just%20reach%20out%20via%20LinkedIn%20if%20I%20have%20a%20profile.%20No%20obligation%20-%20happy%20to%20connect.)%0A%0AThanks!">Show me the Framework</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <details class="disc reveal" id="core-skills" open>
+      <summary>Core skills &amp; expertise <span class="plus">+</span></summary>
+      <div class="disc__body">
+        <div class="grid grid-3">
+          <div>
+            <h4><i data-lucide="layout-template"></i>Digital Learning Design &amp; Development</h4>
+            <ul class="ticks">
+              <li>VLE course builds in Moodle, Rise 360, FutureLearn</li>
+              <li>HTML &amp; Markdown coding for course authoring</li>
+              <li>Accessibility by design (WCAG, inclusive design, plain language, alternative navigation, captions, transcripts, screen reader compatibility, dyslexia-friendly fonts, high contrast)</li>
+              <li>Learning strategy design (learner personas, content journey mapping)</li>
+              <li>Storyline &amp; interactive design (scenario-based learning, simulations, quizzes)</li>
+              <li>LMS feature use: restrictive release, group enrolments, SCORM integration, automated certificates, enhanced quiz feedback</li>
+            </ul>
+          </div>
+          <div>
+            <h4><i data-lucide="workflow"></i>GenAI Integration &amp; Content Pipeline</h4>
+            <ul class="ticks">
+              <li>AI-assisted framework creation from schemes of work &amp; VLE content plans</li>
+              <li>Human assurance QA steps</li>
+              <li>Schedule assessment plan query bot</li>
+              <li>Consistent collateral generation for course intros, bookending, and quiz development</li>
+              <li>Codex (OpenAI) agentic coding to build &amp; maintain a reusable HTML learning-asset library</li>
+              <li>Tools: OpenAI &amp; Codex, Google Gemini, Claude, NotebookLM</li>
+              <li>AI workflow integration for SMEs &amp; LCDs to reduce authoring time</li>
+            </ul>
+          </div>
+          <div>
+            <h4><i data-lucide="shield-check"></i>Quality, Curriculum &amp; Compliance</h4>
+            <ul class="ticks">
+              <li>Alignment with sector standards &amp; apprenticeship standards</li>
+              <li>HE validated narratives, defined schemes of work, VLE content plans</li>
+              <li>Safeguarding &amp; Prevent Duty integration</li>
+              <li>GDPR content control &amp; data handling</li>
+              <li>Industrial technical module client development</li>
+            </ul>
+            <p style="margin-top:var(--space-4);"><a class="btn btn--ghost" href="Accreditation-Quality.html">See the full accreditation &amp; ISO background →</a></p>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="disc reveal">
+      <summary>Supporting skills <span class="plus">+</span></summary>
+      <div class="disc__body">
+        <div class="grid grid-3">
+          <div>
+            <h4><i data-lucide="kanban"></i>Project Management &amp; Coordination</h4>
+            <ul class="ticks">
+              <li>SME and contractor sourcing, screening &amp; engagement</li>
+              <li>Resourcing, costing &amp; contract generation</li>
+              <li>End-to-end project coordination (scope, scheduling, blockers removal)</li>
+              <li>GitHub repository management — structured asset libraries, version control, change logs &amp; porting plans</li>
+              <li>LMS evaluation &amp; optimisation (Moodle version upgrades, plugin testing, sandbox builds, theme configuration)</li>
+            </ul>
+          </div>
+          <div>
+            <h4><i data-lucide="chart-column"></i>Data, Analytics &amp; Reporting</h4>
+            <ul class="ticks">
+              <li>SQL-based reporting for extracting and structuring Moodle/LMS and server data for actionable insights</li>
+              <li>Customised report configuration (enrolment tracking, learner progress, completion rates, activity engagement)</li>
+              <li>Excel &amp; CSV analysis — PivotTables, charts, and trend identification</li>
+              <li>Feedback analytics integration — QR codes, in-platform surveys, automated forms</li>
+              <li>Data-driven improvement cycles informing design refinements, reporting, and compliance tracking</li>
+            </ul>
+          </div>
+          <div>
+            <h4><i data-lucide="messages-square"></i>Communication &amp; Stakeholder Engagement</h4>
+            <ul class="ticks">
+              <li>Clear, sector-appropriate copywriting</li>
+              <li>Business operations administration</li>
+              <li>Collaboration with employers, providers, and academic partners</li>
+              <li>Client and accreditation body liaison for compliance &amp; validation</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="disc reveal" id="personas">
+      <summary>AI personas — the pipeline crew <span class="plus">+</span></summary>
+      <div class="disc__body">
+        <p class="muted">Calibrated AI personas support each stage of the GenAI content pipeline — drafting, levelling, QA, and consolidation — always under human assurance. Approx. 30% SME time saved.</p>
+        <p style="margin-top:var(--space-4);"><a class="btn btn--ghost" href="#pipeline">Back to the pipeline</a></p>
+      </div>
+    </details>
+
+    <p class="reveal" style="text-align:center; margin-top:var(--space-7);"><a class="btn btn--primary" href="Accreditation-Quality.html">🔒 The Accreditation &amp; Quality page — Accreditation, ISO &amp; QMS →</a></p>
+  </div>
+</section>
+
+</main>
+
+<!-- ===================== BLOCK PREVIEW MODAL ===================== -->
+<div class="block-modal" id="blockModal" aria-hidden="true">
+  <div class="block-modal__panel">
+    <div class="block-modal__bar">
+      <span class="block-modal__title" id="blockModalTitle">Preview</span>
+      <div class="block-modal__actions">
+        <a class="block-modal__newtab" id="blockModalNewtab" href="#" target="_blank" rel="noopener">Open in new tab ↗</a>
+        <button class="block-modal__close" id="blockModalClose" type="button" aria-label="Close preview">✕</button>
+      </div>
+    </div>
+    <iframe class="block-modal__frame" id="blockModalFrame" title="Interactive preview" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+  </div>
+</div>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer">
+  <div class="wrap-wide footer__inner">
+    <a class="brand" href="#top" aria-label="Forged Frameworks — home">
+      <svg viewBox="0 0 100 132" aria-hidden="true">
+        <path d="M30 14 L74 14 Q80 14 80 20 L80 40 Q80 46 74 46 L30 46 L12 30 Z" fill="#bc6c3c"/>
+        <rect x="45" y="46" width="10" height="46" fill="#2c3e50"/>
+        <rect x="40" y="90" width="20" height="9" rx="2" fill="#2c3e50"/>
+        <path d="M40 99 L60 99 L51 128 Z" fill="#2c3e50"/>
+      </svg>
+      <span class="brand__name">Forged Frameworks<small>Forging Learning</small></span>
+    </a>
+    <small>© <span id="year"></span> Daniel 'Wig' Boyland · Cwmbran, S. Wales · <a href="mailto:dan.boyland@forgedframeworks.co.uk">dan.boyland@forgedframeworks.co.uk</a></small>
+  </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script src="https://unpkg.com/lucide@0.544.0/dist/umd/lucide.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

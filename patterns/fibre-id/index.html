@@ -1,0 +1,449 @@
+<!--
+==============================================================================
+PROJECT: Forged Frameworks - VLE Automated Curriculum Pipeline (vC4)
+AUTHOR: Daniel Boyland
+ORGANISATION: Forged Frameworks
+DESCRIPTION: Gated Logic Asbestos Identification Decision Matrix
+VERSION: v1.2 (Strict HSG248 Table A2.3 Gating)
+==============================================================================
+SCRIPT ROLE: Gated Fibres
+FUNCTION: Renders a complex, gated logic engine into an interactive
+worked example HTML/CSS/JS module with mutually exclusive
+and inclusive criteria for fibre identification.
+==============================================================================-->
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Asbestos Analysis | Gated Decision Matrix</title>
+
+  <style>
+    :root {
+      /* Clinical / Analytical Purple Palette */
+      --bg1: #f3e8ff;
+      --bg2: #faf5ff;
+      --bg3: #ffffff;
+      --text: #111827;
+      --muted: #4b5563;
+      --accent: #7c3aed;
+      --accent-dark: #6d28d9;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --border: rgba(109, 40, 217, 0.28);
+      --shadow: 0 12px 30px rgba(0,0,0,0.1);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 20px 24px 100px;
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(180deg, var(--bg1), var(--bg2) 40%, var(--bg3));
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* BACKGROUND ANIMATION */
+    .bg-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    
+    .fibre {
+      position: absolute;
+      background: linear-gradient(180deg, rgba(203,213,225,0.2), rgba(148,163,184,0.8), rgba(203,213,225,0.2));
+      border-radius: 1px;
+      opacity: 0.6;
+      animation: tumble 20s linear infinite;
+    }
+
+    @keyframes tumble {
+      0% { transform: translate3d(-10vw, 110vh, 0) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.6; }
+      90% { opacity: 0.6; }
+      100% { transform: translate3d(110vw, -20vh, 0) rotate(720deg); opacity: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .fibre { animation: none !important; display: none; }
+    }
+
+    .wrap { 
+      width: 100%; 
+      max-width: 1000px; 
+      position: relative; 
+      z-index: 5; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      gap: 20px;
+    }
+
+    /* HEADER */
+    .header {
+      text-align: center;
+      padding: 30px 40px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      width: 100%;
+    }
+    .header h1 { font-size: 28px; color: #1e1b4b; margin: 0 0 12px 0; }
+    .header p { margin: 0 auto; color: var(--muted); font-size: 16px; max-width: 800px; }
+
+    /* AMBER CAVEAT BOX */
+    .caveat-box {
+      background-color: #fffbeb;
+      border: 2px solid #fbbf24;
+      border-radius: 12px;
+      padding: 20px 25px;
+      width: 100%;
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    .caveat-icon { font-size: 24px; }
+    .caveat-text { color: #92400e; font-size: 14.5px; margin: 0; font-weight: 500; }
+
+    /* MATRIX GRID */
+    .matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 15px;
+      width: 100%;
+    }
+
+    .property-group {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      transition: opacity 0.3s ease;
+    }
+    .property-group h3 {
+      margin: 0 0 12px 0;
+      font-size: 16px;
+      color: var(--accent-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid #e9d5ff;
+      padding-bottom: 6px;
+    }
+
+    .option-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .property-btn {
+      appearance: none;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 13px;
+      color: var(--text);
+      position: relative;
+    }
+    .property-btn:hover:not(.locked) { background: #f3e8ff; border-color: var(--accent); }
+    .property-btn.selected {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent-dark);
+      font-weight: bold;
+      z-index: 2;
+    }
+    .property-btn.locked {
+      opacity: 0.25;
+      cursor: not-allowed;
+      filter: grayscale(1);
+    }
+
+    /* RESULT AREA */
+    .result-panel {
+      width: 100%;
+      background: #1e1b4b;
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 30px;
+      text-align: center;
+      margin-top: 10px;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 12px;
+      box-shadow: 0 10px 25px rgba(30, 27, 75, 0.2);
+    }
+
+    .status-msg { font-size: 13px; text-transform: uppercase; letter-spacing: 2px; color: #a5b4fc; }
+    .fibre-output { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+    
+    .fibre-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 15px 25px;
+      border-radius: 12px;
+      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    .fibre-card h4 { margin: 0; font-size: 26px; color: #fff; }
+    .fibre-card p { margin: 5px 0 0 0; color: #fbbf24; font-weight: bold; font-family: monospace; font-size: 18px; }
+
+    .btn-reset {
+      background: transparent;
+      color: #a5b4fc;
+      border: 1px solid #a5b4fc;
+      padding: 10px 24px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 15px;
+      transition: all 0.2s;
+      align-self: center;
+    }
+    .btn-reset:hover { background: #a5b4fc; color: #1e1b4b; }
+
+    @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
+    @media (max-width: 768px) {
+      .matrix-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-layer" id="bgLayer"></div>
+
+  <div class="wrap">
+    <div class="header">
+      <h1>Asbestos Identification Matrix</h1>
+      <p>A multi-layered decision engine using gated logic to match physical properties to specific species as required by the Analyst Guide.</p>
+    </div>
+
+    <div class="caveat-box">
+      <div class="caveat-icon">⚠️</div>
+      <p class="caveat-text">
+        <strong>Reference HSG248 Table A2.3:</strong> This tool is an indicative guide for tentative fibre identification. Confirmation must be perform via full Polarised Light Microscopy (PLM) using the specified RI liquid.
+      </p>
+    </div>
+
+    <div class="matrix-grid">
+      
+      <div class="property-group" id="grp-colour">
+        <h3>1. Primary Colour</h3>
+        <div class="option-list">
+          <button class="property-btn" data-group="colour" data-val="white" onclick="handleSelect(this)">Colourless / White</button>
+          <button class="property-btn" data-group="colour" data-val="greybrown" onclick="handleSelect(this)">White to Grey-Brown</button>
+          <button class="property-btn" data-group="colour" data-val="greengrey" onclick="handleSelect(this)">Greenish-Grey</button>
+          <button class="property-btn" data-group="colour" data-val="blue" onclick="handleSelect(this)">Deep Blue</button>
+        </div>
+      </div>
+
+      <div class="property-group" id="grp-texture">
+        <h3>2. Texture</h3>
+        <div class="option-list">
+          <button class="property-btn" data-group="texture" data-val="sinuous" onclick="handleSelect(this)">Soft with bundles of sinuous fibres</button>
+          <button class="property-btn" data-group="texture" data-val="parallel" onclick="handleSelect(this)">Soft or harsh; parallel fibre bundles</button>
+        </div>
+      </div>
+
+      <div class="property-group" id="grp-appearance">
+        <h3>3. Appearance</h3>
+        <div class="option-list">
+          <button class="property-btn" data-group="appearance" data-val="flexible" onclick="handleSelect(this)">Flexible fibres which cling to tweezers</button>
+          <button class="property-btn" data-group="appearance" data-val="straight" onclick="handleSelect(this)">Straight fibres easy to handle</button>
+        </div>
+      </div>
+
+      <div class="property-group" id="grp-lustre">
+        <h3>4. Lustre</h3>
+        <div class="option-list">
+          <button class="property-btn" data-group="lustre" data-val="silky" onclick="handleSelect(this)">Silky</button>
+          <button class="property-btn" data-group="lustre" data-val="vitreous" onclick="handleSelect(this)">Vitreous</button>
+          <button class="property-btn" data-group="lustre" data-val="vitsilky" onclick="handleSelect(this)">Vitreous / Silky</button>
+          <button class="property-btn" data-group="lustre" data-val="vitgrey" onclick="handleSelect(this)">Vitreous / Green-Grey</button>
+          <button class="property-btn" data-group="lustre" data-val="metallic" onclick="handleSelect(this)">Metallic (dark / highly reflective)</button>
+        </div>
+      </div>
+
+      <div class="property-group" id="grp-tensile">
+        <h3>5. Tensile Strength</h3>
+        <div class="option-list">
+          <button class="property-btn" data-group="tensile" data-val="high" onclick="handleSelect(this)">High</button>
+          <button class="property-btn" data-group="tensile" data-val="medium" onclick="handleSelect(this)">Medium</button>
+          <button class="property-btn" data-group="tensile" data-val="low" onclick="handleSelect(this)">Low</button>
+        </div>
+      </div>
+
+      <div class="property-group" id="grp-elasticity">
+        <h3>6. Elasticity</h3>
+        <div class="option-list">
+          <button class="property-btn" data-group="elasticity" data-val="inelastic" onclick="handleSelect(this)">Inelastic</button>
+          <button class="property-btn" data-group="elasticity" data-val="elastic" onclick="handleSelect(this)">Elastic</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="result-panel" id="resultPanel">
+      <div class="status-msg" id="statusMsg">Awaiting Selection...</div>
+      <div class="fibre-output" id="fibreOutput"></div>
+      <button class="btn-reset" onclick="resetLogic()">Reset Selection Matrix</button>
+    </div>
+
+  </div>
+
+  <script>
+    // State management
+    const state = { colour: null, texture: null, appearance: null, lustre: null, tensile: null, elasticity: null };
+
+    // The Logic Matrix (Source: HSG248 Table A2.3)
+    const fibres = [
+      {
+        id: 'chrysotile', name: 'Chrysotile', ri: '1.550',
+        colour: 'white', texture: 'sinuous', appearance: 'flexible', lustre: 'silky', tensile: 'high', elasticity: 'inelastic'
+      },
+      {
+        id: 'amosite', name: 'Amosite', ri: '1.670',
+        colour: 'greybrown', texture: 'parallel', appearance: 'straight', lustre: 'vitreous', tensile: 'high', elasticity: 'elastic'
+      },
+      {
+        id: 'anthophyllite', name: 'Anthophyllite', ri: '1.605',
+        colour: 'greybrown', texture: 'parallel', appearance: 'straight', lustre: 'vitreous', tensile: 'medium', elasticity: 'elastic'
+      },
+      {
+        id: 'tremolite', name: 'Tremolite', ri: '1.605',
+        colour: 'greybrown', texture: 'parallel', appearance: 'straight', lustre: 'vitsilky', tensile: 'low', elasticity: 'elastic'
+      },
+      {
+        id: 'actinolite', name: 'Actinolite', ri: '1.640',
+        colour: 'greengrey', texture: 'parallel', appearance: 'straight', lustre: 'vitgrey', tensile: 'low', elasticity: 'elastic'
+      },
+      {
+        id: 'crocidolite', name: 'Crocidolite', ri: '1.700',
+        colour: 'blue', texture: 'parallel', appearance: 'straight', lustre: 'metallic', tensile: 'high', elasticity: 'elastic'
+      }
+    ];
+
+    function handleSelect(btn) {
+      if (btn.classList.contains('locked')) return;
+
+      const group = btn.dataset.group;
+      const val = btn.dataset.val;
+
+      // Toggle selection
+      if (state[group] === val) {
+        state[group] = null;
+      } else {
+        state[group] = val;
+      }
+
+      updateUI();
+    }
+
+    function updateUI() {
+      // 1. Calculate matching fibres based on CURRENT selections
+      const matches = fibres.filter(f => {
+        return (!state.colour || f.colour === state.colour) &&
+               (!state.texture || f.texture === state.texture) &&
+               (!state.appearance || f.appearance === state.appearance) &&
+               (!state.lustre || f.lustre === state.lustre) &&
+               (!state.tensile || f.tensile === state.tensile) &&
+               (!state.elasticity || f.elasticity === state.elasticity);
+      });
+
+      // 2. Update button visual states (Selected vs Default)
+      document.querySelectorAll('.property-btn').forEach(btn => {
+        const group = btn.dataset.group;
+        const val = btn.dataset.val;
+        
+        // Mark as selected if in state
+        if (state[group] === val) {
+          btn.classList.add('selected');
+        } else {
+          btn.classList.remove('selected');
+        }
+
+        // 3. APPLY GATED LOGIC
+        // A button should be "locked" if selecting it would result in ZERO matches 
+        // GIVEN the selections in OTHER groups.
+        const canMatch = fibres.some(f => {
+          // Check if this fibre matches ALL CURRENT selections EXCEPT the group this button belongs to
+          const matchOthers = Object.keys(state).every(k => {
+            if (k === group) return true; // Ignore own group for checking potential
+            return !state[k] || f[k] === state[k];
+          });
+          // And also matches this specific button's value
+          return matchOthers && f[group] === val;
+        });
+
+        if (!canMatch) {
+          btn.classList.add('locked');
+        } else {
+          btn.classList.remove('locked');
+        }
+      });
+
+      // 4. Update Result Display
+      const output = document.getElementById('fibreOutput');
+      const status = document.getElementById('statusMsg');
+      output.innerHTML = '';
+
+      if (Object.values(state).every(v => v === null)) {
+        status.innerText = "Awaiting Selection...";
+      } else if (matches.length === 0) {
+        status.innerText = "No matches for this combination.";
+      } else {
+        const isDefinitive = Object.values(state).filter(v => v !== null).length >= 3 || matches.length === 1;
+        status.innerText = matches.length === 1 ? "Tentative Identification Confirmed:" : "Potential Fibre Matches:";
+        
+        matches.forEach(f => {
+          const card = document.createElement('div');
+          card.className = 'fibre-card';
+          card.innerHTML = `<h4>${f.name}</h4><p>RI: ${f.ri}</p>`;
+          output.appendChild(card);
+        });
+      }
+    }
+
+    function resetLogic() {
+      Object.keys(state).forEach(k => state[k] = null);
+      updateUI();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function createFibres() {
+      const layer = document.getElementById('bgLayer');
+      for (let i = 0; i < 25; i++) {
+        const f = document.createElement('div');
+        f.classList.add('fibre');
+        f.style.width = `${Math.random() * 2 + 1}px`;
+        f.style.height = `${Math.random() * 20 + 10}px`;
+        f.style.left = `${Math.random() * 100}vw`;
+        f.style.animationDelay = `${Math.random() * -20}s`;
+        f.style.animationDuration = `${Math.random() * 15 + 15}s`;
+        layer.appendChild(f);
+      }
+    }
+    window.addEventListener('DOMContentLoaded', createFibres);
+  </script>
+</body>
+</html>
