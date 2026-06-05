@@ -75,9 +75,27 @@
   /* nav tidy for this page (no mobile menu logic here) */
   .nav__links a { white-space: nowrap; }
   @media (max-width: 600px) { .nav__links a:not(.nav__cta) { display: none; } }
+
+  /* ---- ISO page reveal: slow cascade, hold, then words rain off to expose ---- */
+  #iso-intro { position: fixed; inset: 0; z-index: 9999; overflow: hidden; transition: opacity 0.6s ease; cursor: pointer; }
+  #iso-intro__bg { position: absolute; inset: 0; background: var(--ff-ink); transition: opacity 1.1s ease; }
+  #iso-intro__bg canvas { display: block; width: 100%; height: 100%; }
+  #iso-intro.is-raining #iso-intro__bg { opacity: 0; }
+  #iso-intro__words { position: absolute; inset: 0; pointer-events: none; }
+  .iso-word { position: absolute; transform: translate(-50%, -50%) scale(0.9); font-family: var(--font-mono); letter-spacing: var(--ls-wide); white-space: nowrap; color: #cf8a5a; opacity: 0; transition: opacity 0.6s ease, transform 0.6s ease; text-shadow: 0 0 18px rgba(188,108,60,0.45); }
+  .iso-word.is-in { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  .iso-word.is-out { transition: transform 1.15s cubic-bezier(0.5, 0, 0.9, 0.45), opacity 1.15s ease-in; transform: translate(-50%, 125vh) scale(1); opacity: 0; }
+  .iso-word--std { color: #f4b988; font-weight: 700; font-size: clamp(1rem, 2.6vw, 1.7rem); text-shadow: 0 0 24px rgba(240,176,126,0.7); }
+  .iso-word--dom { font-size: clamp(0.8rem, 1.7vw, 1.15rem); }
+  #iso-intro__skip { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: var(--ls-wide); color: rgba(240,176,126,0.55); opacity: 0; transition: opacity 0.5s ease; pointer-events: none; }
+  #iso-intro.is-hint #iso-intro__skip { opacity: 1; }
+  #iso-intro.is-done { opacity: 0; pointer-events: none; }
+  @media (prefers-reduced-motion: reduce) { #iso-intro { display: none !important; } }
+  @media (max-width: 640px) { .iso-word--dom { font-size: 0.76rem; } .iso-word--std { font-size: 1rem; } }
 </style>
 </head>
 <body>
+<div id="iso-intro" aria-hidden="true"><div id="iso-intro__bg"><canvas id="iso-intro-canvas"></canvas></div><div id="iso-intro__words"></div><div id="iso-intro__skip">tap to skip</div></div>
 <canvas id="matrix" aria-hidden="true"></canvas>
 <a class="skip-link" href="#acc-main">Skip to content</a>
 
@@ -444,6 +462,85 @@
       }
     }
     if (!reduce) setInterval(draw, 64);
+  })();
+
+  // ISO page reveal — slow cascade, words hold, then rain off to expose the page
+  (function () {
+    var intro = document.getElementById('iso-intro');
+    if (!intro) return;
+    function size(){ w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; cols = Math.floor(w / fs); drops = []; for (var i = 0; i < cols; i++) drops[i] = Math.random() * -40; }
+    function kill(){ if (intro && intro.parentNode) intro.parentNode.removeChild(intro); document.documentElement.style.overflow = ''; window.removeEventListener('resize', size); }
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { kill(); return; }
+    var canvas = document.getElementById('iso-intro-canvas');
+    var ctx = canvas && canvas.getContext('2d');
+    if (!ctx) { kill(); return; }
+
+    var WORDS = [
+      ['ISO 15189', 19, 15, 'std'],
+      ['QMS', 72, 12, 'dom'],
+      ['Medical Laboratories', 48, 25, 'dom'],
+      ['ISO 17025', 29, 35, 'std'],
+      ['Clinical', 79, 31, 'dom'],
+      ['NHS', 12, 44, 'dom'],
+      ['Validation', 57, 45, 'dom'],
+      ['ISO 17043', 84, 54, 'std'],
+      ['Risk', 21, 58, 'dom'],
+      ['Measurement Uncertainty', 50, 64, 'dom'],
+      ['Verification', 80, 70, 'dom'],
+      ['Haematology', 17, 73, 'dom'],
+      ['Change', 43, 80, 'dom'],
+      ['Blood Transfusion', 63, 84, 'dom'],
+      ['Haemostasis', 27, 90, 'dom']
+    ];
+    var wrap = document.getElementById('iso-intro__words'), els = [];
+    var IN_BASE = 260, IN_STAGGER = 150, IN_FADE = 600;
+    if (wrap) WORDS.forEach(function (wd, i) {
+      var el = document.createElement('span');
+      el.className = 'iso-word iso-word--' + wd[3];
+      el.textContent = wd[0];
+      el.style.left = wd[1] + '%';
+      el.style.top = wd[2] + '%';
+      wrap.appendChild(el); els.push(el);
+      setTimeout(function () { el.classList.add('is-in'); }, IN_BASE + i * IN_STAGGER);
+    });
+
+    var allIn = IN_BASE + (WORDS.length - 1) * IN_STAGGER + IN_FADE;
+    var HOLD = 3000, OUT_STAGGER = 95, OUT_DUR = 1150;
+    var exiting = false, finished = false, raf;
+
+    function beginExit(){
+      if (exiting || finished) return; exiting = true;
+      intro.classList.remove('is-hint');
+      intro.classList.add('is-raining');               // ink + glyphs fade -> page appears
+      els.forEach(function (el, i) { setTimeout(function () { el.classList.add('is-out'); }, i * OUT_STAGGER); }); // words rain off
+      setTimeout(finish, (els.length - 1) * OUT_STAGGER + OUT_DUR + 200);
+    }
+    function finish(){ if (finished) return; finished = true; if (raf) cancelAnimationFrame(raf); intro.classList.add('is-done'); document.documentElement.style.overflow = ''; setTimeout(kill, 650); }
+
+    setTimeout(function(){ if (!exiting) intro.classList.add('is-hint'); }, allIn + 250);
+    intro.addEventListener('click', function(){ exiting ? finish() : beginExit(); });
+    setTimeout(beginExit, allIn + HOLD);                // natural: hold ~3s, then rain off
+
+    var glyphs = 'FORGEDFRAMEWORKS0123456789ISO151891702517043{}<>/#%='.split('');
+    var fs = 20, cols, drops, w, h;
+    size(); window.addEventListener('resize', size);
+    document.documentElement.style.overflow = 'hidden';
+    function draw(){
+      try {
+        ctx.fillStyle = 'rgba(44,62,80,0.10)'; ctx.fillRect(0, 0, w, h);
+        ctx.font = '700 ' + fs + "px 'JetBrains Mono', ui-monospace, monospace";
+        for (var i = 0; i < drops.length; i++) {
+          var x = i * fs, y = drops[i] * fs;
+          ctx.fillStyle = '#e7a274'; ctx.fillText(glyphs[Math.floor(Math.random() * glyphs.length)], x, y);
+          ctx.fillStyle = '#a85a30'; ctx.fillText(glyphs[Math.floor(Math.random() * glyphs.length)], x, y - fs);
+          if (y > h && Math.random() > 0.975) drops[i] = Math.random() * -16;
+          drops[i] += 0.5;
+        }
+        if (!finished) raf = requestAnimationFrame(draw);
+      } catch (e) { finish(); }
+    }
+    raf = requestAnimationFrame(draw);
+    setTimeout(finish, allIn + HOLD + (WORDS.length * OUT_STAGGER) + OUT_DUR + 1400); // hard safety
   })();
 </script>
 </body>
