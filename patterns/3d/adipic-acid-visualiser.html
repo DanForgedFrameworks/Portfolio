@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forged Frameworks | Adipic Acid Visualiser</title>
+    <script src="https://3Dmol.org/build/3Dmol-min.js"></script>
+    <style>
+        :root {
+            --rose-purple: #691eda;
+            --bg-pastel: #e8dbf7; 
+            --rose-orange: #f08838;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --border-hard: #691eda;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; 
+            height: 100%; min-height: 700px;
+            background-color: var(--bg-pastel);
+            font-family: 'Segoe UI', sans-serif;
+            color: #333;
+            display: flex; flex-direction: column;
+            overflow: hidden;
+        }
+
+        #top-border, #bottom-border { height: 8px; background: var(--border-hard); width: 100%; flex-shrink: 0; z-index: 20; }
+
+        #main-wrapper {
+            display: flex;
+            flex-direction: row;
+            flex-grow: 1;
+            width: 100vw;
+            min-height: 684px;
+            position: relative;
+            z-index: 2;
+        }
+
+        #visualiser-area {
+            position: relative;
+            flex-grow: 1;
+            height: 100%;
+        }
+
+        #container { width: 100%; height: 100%; }
+
+        /* FIXED: Widened text box and implemented flex-start to prevent vertical clipping */
+        #side-panel-wrapper {
+            width: 520px; 
+            padding: 25px; 
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; 
+            flex-shrink: 0;
+            box-sizing: border-box;
+            background: transparent;
+            overflow-y: auto; /* Safety scroll for long text */
+        }
+
+        .case-study-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(105, 30, 218, 0.2);
+            border-left: 5px solid var(--rose-orange);
+            border-radius: 12px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px; /* Buffer for bottom border */
+        }
+
+        .glass-panel {
+            position: absolute; z-index: 10;
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(105, 30, 218, 0.3);
+            border-radius: 8px; padding: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        #title-card { top: 20px; left: 20px; border-left: 4px solid var(--rose-purple); }
+        #molecule-key { bottom: 20px; left: 20px; width: 160px; }
+        #nav-hub { bottom: 20px; right: 20px; width: 260px; }
+
+        .case-study-card h3 { margin: 0; font-size: 1.05rem; color: var(--rose-purple); border-bottom: 1px solid rgba(105, 30, 218, 0.2); padding-bottom: 8px;}
+        .case-study-card p { font-size: 0.95rem; line-height: 1.6; color: #444; margin: 0; text-align: justify; }
+        .case-study-card a { color: var(--rose-purple); text-decoration: none; font-weight: bold; word-break: break-word; }
+        .case-study-card a:hover { text-decoration: underline; }
+        
+        .close-btn { background: #eee; color: #333; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
+        .close-btn:hover { background: #ddd; }
+
+        .ui-header { margin: 0 0 10px 0; font-size: 0.8rem; color: var(--rose-purple); text-transform: uppercase; border-bottom: 1px solid rgba(105, 30, 218, 0.1); padding-bottom: 4px;}
+
+        .atom-row { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; margin-bottom: 6px; font-weight: 600;}
+        .dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
+        .o { background-color: #FF0D0D; } .c { background-color: #909090; } .h { background-color: #FFFFFF; }
+
+        button.ctrl-btn {
+            background: #fff; border: 1px solid var(--rose-purple);
+            color: var(--rose-purple); padding: 5px 8px; border-radius: 4px;
+            cursor: pointer; font-size: 0.75rem; flex: 1; font-weight: bold;
+        }
+        button.ctrl-btn:hover { background: var(--rose-purple); color: white; }
+        
+        .study-btn { background: var(--rose-orange); color: white; border: none; width: 100%; margin-top: 10px; padding: 8px; border-radius: 4px; cursor: pointer; font-weight: bold;}
+        .study-btn:hover { background: #d97529; }
+
+        .kbd { background: #eee; padding: 1px 4px; border-radius: 3px; color: var(--rose-orange); font-family: monospace; font-size: 0.7rem; }
+    </style>
+</head>
+<body>
+    <div id="top-border"></div>
+    <div id="main-wrapper">
+        <div id="visualiser-area">
+            <div id="title-card" class="glass-panel">
+                <h2 style="margin:0; font-size: 1rem; color: var(--rose-purple);">Adipic Acid</h2>
+                <div style="font-size: 0.65rem; opacity: 0.8; color: #000;">SOURCE: PUBCHEM // CID: 2266</div>
+            </div>
+
+            <div id="molecule-key" class="glass-panel">
+                <h3 class="ui-header">Element Key</h3>
+                <div class="atom-row"><div class="dot o"></div> Oxygen</div>
+                <div class="atom-row"><div class="dot c"></div> Carbon</div>
+                <div class="atom-row"><div class="dot h"></div> Hydrogen</div>
+            </div>
+
+            <div id="nav-hub" class="glass-panel">
+                <h3 class="ui-header">Navigation Hub</h3>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <div class="btn-row" style="display:flex; gap:4px;">
+                        <button class="ctrl-btn" onmousedown="startManual('left')" onmouseup="stopManual()" onmouseleave="stopManual()">←</button>
+                        <button class="ctrl-btn" onmousedown="startManual('up')" onmouseup="stopManual()" onmouseleave="stopManual()">↑</button>
+                        <button class="ctrl-btn" onmousedown="startManual('down')" onmouseup="stopManual()" onmouseleave="stopManual()">↓</button>
+                        <button class="ctrl-btn" onmousedown="startManual('right')" onmouseup="stopManual()" onmouseleave="stopManual()">→</button>
+                    </div>
+                    <div style="display:flex; gap:4px;">
+                        <button class="ctrl-btn" onmousedown="startManual('zoomOut')" onmouseup="stopManual()" onmouseleave="stopManual()">Zoom -</button>
+                        <button class="ctrl-btn" onmousedown="startManual('zoomIn')" onmouseup="stopManual()" onmouseleave="stopManual()">Zoom +</button>
+                    </div>
+                    <div style="font-size: 0.7rem; color: #666; text-align: center;">Keyboard: <span class="kbd">Arrows</span> / <span class="kbd">+/-</span></div>
+                    <button class="study-btn" onclick="toggleCaseStudy()">Toggle Case Study Panel</button>
+                </div>
+            </div>
+
+            <div id="container"></div>
+        </div>
+
+        <div id="side-panel-wrapper">
+            <div class="case-study-card">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px;">
+                    <h3>Case Study: Greener Routes to Adipic Acid</h3>
+                    <button class="close-btn" onclick="toggleCaseStudy()">Close [X]</button>
+                </div>
+                <p>Adipic acid is a key monomer for the production of Nylon 6,6, produced on a massive scale (billions of kilograms annually). The traditional industrial process involves the oxidation of a cyclohexane derivative using concentrated nitric acid.<br><br>
+                While effective, this process generates significant quantities of nitrous oxide (N2O), a potent greenhouse gas and ozone-depleting substance. This has driven extensive research into greener alternatives.<br><br>
+                One leading approach, championed by companies and academic groups, involves using glucose (derived from renewable biomass) as a starting material. Through a series of biocatalytic and chemocatalytic steps, glucose can be converted to adipic acid without using nitric acid and without producing N2O.<br><br>
+                This case study perfectly illustrates the green chemistry principles of using renewable feedstocks and designing safer chemistry to prevent pollution at its source.</p>
+                
+                <div style="font-size: 0.85rem; margin-top: 10px;">
+                    🔗 <a href="https://chemistry-europe.onlinelibrary.wiley.com/doi/epdf/10.1002/cssc.202101531" target="_blank">Green route to adipic acid (Chemistry Europe)</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="bottom-border"></div>
+
+    <script>
+        let viewer;
+        let autoRotate = true;
+        const activeInputs = { up: false, down: false, left: false, right: false, zoomIn: false, zoomOut: false };
+
+        document.addEventListener("DOMContentLoaded", function() {
+            let element = document.querySelector('#container');
+            viewer = $3Dmol.createViewer(element, { backgroundColor: 'transparent', nominal_res: 64 });
+
+            $3Dmol.download("cid:2266", viewer, {}, function() {
+                viewer.setStyle({}, { stick: { radius: 0.12, colorscheme: 'Jmol' }, sphere: { scale: 0.28, colorscheme: 'Jmol', quality: 10 } });
+                viewer.zoomTo();
+                viewer.render();
+                element.addEventListener('mousedown', () => autoRotate = false);
+                function animate() {
+                    if (autoRotate) viewer.rotate(0.3, 'y');
+                    const rotStep = 4.0; const zoomStep = 1.03;
+                    if (activeInputs.left) viewer.rotate(-rotStep, 'y');
+                    if (activeInputs.right) viewer.rotate(rotStep, 'y');
+                    if (activeInputs.up) viewer.rotate(-rotStep, 'x');
+                    if (activeInputs.down) viewer.rotate(rotStep, 'x');
+                    if (activeInputs.zoomIn) viewer.zoom(zoomStep);
+                    if (activeInputs.zoomOut) viewer.zoom(1 / zoomStep);
+                    viewer.render();
+                    requestAnimationFrame(animate);
+                }
+                animate();
+            });
+        });
+
+        function toggleCaseStudy() {
+            const panel = document.getElementById('side-panel-wrapper');
+            panel.style.display = (panel.style.display === 'none') ? 'flex' : 'none';
+            setTimeout(() => { if (viewer) { viewer.resize(); viewer.render(); } }, 10);
+        }
+
+        window.addEventListener('keydown', (e) => {
+            autoRotate = false;
+            if (e.key === 'ArrowLeft') activeInputs.left = true;
+            if (e.key === 'ArrowRight') activeInputs.right = true;
+            if (e.key === 'ArrowUp') activeInputs.up = true;
+            if (e.key === 'ArrowDown') activeInputs.down = true;
+            if (e.key === '+' || e.key === '=') activeInputs.zoomIn = true;
+            if (e.key === '-' || e.key === '_') activeInputs.zoomOut = true;
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (e.key === 'ArrowLeft') activeInputs.left = false;
+            if (e.key === 'ArrowRight') activeInputs.right = false;
+            if (e.key === 'ArrowUp') activeInputs.up = false;
+            if (e.key === 'ArrowDown') activeInputs.down = false;
+            if (e.key === '+' || e.key === '=') activeInputs.zoomIn = false;
+            if (e.key === '-' || e.key === '_') activeInputs.zoomOut = false;
+        });
+
+        function startManual(type) { autoRotate = false; activeInputs[type] = true; }
+        function stopManual() { Object.keys(activeInputs).forEach(k => activeInputs[k] = false); }
+    </script>
+</body>
+</html>

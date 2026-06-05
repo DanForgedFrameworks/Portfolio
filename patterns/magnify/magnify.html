@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- 
+========================================================
+Interactive Magnifier Tool (Standalone Version)
+Version: 1.1
+Created by: Daniel Boyland (Forged Frameworks)
+Portfolio: https://forgedframeworks.co.uk
+
+Licence:
+Shared for learning, accessibility improvement, and 
+non-commercial community development. 
+Please credit “Daniel Boyland – Forged Frameworks” 
+wherever reused, modified, or redistributed.
+
+Note:
+This block is non-displayed and exists solely to ensure 
+attribution is preserved even when the visible footer is 
+removed or not rendered (e.g., in LMS embed scenarios).
+
+========================================================
+-->
+<meta name="author" content="Daniel Boyland (Forged Frameworks)">
+<meta name="version" content="1.1">
+<meta name="license" content="Shared for learning, accessibility, and community development. Attribution required.">
+
+<title>Inspect View – Magnifier Only</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    :root { --accent: #004a7c; }
+
+    body {
+        margin: 0;
+        background: #f3f3f3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        font-family: Arial, sans-serif;
+    }
+
+    .wrapper {
+        width: 100%;
+        max-width: 1200px;
+        padding: 16px;
+        box-sizing: border-box;
+    }
+
+    .instructions {
+        margin: 0 0 12px 0;
+        font-size: 14px;
+        color: #333;
+        line-height: 1.4;
+    }
+
+    .instructions .hint {
+        display: block;
+        margin-top: 4px;
+        font-size: 13px;
+        font-style: italic;
+        color: #666d80;
+    }
+
+    .img-container {
+        position: relative;
+        width: 100%;
+        background: #e6e9ed;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .img-container img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .magnifier-lens {
+        position: absolute;
+        border: 4px solid rgba(0, 74, 124, 0.95);
+        cursor: crosshair;
+        width: min(26vw, 220px);
+        height: min(26vw, 220px);
+        min-width: 120px;
+        min-height: 120px;
+        background-repeat: no-repeat;
+        background-size: 200%;
+        pointer-events: none;
+        transition: opacity 0.15s ease-in-out, transform 0.1s ease-out;
+        opacity: 0;
+        clip-path: polygon(25% 3%, 75% 3%, 97% 50%, 75% 97%, 25% 97%, 3% 50%);
+        box-shadow:
+            0 8px 20px rgba(0,0,0,0.35),
+            inset 0 0 18px rgba(255,255,255,0.35);
+        background-color: rgba(240, 248, 255, 0.25);
+    }
+
+    .magnifier-lens::after {
+        content: "";
+        position: absolute;
+        inset: 8%;
+        pointer-events: none;
+        clip-path: inherit;
+        background: radial-gradient(circle at 20% 15%,
+                  rgba(255,255,255,0.45),
+                  transparent 60%);
+        mix-blend-mode: screen;
+    }
+
+    .inspect-toggle {
+        position: absolute;
+        bottom: 14px;
+        left: 14px;
+        padding: 8px 14px;
+        font-size: 13px;
+        border-radius: 999px;
+        border: none;
+        background: var(--accent);
+        color: #ffffff;
+        cursor: pointer;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        z-index: 3;
+    }
+
+    .inspect-toggle span.icon {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 2px solid #ffffff;
+        box-sizing: border-box;
+        position: relative;
+    }
+
+    .inspect-toggle span.icon::after {
+        content: "";
+        position: absolute;
+        width: 7px;
+        height: 2px;
+        background: #ffffff;
+        border-radius: 2px;
+        right: -5px;
+        bottom: -1px;
+        transform: rotate(40deg);
+    }
+
+    .inspect-toggle.on {
+        background: #0a7ac2;
+    }
+
+    @media (max-width: 768px) {
+        .inspect-toggle {
+            bottom: auto;
+            top: 10px;
+            left: 10px;
+        }
+    }
+
+    /* Credits under the image */
+    .credits {
+        margin: 8px 0 0 0;
+        font-size: 12px;
+        color: #555e6b;
+        text-align: center;
+    }
+
+    .credits a {
+        color: var(--accent);
+        text-decoration: none;
+    }
+
+    .credits a:hover,
+    .credits a:focus {
+        text-decoration: underline;
+    }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+    <p class="instructions">
+        Turn on inspect mode, then move over the image to explore details.
+        Use your mouse wheel or <span>+</span> / <span>−</span> to zoom on desktop.
+        On touch devices, drag your finger across the image.
+        <span class="hint">
+            If the magnifier ever looks faint or disappears after moving off the image,
+            move back over the picture or toggle “Enable inspect mode” off and on to reset it.
+        </span>
+    </p>
+
+    <div class="img-container">
+        <img id="labImage" src="tracked-lab.png" alt="Laboratory Image">
+        <div class="magnifier-lens" id="lens"></div>
+
+        <button id="inspectToggle" class="inspect-toggle" type="button">
+            <span class="icon" aria-hidden="true"></span>
+            <span class="label">Enable inspect mode</span>
+        </button>
+    </div>
+
+    <p class="credits">
+        Interactive magnifier tool v1.1 created by Daniel Boyland (Forged Frameworks). 
+        Portfolio: <a href="https://forgedframeworks.co.uk" target="_blank" rel="noopener">
+        forgedframeworks.co.uk</a>. Shared for learning, accessibility, and community development.
+    </p>
+</div>
+
+<script>
+const img = document.getElementById("labImage");
+const lens = document.getElementById("lens");
+const toggleBtn = document.getElementById("inspectToggle");
+
+let zoom = 2.5;
+const minZoom = 1.5;
+const maxZoom = 4.0;
+let isInspecting = false;
+
+function updateLensBackground() {
+    const displayedWidth = img.clientWidth;
+    const displayedHeight = img.clientHeight;
+    lens.style.backgroundImage = `url('${img.src}')`;
+    lens.style.backgroundSize = `${displayedWidth * zoom}px ${displayedHeight * zoom}px`;
+}
+
+img.onload = updateLensBackground;
+window.addEventListener("resize", updateLensBackground);
+
+toggleBtn.addEventListener("click", () => {
+    isInspecting = !isInspecting;
+    if (isInspecting) {
+        toggleBtn.classList.add("on");
+        toggleBtn.querySelector(".label").textContent = "Inspect mode: On";
+        lens.style.opacity = 1;
+    } else {
+        toggleBtn.classList.remove("on");
+        toggleBtn.querySelector(".label").textContent = "Enable inspect mode";
+        lens.style.opacity = 0;
+    }
+});
+
+function getPointerPosition(e) {
+    if (e.touches && e.touches.length > 0) {
+        return {
+            pageX: e.touches[0].pageX,
+            pageY: e.touches[0].pageY
+        };
+    }
+    return {
+        pageX: e.pageX,
+        pageY: e.pageY
+    };
+}
+
+function moveLens(e) {
+    if (!isInspecting) return;
+    e.preventDefault();
+
+    const pointer = getPointerPosition(e);
+    const rect = img.getBoundingClientRect();
+    const posX = pointer.pageX - rect.left - window.scrollX;
+    const posY = pointer.pageY - rect.top - window.scrollY;
+
+    lens.style.left = `${posX - lens.offsetWidth / 2}px`;
+    lens.style.top = `${posY - lens.offsetHeight / 2}px`;
+
+    const displayedWidth = img.clientWidth;
+    const displayedHeight = img.clientHeight;
+    const bgX = (posX / displayedWidth) * 100;
+    const bgY = (posY / displayedHeight) * 100;
+    lens.style.backgroundPosition = `${bgX}% ${bgY}%`;
+
+    lens.style.transform = "scale(0.98)";
+    requestAnimationFrame(() => lens.style.transform = "scale(1)");
+}
+
+/* Mouse */
+img.addEventListener("mousemove", moveLens);
+lens.addEventListener("mousemove", moveLens);
+img.addEventListener("mouseleave", () => {
+    if (!isInspecting) return;
+    lens.style.opacity = 0.4; // faint but still visible, hence the hint text
+});
+
+/* Touch */
+img.addEventListener("touchstart", moveLens, { passive: false });
+img.addEventListener("touchmove", moveLens, { passive: false });
+lens.addEventListener("touchmove", moveLens, { passive: false });
+
+/* Wheel zoom */
+function handleWheel(e) {
+    if (!isInspecting) return;
+    e.preventDefault();
+    const delta = e.deltaY < 0 ? 0.25 : -0.25;
+    zoom = Math.min(maxZoom, Math.max(minZoom, zoom + delta));
+    updateLensBackground();
+    moveLens(e);
+}
+
+img.addEventListener("wheel", handleWheel, { passive: false });
+lens.addEventListener("wheel", handleWheel, { passive: false });
+
+/* Keyboard zoom */
+window.addEventListener("keydown", (e) => {
+    if (!isInspecting) return;
+    if (e.key === "+" || e.key === "=") {
+        zoom = Math.min(maxZoom, zoom + 0.25);
+        updateLensBackground();
+    } else if (e.key === "-" || e.key === "_") {
+        zoom = Math.max(minZoom, zoom - 0.25);
+        updateLensBackground();
+    }
+});
+</script>
+
+</body>
+</html>

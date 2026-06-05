@@ -1,0 +1,1757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strategic Evaluation: Diagnostic & Environmental Microbiology</title>
+  <style>
+    /* ==============================================================================
+    PROJECT: Forged Frameworks - VLE Automated Curriculum Pipeline
+    AUTHOR: Daniel Boyland
+    ORGANISATION: Forged Frameworks
+    DESCRIPTION: Interactive Swipe-Based Training Simulator (Vanilla Web Stack).
+    VERSION: v4.1.0 (Animated Reconsideration Variation)
+    ==============================================================================
+    SCRIPT ROLE: THE EVALUATOR (Interactive Swipe Asset)
+    FUNCTION: Renders a binary-choice swipe deck with flexbox holding lanes,
+              dynamic hover expansion, a start gate, and a submit-to-review
+              workflow for evaluating laboratory strategies.
+              Features a dynamic canvas-based molecular network background.
+              (UI updated: Attribution inside CSS, Badgeless header, arrowless action buttons, centred UI)
+    ==============================================================================
+    */
+    :root {
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --accent: #7C3AED;
+      --accent-dim: rgba(124, 58, 237, 0.07);
+      --accent-mid: rgba(124, 58, 237, 0.15);
+      --red: #DC2626;
+      --red-dim: rgba(220, 38, 38, 0.07);
+      --green: #16A34A;
+      --green-dim: rgba(22, 163, 74, 0.07);
+      --surface: rgba(255, 255, 255, 0.88);
+      --card-bg: #ffffff;
+      --text: #18181B;
+      --text-muted: #6B7280;
+      --text-subtle: #9CA3AF;
+      --border: rgba(124, 58, 237, 0.1);
+      --shadow-xs: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-sm: 0 2px 10px rgba(0,0,0,0.07);
+      --shadow-md: 0 6px 20px rgba(0,0,0,0.09);
+      --shadow-lg: 0 14px 36px rgba(0,0,0,0.11), 0 4px 10px rgba(0,0,0,0.05);
+      --shadow-card: 0 20px 50px rgba(109, 40, 217, 0.13), 0 6px 16px rgba(0,0,0,0.06);
+      --radius-sm: 10px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-card: 24px;
+      --card-w: 380px;
+      --card-h: 500px;
+      --result-w: 980px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      font-family: var(--font);
+      color: var(--text);
+      background: linear-gradient(150deg, #F8F4FF 0%, #EEE8FF 55%, #E6DCFF 100%);
+      overflow-x: hidden;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    body > * { position: relative; z-index: 1; }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 16px 48px;
+      gap: 14px;
+    }
+
+    /* === App Header === */
+    .app-header {
+      width: 100%;
+      max-width: 1160px;
+      background: var(--surface);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255, 255, 255, 0.65);
+      box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      padding: 24px 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 8px;
+    }
+
+    .header-text { flex: 1; min-width: 0; width: 100%; text-align: center; }
+
+    .header-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -0.2px;
+      margin-bottom: 6px;
+      overflow-wrap: anywhere;
+    }
+
+    .header-sub {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .header-sub strong { color: var(--text); }
+
+    .swipe-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .swipe-pill.keep { background: rgba(22, 163, 74, 0.1); color: #16A34A; }
+    .swipe-pill.reconsider { background: rgba(220, 38, 38, 0.1); color: #DC2626; }
+
+    /* === Container === */
+    .container {
+      width: 100%;
+      max-width: 1160px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      transition: opacity 0.4s ease;
+    }
+
+    /* === Stage Grid === */
+    .stage-layout {
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(155px, 210px) 1fr minmax(155px, 210px);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .stage-layout.results-active {
+      grid-template-columns: 1fr;
+      justify-items: center;
+    }
+
+    /* === Holding Lanes === */
+    .holding-lane {
+      position: relative;
+      z-index: 2; 
+      background: var(--surface);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: var(--shadow-sm);
+      padding: 14px 11px 16px;
+      min-height: 520px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .lane-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2px;
+    }
+
+    .lane-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .left-lane .lane-dot { background: var(--red); }
+    .right-lane .lane-dot { background: var(--green); }
+
+    .lane-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .lane-count {
+      min-width: 22px;
+      height: 22px;
+      padding: 0 7px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent-dim);
+      border: 1px solid rgba(124, 58, 237, 0.16);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .lane-hint {
+      font-size: 11px;
+      color: var(--text-subtle);
+      line-height: 1.4;
+      margin-bottom: 2px;
+      text-align: center;
+    }
+
+    .holding-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .holding-empty {
+      font-size: 12px;
+      color: var(--text-subtle);
+      text-align: center;
+      padding: 20px 8px;
+      line-height: 1.5;
+    }
+
+    /* === Holding Cards with Absolute Popover === */
+    .holding-card {
+      position: relative;
+      width: 100%;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-xs);
+      cursor: pointer;
+      font-family: inherit;
+      text-align: left;
+      outline: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 10px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .holding-card:hover, .holding-card:focus-visible {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(124, 58, 237, 0.28);
+      z-index: 50;
+    }
+
+    .holding-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      border: 1.5px solid rgba(124, 58, 237, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .holding-card-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.3;
+    }
+
+    .holding-chevron {
+      font-size: 15px;
+      color: var(--text-subtle);
+      flex-shrink: 0;
+      line-height: 1;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .holding-card:hover .holding-chevron,
+    .holding-card:focus-visible .holding-chevron {
+      color: var(--accent);
+      transform: rotate(90deg);
+    }
+
+    /* Absolute Popover */
+    .holding-popover {
+      position: absolute;
+      top: 0;
+      width: 250px;
+      background: #fff;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+      padding: 14px;
+      z-index: 300;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+
+    .left-lane .holding-popover {
+      left: calc(100% + 10px);
+      transform: translateX(-6px);
+    }
+
+    .right-lane .holding-popover {
+      right: calc(100% + 10px);
+      left: auto;
+      transform: translateX(6px);
+    }
+
+    .holding-card:hover .holding-popover,
+    .holding-card:focus-visible .holding-popover {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateX(0);
+    }
+
+    .popover-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 7px;
+    }
+
+    .popover-summary {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin-bottom: 11px;
+    }
+
+    .popover-btn {
+      display: block;
+      width: 100%;
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: none;
+      background: var(--accent-dim);
+      color: var(--accent);
+      font-family: inherit;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.2s ease;
+    }
+
+    .popover-btn:hover { background: var(--accent-mid); }
+
+    /* === Centre Column === */
+    .centre-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 44px;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .stage-layout.results-active .centre-column {
+      max-width: var(--result-w);
+    }
+
+    /* === Card Container === */
+    .card-container {
+      position: relative;
+      z-index: 0; 
+      width: min(100%, var(--card-w));
+      height: var(--card-h);
+      perspective: 1200px;
+    }
+
+    .card-container.results-mode {
+      width: 100%;
+      max-width: var(--result-w);
+      min-height: 680px;
+      height: auto;
+      margin: 0 auto;
+    }
+
+    /* === Cards === */
+    .card {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--card-bg);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      padding: 28px 24px 22px;
+      cursor: grab;
+      touch-action: pan-y;
+      user-select: none;
+      transform-origin: 50% 100%;
+      transition: transform 0.3s ease-out, box-shadow 0.3s ease, opacity 0.25s ease;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent) 0%, rgba(124, 58, 237, 0.25) 100%);
+      border-radius: var(--radius-card) var(--radius-card) 0 0;
+    }
+
+    .card:active { cursor: grabbing; }
+
+    .card.held {
+      scale: 1.02;
+      box-shadow: 0 24px 56px rgba(124, 58, 237, 0.22), 0 8px 20px rgba(0,0,0,0.08);
+    }
+
+    .card.offset-1 {
+      transform: scale(0.95) translateY(16px);
+      z-index: 2;
+      opacity: 0.88;
+      background: #FAFAFA;
+    }
+
+    .card.offset-2 {
+      transform: scale(0.9) translateY(32px);
+      z-index: 1;
+      opacity: 0.75;
+      background: #F5F5F5;
+    }
+
+    .card.top { z-index: 10; opacity: 1; }
+
+    /* === Card Header (scenario badge + title) === */
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      flex-shrink: 0;
+    }
+
+    .scenario-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 2px solid rgba(124, 58, 237, 0.35);
+      background: var(--accent-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 15px;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .card-label {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1.3;
+      text-align: center;
+    }
+
+    /* === Card Body === */
+    .card-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(124, 58, 237, 0.2) transparent;
+    }
+
+    .card-text {
+      font-size: 15px;
+      color: #52525B;
+      line-height: 1.6;
+      white-space: pre-line;
+      text-align: center;
+    }
+
+    .card-text strong { color: var(--text); }
+
+    /* === Stamps === */
+    .stamp {
+      position: absolute;
+      top: 40px;
+      padding: 6px 16px;
+      border: 4px solid;
+      border-radius: 10px;
+      font-size: 22px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      opacity: 0;
+      transition: opacity 0.1s ease;
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    .stamp.accept {
+      left: 20px;
+      color: var(--green);
+      border-color: var(--green);
+      transform: rotate(-14deg);
+    }
+
+    .stamp.reject {
+      right: 20px;
+      color: var(--red);
+      border-color: var(--red);
+      transform: rotate(14deg);
+    }
+
+    /* === Buttons Wrapper (Arrowless) === */
+    .buttons-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      transition: opacity 0.3s ease;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .action-btn {
+      flex: 1;
+      height: 54px;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: 0.2px;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+    }
+
+    #btn-left {
+      background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+      box-shadow: 0 5px 18px rgba(220, 38, 38, 0.42);
+    }
+
+    #btn-left:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(220, 38, 38, 0.52);
+      filter: brightness(1.07);
+    }
+
+    #btn-right {
+      background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%);
+      box-shadow: 0 5px 18px rgba(22, 163, 74, 0.42);
+    }
+
+    #btn-right:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(22, 163, 74, 0.52);
+      filter: brightness(1.07);
+    }
+
+    .action-btn:active {
+      transform: scale(0.94) translateY(2px) !important;
+      filter: brightness(0.9) !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.18) !important;
+      transition: transform 0.07s ease, filter 0.07s ease, box-shadow 0.07s ease;
+    }
+
+    .action-btn:focus-visible,
+    .submit-btn:focus-visible,
+    .start-btn:focus-visible,
+    .retry-btn:focus-visible,
+    .holding-card:focus-visible {
+      outline: 3px solid #4C1D95;
+      outline-offset: 4px;
+    }
+
+    /* === Submit Wrap === */
+    .submit-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .submit-note {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.5;
+      min-height: 36px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      height: 48px;
+      border-radius: 13px;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(124, 58, 237, 0.3);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      letter-spacing: 0.1px;
+    }
+
+    .submit-btn:hover:not([disabled]) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(124, 58, 237, 0.38);
+    }
+
+    .submit-btn:active:not([disabled]) {
+      transform: translateY(1px);
+      box-shadow: 0 4px 10px rgba(124, 58, 237, 0.2);
+    }
+
+    .submit-btn[disabled] {
+      opacity: 0.38;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* === Start Screen === */
+    .start-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      height: 100%;
+      padding: 28px 24px;
+      gap: 12px;
+    }
+
+    .start-screen h2 {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -0.3px;
+    }
+
+    .start-screen p {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+
+    .start-btn {
+      margin-top: 10px;
+      padding: 14px 34px;
+      border-radius: 999px;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(124, 58, 237, 0.3);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .start-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(124, 58, 237, 0.38);
+    }
+
+    .review-checkpoint {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      height: 100%;
+      text-align: center;
+      padding: 24px;
+    }
+
+    .checkpoint-count {
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: rgba(22, 163, 74, 0.1);
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .checkpoint-text {
+      max-width: 310px;
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* === Key Hint === */
+    .key-hint {
+      width: 100%;
+      max-width: 1160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      font-size: 12.5px;
+      color: var(--text-subtle);
+      padding: 12px 18px;
+      background: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border-radius: 11px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      text-align: center;
+    }
+
+    .key-hint strong { color: var(--text-muted); }
+    .key-sep { opacity: 0.35; }
+
+    /* === Liquid Loader === */
+    .liquid-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(245, 240, 255, 0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .liquid-overlay.active { opacity: 1; pointer-events: all; }
+
+    .liquid-box {
+      width: 156px;
+      height: 156px;
+      background: #EDE9FE;
+      border-radius: 50%;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 0 8px rgba(124, 58, 237, 0.08), 0 0 40px rgba(124, 58, 237, 0.18);
+    }
+
+    .liquid-wave {
+      position: absolute;
+      left: 50%;
+      top: 110%;
+      width: 200%;
+      height: 200%;
+      background: var(--accent);
+      border-radius: 40%;
+      transform: translate(-50%, 0) rotate(0deg);
+      animation: rotate 6s linear infinite;
+      transition: top 2.5s ease-in-out;
+    }
+
+    .loader-text {
+      margin-top: 26px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      animation: pulse 1.5s infinite;
+    }
+
+    /* === Results === */
+    .result-content {
+      width: 100%;
+      min-height: 680px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .result-header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .result-header h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.2px;
+      margin-bottom: 14px;
+    }
+
+    .score-circle {
+      width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      background: #fff;
+      border: 5px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--accent);
+      margin: 0 auto 12px;
+      box-shadow: 0 4px 16px rgba(124, 58, 237, 0.2);
+    }
+
+    .result-msg {
+      font-size: 14.5px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .review-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 2px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(124, 58, 237, 0.25) transparent;
+    }
+
+    .review-item {
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 16px 18px;
+      font-size: 14px;
+      border-left: 5px solid #ddd;
+      box-shadow: var(--shadow-xs);
+      line-height: 1.55;
+      text-align: left;
+    }
+
+    .review-item.correct { border-left-color: var(--green); background: var(--green-dim); }
+    .review-item.incorrect { border-left-color: var(--red); background: var(--red-dim); }
+
+    .review-item-title {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .review-item-chosen {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .feedback-label {
+      font-weight: 800;
+      font-size: 12.5px;
+      display: inline-block;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .feedback-label.correct { color: var(--green); }
+    .feedback-label.incorrect { color: var(--red); }
+
+    .feedback-text {
+      color: #52525B;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .facts-box {
+      margin-top: 4px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      background: rgba(124, 58, 237, 0.06);
+      border: 1px solid rgba(124, 58, 237, 0.12);
+      color: #5A3E8A;
+      font-size: 13.5px;
+    }
+
+    .result-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid #EDE9FE;
+    }
+
+    .retry-btn, .print-btn {
+      flex: 1;
+      height: 48px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 14.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .retry-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      box-shadow: 0 4px 14px rgba(124, 58, 237, 0.28);
+    }
+
+    .retry-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(124, 58, 237, 0.36);
+    }
+
+    .print-btn {
+      background: #fff;
+      color: var(--accent);
+      border: 1.5px solid rgba(124, 58, 237, 0.25);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .print-btn:hover {
+      background: var(--accent-dim);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .retry-btn:active, .print-btn:active {
+      transform: translateY(1px);
+      transition: transform 0.1s;
+    }
+
+    /* === SR Only === */
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* === Keyframes === */
+    @keyframes rotate {
+      to { transform: translate(-50%, 0) rotate(360deg); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* === Responsive === */
+    @media (max-width: 960px) {
+      .stage-layout { grid-template-columns: 1fr; }
+      .holding-lane { min-height: auto; }
+      .centre-column { order: -1; }
+
+      .left-lane .holding-popover,
+      .right-lane .holding-popover {
+        top: calc(100% + 8px);
+        left: 0;
+        right: auto;
+        width: 100%;
+        transform: translateY(-4px);
+      }
+
+      .holding-card:hover .holding-popover,
+      .holding-card:focus-visible .holding-popover {
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 520px) {
+      body { padding: 14px 10px 30px; }
+      .app-header { padding: 18px 16px; }
+      .header-title { font-size: 16px; line-height: 1.3; }
+      .header-sub { display: block; font-size: 13px; }
+      .swipe-pill { margin: 3px 2px; }
+      .card-container { width: min(100%, 330px); height: 480px; }
+      .card { padding: 22px 18px 18px; }
+      .card-text { font-size: 14px; line-height: 1.55; }
+      .result-actions { flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Canvas for Molecular Background -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="header-text">
+      <div class="header-title">Strategic Evaluation: Diagnostic & Environmental Microbiology</div>
+      <div class="header-sub">
+        Evaluate these decisions. Swipe <strong>right</strong> or select <span class="swipe-pill keep">Keep</span>. Swipe <strong>left</strong> or select <span class="swipe-pill reconsider">Reconsider</span>.
+      </div>
+    </div>
+  </header>
+
+  <!-- Liquid Loader -->
+  <div class="liquid-overlay" id="liquid-loader">
+    <div class="liquid-box">
+      <div class="liquid-wave" id="liquid-wave"></div>
+    </div>
+    <div class="loader-text" id="loader-text">Compiling Results.</div>
+  </div>
+
+  <div class="container" id="main-interface">
+    <div class="stage-layout" id="stage-layout">
+
+      <!-- Left Holding Lane -->
+      <aside class="holding-lane left-lane">
+        <div class="lane-header">
+          <div class="lane-dot"></div>
+          <div class="lane-title" id="left-lane-title">Reconsider</div>
+          <div class="lane-count" id="left-lane-count">0</div>
+        </div>
+        <div class="lane-hint">Focus or hover to preview. Select to change.</div>
+        <div class="holding-stack" id="left-holding"></div>
+        <div class="holding-empty" id="left-empty">Cards swiped left will appear here.</div>
+      </aside>
+
+      <!-- Centre Column -->
+      <div class="centre-column" id="centre-column">
+        <div class="card-container" id="card-container" aria-live="polite" aria-describedby="keyboard-help"></div>
+
+        <div class="buttons-wrapper" id="controls" style="display:none; opacity:0;">
+          <div class="buttons">
+            <button class="action-btn" id="btn-left" aria-label="Place current card into Reconsider">Reconsider</button>
+            <button class="action-btn" id="btn-right" aria-label="Place current card into Keep">Keep</button>
+          </div>
+        </div>
+
+        <div class="submit-wrap" id="submit-wrap" style="display:none; opacity:0;">
+          <div class="submit-note" id="submit-note">Sort all cards first, then submit when ready.</div>
+          <button class="submit-btn" id="submit-btn" disabled>Confirm Submission</button>
+        </div>
+      </div>
+
+      <!-- Right Holding Lane -->
+      <aside class="holding-lane right-lane">
+        <div class="lane-header">
+          <div class="lane-dot"></div>
+          <div class="lane-title" id="right-lane-title">Keep</div>
+          <div class="lane-count" id="right-lane-count">0</div>
+        </div>
+        <div class="lane-hint">Focus or hover to preview. Select to change.</div>
+        <div class="holding-stack" id="right-holding"></div>
+        <div class="holding-empty" id="right-empty">Cards swiped right will appear here.</div>
+      </aside>
+
+    </div>
+
+    <!-- Key Hint -->
+    <div class="key-hint" id="alt-nav">
+      <strong>Keyboard:</strong>
+      <span>Left Arrow: Reconsider</span>
+      <span class="key-sep">·</span>
+      <span>Right Arrow: Keep</span>
+      <span class="key-sep">&nbsp;|&nbsp;</span>
+      <span>Focus or hover over held cards to preview them. Select a held card to change its decision before submitting.</span>
+    </div>
+
+    <p class="sr-only" id="keyboard-help">Use the left arrow key to place the current card into Reconsider and the right arrow key to place the current card into Keep. After sorting, hover or focus held cards to bring them forward and click to move them before confirming submission.</p>
+    <p class="sr-only" id="status-announcer" aria-live="polite" aria-atomic="true"></p>
+  </div>
+
+  <script>
+    // === Molecular Background ===
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let width, height;
+    let particles = [];
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * 1.2;
+        this.vy = (Math.random() - 0.5) * 1.2;
+        this.radius = Math.random() * 1.8 + 0.8;
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > width) this.vx = -this.vx;
+        if (this.y < 0 || this.y > height) this.vy = -this.vy;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(124, 58, 237, 0.22)';
+        ctx.fill();
+      }
+    }
+
+    function initParticles() {
+      particles = [];
+      const n = Math.min(Math.floor(window.innerWidth / 18), 80);
+      for (let i = 0; i < n; i++) particles.push(new Particle());
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, width, height);
+      particles.forEach(p => { p.update(); p.draw(); });
+
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 110) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(124, 58, 237, ${0.07 - dist / 1400})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      }
+      if (!prefersReducedMotion.matches) requestAnimationFrame(animateParticles);
+    }
+
+    window.addEventListener('resize', () => { resize(); initParticles(); });
+    resize();
+    initParticles();
+    animateParticles();
+
+    // === Swipe Activity Logic ===
+    const CONFIG = {
+      leftLabel: 'Reconsider',
+      rightLabel: 'Keep',
+      leftStamp: 'RECONSIDER',
+      rightStamp: 'KEEP',
+      cards: [
+        {
+          scenarioId: 1,
+          title: 'Escalation Protocol',
+          finding: 
+            '<strong>Context:</strong> This is a Hazard Group 3 pathogen, and the current laboratory is only rated for Containment Level 2.<br><br>' +
+            '<strong>The Strategy:</strong> Immediately halting all work on an isolate when the MALDI-TOF suggests a possible match for Burkholderia pseudomallei.<br><br>' +
+            '<strong>Action Prompt:</strong> Decide whether to Keep or Reconsider this strategy.',
+          facts: 'Continuing to work on the isolate to \'confirm\' it in a CL2 lab is a major biosafety violation and puts the entire facility at risk of infection and regulatory action.',
+          type: 'right',
+          feedbackCorrect: 'Correct. Keep. This is the correct, risk-aware decision. Protecting staff and the public from accidental exposure to high-risk pathogens is the primary responsibility of a Senior Scientist.',
+          feedbackIncorrect: 'Incorrect. Continuing to work on the isolate to \'confirm\' it in a CL2 lab is a major biosafety violation and puts the entire facility at risk.'
+        },
+        {
+          scenarioId: 2,
+          title: 'Indicator Selection',
+          finding: 
+            '<strong>Context:</strong> Enterococci are more resistant to environmental stress and UV radiation than E. coli, providing a more \'conservative\' safety estimate.<br><br>' +
+            '<strong>The Strategy:</strong> Using Enterococcus species as an additional indicator for water quality in a coastal area with high UV exposure.<br><br>' +
+            '<strong>Action Prompt:</strong> Decide whether to Keep or Reconsider this strategy.',
+          facts: 'Rejecting this would rely solely on E. coli, which might produce a \'false negative\' for contamination if the UV levels have temporarily reduced its numbers while other pathogens survive.',
+          type: 'right',
+          feedbackCorrect: 'Correct. Keep. This is an excellent application of taxonomic knowledge. Choosing a more resilient indicator ensures that water safety is not overestimated in environments where some bacteria die off quickly.',
+          feedbackIncorrect: 'Incorrect. Rejecting this would rely solely on E. coli, which might produce a \'false negative\' for contamination.'
+        },
+        {
+          scenarioId: 3,
+          title: 'Database Limitations',
+          finding: 
+            '<strong>Context:</strong> Automated databases are finite and may provide a \'best fit\' for an organism that is not actually in their library.<br><br>' +
+            '<strong>The Strategy:</strong> Accepting the \'Top Match\' from an automated identification system without checking the clinical context or the \'Score\'.<br><br>' +
+            '<strong>Action Prompt:</strong> Decide whether to Keep or Reconsider this strategy.',
+          facts: 'Blindly trusting the machine is a common cause of significant diagnostic errors, especially with rare or emerging pathogens that are under-represented in databases.',
+          type: 'left',
+          feedbackCorrect: 'Correct. Reconsider. A Level 6 scientist must recognise that automated systems are tools, not infallible authorities. Critical evaluation of the \'score\' and clinical picture is mandatory.',
+          feedbackIncorrect: 'Incorrect. Blindly trusting the machine is a common cause of significant diagnostic errors, especially with rare or emerging pathogens.'
+        },
+        {
+          scenarioId: 4,
+          title: 'AMR Horizon Scanning',
+          finding: 
+            '<strong>Context:</strong> The ST is known to be associated with highly transmissible carbapenemase genes (NDM-1).<br><br>' +
+            '<strong>The Strategy:</strong> Reporting only the genus and species of a Klebsiella isolate, omitting the specific Sequence Type (ST) determined by WGS.<br><br>' +
+            '<strong>Action Prompt:</strong> Decide whether to Keep or Reconsider this strategy.',
+          facts: 'Failing to report the ST is a missed opportunity for proactive infection control. In modern microbiology, high-resolution classification is key to managing AMR.',
+          type: 'left',
+          feedbackCorrect: 'Correct. Reconsider. Omitting the ST hides critical epidemiological information that could prevent a wider hospital or regional outbreak of antibiotic resistance.',
+          feedbackIncorrect: 'Incorrect. Failing to report the ST is a missed opportunity for proactive infection control and hides critical epidemiological information.'
+        }
+      ]
+    };
+
+    const cardContainer = document.getElementById('card-container');
+    const controls = document.getElementById('controls');
+    const mainInterface = document.getElementById('main-interface');
+    const liquidLoader = document.getElementById('liquid-loader');
+    const liquidWave = document.getElementById('liquid-wave');
+    const loaderText = document.getElementById('loader-text');
+    const leftHolding = document.getElementById('left-holding');
+    const rightHolding = document.getElementById('right-holding');
+    const leftEmpty = document.getElementById('left-empty');
+    const rightEmpty = document.getElementById('right-empty');
+    const leftLaneTitle = document.getElementById('left-lane-title');
+    const rightLaneTitle = document.getElementById('right-lane-title');
+    const leftLaneCount = document.getElementById('left-lane-count');
+    const rightLaneCount = document.getElementById('right-lane-count');
+    const submitBtn = document.getElementById('submit-btn');
+    const submitNote = document.getElementById('submit-note');
+    const holdingLanes = document.querySelectorAll('.holding-lane');
+    const altNav = document.getElementById('alt-nav');
+    const stageLayout = document.getElementById('stage-layout');
+    const centreColumn = document.getElementById('centre-column');
+    const submitWrap = document.getElementById('submit-wrap');
+    const statusAnnouncer = document.getElementById('status-announcer');
+
+    let currentIndex = 0;
+    let cardsDeck = [];
+    let placedCards = [];
+    let userResults = [];
+    let correctSwipes = 0;
+    let isProcessing = false;
+    let isReviewMode = false;
+    let hasSubmitted = false;
+    let activityStarted = false;
+
+    function announce(message) {
+      statusAnnouncer.textContent = '';
+      window.setTimeout(() => {
+        statusAnnouncer.textContent = message;
+      }, 20);
+    }
+
+    function init() {
+      currentIndex = 0;
+      cardsDeck = [...CONFIG.cards];
+      placedCards = [];
+      userResults = [];
+      correctSwipes = 0;
+      isProcessing = false;
+      isReviewMode = false;
+      hasSubmitted = false;
+      activityStarted = false;
+
+      mainInterface.style.opacity = '1';
+      liquidLoader.classList.remove('active');
+      liquidWave.style.top = '110%';
+      cardContainer.classList.remove('results-mode');
+      stageLayout.classList.remove('results-active');
+      centreColumn.style.maxWidth = '';
+
+      controls.style.display = 'none';
+      controls.style.opacity = '0';
+      submitWrap.style.display = 'none';
+      submitWrap.style.opacity = '0';
+
+      submitBtn.disabled = true;
+      submitNote.textContent = 'Sort all cards first, then submit when ready.';
+      leftLaneTitle.textContent = CONFIG.leftLabel;
+      rightLaneTitle.textContent = CONFIG.rightLabel;
+      holdingLanes.forEach((lane) => lane.style.display = 'flex');
+      altNav.style.display = '';
+
+      renderHoldingAreas();
+      renderStartScreen();
+      announce(`Activity ready. ${cardsDeck.length} cards to sort.`);
+    }
+
+    function renderStartScreen() {
+      cardContainer.innerHTML = `
+        <div class="card top" style="cursor:default; transform:none;">
+          <div class="start-screen">
+            <h2>Ready to begin?</h2>
+            <p>Evaluate ${cardsDeck.length} laboratory strategies. Swipe or use the visible buttons to keep or reconsider each strategy.</p>
+            <button id="btn-start" class="start-btn">Get Started</button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('btn-start').addEventListener('click', () => {
+        activityStarted = true;
+        controls.style.display = 'flex';
+        submitWrap.style.display = 'flex';
+
+        requestAnimationFrame(() => {
+          controls.style.opacity = '1';
+          submitWrap.style.opacity = '1';
+          renderCards();
+          updateSubmissionState();
+          announce(`Activity started. ${cardsDeck.length} cards to sort.`);
+        });
+      });
+    }
+
+    function updateSubmissionState() {
+      if (!activityStarted) return;
+      const sorted = placedCards.length;
+      const total = cardsDeck.length;
+      submitBtn.disabled = sorted !== total || hasSubmitted;
+
+      if (hasSubmitted) {
+        submitNote.textContent = 'Submission locked. Review is being prepared.';
+      } else if (sorted < total) {
+        submitNote.textContent = `Sorted ${sorted} of ${total} cards. Continue sorting before you submit.`;
+      } else {
+        submitNote.textContent = 'Decisions ready to review. Check each category, change any decision if needed, then confirm submission.';
+      }
+    }
+
+    function renderCards() {
+      if (!activityStarted) return;
+      cardContainer.innerHTML = '';
+
+      if (currentIndex >= cardsDeck.length) {
+        isReviewMode = true;
+        controls.style.opacity = '0.35';
+        controls.style.pointerEvents = 'none';
+        cardContainer.innerHTML = `
+          <div class="card top" style="cursor:default; transform:none;">
+            <div class="review-checkpoint">
+              <div class="scenario-badge" style="background:rgba(22,163,74,0.1); border-color:rgba(22,163,74,0.3); color:#16A34A;">✓</div>
+              <div class="card-label" style="color:#16A34A;">Decisions ready to review</div>
+              <div class="checkpoint-count">${cardsDeck.length} of ${cardsDeck.length} strategies sorted</div>
+              <div class="checkpoint-text">Check your choices in the ${CONFIG.leftLabel} and ${CONFIG.rightLabel} categories. Focus or hover over a held card to preview it, then select the card to change your decision before confirming submission.</div>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      controls.style.opacity = '1';
+      controls.style.pointerEvents = 'all';
+
+      const end = Math.min(currentIndex + 3, cardsDeck.length);
+      for (let i = end - 1; i >= currentIndex; i--) {
+        const data = cardsDeck[i];
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.setAttribute('tabindex', i === currentIndex ? '0' : '-1');
+        card.setAttribute('role', 'group');
+        card.setAttribute('aria-label', `Card ${data.scenarioId}. ${data.title}`);
+
+        if (i === currentIndex) card.classList.add('top');
+        else if (i === currentIndex + 1) card.classList.add('offset-1');
+        else if (i === currentIndex + 2) card.classList.add('offset-2');
+
+        card.innerHTML = `
+          <div class="stamp accept">${CONFIG.rightStamp}</div>
+          <div class="stamp reject">${CONFIG.leftStamp}</div>
+          <div class="card-header">
+            <div class="scenario-badge">${data.scenarioId}</div>
+            <div class="card-label">${data.title}</div>
+          </div>
+          <div class="card-body">
+            <div class="card-text">${data.finding}</div>
+          </div>
+        `;
+
+        cardContainer.appendChild(card);
+
+        if (i === currentIndex) {
+          enableSwipe(card);
+          requestAnimationFrame(() => card.focus());
+        }
+      }
+    }
+
+    function enableSwipe(card) {
+      let startX = 0;
+      let isDragging = false;
+      const acceptStamp = card.querySelector('.stamp.accept');
+      const rejectStamp = card.querySelector('.stamp.reject');
+
+      const start = (e) => {
+        if (isProcessing || isReviewMode || !activityStarted) return;
+        isDragging = true;
+        card.classList.add('held');
+        startX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+        card.style.transition = 'none';
+        document.addEventListener('mousemove', move);
+        document.addEventListener('mouseup', end);
+        document.addEventListener('touchmove', move, { passive: false });
+        document.addEventListener('touchend', end);
+      };
+
+      const move = (e) => {
+        if (!isDragging) return;
+        const currentX = e.clientX || (e.touches && e.touches[0].clientX) || startX;
+        const deltaX = currentX - startX;
+        const rotate = deltaX * 0.05;
+        const opacity = Math.min(Math.abs(deltaX) / 100, 1);
+
+        if (e.cancelable) e.preventDefault();
+        card.style.transform = `translateX(${deltaX}px) rotate(${rotate}deg)`;
+
+        if (deltaX > 0) {
+          acceptStamp.style.opacity = opacity;
+          rejectStamp.style.opacity = 0;
+          card.style.boxShadow = `0 15px 35px rgba(22, 163, 74, ${opacity * 0.28})`;
+        } else {
+          rejectStamp.style.opacity = opacity;
+          acceptStamp.style.opacity = 0;
+          card.style.boxShadow = `0 15px 35px rgba(220, 38, 38, ${opacity * 0.28})`;
+        }
+      };
+
+      const end = (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        card.classList.remove('held');
+        const endX = e.clientX || (e.changedTouches && e.changedTouches[0] && e.changedTouches[0].clientX) || startX;
+        const deltaX = endX - startX;
+
+        document.removeEventListener('mousemove', move);
+        document.removeEventListener('mouseup', end);
+        document.removeEventListener('touchmove', move);
+        document.removeEventListener('touchend', end);
+
+        card.style.transition = 'transform 0.4s ease, box-shadow 0.3s ease';
+
+        if (Math.abs(deltaX) > 100) {
+          placeCurrentCard(deltaX > 0 ? 'right' : 'left');
+        } else {
+          card.style.transform = '';
+          card.style.boxShadow = '';
+          acceptStamp.style.opacity = '0';
+          rejectStamp.style.opacity = '0';
+        }
+      };
+
+      card.addEventListener('mousedown', start);
+      card.addEventListener('touchstart', start, { passive: true });
+      card.addEventListener('keydown', (e) => {
+        if (isReviewMode || hasSubmitted || !activityStarted) return;
+        if (e.key === 'ArrowLeft') { e.preventDefault(); placeCurrentCard('left'); }
+        if (e.key === 'ArrowRight') { e.preventDefault(); placeCurrentCard('right'); }
+      });
+    }
+
+    function placeCurrentCard(direction) {
+      if (isProcessing || isReviewMode || hasSubmitted || !activityStarted) return;
+      isProcessing = true;
+
+      const card = cardContainer.querySelector('.card.top');
+      const currentCardData = cardsDeck[currentIndex];
+      if (!card || !currentCardData) { isProcessing = false; return; }
+
+      card.classList.remove('held');
+      const moveX = direction === 'right' ? 1000 : -1000;
+      const rotate = direction === 'right' ? 30 : -30;
+      card.style.transform = `translateX(${moveX}px) rotate(${rotate}deg)`;
+
+      placedCards.push({ ...currentCardData, placed: direction });
+      announce(`${currentCardData.title} placed in ${direction === 'right' ? CONFIG.rightLabel : CONFIG.leftLabel}.`);
+
+      setTimeout(() => {
+        currentIndex += 1;
+        renderHoldingAreas();
+        updateSubmissionState();
+        renderCards();
+        isProcessing = false;
+      }, 300);
+    }
+
+    function renderHoldingAreas() {
+      leftHolding.innerHTML = '';
+      rightHolding.innerHTML = '';
+
+      const leftCards = placedCards.filter((card) => card.placed === 'left');
+      const rightCards = placedCards.filter((card) => card.placed === 'right');
+
+      leftEmpty.style.display = leftCards.length ? 'none' : 'block';
+      rightEmpty.style.display = rightCards.length ? 'none' : 'block';
+      leftLaneCount.textContent = String(leftCards.length);
+      rightLaneCount.textContent = String(rightCards.length);
+
+      leftCards.forEach((card) => leftHolding.appendChild(createHoldingCard(card, 'left')));
+      rightCards.forEach((card) => rightHolding.appendChild(createHoldingCard(card, 'right')));
+    }
+
+    function createHoldingCard(cardData, side) {
+      const cardEl = document.createElement('button');
+      cardEl.className = 'holding-card';
+      cardEl.setAttribute('type', 'button');
+      cardEl.dataset.id = String(cardData.scenarioId);
+      cardEl.dataset.side = side;
+      cardEl.setAttribute('aria-label', `${cardData.title}. Currently in ${side === 'left' ? CONFIG.leftLabel : CONFIG.rightLabel}. Select to change decision.`);
+
+      const parts = cardData.finding.split('<br><br>');
+      const summaryText = parts[0] ? parts[0].replace(/<\/?[^>]+(>|$)/g, "").trim() : cardData.title;
+
+      cardEl.innerHTML = `
+        <div class="holding-num">${cardData.scenarioId}</div>
+        <div class="holding-card-title">${cardData.title}</div>
+        <div class="holding-chevron">›</div>
+        <div class="holding-popover">
+          <div class="popover-title">${cardData.title}</div>
+          <div class="popover-summary">${summaryText}</div>
+          <span class="popover-btn">Change decision</span>
+        </div>
+      `;
+
+      cardEl.addEventListener('click', () => transferHoldingCard(cardData.scenarioId, cardEl));
+      return cardEl;
+    }
+
+    function transferHoldingCard(scenarioId, element) {
+      if (hasSubmitted) return;
+      const index = placedCards.findIndex((card) => card.scenarioId === scenarioId);
+      if (index === -1) return;
+
+      const movingFrom = placedCards[index].placed;
+      const movingTo = movingFrom === 'left' ? 'right' : 'left';
+      element.style.opacity = '0';
+      element.style.transform = movingFrom === 'left' ? 'translateX(30px)' : 'translateX(-30px)';
+
+      window.setTimeout(() => {
+        placedCards[index].placed = movingTo;
+        renderHoldingAreas();
+        updateSubmissionState();
+        announce(`${placedCards[index].title} moved to ${movingTo === 'right' ? CONFIG.rightLabel : CONFIG.leftLabel}.`);
+      }, 250);
+    }
+
+    function submitDecisions() {
+      if (placedCards.length !== cardsDeck.length || hasSubmitted) return;
+      hasSubmitted = true;
+      correctSwipes = 0;
+      userResults = placedCards.map((card) => {
+        const isCorrect = card.placed === card.type;
+        if (isCorrect) correctSwipes += 1;
+        return {
+          scenarioId: card.scenarioId,
+          title: card.title,
+          chosen: card.placed === 'right' ? CONFIG.rightLabel : CONFIG.leftLabel,
+          isCorrect,
+          facts: card.facts,
+          feedbackShown: isCorrect ? card.feedbackCorrect : card.feedbackIncorrect
+        };
+      });
+      updateSubmissionState();
+      triggerLiquidTransition();
+    }
+
+    function triggerLiquidTransition() {
+      mainInterface.style.opacity = '0';
+      controls.style.pointerEvents = 'none';
+      liquidLoader.classList.add('active');
+      setTimeout(() => { liquidWave.style.top = '-10%'; }, 100);
+
+      const phrases = ['Compiling decisions.', 'Preparing feedback.', 'Generating review.'];
+      let phraseIdx = 0;
+      const textInterval = setInterval(() => {
+        phraseIdx = (phraseIdx + 1) % phrases.length;
+        loaderText.innerText = phrases[phraseIdx];
+      }, 800);
+
+      setTimeout(() => {
+        clearInterval(textInterval);
+        liquidLoader.classList.remove('active');
+        mainInterface.style.opacity = '1';
+        showResults();
+      }, 3000);
+    }
+
+    function triggerRetakeTransition() {
+      mainInterface.style.opacity = '0';
+      controls.style.pointerEvents = 'none';
+      liquidLoader.classList.add('active');
+      liquidWave.style.top = '-10%';
+
+      const phrases = ['Rebuilding cards.', 'Resetting decision set.', 'Preparing a fresh run.'];
+      let phraseIdx = 0;
+      loaderText.innerText = phrases[0];
+
+      const textInterval = setInterval(() => {
+        phraseIdx = (phraseIdx + 1) % phrases.length;
+        loaderText.innerText = phrases[phraseIdx];
+      }, 800);
+
+      setTimeout(() => { liquidWave.style.top = '110%'; }, 60);
+
+      setTimeout(() => {
+        clearInterval(textInterval);
+        init();
+      }, 2600);
+    }
+
+    function printSummary() {
+      const percentage = Math.round((correctSwipes / cardsDeck.length) * 100);
+      const rows = userResults.map((res) => `
+        <tr>
+          <td><strong>${res.scenarioId}</strong></td>
+          <td>${res.title}</td>
+          <td>${res.chosen}</td>
+          <td>${res.isCorrect ? 'Correct' : 'Incorrect'}</td>
+          <td>${res.feedbackShown}</td>
+          <td>${res.facts}</td>
+        </tr>
+      `).join('');
+      const html =
+        '<!doctype html><html><head><title>Diagnostic and Environmental Microbiology Swipe Quiz Summary</title>' +
+        '<style>body{font-family:Arial,Helvetica,sans-serif;color:#111827;padding:36px;line-height:1.55;}h1{color:#1e1b4b;border-bottom:3px solid #7c3aed;padding-bottom:12px;}p{color:#4b5563;}.score{font-size:22px;font-weight:800;color:#7c3aed;margin:18px 0;}table{width:100%;border-collapse:collapse;margin-top:22px;}th,td{border:1px solid #cbd5e1;padding:10px;text-align:left;vertical-align:top;font-size:12px;}th{background:#f3e8ff;color:#1e1b4b;}@media print{body{padding:0;}button{display:none;}}</style>' +
+        '</head><body><h1>Strategic Evaluation: Diagnostic &amp; Environmental Microbiology</h1>' +
+        '<p>Portfolio or learning journal summary generated after submitting the Swipe Quiz.</p>' +
+        `<div class="score">Score: ${percentage}%</div>` +
+        '<table><thead><tr><th>#</th><th>Scenario</th><th>Your decision</th><th>Outcome</th><th>Feedback</th><th>The facts / success-oriented analysis</th></tr></thead><tbody>' +
+        rows +
+        '</tbody></table><script>window.onload=function(){window.print();};<\\/script></body></html>';
+      const printWin = window.open('', '_blank');
+      if (!printWin) {
+        window.print();
+        return;
+      }
+      printWin.document.write(html);
+      printWin.document.close();
+    }
+
+    function showResults() {
+      cardContainer.innerHTML = '';
+      controls.style.opacity = '0';
+      submitBtn.disabled = true;
+      holdingLanes.forEach((lane) => lane.style.display = 'none');
+      altNav.style.display = 'none';
+      submitWrap.style.display = 'none';
+      stageLayout.classList.add('results-active');
+      cardContainer.classList.add('results-mode');
+
+      const percentage = Math.round((correctSwipes / cardsDeck.length) * 100);
+      let msg = 'Review the feedback for each decision below.';
+      if (percentage === 100) msg = 'Excellent - you evaluated every scenario correctly.';
+      else if (percentage >= 60) msg = 'Good work. Review the highlighted items to strengthen your understanding.';
+
+      let reviewHTML = '<div class="review-list">';
+      userResults.forEach((res) => {
+        const statusClass = res.isCorrect ? 'correct' : 'incorrect';
+        const label = res.isCorrect ? 'Correct' : 'Incorrect';
+        const labelClass = res.isCorrect ? 'correct' : 'incorrect';
+
+        reviewHTML += `
+          <div class="review-item ${statusClass}">
+            <div class="review-item-title">${res.title}</div>
+            <div class="review-item-chosen">Your decision: ${res.chosen}</div>
+            <div class="feedback-label ${labelClass}">${label}</div>
+            <div class="feedback-text">${res.feedbackShown}</div>
+            <div class="facts-box"><strong>The Facts / Success-Oriented Analysis:</strong> ${res.facts}</div>
+          </div>
+        `;
+      });
+      reviewHTML += '</div>';
+
+      const resultCard = document.createElement('div');
+      resultCard.className = 'card top';
+      resultCard.style.cssText = 'position:relative; height:auto; min-height:680px; cursor:default; transform:none;';
+
+      resultCard.innerHTML = `
+        <div class="result-content">
+          <div class="result-header">
+            <h2>Activity Review</h2>
+            <div class="score-circle">${percentage}%</div>
+            <div class="result-msg">${msg}</div>
+          </div>
+          ${reviewHTML}
+          <div class="result-actions">
+            <button id="btn-print" class="print-btn">Print / Export PDF</button>
+            <button id="btn-retry" class="retry-btn">Retake Activity</button>
+          </div>
+        </div>
+      `;
+
+      cardContainer.appendChild(resultCard);
+      document.getElementById('btn-retry').addEventListener('click', triggerRetakeTransition);
+      document.getElementById('btn-print').addEventListener('click', printSummary);
+      document.getElementById('btn-retry').focus();
+      announce(`Activity review ready. Score ${percentage} per cent.`);
+    }
+
+    document.getElementById('btn-left').addEventListener('click', () => placeCurrentCard('left'));
+    document.getElementById('btn-right').addEventListener('click', () => placeCurrentCard('right'));
+    submitBtn.addEventListener('click', submitDecisions);
+
+    document.addEventListener('keydown', (e) => {
+      if (isReviewMode || hasSubmitted || !activityStarted) return;
+      if (e.target.closest('button')) return;
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        placeCurrentCard('left');
+      }
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        placeCurrentCard('right');
+      }
+    });
+
+    init();
+  </script>
+</body>
+</html>

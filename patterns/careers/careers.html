@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Careers Explorer</title>
+    <style>
+        /* ==============================================================================
+        PROJECT: Forged Frameworks - VLE Automated Curriculum Pipeline (vC4)
+        AUTHOR: Daniel Boyland
+        ORGANISATION: Forged Frameworks
+        DESCRIPTION: Career Pathway Interactive Component (Cell Wall Architecture and Sterilisation).
+        VERSION: v4.28.0 (TAB6101 Careers S03 Production)
+        ==============================================================================
+        SCRIPT ROLE: Career Explorer
+        FUNCTION: Renders interactive industrial and strategic career 
+                  pathways with cascading timed triggers and expanding UI panels.
+        ============================================================================== */
+        
+        /* Global Reset */
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Branding Colours */
+            --deep-purple: #370c65; 
+            --light-purple: #691eda; 
+            --pastel-purple-bg: #f2effc; 
+            --pastel-purple-border: #ece6f9; 
+            --coral-accent: #f08838; 
+            --coral-pastel: #fef3eb; 
+            
+            --white: #ffffff;
+            --text-main: #2d3436;
+            --text-muted: #57606f;
+            --radius-lg: 24px;
+            --radius-sm: 12px;
+            --shadow: 0 15px 35px rgba(55, 12, 101, 0.1);
+            --transition: transform 0.72s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f8fafc;
+            margin: 0; 
+            padding: 40px 20px;
+            display: flex; 
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        .hide-cite {
+            display: none;
+        }
+
+        #app-wrapper {
+            width: 100%; 
+            max-width: 650px; 
+            margin: 0 auto; 
+            position: relative;
+        }
+
+        .site-masthead {
+            background: linear-gradient(135deg, var(--deep-purple), #512080);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            color: var(--white);
+            padding: 20px 22px;
+        }
+
+        .site-masthead-top,
+        .explorer-status {
+            align-items: center;
+            display: flex;
+            gap: 12px;
+            justify-content: space-between;
+        }
+
+        .site-brand {
+            font-size: 0.76rem;
+            font-weight: 800;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+        }
+
+        .live-label {
+            align-items: center;
+            background: rgba(255, 255, 255, 0.16);
+            border: 1px solid rgba(255, 255, 255, 0.36);
+            border-radius: 999px;
+            display: inline-flex;
+            font-size: 0.72rem;
+            font-weight: 800;
+            gap: 7px;
+            padding: 6px 10px;
+            text-transform: uppercase;
+        }
+
+        .live-label::before {
+            background: #86efac;
+            border-radius: 50%;
+            content: "";
+            height: 8px;
+            width: 8px;
+        }
+
+        .site-masthead h1 {
+            color: var(--white);
+            font-size: 1.45rem;
+            margin: 18px 0 6px;
+        }
+
+        .site-masthead p {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 0;
+            opacity: 0.88;
+        }
+
+        .explorer-status {
+            background: #fffaf5;
+            border-bottom: 1px solid #f7d7bf;
+            color: var(--deep-purple);
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 11px 18px;
+        }
+
+        .status-route {
+            color: #9a4d14;
+            text-transform: uppercase;
+        }
+
+        .vacancy-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: -4px 0 16px;
+        }
+
+        .vacancy-meta span {
+            background: #f8fafc;
+            border: 1px solid #dbe3ed;
+            border-radius: 999px;
+            color: #455468;
+            font-size: 0.76rem;
+            font-weight: 700;
+            padding: 6px 9px;
+        }
+
+        .panel-kicker {
+            color: var(--text-muted);
+            display: block;
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            margin-bottom: 7px;
+            text-transform: uppercase;
+        }
+
+        .learner-instructions {
+            background: var(--white);
+            border: 2px solid var(--pastel-purple-border);
+            border-left: 6px solid var(--light-purple);
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow);
+            margin-bottom: 16px;
+            padding: 16px 18px;
+            font-size: 0.92rem;
+            line-height: 1.55;
+        }
+
+        .learner-instructions strong { color: var(--deep-purple); }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Main Container */
+        .carousel-container {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            border: 2px solid var(--pastel-purple-border);
+            box-shadow: var(--shadow);
+            overflow: hidden; 
+            position: relative;
+            width: 100%;
+        }
+
+        .track {
+            display: flex;
+            width: 100%;
+            transition: var(--transition);
+            will-change: transform;
+        }
+
+        .role-card {
+            flex: 0 0 100%; 
+            min-width: 100%;
+            padding: 40px; 
+        }
+
+        .role-label {
+            font-size: 0.75rem; 
+            font-weight: 800; 
+            text-transform: uppercase;
+            letter-spacing: 1.5px; 
+            color: var(--light-purple); 
+            margin-bottom: 12px;
+        }
+
+        h1 { 
+            color: var(--deep-purple); 
+            font-size: 1.6rem; 
+            margin: 0 0 16px 0; 
+            line-height: 1.3;
+        }
+        
+        .intro-box {
+            background: var(--pastel-purple-bg);
+            padding: 18px; 
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem; 
+            line-height: 1.6; 
+            margin-bottom: 24px;
+            color: var(--text-main);
+        }
+
+        .section-header {
+            font-size: 0.8rem; 
+            font-weight: 700; 
+            text-transform: uppercase;
+            color: var(--text-muted); 
+            margin: 24px 0 12px 0;
+            border-bottom: 1px solid #f1f1f1; 
+            padding-bottom: 6px;
+        }
+
+        ul { 
+            padding-left: 20px; 
+            margin: 0 0 24px 0; 
+        }
+        
+        li { 
+            font-size: 0.95rem; 
+            margin-bottom: 12px; 
+            color: var(--text-muted); 
+            line-height: 1.5; 
+        }
+
+        .pill-container { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 10px; 
+            margin-bottom: 24px; 
+        }
+        
+        .pill {
+            background: var(--pastel-purple-bg);
+            color: var(--deep-purple);
+            padding: 8px 16px; 
+            border-radius: 20px;
+            font-size: 0.85rem; 
+            font-weight: 500; 
+            border: 1px solid transparent; 
+            transition: all 0.3s ease;
+        }
+        
+        .pill:hover { 
+            border-color: var(--light-purple); 
+            background: var(--white); 
+            transform: translateY(-2px); 
+        }
+
+        .nav-actions { 
+            display: flex; 
+            gap: 15px; 
+            margin-top: 30px; 
+        }
+        
+        .btn {
+            flex: 1; 
+            padding: 16px; 
+            border-radius: var(--radius-sm); 
+            border: none;
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            font-size: 0.95rem;
+            text-align: center;
+        }
+        
+        .btn-primary { 
+            background: var(--deep-purple); 
+            color: white; 
+        }
+        
+        .btn-primary:hover { 
+            background: var(--light-purple); 
+            transform: scale(1.02); 
+        }
+        
+        .btn-secondary { 
+            background: #f1f2f6; 
+            color: var(--text-main); 
+        }
+
+        button:focus-visible,
+        a:focus-visible,
+        [tabindex="0"]:focus-visible {
+            outline: 4px solid #fcc419;
+            outline-offset: 4px;
+        }
+
+        /* Animations */
+        @keyframes pulse-coral {
+            0% { box-shadow: 0 0 0 0 rgba(240, 136, 56, 0.6); }
+            70% { box-shadow: 0 0 0 14px rgba(240, 136, 56, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(240, 136, 56, 0); }
+        }
+
+        @keyframes pulse-purple {
+            0% { box-shadow: 0 0 0 0 rgba(105, 30, 218, 0.4); }
+            70% { box-shadow: 0 0 0 12px rgba(105, 30, 218, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(105, 30, 218, 0); }
+        }
+
+        /* Desktop Panel Styling */
+        .side-panel {
+            position: fixed; 
+            background: var(--white);
+            border-radius: var(--radius-lg); 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            padding: 35px; 
+            z-index: 1000; 
+            overflow-y: auto;
+            transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .side-panel.peek:focus-visible {
+            outline: 4px solid #fcc419;
+            outline-offset: -8px;
+        }
+
+        .panel-close { 
+            position: absolute; 
+            top: 20px; 
+            background: none; 
+            border: none; 
+            font-size: 1.5rem; 
+            cursor: pointer; 
+        }
+
+        /* Desktop Right Panel: Future Growth */
+        #growth-panel { 
+            top: 20px;
+            right: -650px; 
+            width: 550px; 
+            border-top: 6px solid var(--coral-accent); 
+            max-height: 90vh;
+        }
+        #growth-panel.peek { right: 20px; width: 280px; cursor: pointer; }
+        #growth-panel.expanded { right: 20px; width: 550px; }
+        #growth-panel .panel-close { right: 25px; }
+
+        /* Desktop Left Panel: Networks */
+        #network-panel { 
+            top: 20px;
+            left: -500px; 
+            width: 450px; 
+            border-top: 6px solid var(--deep-purple); 
+            max-height: 45vh;
+        }
+        #network-panel.peek { left: 20px; width: 260px; cursor: pointer; }
+        #network-panel.expanded { left: 20px; width: 450px; }
+        #network-panel .panel-close { right: 25px; }
+
+        .hidden { display: none; opacity: 0; transform: translateY(10px); transition: 0.4s; }
+        .visible { display: block; opacity: 1; transform: translateY(0); }
+
+        .btn-coral { 
+            background: var(--coral-accent); 
+            color: white; 
+            width: 100%;
+            animation: pulse-coral 2s infinite cubic-bezier(0.66, 0, 0, 1);
+        }
+        .btn-coral:hover { animation: none !important; }
+        .pulse-stopped .btn-coral,
+        .accordion-item.pulse-stopped .btn-outline { animation: none !important; }
+
+        .btn-outline { 
+            border: 2px solid var(--light-purple); 
+            color: var(--deep-purple); 
+            background: transparent; 
+            padding: 12px;
+            margin-top: 15px;
+            display: block;
+            text-decoration: none;
+            border-radius: var(--radius-sm);
+        }
+        .btn-outline:hover { background: var(--pastel-purple-bg); animation: none !important; }
+        .accordion-item.open .btn-outline { animation: pulse-purple 2s infinite cubic-bezier(0.66, 0, 0, 1); }
+
+        .planning-box {
+            margin-top: 24px; 
+            padding: 24px; 
+            background: #fffcf0;
+            border-radius: var(--radius-sm); 
+            border-left: 4px solid #fcc419;
+            scroll-margin-top: 20px;
+        }
+
+        /* Accordions */
+        .accordion-item {
+            border: 1px solid var(--pastel-purple-border);
+            border-radius: var(--radius-sm);
+            margin-bottom: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .accordion-header {
+            width: 100%; text-align: left; padding: 15px;
+            background: var(--pastel-purple-bg); border: none;
+            color: var(--deep-purple); font-weight: 700;
+            cursor: pointer; display: flex; justify-content: space-between;
+        }
+        .accordion-header::after { content: '+'; transition: transform 0.3s; }
+        .accordion-content { max-height: 0; overflow: hidden; background: var(--white); padding: 0 15px; transition: all 0.4s ease; }
+        .accordion-item.open .accordion-content { max-height: 500px; padding: 15px; }
+        .accordion-item.open .accordion-header::after { transform: rotate(45deg); }
+
+        /* =========================================
+           MOBILE RESPONSIVE OVERRIDES
+           ========================================= */
+        @media (max-width: 800px) {
+            #app-wrapper { padding: 10px; }
+            .role-card { padding: 20px; }
+            .nav-actions { flex-direction: column; }
+            
+            .side-panel { 
+                width: 94% !important; 
+                left: 3% !important; 
+                right: auto !important; 
+                z-index: 2000; 
+                max-height: 85vh !important;
+                padding: 25px 20px !important;
+            }
+            
+            /* Mobile Network Panel (Peeks from Top) */
+            #network-panel { 
+                top: -120%; 
+                transition: all 0.5s ease; 
+            }
+            #network-panel.peek { 
+                top: 10px; 
+                height: 90px; 
+                overflow: hidden; 
+                cursor: pointer;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            }
+            #network-panel.expanded { 
+                top: 5vh; 
+                height: auto; 
+                overflow-y: auto; 
+                box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            }
+
+            /* Mobile Growth Panel (Peeks from Bottom) */
+            #growth-panel { 
+                top: auto; 
+                bottom: -120%; 
+                transition: all 0.5s ease; 
+            }
+            #growth-panel.peek { 
+                bottom: 10px; 
+                top: auto; 
+                height: 90px; 
+                overflow: hidden; 
+                cursor: pointer;
+                box-shadow: 0 -10px 20px rgba(0,0,0,0.2);
+            }
+            #growth-panel.expanded { 
+                bottom: 5vh; 
+                top: auto;
+                height: auto; 
+                overflow-y: auto; 
+                box-shadow: 0 -20px 40px rgba(0,0,0,0.4);
+            }
+            
+            .panel-close { 
+                top: 15px; 
+                right: 15px !important; 
+                font-size: 1.8rem; 
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="app-wrapper">
+    <div class="site-masthead">
+        <div class="site-masthead-top">
+            <span class="site-brand">Careers pathway board</span>
+            <span class="live-label">Live explorer</span>
+        </div>
+        <h1>Cell structure and applied microbiology careers</h1>
+        <p>Explore example roles linked to staining, pathogen identification, sterilisation and contamination control, then watch for professional-body and progression updates as the careers board responds.</p>
+    </div>
+    <div class="explorer-status" aria-hidden="true">
+        <span id="role-counter">Profile 1 of 2</span>
+            <span class="status-route">Illustrative career routes</span>
+    </div>
+    <div class="learner-instructions">
+        <strong>How to explore:</strong> Select <strong>Next Role</strong> to move through the illustrative career profiles. Timed panels will appear at the screen edges to mirror a live careers website. Select a panel to read more. You can use a mouse, touch screen or keyboard.
+    </div>
+    <div id="status-message" class="sr-only" aria-live="polite"></div>
+    <div class="carousel-container">
+        <div class="track" id="main-track">
+            
+            <!-- ROLE 1 -->
+            <div class="role-card">
+                <div class="role-label">Illustrative Career Route<span class="hide-cite"></span></div>
+                <h1 id="role-title-1" tabindex="-1">Clinical Microbiology Scientist<span class="hide-cite"></span></h1>
+                <div class="vacancy-meta"><span>Example route</span><span>Clinical microbiology</span><span>Progression profile</span></div>
+                <div class="intro-box">Applies knowledge of cell wall architecture and staining characteristics to rapidly identify pathogens in patient samples, guiding urgent clinical treatment decisions.<span class="hide-cite"></span></div>
+                
+                <div class="section-header">Key Duties<span class="hide-cite"></span></div>
+                <ul>
+                    <li>Interpreting complex Gram stain morphologies from sterile site fluids.<span class="hide-cite"></span></li>
+                    <li>Identifying mucoid phenotypes linked to bacterial capsules.<span class="hide-cite"></span></li>
+                    <li>Performing susceptibility testing based on cell wall permeability.<span class="hide-cite"></span></li>
+                    <li>Adhering to UKHSA UK Standards for Microbiology Investigations (UK SMIs).<span class="hide-cite"></span></li>
+                    <li>Reporting diagnostic findings to multi-disciplinary clinical teams.<span class="hide-cite"></span></li>
+                </ul>
+
+                <div class="section-header">Core Skills<span class="hide-cite"></span></div>
+                <div class="pill-container">
+                    <span class="pill">Drafting clinical validation reports (English)<span class="hide-cite"></span></span>
+                    <span class="pill">Calculating Minimum Inhibitory Concentrations (Maths)<span class="hide-cite"></span></span>
+                    <span class="pill">Adherence to ISO 15189 standards (Rule of Law)<span class="hide-cite"></span></span>
+                    <span class="pill">Collaborative case review with clinicians (Mutual Respect)<span class="hide-cite"></span></span>
+                    <span class="pill">Differential staining technique proficiency<span class="hide-cite"></span></span>
+                </div>
+
+                <div class="nav-actions">
+                    <button class="btn btn-secondary" style="opacity:0.4" disabled>Previous</button>
+                    <button class="btn btn-primary" onclick="slide(1)" aria-controls="main-track">Next Role</button>
+                </div>
+            </div>
+
+            <!-- ROLE 2 -->
+            <div class="role-card">
+                <div class="role-label">Illustrative Career Route<span class="hide-cite"></span></div>
+                <h1 id="role-title-2" tabindex="-1">Aseptic Processing Specialist<span class="hide-cite"></span></h1>
+                <div class="vacancy-meta"><span>Example route</span><span>Pharmaceutical manufacturing</span><span>Progression profile</span></div>
+                <div class="intro-box">Utilises understanding of endospore resistance and structural resilience to validate sterilisation cycles and investigate contamination root causes in pharmaceutical manufacturing.<span class="hide-cite"></span></div>
+                
+                <div class="section-header">Key Duties<span class="hide-cite"></span></div>
+                <ul>
+                    <li>Designing autoclave validation protocols using biological indicators.<span class="hide-cite"></span></li>
+                    <li>Investigating sterility failures linked to spore-forming organisms.<span class="hide-cite"></span></li>
+                    <li>Monitoring cleanroom environments for structural resistance trends.<span class="hide-cite"></span></li>
+                    <li>Ensuring compliance with EU GMP Annex 1 regulations.<span class="hide-cite"></span></li>
+                    <li>Authoring non-conformance and CAPA investigations.<span class="hide-cite"></span></li>
+                </ul>
+
+                <div class="section-header">Core Skills<span class="hide-cite"></span></div>
+                <div class="pill-container">
+                    <span class="pill">Writing technical root-cause analyses (English)<span class="hide-cite"></span></span>
+                    <span class="pill">Calculating log-reduction factors for sporicides (Maths)<span class="hide-cite"></span></span>
+                    <span class="pill">Strict adherence to MHRA regulatory guidance (Rule of Law)<span class="hide-cite"></span></span>
+                    <span class="pill">Coordinating with production for contamination control (Mutual Respect)<span class="hide-cite"></span></span>
+                    <span class="pill">Interpretation of environmental monitoring and biological indicator data<span class="hide-cite"></span></span>
+                </div>
+
+                <div class="nav-actions">
+                    <button class="btn btn-secondary" onclick="slide(0)" aria-controls="main-track">Back</button>
+                    <button class="btn btn-primary" style="background: var(--coral-accent)" onclick="expandPanel('growth', this)">Explore Growth</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- LEFT PANEL: NETWORKS -->
+<div id="network-panel" class="side-panel" onclick="expandPanel('network', this)" onkeydown="activatePanel(event, 'network')" role="button" tabindex="-1" aria-expanded="false" aria-label="Professional networks panel. Select to expand.">
+    <button class="panel-close" onclick="closePanel('network', event)" aria-label="Close professional networks panel">&times;</button>
+    <span class="panel-kicker">New careers-board update</span>
+    <h2 style="margin:0; color: var(--deep-purple); font-size: 1.2rem;">Professional Bodies and Networks<span class="hide-cite"></span></h2>
+    <p id="network-teaser" style="margin: 8px 0; font-size: 0.85rem; font-weight: 600;">Explore professional development and sector networks.</p>
+    <div id="network-details" class="hidden" style="margin-top: 20px;">
+        
+        <div class="accordion-item">
+            <button class="accordion-header" onclick="toggleAccordion(this, event)" aria-expanded="false" aria-controls="network-microbiology-society">Microbiology Society<span class="hide-cite"></span></button>
+            <div class="accordion-content" id="network-microbiology-society">
+                <p style="font-size: 0.85rem; color: var(--text-muted);">The Microbiology Society provides professional development resources, AMR resources, biofilm resources, scientific conferences and career development support for people working with microbiology.<span class="hide-cite"></span></p>
+                <a href="https://microbiologysociety.org/" target="_blank" rel="noopener noreferrer" class="btn btn-outline" onclick="event.stopPropagation()">Visit Microbiology Society Website (opens in a new tab)</a>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <button class="accordion-header" onclick="toggleAccordion(this, event)" aria-expanded="false" aria-controls="network-rsb">Royal Society of Biology<span class="hide-cite"></span></button>
+            <div class="accordion-content" id="network-rsb">
+                <p style="font-size: 0.85rem; color: var(--text-muted);">The Royal Society of Biology supports professional recognition, CPD and Chartered or Registered Scientist pathways. Check current membership and registration routes on the official website.<span class="hide-cite"></span></p>
+                <a href="https://www.rsb.org.uk/" target="_blank" rel="noopener noreferrer" class="btn btn-outline" onclick="event.stopPropagation()">Visit Royal Society of Biology Website (opens in a new tab)</a>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <button class="accordion-header" onclick="toggleAccordion(this, event)" aria-expanded="false" aria-controls="network-science-council">Science Council<span class="hide-cite"></span></button>
+            <div class="accordion-content" id="network-science-council">
+                <p style="font-size: 0.85rem; color: var(--text-muted);">The Science Council provides professional registration, including Registered Scientist (RSci), and uses professional competency standards to support career progression. Registration is normally accessed through licensed professional bodies.<span class="hide-cite"></span></p>
+                <a href="https://sciencecouncil.org/" target="_blank" rel="noopener noreferrer" class="btn btn-outline" onclick="event.stopPropagation()">Visit Science Council Website (opens in a new tab)</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- RIGHT PANEL: FUTURE GROWTH -->
+<div id="growth-panel" class="side-panel" onclick="expandPanel('growth', this)" onkeydown="activatePanel(event, 'growth')" role="button" tabindex="-1" aria-expanded="false" aria-label="Career growth panel. Select to expand.">
+    <button class="panel-close" onclick="closePanel('growth', event)" aria-label="Close career growth panel">&times;</button>
+    <span class="panel-kicker">Suggested progression route</span>
+    <h2 id="growth-title" style="margin:0; color: var(--coral-accent); font-size: 1.3rem;">Ready to grow?</h2>
+    <p id="growth-teaser" style="margin: 8px 0; font-size: 0.9rem; font-weight: 600;">Click to explore strategic leadership.</p>
+
+    <div id="growth-details" class="hidden" style="margin-top: 20px;">
+        <h1 style="font-size: 1.4rem; margin: 0 0 12px 0;">Strategic Senior Scientist / Technical Specialist / Laboratory Team Lead<span class="hide-cite"></span></h1>
+        <p style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6;">A senior scientific role responsible for leading investigations, interpreting complex microbiological data, supporting quality systems and providing technical expertise across laboratory operations.<span class="hide-cite"></span></p>
+        
+        <div class="section-header">Strategic Skills<span class="hide-cite"></span></div>
+        <div class="pill-container">
+            <span class="pill">Root-cause investigation<span class="hide-cite"></span></span>
+            <span class="pill">Risk-based decision making<span class="hide-cite"></span></span>
+            <span class="pill">Quality management systems<span class="hide-cite"></span></span>
+            <span class="pill">Regulatory compliance<span class="hide-cite"></span></span>
+            <span class="pill">Technical leadership<span class="hide-cite"></span></span>
+            <span class="pill">Scientific communication<span class="hide-cite"></span></span>
+        </div>
+        
+        <button class="btn btn-coral" style="margin-top: 20px;" onclick="showPlanning(event)" aria-expanded="false" aria-controls="planning-details">Start Planning</button>
+        
+        <div id="planning-details" class="hidden">
+            <div id="plan-box" class="planning-box" tabindex="-1">
+                <div class="section-header" style="color: #856404; border:none; margin-top: 0;">Skill Development & Growth<span class="hide-cite"></span></div>
+                
+                <p style="font-size: 0.9rem; font-weight: 700; margin-bottom: 8px;">Gained in this session:<span class="hide-cite"></span></p>
+                <ul style="margin-bottom: 20px; font-size: 0.85rem;">
+                    <li><strong>Differential Staining Proficiency:</strong> The learner developed the ability to interpret Gram staining results and understand the structural basis of differential staining.<span class="hide-cite"></span></li>
+                    <li><strong>Virulence Phenotyping:</strong> By identifying structures like capsules and biofilms, the learner can now assess the pathogenic risk of an isolate, contributing to risk assessment and interpretation of potential pathogenicity.<span class="hide-cite"></span></li>
+                    <li><strong>Sterilisation Logic Application:</strong> Understanding endospore architecture allows the learner to scientifically justify contact times and agent selection for decontamination protocols within their specific laboratory setting.<span class="hide-cite"></span></li>
+                </ul>
+                
+                <p style="font-size: 0.9rem; font-weight: 700; margin-bottom: 8px;">To develop for progression:<span class="hide-cite"></span></p>
+                <ul style="margin-bottom: 0; font-size: 0.85rem;">
+                    <li><strong>Advanced Quality Management and Regulatory Compliance:</strong> Required for senior roles to ensure technical competence and data integrity in labs performing structural characterisation and antimicrobial susceptibility testing.<span class="hide-cite"></span></li>
+                    <li><strong>Strategic Biosafety Management:</strong> Necessary for transitioning to Lab Manager roles, focusing on the safe handling of high-virulence encapsulated pathogens according to ACDP containment guidelines.<span class="hide-cite"></span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const track = document.getElementById('main-track');
+    const panels = {
+        growth: document.getElementById('growth-panel'),
+        network: document.getElementById('network-panel')
+    };
+    let timers = [];
+    let lastFocusedElement = null;
+    const statusMessage = document.getElementById('status-message');
+    const roleCounter = document.getElementById('role-counter');
+
+    window.onload = () => {
+        timers.push(setTimeout(() => showPeek('growth'), 10000));
+    };
+
+    function slide(idx) {
+        track.style.transform = `translate3d(-${idx * 100}%, 0, 0)`;
+        roleCounter.textContent = `Profile ${idx + 1} of 2`;
+        if(idx === 1) {
+            timers.forEach(clearTimeout);
+            timers = [];
+            timers.push(setTimeout(() => showPeek('growth'), 1000)); 
+        }
+        timers.push(setTimeout(() => {
+            document.getElementById(`role-title-${idx + 1}`).focus({ preventScroll: true });
+        }, 740));
+    }
+
+    function showPeek(type) {
+        panels[type].className = 'side-panel peek';
+        panels[type].setAttribute('role', 'button');
+        panels[type].tabIndex = 0;
+        panels[type].setAttribute('aria-expanded', 'false');
+        statusMessage.textContent = type === 'growth'
+            ? 'A career growth panel is now available. Use Tab to reach it.'
+            : 'A professional networks panel is now available. Use Tab to reach it.';
+        if(type === 'growth') timers.push(setTimeout(() => showPeek('network'), 3000)); 
+    }
+
+    function activatePanel(e, type) {
+        if(e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            expandPanel(type, e.currentTarget);
+        }
+    }
+
+    function expandPanel(type, trigger) {
+        if(panels[type].classList.contains('expanded')) return;
+        if(trigger && trigger !== panels[type]) lastFocusedElement = trigger;
+        if(!lastFocusedElement) lastFocusedElement = document.querySelector('[onclick="slide(1)"]');
+        // Force expanded state regardless of current peek state
+        panels[type].className = 'side-panel expanded';
+        panels[type].removeAttribute('role');
+        panels[type].tabIndex = -1;
+        panels[type].setAttribute('aria-expanded', 'true');
+        document.getElementById(type + '-details').classList.add('visible');
+        const teaser = document.getElementById(type + '-teaser');
+        if(teaser) teaser.style.display = 'none';
+        const closeButton = panels[type].querySelector('.panel-close');
+        closeButton.focus();
+        if(type === 'growth') {
+            panels[type].classList.remove('pulse-stopped');
+            timers.push(setTimeout(() => panels[type].classList.add('pulse-stopped'), 8000));
+        }
+    }
+
+    function closePanel(type, e) {
+        e.stopPropagation(); 
+        panels[type].className = 'side-panel';
+        panels[type].setAttribute('role', 'button');
+        panels[type].tabIndex = -1;
+        panels[type].setAttribute('aria-expanded', 'false');
+        document.getElementById(type + '-details').classList.remove('visible');
+        if(type === 'growth') document.getElementById('planning-details').classList.remove('visible');
+        
+        // Restore teaser when closed
+        const teaser = document.getElementById(type + '-teaser');
+        if(teaser) teaser.style.display = 'block';
+        if(lastFocusedElement && document.body.contains(lastFocusedElement)) lastFocusedElement.focus();
+    }
+
+    function showPlanning(e) {
+        e.stopPropagation();
+        const details = document.getElementById('planning-details');
+        details.classList.add('visible');
+        e.currentTarget.setAttribute('aria-expanded', 'true');
+        setTimeout(() => {
+            document.getElementById('plan-box').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); 
+            document.getElementById('plan-box').focus();
+        }, 150);
+    }
+
+    function toggleAccordion(button, e) {
+        e.stopPropagation();
+        const items = document.querySelectorAll('.accordion-item');
+        const item = button.closest('.accordion-item');
+        items.forEach(otherItem => {
+            if(otherItem !== item) {
+                otherItem.classList.remove('open', 'pulse-stopped');
+                otherItem.querySelector('.accordion-header').setAttribute('aria-expanded', 'false');
+            }
+        });
+        item.classList.toggle('open');
+        item.classList.remove('pulse-stopped');
+        button.setAttribute('aria-expanded', item.classList.contains('open') ? 'true' : 'false');
+        if(item.classList.contains('open')) {
+            timers.push(setTimeout(() => item.classList.add('pulse-stopped'), 6000));
+        }
+    }
+</script>
+</body>
+</html>

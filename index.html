@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Daniel 'Wig' Boyland — Forged Frameworks Portfolio</title>
+<title>Daniel 'Wig' Boyland — Forged Frameworks Portfolio (v2 prototype)</title>
 <meta name="description" content="Forged Frameworks — a portfolio by Daniel 'Wig' Boyland: digital learning content design, GenAI content pipelines, and accessibility-first instructional design." />
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
 <link rel="stylesheet" href="assets/colors_and_type.css" />
@@ -51,6 +51,25 @@
   video.media-fill { display: block; width: 100%; height: 100%; object-fit: cover; }
   video.waving-head { display: block; }
   .pipe-figure video { display: block; width: 100%; height: auto; }
+
+  /* ===== v2 — Codex pedagogical groupings ===== */
+  .codex-cat + .codex-cat { margin-top: var(--space-7); }
+  .codex-cat__head { display: flex; align-items: flex-start; gap: var(--space-4); margin: 0 0 var(--space-5); padding-bottom: var(--space-4); border-bottom: 1px solid var(--ff-paper-rule); }
+  .codex-cat__icon { flex: none; display: grid; place-items: center; width: 42px; height: 42px; border-radius: var(--radius-md); background: var(--ff-copper-wash); color: var(--ff-copper-hot); }
+  .codex-cat__icon svg { width: 22px; height: 22px; }
+  .codex-cat__titles { display: flex; flex-direction: column; gap: 3px; }
+  .codex-cat__title { margin: 0; font-size: var(--fs-lg); font-weight: var(--fw-bold); color: var(--ff-ink); display: flex; align-items: baseline; gap: var(--space-3); flex-wrap: wrap; }
+  .codex-cat__count { font-family: var(--font-mono); font-size: var(--fs-xs); font-weight: var(--fw-regular); color: var(--ff-ink-muted); }
+  .codex-cat__desc { margin: 0; font-size: var(--fs-sm); color: var(--ff-ink-muted); line-height: 1.5; max-width: 72ch; }
+
+  /* ===== v2 — Codex featured spotlight (Cinematic Package Designer) ===== */
+  .codex-spotlight-feature { margin-top: var(--space-6); padding: var(--space-5); background: var(--color-surface); border: 1px solid var(--ff-paper-edge); border-top: var(--border-accent); border-radius: var(--radius-md); box-shadow: var(--ff-shadow-card); }
+  .codex-spotlight__intro { max-width: 82ch; margin-bottom: var(--space-5); }
+  .codex-spotlight__intro p { color: var(--ff-ink); font-size: var(--fs-base); line-height: 1.6; margin: var(--space-3) 0 0; }
+  .codex-spotlight__tag { display: inline-block; font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: .03em; color: var(--ff-copper-hot); background: var(--ff-copper-wash); border-radius: var(--radius-pill); padding: 3px 12px; margin-bottom: var(--space-3); }
+  .codex-spotlight-feature .demo { margin: 0; }
+  .codex-spotlight__cta { margin-top: var(--space-5); display: flex; align-items: center; gap: var(--space-4); flex-wrap: wrap; }
+  .codex-spotlight__cap { margin: 0; font-size: var(--fs-sm); color: var(--ff-ink-muted); font-style: normal; }
 </style>
 </head>
 <body>
@@ -110,7 +129,7 @@
         <a class="btn btn--primary" href="#work">See my work</a>
         <a class="btn btn--ghost" href="#contact">Let's work together</a>
       </div>
-      <a class="hero__nudge" href="Accreditation-Quality.html">
+      <a class="hero__nudge" href="Accreditation-Quality v2.html">
         <i data-lucide="shield-check"></i>
         <span>Here for <strong>ISO, QMS or accreditation</strong> support? See the accreditation &amp; quality background <span class="hero__nudge-arrow">&rarr;</span></span>
       </a>
@@ -265,7 +284,7 @@
         <figcaption class="quote__who"><strong>Ash Backhouse</strong><span>Programme Director IFLP, SECBE</span></figcaption>
       </figure>
     </div>
-    <p class="reviews-elsewhere reveal">The UKAS, accreditation &amp; QMS recommendations now live on the <a href="Accreditation-Quality.html">Accreditation &amp; Quality page →</a></p>
+    <p class="reviews-elsewhere reveal">The UKAS, accreditation &amp; QMS recommendations now live on the <a href="Accreditation-Quality v2.html">Accreditation &amp; Quality page →</a></p>
   </div>
 </section>
 
@@ -527,88 +546,190 @@
       <iframe title="Myth vs Fact — live interactive demo" src="patterns/myths/myths.html" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
     </div>
 
+    <div class="codex-spotlight-feature reveal">
+      <div class="codex-spotlight__intro">
+        <span class="codex-spotlight__tag">Featured authoring tool</span>
+        <h3 class="h3">Cinematic Package Designer</h3>
+        <p>The live player below is a real example output — the branded, learner-facing package this tool produces, with a synced transcript and clickable chapter hotspots. The back office turns a raw screen-recording, a script and brand assets into exactly this, ready to drop into Rise 360, Storyline or any VLE.</p>
+      </div>
+      <div class="demo">
+        <div class="demo__bar">
+          <span class="demo__title">walkthrough.html · live — branded package output</span>
+          <a class="demo__open" href="patterns/video-designer/walkthrough.html" target="_blank" rel="noopener">Open full screen ↗</a>
+        </div>
+        <iframe title="Cinematic Package Designer — example output (MCQ LMS walkthrough)" src="patterns/video-designer/walkthrough.html" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups allow-downloads"></iframe>
+      </div>
+      <div class="codex-spotlight__cta">
+        <a class="btn btn--primary" href="patterns/video-designer/video-designer.html" target="_blank" rel="noopener">Launch the demo ↗</a>
+        <span class="codex-spotlight__cap">Opens the back-office authoring tool.</span>
+      </div>
+    </div>
+
     <h3 class="h3 reveal" style="margin:var(--space-7) 0 var(--space-5);">Browse the library</h3>
 
     <div class="codex-group reveal">
       <p class="codex-group__lead"><span class="codex-group__tag">How to read these</span> There are two kinds of card. <strong class="hot">Launch demo ↗</strong> opens a <strong>live, standalone block</strong> right here in your browser — and the ones tagged <strong>designer mode</strong> include a <strong>built-in back-office editor</strong>, so you can change copy, scoring and logic <strong>yourself, with no AI cost</strong>. <strong class="hot">Open in Review 360 ↗</strong> opens a <strong>finished production build</strong> in Articulate's review player — also the fallback for anything that won't render in-browser.</p>
-      <div class="codex-grid">
-        <a class="block-card reveal" href="patterns/odd-one-out/odd-one-out-quiz.html" target="_blank" rel="noopener">
-          <img class="block-card__thumb" src="assets/thumbs/odd-one-out.jpg" alt="Preview of the Odd One Out quiz engine" loading="lazy" />
-          <span class="block-card__kind">Quiz engine · designer mode</span>
-          <span class="block-card__title">Odd One Out</span>
-          <p class="block-card__meta">Digital Transformation · authorable knowledge-check with image options</p>
-          <span class="block-card__open">Launch demo ↗</span>
-        </a>
-        <a class="block-card reveal" href="patterns/key-points/key-points.html" target="_blank" rel="noopener">
-          <img class="block-card__thumb" src="assets/thumbs/key-points.jpg" alt="Preview of the Takeaways Revealer block" loading="lazy" />
-          <span class="block-card__kind">Reveal block · designer mode</span>
-          <span class="block-card__title">Takeaways Revealer</span>
-          <p class="block-card__meta">Progressive reveal of key learning points — editable in the built-in designer</p>
-          <span class="block-card__open">Launch demo ↗</span>
-        </a>
-        <a class="block-card reveal" href="patterns/benefits/benefits.html" target="_blank" rel="noopener">
-          <img class="block-card__thumb" src="assets/thumbs/benefits.jpg" alt="Preview of the Benefits Master block" loading="lazy" />
-          <span class="block-card__kind">Reveal block · designer mode</span>
-          <span class="block-card__title">Benefits Master</span>
-          <p class="block-card__meta">Card-based benefits explainer — editable in the built-in designer</p>
-          <span class="block-card__open">Launch demo ↗</span>
-        </a>
-        <a class="block-card reveal" href="patterns/myths/myths.html" target="_blank" rel="noopener">
-          <img class="block-card__thumb" src="assets/thumbs/myths.jpg" alt="Preview of the Myth vs Fact sorting block" loading="lazy" />
-          <span class="block-card__kind">Sorting block · designer mode</span>
-          <span class="block-card__title">Myth vs Fact</span>
-          <p class="block-card__meta">Misconception check with feedback — editable in the built-in designer</p>
-          <span class="block-card__open">Launch demo ↗</span>
-        </a>
-        <a class="block-card reveal" href="patterns/carousel/carousel-prompt-index.html" target="_blank" rel="noopener">
-          <img class="block-card__thumb" src="assets/thumbs/carousel.jpg" alt="Preview of the Pharmacological Chirality carousel" loading="lazy" />
-          <span class="block-card__kind">Carousel viewer</span>
-          <span class="block-card__title">Pharmacological Chirality</span>
-          <p class="block-card__meta">Level 6 HE · swipeable content carousel</p>
-          <span class="block-card__open">Launch demo ↗</span>
-        </a>
-        <a class="block-card reveal" href="patterns/reflection/writing-reflection-html-english.html" target="_blank" rel="noopener">
-          <img class="block-card__thumb" src="assets/thumbs/reflection-english.jpg" alt="Preview of the English Functional skills reflective notebook" loading="lazy" />
-          <span class="block-card__kind">Reflective workbook</span>
-          <span class="block-card__title">Reflective Notebook — English Functional skills</span>
-          <p class="block-card__meta">Strategic Communication · exportable reflection workbook</p>
-          <span class="block-card__open">Launch demo ↗</span>
-        </a>
-        <a class="block-card reveal" href="patterns/reflection/writing-reflection-html-index-maths.html" target="_blank" rel="noopener">
-          <img class="block-card__thumb" src="assets/thumbs/reflection-maths.jpg" alt="Preview of the Maths Functional skills reflective notebook" loading="lazy" />
-          <span class="block-card__kind">Reflective workbook</span>
-          <span class="block-card__title">Reflective Notebook — Maths Functional skills</span>
-          <p class="block-card__meta">Numeracy &amp; application · exportable reflection workbook</p>
-          <span class="block-card__open">Launch demo ↗</span>
-        </a>
-        <a class="block-card reveal" href="https://360.articulate.com/review/content/ce4bf4c4-569b-4952-a194-979d0c778cec/review" target="_blank" rel="noopener">
-          <span class="block-card__thumb--glyph"><i data-lucide="layers"></i></span>
-          <span class="block-card__kind">Reveal styles · Review 360</span>
-          <span class="block-card__title">Reveal Options</span>
-          <p class="block-card__meta">Reveal, flip and progressive-disclosure card styles</p>
-          <span class="block-card__open">Open in Review 360 ↗</span>
-        </a>
-        <a class="block-card reveal" href="https://360.articulate.com/review/content/52955237-15b1-4735-a948-9dd001060ae2/review" target="_blank" rel="noopener">
-          <span class="block-card__thumb--glyph"><i data-lucide="zoom-in"></i></span>
-          <span class="block-card__kind">Image tool · Review 360</span>
-          <span class="block-card__title">Magnify</span>
-          <p class="block-card__meta">Interactive zoom/magnifier for detailed imagery and diagrams</p>
-          <span class="block-card__open">Open in Review 360 ↗</span>
-        </a>
-        <a class="block-card reveal" href="https://360.articulate.com/review/content/f520b311-9cc7-49d2-aa67-f79c8dba84ff/review" target="_blank" rel="noopener">
-          <span class="block-card__thumb--glyph"><i data-lucide="shapes"></i></span>
-          <span class="block-card__kind">Graphics-in-code · Review 360</span>
-          <span class="block-card__title">SVG Pictograms</span>
-          <p class="block-card__meta">Scalable inline SVG pictograms coded for crisp, lightweight visuals</p>
-          <span class="block-card__open">Open in Review 360 ↗</span>
-        </a>
-        <a class="block-card reveal" href="https://360.articulate.com/review/content/438ac80f-37c1-4fc9-9e63-bf352321f713/review" target="_blank" rel="noopener">
-          <span class="block-card__thumb--glyph"><i data-lucide="atom"></i></span>
-          <span class="block-card__kind">3D viewer · Review 360</span>
-          <span class="block-card__title">3D Molecule Viewer</span>
-          <p class="block-card__meta">Interactive 3D molecule model embedded into a Review 360 lesson</p>
-          <span class="block-card__open">Open in Review 360 ↗</span>
-        </a>
+      <!-- Category 1 — Learning & knowledge -->
+      <div class="codex-cat">
+        <div class="codex-cat__head">
+          <span class="codex-cat__icon" aria-hidden="true"><i data-lucide="book-open"></i></span>
+          <div class="codex-cat__titles">
+            <h4 class="codex-cat__title">Learning &amp; knowledge blocks <span class="codex-cat__count">7 blocks</span></h4>
+            <p class="codex-cat__desc">Explainers, reveals and interactive viewers that introduce or build understanding — progressive disclosure, carousels and rich media for the teaching part of a lesson.</p>
+          </div>
+        </div>
+        <div class="codex-grid">
+          <a class="block-card reveal" href="patterns/key-points/key-points.html" target="_blank" rel="noopener">
+            <img class="block-card__thumb" src="assets/thumbs/key-points.jpg" alt="Preview of the Takeaways Revealer block" loading="lazy" />
+            <span class="block-card__kind">Reveal block · designer mode</span>
+            <span class="block-card__title">Takeaways Revealer</span>
+            <p class="block-card__meta">Progressive reveal of key learning points — editable in the built-in designer</p>
+            <span class="block-card__open">Launch demo ↗</span>
+          </a>
+          <a class="block-card reveal" href="patterns/benefits/benefits.html" target="_blank" rel="noopener">
+            <img class="block-card__thumb" src="assets/thumbs/benefits.jpg" alt="Preview of the Benefits Master block" loading="lazy" />
+            <span class="block-card__kind">Reveal block · designer mode</span>
+            <span class="block-card__title">Benefits Master</span>
+            <p class="block-card__meta">Card-based benefits explainer — editable in the built-in designer</p>
+            <span class="block-card__open">Launch demo ↗</span>
+          </a>
+          <a class="block-card reveal" href="patterns/carousel/carousel-prompt-index.html" target="_blank" rel="noopener">
+            <img class="block-card__thumb" src="assets/thumbs/carousel.jpg" alt="Preview of the Pharmacological Chirality carousel" loading="lazy" />
+            <span class="block-card__kind">Carousel viewer</span>
+            <span class="block-card__title">Pharmacological Chirality</span>
+            <p class="block-card__meta">Level 6 HE · swipeable content carousel</p>
+            <span class="block-card__open">Launch demo ↗</span>
+          </a>
+          <a class="block-card reveal" href="https://360.articulate.com/review/content/ce4bf4c4-569b-4952-a194-979d0c778cec/review" target="_blank" rel="noopener">
+            <span class="block-card__thumb--glyph"><i data-lucide="layers"></i></span>
+            <span class="block-card__kind">Reveal styles · Review 360</span>
+            <span class="block-card__title">Reveal Options</span>
+            <p class="block-card__meta">Reveal, flip and progressive-disclosure card styles</p>
+            <span class="block-card__open">Open in Review 360 ↗</span>
+          </a>
+          <div class="block-card block-card--dual reveal">
+            <img class="block-card__thumb" src="assets/thumbs/magnify.jpg" alt="Preview of the Magnify inspect tool over a laboratory image" loading="lazy" />
+            <span class="block-card__kind">Image tool · live demo</span>
+            <span class="block-card__title">Magnify</span>
+            <p class="block-card__meta">Interactive zoom/magnifier for detailed imagery and diagrams</p>
+            <span class="block-card__actions">
+              <a class="block-card__open" href="patterns/magnify/magnify.html" target="_blank" rel="noopener">Launch demo ↗</a>
+              <a class="block-card__open block-card__open--alt" href="https://360.articulate.com/review/content/52955237-15b1-4735-a948-9dd001060ae2/review" target="_blank" rel="noopener">Review 360 ↗</a>
+            </span>
+          </div>
+          <a class="block-card reveal" href="https://360.articulate.com/review/content/f520b311-9cc7-49d2-aa67-f79c8dba84ff/review" target="_blank" rel="noopener">
+            <span class="block-card__thumb--glyph"><i data-lucide="shapes"></i></span>
+            <span class="block-card__kind">Graphics-in-code · Review 360</span>
+            <span class="block-card__title">SVG Pictograms</span>
+            <p class="block-card__meta">Scalable inline SVG pictograms coded for crisp, lightweight visuals</p>
+            <span class="block-card__open">Open in Review 360 ↗</span>
+          </a>
+          <div class="block-card block-card--dual reveal">
+            <img class="block-card__thumb" src="assets/thumbs/adipic-3d.jpg" alt="Preview of the 3D Adipic Acid molecule visualiser" loading="lazy" />
+            <span class="block-card__kind">3D viewer · live demo</span>
+            <span class="block-card__title">3D Molecule Viewer</span>
+            <p class="block-card__meta">Interactive 3D ball-and-stick model of adipic acid with a greener-chemistry case study</p>
+            <span class="block-card__actions">
+              <a class="block-card__open" href="patterns/3d/adipic-acid-visualiser.html" target="_blank" rel="noopener">Launch demo ↗</a>
+              <a class="block-card__open block-card__open--alt" href="https://360.articulate.com/review/content/438ac80f-37c1-4fc9-9e63-bf352321f713/review" target="_blank" rel="noopener">Review 360 ↗</a>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category 2 — Formative assessment -->
+      <div class="codex-cat">
+        <div class="codex-cat__head">
+          <span class="codex-cat__icon" aria-hidden="true"><i data-lucide="clipboard-check"></i></span>
+          <div class="codex-cat__titles">
+            <h4 class="codex-cat__title">Formative assessment blocks <span class="codex-cat__count">3 blocks</span></h4>
+            <p class="codex-cat__desc">Low-stakes knowledge checks that test understanding and surface misconceptions — instant feedback, authorable questions, no LMS scoring required.</p>
+          </div>
+        </div>
+        <div class="codex-grid">
+          <a class="block-card reveal" href="patterns/swipe/swipe-quiz.html" target="_blank" rel="noopener">
+            <img class="block-card__thumb" src="assets/thumbs/swipe-quiz.jpg" alt="Preview of the Microbiology swipe quiz" loading="lazy" />
+            <span class="block-card__kind">Swipe quiz · live demo</span>
+            <span class="block-card__title">Swipe Quiz — Microbiology</span>
+            <p class="block-card__meta">Level 6 · swipe-to-decide strategic evaluation with instant feedback &amp; a results summary</p>
+            <span class="block-card__open">Launch demo ↗</span>
+          </a>
+          <a class="block-card reveal" href="patterns/odd-one-out/odd-one-out-quiz.html" target="_blank" rel="noopener">
+            <img class="block-card__thumb" src="assets/thumbs/odd-one-out.jpg" alt="Preview of the Odd One Out quiz engine" loading="lazy" />
+            <span class="block-card__kind">Quiz engine · designer mode</span>
+            <span class="block-card__title">Odd One Out</span>
+            <p class="block-card__meta">Digital Transformation · authorable knowledge-check with image options</p>
+            <span class="block-card__open">Launch demo ↗</span>
+          </a>
+          <a class="block-card reveal" href="patterns/myths/myths.html" target="_blank" rel="noopener">
+            <img class="block-card__thumb" src="assets/thumbs/myths.jpg" alt="Preview of the Myth vs Fact sorting block" loading="lazy" />
+            <span class="block-card__kind">Sorting block · designer mode</span>
+            <span class="block-card__title">Myth vs Fact</span>
+            <p class="block-card__meta">Misconception check with feedback — editable in the built-in designer</p>
+            <span class="block-card__open">Launch demo ↗</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Category 3 — Reflection -->
+      <div class="codex-cat">
+        <div class="codex-cat__head">
+          <span class="codex-cat__icon" aria-hidden="true"><i data-lucide="notebook-pen"></i></span>
+          <div class="codex-cat__titles">
+            <h4 class="codex-cat__title">Reflection blocks <span class="codex-cat__count">2 blocks</span></h4>
+            <p class="codex-cat__desc">Private, device-stored journaling and self-assessment spaces that deepen metacognition and reflective practice — exportable, with no learner data leaving the browser.</p>
+          </div>
+        </div>
+        <div class="codex-grid">
+          <a class="block-card reveal" href="patterns/reflection/writing-reflection-html-english.html" target="_blank" rel="noopener">
+            <img class="block-card__thumb" src="assets/thumbs/reflection-english.jpg" alt="Preview of the English Functional skills reflective notebook" loading="lazy" />
+            <span class="block-card__kind">Reflective workbook</span>
+            <span class="block-card__title">Reflective Notebook — English Functional skills</span>
+            <p class="block-card__meta">Strategic Communication · exportable reflection workbook</p>
+            <span class="block-card__open">Launch demo ↗</span>
+          </a>
+          <a class="block-card reveal" href="patterns/reflection/writing-reflection-html-index-maths.html" target="_blank" rel="noopener">
+            <img class="block-card__thumb" src="assets/thumbs/reflection-maths.jpg" alt="Preview of the Maths Functional skills reflective notebook" loading="lazy" />
+            <span class="block-card__kind">Reflective workbook</span>
+            <span class="block-card__title">Reflective Notebook — Maths Functional skills</span>
+            <p class="block-card__meta">Numeracy &amp; application · exportable reflection workbook</p>
+            <span class="block-card__open">Launch demo ↗</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Category 4 — Resources & wayfinding -->
+      <div class="codex-cat">
+        <div class="codex-cat__head">
+          <span class="codex-cat__icon" aria-hidden="true"><i data-lucide="compass"></i></span>
+          <div class="codex-cat__titles">
+            <h4 class="codex-cat__title">Resources &amp; wayfinding blocks <span class="codex-cat__count">3 blocks</span></h4>
+            <p class="codex-cat__desc">Searchable portals, curated resource explorers and careers pathways that help learners navigate standards, further reading and progression — wayfinding rather than teaching.</p>
+          </div>
+        </div>
+        <div class="codex-grid">
+          <a class="block-card reveal" href="patterns/resource-hub/resource-hub.html" target="_blank" rel="noopener">
+            <img class="block-card__thumb" src="assets/thumbs/resource-hub.jpg" alt="Preview of the Standards &amp; Guidance Portal" loading="lazy" />
+            <span class="block-card__kind">Resource portal · live demo</span>
+            <span class="block-card__title">Standards &amp; Guidance Portal</span>
+            <p class="block-card__meta">Searchable hub of standards &amp; guidance — sector references gathered in one place</p>
+            <span class="block-card__open">Launch demo ↗</span>
+          </a>
+          <a class="block-card reveal" href="patterns/further-learning/further-learning.html" target="_blank" rel="noopener">
+            <img class="block-card__thumb" src="assets/thumbs/further-learning.jpg" alt="Preview of the Further Learning Resources explorer" loading="lazy" />
+            <span class="block-card__kind">Resource explorer · live demo</span>
+            <span class="block-card__title">Further Learning Resources</span>
+            <p class="block-card__meta">Curated further-reading explorer mapped to a module's sessions</p>
+            <span class="block-card__open">Launch demo ↗</span>
+          </a>
+          <a class="block-card reveal" href="patterns/careers/careers.html" target="_blank" rel="noopener">
+            <img class="block-card__thumb" src="assets/thumbs/careers.jpg" alt="Preview of the Careers Explorer" loading="lazy" />
+            <span class="block-card__kind">Careers explorer · live demo</span>
+            <span class="block-card__title">Careers Explorer</span>
+            <p class="block-card__meta">Interactive careers &amp; progression-pathway explorer for learners</p>
+            <span class="block-card__open">Launch demo ↗</span>
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -881,7 +1002,7 @@
               <li>GDPR content control &amp; data handling</li>
               <li>Industrial technical module client development</li>
             </ul>
-            <p style="margin-top:var(--space-4);"><a class="btn btn--ghost" href="Accreditation-Quality.html">See the full accreditation &amp; ISO background →</a></p>
+            <p style="margin-top:var(--space-4);"><a class="btn btn--ghost" href="Accreditation-Quality v2.html">See the full accreditation &amp; ISO background →</a></p>
           </div>
         </div>
       </div>
@@ -932,7 +1053,7 @@
       </div>
     </details>
 
-    <p class="reveal" style="text-align:center; margin-top:var(--space-7);"><a class="btn btn--primary" href="Accreditation-Quality.html">🔒 The Accreditation &amp; Quality page — Accreditation, ISO &amp; QMS →</a></p>
+    <p class="reveal" style="text-align:center; margin-top:var(--space-7);"><a class="btn btn--primary" href="Accreditation-Quality v2.html">🔒 The Accreditation &amp; Quality page — Accreditation, ISO &amp; QMS →</a></p>
   </div>
 </section>
 
@@ -984,5 +1105,11 @@
   });
 })();
 </script>
+<div id="tweaks-root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="tweaks-app.jsx"></script>
 </body>
 </html>

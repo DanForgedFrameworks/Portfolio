@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Standards and Guidance Resource Portal</title>
+    <style>
+        /* Core Box Sizing & Variables */
+        * { box-sizing: border-box; }
+        :root {
+            --deep-purple: #370c65; 
+            --light-purple: #691eda; 
+            --pastel-purple-bg: #f2effc;
+            --pastel-purple-border: #ece6f9; 
+            --status-pub: #059669;  
+            --white: #ffffff; 
+            --text-main: #2d3436; 
+            --text-muted: #57606f;
+            --radius-lg: 16px; 
+            --radius-sm: 8px;
+            --directional-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --heavy-shadow: 0 10px 25px rgba(55, 12, 101, 0.15);
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            color: var(--text-main); 
+            background-color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        #library-wrapper { 
+            width: 100%; 
+            min-height: 100vh;
+            padding: 40px 20px; 
+            position: relative;
+            z-index: 1;
+        }
+
+        .digital-bg {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background-image: radial-gradient(var(--light-purple) 2px, transparent 2px);
+            background-size: 45px 45px;
+            opacity: 0.08;
+            z-index: -1;
+            animation: pan-digital-grid 50s linear infinite;
+        }
+
+        @keyframes pan-digital-grid {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(45px, 45px); }
+        }
+
+        .main-header { text-align: center; margin-bottom: 20px; }
+        h1 { color: var(--deep-purple); margin: 0 0 5px 0; font-size: 2.2rem; font-weight: 800; }
+        .subtitle { color: var(--text-muted); font-size: 1.1rem; }
+
+        .nav-tip {
+            text-align: center;
+            background: var(--white);
+            color: var(--text-muted);
+            padding: 12px 20px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--pastel-purple-border);
+            max-width: 800px;
+            margin: 0 auto 30px auto;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            line-height: 1.5;
+        }
+
+        .controls-container {
+            max-width: 1200px;
+            margin: 0 auto 30px auto;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+        }
+
+        /* Spaced out breadcrumbs / back buttons */
+        #breadcrumbs {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto 40px auto;
+            font-weight: 600;
+            color: var(--deep-purple);
+        }
+
+        .breadcrumb-item {
+            cursor: pointer;
+            padding: 10px 20px;
+            background: var(--white);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--pastel-purple-border);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+            font-size: 15px;
+        }
+        
+        .breadcrumb-item:hover {
+            background: var(--pastel-purple-bg);
+            border-color: var(--light-purple);
+        }
+
+        .breadcrumb-separator {
+            color: var(--text-muted);
+            font-size: 18px;
+        }
+
+        input[type="text"] { 
+            width: 100%; 
+            padding: 18px 25px; 
+            font-size: 18px; 
+            box-sizing: border-box; 
+            border: 2px solid var(--pastel-purple-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--directional-shadow);
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            font-family: inherit;
+        }
+        input[type="text"]:focus { 
+            border-color: var(--light-purple); 
+            box-shadow: var(--heavy-shadow);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Card Styling */
+        .trigger-card {
+            background: var(--white);
+            border: 2px solid var(--pastel-purple-border);
+            border-top: 6px solid var(--theme-color, var(--deep-purple));
+            border-radius: var(--radius-lg);
+            padding: 30px 25px 25px 25px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: var(--directional-shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+            text-align: center;  
+            position: relative; 
+            z-index: 1;
+            text-decoration: none;
+        }
+
+        .trigger-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: var(--heavy-shadow); 
+            border-color: var(--theme-color, var(--light-purple)); 
+            z-index: 10; 
+        }
+
+        .trigger-icon {
+            margin-bottom: 20px;
+            width: 80px;
+            height: 80px;
+            background: var(--white);
+            border: 2px solid var(--theme-color, var(--deep-purple));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .trigger-icon svg {
+            stroke: var(--theme-color, var(--deep-purple));
+            width: 35px;
+            height: 35px;
+        }
+
+        .trigger-title { 
+            color: var(--deep-purple); 
+            font-weight: 800; 
+            font-size: 1.25rem; 
+            margin: 0 0 20px 0; 
+            line-height: 1.4;
+        }
+
+        .meta-container {
+            width: 100%;
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center; 
+            border-top: 1px dashed var(--pastel-purple-border);
+            padding-top: 20px;
+        }
+
+        .tag-programme { 
+            background: var(--theme-color, var(--deep-purple)); 
+            color: #ffffff; 
+            border-radius: 8px;
+            width: 100%;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 700;
+            text-align: left;
+        }
+
+        /* Tooltip floating beside card */
+        .module-tooltip {
+            position: absolute;
+            top: 50%;
+            left: calc(100% + 15px);
+            transform: translateY(-50%) translateX(10px);
+            background: #1a202c;
+            color: var(--white);
+            padding: 15px 20px;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            width: max-content;
+            max-width: 320px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            pointer-events: none;
+        }
+
+        .module-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 100%;
+            margin-top: -8px;
+            border-width: 8px;
+            border-style: solid;
+            border-color: transparent #1a202c transparent transparent;
+        }
+
+        .trigger-card:hover .module-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-50%) translateX(0);
+        }
+
+        .tooltip-header {
+            text-align: left;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #ffffff;
+            border-bottom: 1px solid #4a5568;
+            padding-bottom: 5px;
+        }
+
+        .tooltip-list {
+            margin: 0;
+            padding-left: 20px;
+            text-align: left;
+        }
+
+        .tooltip-list li {
+            margin-bottom: 6px;
+            line-height: 1.3;
+            color: #e2e8f0;
+        }
+
+        .empty-state {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 40px;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px; right: 20px;
+            background: none; border: none;
+            font-size: 28px; cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover { color: #e11d48; }
+
+        .modal-content h2 { margin-top: 0; color: var(--deep-purple); }
+        .modal-content p { color: var(--text-muted); font-size: 16px; margin-bottom: 20px; }
+        
+        .modal-url-box {
+            background: #f8fafc;
+            border: 1px solid var(--pastel-purple-border);
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .modal-url-box a {
+            color: var(--light-purple);
+            text-decoration: none;
+            font-weight: 600;
+            word-break: break-all;
+            flex-grow: 1;
+        }
+
+        .modal-url-box a:hover { text-decoration: underline; }
+
+        .btn-copy {
+            background: var(--light-purple);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            flex-shrink: 0;
+            transition: background 0.2s;
+        }
+
+        .btn-copy:hover { background: var(--deep-purple); }
+
+        .modal-instruction {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 0;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        /* Fallback Search Styles */
+        .search-fallback-box {
+            background: #f1f5f9;
+            border: 1px dashed #cbd5e1;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .search-fallback-box label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .search-input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-input-group input {
+            flex-grow: 1;
+            padding: 10px 12px;
+            font-size: 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background: white;
+            color: var(--text-muted);
+            box-shadow: none;
+        }
+
+        .btn-copy-search {
+            background: var(--text-muted);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            flex-shrink: 0;
+            transition: background 0.2s;
+            font-size: 14px;
+        }
+
+        .btn-copy-search:hover { background: var(--text-main); }
+
+        @media (max-width: 1000px) {
+            .module-tooltip { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="library-wrapper">
+    <div class="digital-bg"></div>
+    
+    <header class="main-header">
+        <h1>Standards and Guidance Resource Portal</h1>
+        <p class="subtitle">Key standards, guidance and regulatory references for microbiology and laboratory quality.</p>
+    </header>
+
+    <div class="nav-tip">
+        <strong>Quick Tip:</strong> Select a category to explore the standards or guidance linked to microbiology, laboratory quality, accreditation and biological risk management.
+    </div>
+
+    <div class="controls-container">
+        <input type="text" id="searchInput" placeholder="Search by standard, organisation, guidance area, or keyword...">
+    </div>
+
+    <div id="breadcrumbs"></div>
+    <div id="linksContainer" class="card-grid"></div>
+
+</div>
+
+<div class="modal-overlay" id="resource-modal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal()">×</button>
+        <h2 id="modal-title">Resource Title</h2>
+        <p id="modal-desc">Resource description goes here.</p>
+        
+        <div id="modal-links-list"></div>
+        <p class="modal-instruction">Open the relevant URL directly. If your browser blocks pop-ups, please copy the URL.</p>
+
+        <div class="search-fallback-box">
+            <label>If the URL fails, copy this search term to find it manually:</label>
+            <div class="search-input-group">
+                <input type="text" id="modal-search-term" readonly value="Search term will appear here">
+                <button class="btn-copy-search" id="copy-search-btn" onclick="copySearchTerm()">Copy Search Term</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Original Icons
+    const icons = {
+        "he": `<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>`,
+        "management": `<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>`,
+        "factory": `<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4H2z"></path></svg>`,
+        "folder": `<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`,
+        "lab": `<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.31"></path><path d="M14 9.3V1.99"></path><path d="M8.5 2h7"></path><path d="M14 9.3a6.5 6.5 0 1 1-4 0"></path><path d="M5.5 16.5h13"></path></svg>`,
+        "bio": `<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="6"></circle><path d="M12 2v4m0 12v4m10-10h-4M6 12H2m15.5-7.5l-2.8 2.8M7.3 16.7l-2.8 2.8m15.5 0l-2.8-2.8M7.3 7.3L4.5 4.5"></path></svg>`,
+        "chem": `<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H15M10 3V10L5 19H19L14 10V3"></path></svg>`,
+        "materials": `<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>`,
+        "safety": `<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6-8 10-8 10z"></path></svg>`,
+        "network": `<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>`,
+        "data": `<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>`
+    };
+
+    const themeColours = {
+        "Accreditation and Laboratory Quality Standards": "#7c3aed",
+        "Microbiology Examination and Workflow Guidance": "#370c65",
+        "Biological Safety and Risk Management": "#f59a23",
+        "Clinical Laboratory Standards": "#691eda",
+        "Testing and Calibration Standards": "#8b5cf6",
+        "Microbiology Standards and Protocols": "#4c1d95",
+        "Containment and Exposure Controls": "#f08838",
+        "Regulatory Classification & Biocontainment": "#be123c"
+    };
+
+    const folderIcons = {
+        "Accreditation and Laboratory Quality Standards": "management",
+        "Microbiology Examination and Workflow Guidance": "lab",
+        "Biological Safety and Risk Management": "safety",
+        "Clinical Laboratory Standards": "he",
+        "Testing and Calibration Standards": "data",
+        "Microbiology Standards and Protocols": "bio",
+        "Containment and Exposure Controls": "safety",
+        "Regulatory Classification & Biocontainment": "folder"
+    };
+
+    const resourcesData = [
+        {
+            path: ["Accreditation and Laboratory Quality Standards", "Clinical Laboratory Standards"],
+            iconKey: "he",
+            title: "ISO 15189: Medical Laboratories",
+            code: "ISO 15189",
+            description: "Specifies quality and competence requirements particular to medical laboratories, supporting accurate, reliable and defensible diagnostic processes.",
+            urls: [
+                { label: "ISO 15189 standard page", url: "https://www.iso.org/standard/76677.html" }
+            ],
+            searchTerm: "ISO 15189 medical laboratories quality competence requirements diagnostic processes"
+        },
+        {
+            path: ["Accreditation and Laboratory Quality Standards", "Testing and Calibration Standards"],
+            iconKey: "data",
+            title: "ISO/IEC 17025: Testing and Calibration Laboratories",
+            code: "ISO/IEC 17025",
+            description: "Defines general requirements for the competence of testing and calibration laboratories, including measurement traceability across analytical and imaging workflows.",
+            urls: [
+                { label: "ISO/IEC 17025 overview", url: "https://www.iso.org/ISO-IEC-17025-testing-and-calibration-laboratories.html" }
+            ],
+            searchTerm: "ISO IEC 17025 testing calibration laboratories measurement traceability analytical imaging workflows"
+        },
+        {
+            path: ["Microbiology Examination and Workflow Guidance", "Microbiology Standards and Protocols"],
+            iconKey: "bio",
+            title: "ISO 7218: Microbiology of the Food Chain",
+            code: "ISO 7218",
+            description: "Provides general requirements and guidance for microbiological examinations, including workflows relevant to media preparation, sterilisation and validation.",
+            urls: [
+                { label: "ISO 7218 standard page", url: "https://www.iso.org/standard/79508.html" }
+            ],
+            searchTerm: "ISO 7218 microbiology of the food chain general requirements microbiological examinations media preparation sterilisation"
+        },
+        {
+            path: ["Microbiology Examination and Workflow Guidance", "Microbiology Standards and Protocols"],
+            iconKey: "lab",
+            title: "UK Standards for Microbiology Investigations",
+            code: "UK SMI",
+            description: "Nationally recognised standards defining gold-standard protocols for clinical specimen processing, identification and microbiology investigation workflows.",
+            urls: [
+                { label: "RCPath UK SMI publications", url: "https://www.rcpath.org/profession/publications/standards-for-microbiology-investigations.html" }
+            ],
+            searchTerm: "UK Standards for Microbiology Investigations UK SMI clinical specimen processing identification protocols"
+        },
+        {
+            path: ["Biological Safety and Risk Management", "Containment and Exposure Controls"],
+            iconKey: "safety",
+            title: "ACDP Guidance: Dangerous Pathogens",
+            code: "ACDP",
+            description: "Advisory Committee on Dangerous Pathogens resources supporting risk management decisions when working with biological agents and containment expectations.",
+            urls: [
+                { label: "ACDP group page", url: "https://www.gov.uk/government/groups/advisory-committee-on-dangerous-pathogens" }
+            ],
+            searchTerm: "ACDP Advisory Committee on Dangerous Pathogens biological agents containment levels CL1 CL2 CL3 CL4"
+        },
+        {
+            path: ["Biological Safety and Risk Management", "Containment and Exposure Controls"],
+            iconKey: "safety",
+            title: "COSHH Guidance: Biological Agents",
+            code: "COSHH",
+            description: "Health and Safety Executive guidance for controlling exposure to biological agents, including containment level expectations and risk-control measures.",
+            urls: [
+                { label: "HSE COSHH biological agents guidance", url: "https://www.hse.gov.uk/pubns/misc208.htm" }
+            ],
+            searchTerm: "HSE COSHH biological agents containment levels CL1 CL2 CL3 CL4 risk assessment control exposure"
+        },
+        {
+            path: ["Biological Safety and Risk Management", "Regulatory Classification & Biocontainment"],
+            iconKey: "safety",
+            title: "ISO 35007 / ISO 35001: Biorisk Management",
+            code: "ISO 35001",
+            description: "This standard defines the global requirements for implementing an effective system to identify, assess, and control biosafety and biosecurity risks associated with handling high-consequence pathogens.",
+            urls: [
+                { label: "ISO 35001 standard page", url: "https://www.iso.org/standard/71250.html" }
+            ],
+            searchTerm: "ISO 35001 biorisk management laboratories biosafety biosecurity pathogens"
+        },
+        {
+            path: ["Biological Safety and Risk Management", "Regulatory Classification & Biocontainment"],
+            iconKey: "bio",
+            title: "ISO 20387: Biobanking General Requirements",
+            code: "ISO 20387",
+            description: "This framework governs structural and data integrity protocols for facilities that deliberately preserve, store, and distribute microbial strains, ensuring structural and genomic stability is audited regularly.",
+            urls: [
+                { label: "ISO 20387 standard page", url: "https://www.iso.org/standard/67888.html" }
+            ],
+            searchTerm: "ISO 20387 biobanking general requirements structural data integrity microbial strains"
+        },
+        {
+            path: ["Biological Safety and Risk Management", "Regulatory Classification & Biocontainment"],
+            iconKey: "lab",
+            title: "SACGM Compendium of Guidance",
+            code: "SACGM",
+            description: "Issued by the HSE, Part 2 of this guidance mandates the strict containment measures and risk assessment steps required when working with host-vector systems or deliberately altering plasmid architecture.",
+            urls: [
+                { label: "HSE SACGM guidance", url: "https://www.hse.gov.uk/biosafety/gmo/acgm/acgmcomp/" }
+            ],
+            searchTerm: "SACGM Compendium of Guidance Genetically Modified Organisms HSE containment measures host-vector"
+        },
+        {
+            path: ["Biological Safety and Risk Management", "Regulatory Classification & Biocontainment"],
+            iconKey: "factory",
+            title: "BS EN 12128: Biotechnology Containment Laboratories",
+            code: "BS EN 12128",
+            description: "This European and UK standard sets the physical engineering baselines, architectural boundary requirements, and safety equipment classifications necessary for processing live biological material across all containment tiers.",
+            urls: [
+                { label: "BSI BS EN 12128", url: "https://knowledge.bsigroup.com/products/biotechnology-laboratories-for-research-development-and-analysis-containment-levels-of-microbiology-laboratories-areas-of-risk-localities-and-physical-safety-requirements" }
+            ],
+            searchTerm: "BS EN 12128 Biotechnology Containment Laboratories physical engineering safety equipment biological material"
+        },
+        {
+            path: ["Biological Safety and Risk Management", "Regulatory Classification & Biocontainment"],
+            iconKey: "chem",
+            title: "ISO 11138: Sterilization of Healthcare Products",
+            code: "ISO 11138",
+            description: "This standard provides the exact quality specifications for the biological indicators (such as Geobacillus stearothermophilus) used to empirically validate the thermal death kinetics of your autoclave cycles.",
+            urls: [
+                { label: "ISO 11138 standard page", url: "https://www.iso.org/standard/74409.html" }
+            ],
+            searchTerm: "ISO 11138 Sterilization of Healthcare Products biological indicators thermal death kinetics autoclave cycles"
+        }
+    ];
+
+    let currentNavPath = [];
+    const searchInput = document.getElementById('searchInput');
+    const linksContainer = document.getElementById('linksContainer');
+    const breadcrumbsContainer = document.getElementById('breadcrumbs');
+
+    // Modal Functions
+    function normaliseUrls(linkData) {
+        if (Array.isArray(linkData.urls) && linkData.urls.length > 0) {
+            return linkData.urls;
+        }
+        return [{ label: "Open resource", url: linkData.url }];
+    }
+
+    function openModal(linkData) {
+        document.getElementById('modal-title').innerText = linkData.title;
+        document.getElementById('modal-desc').innerText = linkData.description;
+
+        const linksList = document.getElementById('modal-links-list');
+        linksList.innerHTML = '';
+
+        normaliseUrls(linkData).forEach((resourceLink, index) => {
+            const row = document.createElement('div');
+            row.className = 'modal-url-box';
+
+            const anchor = document.createElement('a');
+            anchor.href = resourceLink.url;
+            anchor.target = '_blank';
+            anchor.rel = 'noopener noreferrer';
+            anchor.innerText = resourceLink.label ? `${resourceLink.label}: ${resourceLink.url}` : resourceLink.url;
+
+            const copyButton = document.createElement('button');
+            copyButton.className = 'btn-copy';
+            copyButton.type = 'button';
+            copyButton.innerText = normaliseUrls(linkData).length > 1 ? `Copy URL ${index + 1}` : 'Copy URL';
+            copyButton.onclick = () => copyModalUrl(resourceLink.url, copyButton);
+
+            row.appendChild(anchor);
+            row.appendChild(copyButton);
+            linksList.appendChild(row);
+        });
+
+        document.getElementById('modal-search-term').value = linkData.searchTerm;
+        document.getElementById('resource-modal').classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('resource-modal').classList.remove('active');
+    }
+
+    function copyModalUrl(url, btn) {
+        navigator.clipboard.writeText(url).then(() => {
+            btn.innerText = 'Copied!';
+            btn.style.background = '#f59a23';
+            setTimeout(() => {
+                btn.innerText = 'Copy URL';
+                btn.style.background = 'var(--light-purple)';
+            }, 2000);
+        });
+    }
+
+    function copySearchTerm() {
+        const term = document.getElementById('modal-search-term').value;
+        navigator.clipboard.writeText(term).then(() => {
+            const btn = document.getElementById('copy-search-btn');
+            btn.innerText = 'Copied!';
+            btn.style.background = '#f59a23';
+            setTimeout(() => {
+                btn.innerText = 'Copy Search Term';
+                btn.style.background = 'var(--text-muted)';
+            }, 2000);
+        });
+    }
+
+    // Close modal if clicking outside
+    document.getElementById('resource-modal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+
+    // Navigation and Rendering Logic
+    function renderView() {
+        linksContainer.innerHTML = '';
+        renderBreadcrumbs();
+        
+        const depth = currentNavPath.length;
+        
+        const relevantModules = resourcesData.filter(m => {
+            for (let i = 0; i < depth; i++) {
+                if (m.path[i] !== currentNavPath[i]) return false;
+            }
+            return true;
+        });
+
+        const itemsToRender = new Map();
+
+        relevantModules.forEach(m => {
+            if (m.path.length > depth) {
+                const folderName = m.path[depth];
+                if (!itemsToRender.has(folderName)) {
+                    itemsToRender.set(folderName, {
+                        type: 'folder',
+                        title: folderName,
+                        iconKey: folderIcons[folderName] || 'folder',
+                        theme: themeColours[folderName] || "var(--deep-purple)",
+                        modulesInside: []
+                    });
+                }
+                itemsToRender.get(folderName).modulesInside.push(m);
+            } else {
+                itemsToRender.set(m.code, {
+                    type: 'module',
+                    data: m,
+                    theme: themeColours[m.path[depth - 1]] || "var(--deep-purple)"
+                });
+            }
+        });
+
+        itemsToRender.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'trigger-card';
+            card.style.setProperty('--theme-color', item.theme);
+            card.style.background = `color-mix(in srgb, ${item.theme} 4%, white)`;
+
+            if (item.type === 'folder') {
+                card.onclick = () => {
+                    currentNavPath.push(item.title);
+                    renderView();
+                };
+                
+                let hasSubFolders = false;
+                const subFolderNames = new Set();
+                const directModules = [];
+
+                item.modulesInside.forEach(m => {
+                    if (m.path.length > depth + 1) {
+                        hasSubFolders = true;
+                        subFolderNames.add(m.path[depth + 1]);
+                    } else {
+                        directModules.push(m);
+                    }
+                });
+
+                let tooltipHTML = '';
+                let tagText = '';
+
+                if (hasSubFolders) {
+                    const listHTML = Array.from(subFolderNames).map(name => `<li>${name}</li>`).join('');
+                    tooltipHTML = `
+                        <div class="tooltip-header">Categories included:</div>
+                        <ul class="tooltip-list">${listHTML}</ul>
+                    `;
+                    tagText = `${subFolderNames.size} Categor${subFolderNames.size > 1 ? 'ies' : 'y'}`;
+                } else {
+                    const listHTML = directModules.map(m => `<li><strong>${m.code}</strong><br>${m.title}</li>`).join('');
+                    tooltipHTML = `
+                        <div class="tooltip-header">Resources included:</div>
+                        <ul class="tooltip-list">${listHTML}</ul>
+                    `;
+                    tagText = `${directModules.length} Resource${directModules.length > 1 ? 's' : ''}`;
+                }
+
+                card.innerHTML = `
+                    <div class="trigger-icon">${icons[item.iconKey] || icons.folder}</div>
+                    <h2 class="trigger-title">${item.title}</h2>
+                    <div class="meta-container">
+                        <span class="tag-programme">${tagText}</span>
+                    </div>
+                    <div class="module-tooltip">
+                        ${tooltipHTML}
+                    </div>
+                `;
+            } else {
+                const link = item.data;
+                // Pass the search term to the modal function
+                card.onclick = () => openModal(link);
+                
+                card.innerHTML = `
+                    <div class="trigger-icon">${icons[link.iconKey]}</div>
+                    <h2 class="trigger-title">${link.title}</h2>
+                    <div style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px;">Reference: ${link.code}</div>
+                    <div class="meta-container">
+                        <span class="tag-programme">Click to view resource</span>
+                    </div>
+                `;
+            }
+            linksContainer.appendChild(card);
+        });
+    }
+
+    function renderBreadcrumbs() {
+        breadcrumbsContainer.innerHTML = '';
+        
+        const homeBtn = document.createElement('div');
+        homeBtn.className = 'breadcrumb-item';
+        homeBtn.innerText = 'Home Menu';
+        homeBtn.onclick = () => { currentNavPath = []; renderView(); };
+        breadcrumbsContainer.appendChild(homeBtn);
+
+        currentNavPath.forEach((pathName, index) => {
+            const sep = document.createElement('span');
+            sep.className = 'breadcrumb-separator';
+            sep.innerText = '>';
+            breadcrumbsContainer.appendChild(sep);
+
+            const crumb = document.createElement('div');
+            crumb.className = 'breadcrumb-item';
+            crumb.innerText = pathName;
+            crumb.onclick = () => {
+                currentNavPath = currentNavPath.slice(0, index + 1);
+                renderView();
+            };
+            breadcrumbsContainer.appendChild(crumb);
+        });
+    }
+
+    searchInput.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        
+        if (term === '') {
+            renderView();
+            return;
+        }
+
+        breadcrumbsContainer.innerHTML = `<div class="breadcrumb-item">Search Results for "${e.target.value}"</div>`;
+        linksContainer.innerHTML = '';
+        
+        const filtered = resourcesData.filter(l => 
+            l.path.some(p => p.toLowerCase().includes(term)) ||
+            l.title.toLowerCase().includes(term) ||
+            l.code.toLowerCase().includes(term) ||
+            l.description.toLowerCase().includes(term)
+        );
+
+        if (filtered.length === 0) {
+            linksContainer.innerHTML = '<div class="empty-state">No matching resources found.</div>';
+            return;
+        }
+
+        filtered.forEach(link => {
+            const card = document.createElement('div');
+            card.className = 'trigger-card';
+            const theme = themeColours[link.path[link.path.length - 1]] || "var(--deep-purple)";
+            card.style.setProperty('--theme-color', theme);
+            card.style.background = `color-mix(in srgb, ${theme} 4%, white)`;
+            
+            // Pass the search term from search results
+            card.onclick = () => openModal(link);
+            
+            card.innerHTML = `
+                <div class="trigger-icon">${icons[link.iconKey]}</div>
+                <h2 class="trigger-title">${link.title}</h2>
+                <div style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px;">Reference: ${link.code}</div>
+                <div class="meta-container">
+                    <span class="tag-programme">Click to view resource</span>
+                </div>
+            `;
+            linksContainer.appendChild(card);
+        });
+    });
+
+    renderView();
+</script>
+</body>
+</html>
