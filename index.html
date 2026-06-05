@@ -8,6 +8,50 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
 <link rel="stylesheet" href="assets/colors_and_type.css" />
 <link rel="stylesheet" href="site.css" />
+<style id="v2-overrides">
+  /* ===== v2 — static learning-design review grid (navy band) ===== */
+  #reviews .quote-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); align-items: start; }
+  @media (max-width: 760px) { #reviews .quote-grid { grid-template-columns: 1fr; } }
+  #reviews .quote-grid .quote {
+    background: var(--color-surface); border: 1px solid var(--ff-paper-edge);
+    border-left: 4px solid var(--ff-copper); border-radius: var(--radius-md);
+    padding: var(--space-5); box-shadow: var(--ff-shadow-card); width: auto; flex: initial;
+  }
+  #reviews .quote-grid .quote__tag {
+    display: inline-block; font-family: var(--font-mono); font-size: var(--fs-xs);
+    letter-spacing: .03em; color: var(--ff-copper-hot); background: var(--ff-copper-wash);
+    border-radius: var(--radius-pill); padding: 3px 12px; margin-bottom: var(--space-4);
+  }
+  #reviews .quote-grid blockquote { margin: 0; }
+  #reviews .quote-grid .quote p { color: var(--ff-ink); font-size: var(--fs-base); line-height: 1.6; }
+  #reviews .quote-grid .quote__who { margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--ff-paper-rule); }
+  #reviews .quote-grid .quote__who strong, #reviews .quote-grid .quote__who strong a { color: var(--ff-ink); text-decoration: none; }
+  #reviews .quote-grid .quote__who span { display: block; color: var(--ff-ink-muted); font-size: var(--fs-sm); margin-top: 2px; }
+  #reviews .reviews-elsewhere { margin-top: var(--space-6); font-size: var(--fs-base); color: #d7dee3; }
+  #reviews .reviews-elsewhere a { color: #e09a6b; font-weight: var(--fw-bold); }
+
+  /* ===== v2 — collapsible stage dividers ===== */
+  .stage-divider--collapse { padding-top: clamp(20px,3.5vw,40px); padding-bottom: clamp(20px,3.5vw,40px); }
+  .stage-divider__toggle {
+    display: flex; align-items: center; gap: clamp(14px,3vw,28px); width: 100%;
+    max-width: 1000px; margin: 0 auto; padding: 8px 20px; background: none; border: 0;
+    cursor: pointer; font: inherit; -webkit-tap-highlight-color: transparent;
+  }
+  .stage-divider__chev { width: 18px; height: 18px; flex: none; color: var(--ff-copper); transition: transform var(--dur-base) var(--ease-standard); }
+  .stage-divider--dark .stage-divider__chev { color: #e09a6b; }
+  .stage-divider__toggle[aria-expanded="false"] .stage-divider__chev { transform: rotate(-90deg); }
+  .stage-divider__toggle[aria-expanded="false"] .stage-divider__rule { opacity: .5; }
+  .stage-divider__toggle:hover .stage-divider__text { text-decoration: underline; text-underline-offset: 3px; }
+  .stage-divider__toggle:focus-visible { outline: 2px solid var(--ff-copper); outline-offset: 3px; border-radius: var(--radius-sm); }
+  .band[hidden] { display: none !important; }
+
+  /* ===== v2 — media (GIF/MP4 swapped to muted WebM video) ===== */
+  video.hero__logo-big { display: block; width: 100%; height: auto; }
+  .gif-strip video { display: block; width: 100%; height: auto; border-radius: var(--radius-md); }
+  video.media-fill { display: block; width: 100%; height: 100%; object-fit: cover; }
+  video.waving-head { display: block; }
+  .pipe-figure video { display: block; width: 100%; height: auto; }
+</style>
 </head>
 <body>
 <canvas id="matrix" aria-hidden="true"></canvas>
@@ -70,7 +114,6 @@
         <i data-lucide="shield-check"></i>
         <span>Here for <strong>ISO, QMS or accreditation</strong> support? See the accreditation &amp; quality background <span class="hero__nudge-arrow">&rarr;</span></span>
       </a>
-      <p class="bg-note">The background is a live "forge-rain" of copper glyphs — toggle it any time with the button in the corner.</p>
     </div>
     <div class="hero__mark hero__mark--logo reveal in">
       <img class="hero__logo-big" src="assets/logo-animated.gif" alt="Forged Frameworks — animated hammer-and-nib mark" />
@@ -116,8 +159,8 @@
 </section>
 
 <!-- ===================== STAGE DIVIDER (about → skills) ===================== -->
-<div class="stage-divider stage-divider--light" role="separator" aria-label="From who I am to what I do">
-  <div class="stage-divider__inner">
+<div class="stage-divider stage-divider--light stage-divider--collapse" role="separator">
+  <button class="stage-divider__toggle" type="button" aria-expanded="true" aria-controls="skills">
     <span class="stage-divider__rule"></span>
     <span class="stage-divider__label">
       <svg class="stage-divider__mark" viewBox="0 0 100 132" aria-hidden="true">
@@ -126,10 +169,11 @@
         <rect x="40" y="90" width="20" height="9" rx="2" fill="#2c3e50"/>
         <path d="M40 99 L60 99 L51 128 Z" fill="#2c3e50"/>
       </svg>
-      <span class="stage-divider__text"><strong>What I do</strong> — from the person to the practice</span>
+      <span class="stage-divider__text">From the person — <strong>to the practice</strong></span>
+      <svg class="stage-divider__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
     </span>
     <span class="stage-divider__rule is-right"></span>
-  </div>
+  </button>
 </div>
 
 <!-- ===================== SUMMARY & SKILLS ===================== -->
@@ -187,109 +231,47 @@
     <div class="sec-head reveal">
       <p class="kicker"><i data-lucide="quote"></i>let's work together</p>
       <h2 class="h1">Read what others think</h2>
-      <p class="lead" style="color:#d7dee3;">LinkedIn recommendations spanning learning design and pedagogy, project management and HE, content-pipeline work from Level 3 to Level 6, and quality, accreditation &amp; QMS from my UKAS years. <a href="https://www.linkedin.com/in/daniel-boyland-577b6476/" target="_blank" rel="noopener">See all my recommendations on LinkedIn ↗</a></p>
+      <p class="lead" style="color:#d7dee3;">Recommendations across learning design, pedagogy, project management and HE, and content-pipeline work from Level 3 to Level 6. <a href="https://www.linkedin.com/in/daniel-boyland-577b6476/" target="_blank" rel="noopener">See all my recommendations on LinkedIn ↗</a></p>
     </div>
-    <div class="quote-river reveal" aria-label="LinkedIn recommendations — auto-scrolling">
-      <div class="quote-track">
+    <div class="quote-grid reveal" aria-label="Learning-design recommendations">
       <figure class="quote">
-        <div class="quote__mark">&ldquo;</div>
+        <span class="quote__tag">Project leadership</span>
         <blockquote><p>I've had the pleasure of working with Dan on a number of projects and always admire his integrity, autonomy and trust-centric ways of working, coupled with his humility and constant drive to learn, grow, and help others do the same. Work with Dan never felt like 'work'. He has a flair for managing projects with perceived effortlessness, but there's a tremendous amount of thought and care that goes into his leadership of projects. His client and user-centric approach means he fits like a glove in whichever team he works in, and I cannot recommend him highly enough.</p></blockquote>
         <figcaption class="quote__who"><strong><a href="https://www.linkedin.com/in/vashishtbhatt/" target="_blank" rel="noopener">Vashisht Bhatt</a></strong><span>Digital / Productivity — Commercial option</span></figcaption>
       </figure>
       <figure class="quote">
-        <div class="quote__mark">&ldquo;</div>
+        <span class="quote__tag">Learning design — HE</span>
         <blockquote><p>It was such a pleasure working with Dan during my time at Tiro, where he was my direct manager and Learning Content lead. Together, we developed a Project Management module for Level 5 degree apprentices, from initial concept through to delivery. This was my first time working in the learning design space, and Dan made the experience both enjoyable and hugely rewarding. His depth of knowledge in content and learning development is exceptional, and his ability to transform raw material into captivating, learner-friendly content and UX was second to none. Dan's guidance, patience, and creative input helped me navigate a completely new field with confidence. I felt supported every step of the way, and the result was an engaging, well-received module that helped learners apply project management principles in their real-world roles. He's a brilliant collaborator, insightful, encouraging, and genuinely invested in helping others succeed. I'd happily work with him again in a heartbeat.</p></blockquote>
         <figcaption class="quote__who"><strong><a href="https://www.linkedin.com/in/cathycoulthard/" target="_blank" rel="noopener">Cathy Coulthard</a></strong><span>Project Management — HE option</span></figcaption>
       </figure>
       <figure class="quote">
-        <div class="quote__mark">&ldquo;</div>
+        <span class="quote__tag">Content pipeline</span>
         <blockquote><p>I really enjoyed working with Daniel, he's collaborative, grounded, and brings a clear sense of purpose to every project. He has a great eye for learning design, and his project management skills keep everything running smoothly. What stands out most is his calm, supportive approach and genuine willingness to share knowledge. Daniel is one of those people who makes teamwork both easy and enjoyable.</p></blockquote>
         <figcaption class="quote__who"><strong><a href="https://www.linkedin.com/in/deborah-ogbeni-3aa5aa90/" target="_blank" rel="noopener">Deborah Ogbeni</a></strong><span>Content pipeline — Biosciences &amp; L5 Lab Management</span></figcaption>
       </figure>
       <figure class="quote">
-        <div class="quote__mark">&ldquo;</div>
+        <span class="quote__tag">Content pipeline</span>
         <blockquote><p>I've been fortunate to work with Daniel on multiple digital learning modules for a growing training provider in a fast-paced environment. During the projects, it became clear that Daniel has a strong understanding of all aspects of high-quality learning content development, including accessibility, multimedia use, pedagogy, quality assurance, curriculum alignment at both national and course levels, and the overall learner experience. He consistently demonstrated a high level of professionalism, balancing project management with a strong focus on both learner experience and stakeholder needs, while also being open to exploring new creative ways of delivering learning content. Daniel developed one of the most efficient workflows I've seen in the industry and ensured everyone felt supported throughout. I'm confident that his framework-oriented approach to learning design and project management would be a tremendous asset to any Learning and Development team.</p></blockquote>
         <figcaption class="quote__who"><strong><a href="https://www.linkedin.com/in/zsolt-barath-8aa3aa140/" target="_blank" rel="noopener">Zsolt Barath</a></strong><span>Content pipeline — L3 Specialist FE options</span></figcaption>
       </figure>
       <figure class="quote">
-        <div class="quote__mark">&ldquo;</div>
+        <span class="quote__tag">Learning design</span>
         <blockquote><p>Dan is a first rate Learning Designer. He has a deep understanding of accessibility and online pedagogy. He makes really engaging, high quality content that encourage deep learning.</p></blockquote>
-        <figcaption class="quote__who"><strong>Paul Wakeling</strong><span>Founder &amp; CEO, Assynt Lead &amp; Learn · Learning design</span></figcaption>
+        <figcaption class="quote__who"><strong>Paul Wakeling</strong><span>Founder &amp; CEO, Assynt Lead &amp; Learn</span></figcaption>
       </figure>
       <figure class="quote">
-        <div class="quote__mark">&ldquo;</div>
+        <span class="quote__tag">Learning design</span>
         <blockquote><p>I've had the privilege of working closely with Dan at Tiro, and he is one of those colleagues who makes a real difference. Dan has an incredible talent for turning complex ideas into engaging, accessible learning content that really lands with learners and employers alike. He does not just design curriculum and training, he makes sure it is embedded properly so it actually works in practice and delivers results.</p></blockquote>
-        <figcaption class="quote__who"><strong>Ash Backhouse</strong><span>Programme Director IFLP, SECBE · Learning design</span></figcaption>
+        <figcaption class="quote__who"><strong>Ash Backhouse</strong><span>Programme Director IFLP, SECBE</span></figcaption>
       </figure>
-      <figure class="quote">
-        <div class="quote__mark">&ldquo;</div>
-        <blockquote><p>We worked together at UKAS as fellow assessment managers for several years. Dan is great communicator and motivator with a solid background in Pathology and Quality Management. A brilliant team player who is always at the forefront of discussion, innovation and an enthusiastic advocate of effective quality improvement. Able to work well with personnel at all levels with a skill for tailored communication style and building effective rapport.</p></blockquote>
-        <figcaption class="quote__who"><strong>Gary Bateman</strong><span>Scientific Laboratory Manager, UHL NHS Trust · UKAS &amp; quality management</span></figcaption>
-      </figure>
-      <figure class="quote">
-        <div class="quote__mark">&ldquo;</div>
-        <blockquote><p>I'm very fortunate to have worked with Dan as both a Technical Assessor and a Training Specialist. Whatever he does, he gives his all! Fast thinking and an eye for detail. Whatever Dan chooses to do he will succeed due to his grit, determination, professionalism and his developmental approach. I thoroughly enjoy working with you Dan.</p></blockquote>
-        <figcaption class="quote__who"><strong>Rachel Boyer-Blanchard CDLP</strong><span>Senior Commercial Training Specialist, UKAS · Accreditation &amp; training</span></figcaption>
-      </figure>
-      <figure class="quote">
-        <div class="quote__mark">&ldquo;</div>
-        <blockquote><p>Dan is dedicated, enthusiastic, knowledgeable and will work tirelessly to get the job done.</p></blockquote>
-        <figcaption class="quote__who"><strong>Kristel Smith</strong><span>Accreditation Specialist Development · Accreditation</span></figcaption>
-      </figure>
-      <figure class="quote">
-        <div class="quote__mark">&ldquo;</div>
-        <blockquote><p>Dan is very knowledgeable, highly professional and personable. I found him extremely supportive in the growth of our quality management system and a positive influence in the strive for continual improvement. Highly recommended.</p></blockquote>
-        <figcaption class="quote__who"><strong>Katie Berger</strong><span>Chief Healthcare Scientist &amp; Pathology Practice Educator, UHNM NHS Trust · QMS client</span></figcaption>
-      </figure>
-      <figure class="quote">
-        <div class="quote__mark">&ldquo;</div>
-        <blockquote><p>I have only worked with Daniel for a short period of time, but he is a pleasure to work with. He is knowledgeable, hard working, approachable, helpful and a great communicator. He is definitely not one to back down from a challenge, and he will always puts a great deal of enthusiasm into everything that he does.</p></blockquote>
-        <figcaption class="quote__who"><strong>Emma Palmer</strong><span>Customer Liaison Officer, UKAS · Accreditation</span></figcaption>
-      </figure>
-      <figure class="quote">
-        <div class="quote__mark">&ldquo;</div>
-        <blockquote><p>Dan is very efficient, always striving to improve efficiencies and support others in their role. Dan is someone I can approach with any work related or personal endeavours and know I can move forward with the advice. Strong team member, great communication, self motivated with strong leadership skills.</p></blockquote>
-        <figcaption class="quote__who"><strong>Nathan Saghdaoui</strong><span>Customer Liaison Officer, UKAS · Accreditation</span></figcaption>
-      </figure>
-      <figure class="quote">
-        <div class="quote__mark">&ldquo;</div>
-        <blockquote><p>Fantastic trainer. Great assessment managed. Nice bloke.</p></blockquote>
-        <figcaption class="quote__who"><strong>Christopher Kettle</strong><span>Operational Manager, NovoPath &amp; NEHODS, Newcastle upon Tyne Hospitals NHS FT · Pathology</span></figcaption>
-      </figure>
-      <figure class="quote">
-        <div class="quote__mark">&ldquo;</div>
-        <blockquote><p>Dan is the consummate professional. His technical and subject matter knowledge of haematology and blood transfusion is second to none. He provides a fair, honest and thorough assessment to his customers without compromising UKAS neutrality. I have worked with Dan on numerous occasions and never found him to be lacking in his professional knowledge whatsoever. He has been full of advice to me to enable me to improve my understanding of haematology and related subjects. On a personal level Dan is a generous kind hearted man who has a great sense of humour.</p></blockquote>
-        <figcaption class="quote__who"><strong>Victoria Fereday Brown</strong><span>Head of Pathology, phlebotomy &amp; POCT, South London &amp; Maudsley NHS FT · UKAS &amp; pathology</span></figcaption>
-      </figure>
-      <figure class="quote">
-        <div class="quote__mark">&ldquo;</div>
-        <blockquote><p>I've been fortunate enough to have worked alongside Dan for the last couple of years because not only does Dan bring a real depth and breadth of technical knowledge to our team, he has an uncompromising drive to continually improve not only his own performance, but that of the organisation we work in and the medical labs he works with in accreditation. He has time for, and engages with all colleagues whilst being an excellent motivator and team player. I know he will continue to be successful in his career, and deserves to be!</p></blockquote>
-        <figcaption class="quote__who"><strong>Gavin Dickinson</strong><span>Quality &amp; Improvement Manager · Quality improvement</span></figcaption>
-      </figure>
-      <figure class="quote">
-        <div class="quote__mark">&ldquo;</div>
-        <blockquote><p>Dan was a great colleague to work with, enthusiastic and involves himself wholeheartedly in his roles and responsibilities. I haven't worked with many similar thinking colleagues, who consider elements of a challenge, which are not the most obvious, but produces more effective solutions. This level of critical thinking and self awareness are rare traits and Dan has these in regular use.</p></blockquote>
-        <figcaption class="quote__who"><strong>Ryan Cooper</strong><span>Point of Care Testing Programme Lead · Accreditation</span></figcaption>
-      </figure>
-      </div>
     </div>
-    <div class="quote-controls reveal" role="group" aria-label="Reviews controls">
-      <button class="qbtn" type="button" data-q="prev" aria-label="Previous review">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m15 18-6-6 6-6"/></svg>
-      </button>
-      <button class="qbtn qbtn--pp" type="button" data-q="toggle" aria-pressed="false">
-        <span class="qbtn__ico" aria-hidden="true">❚❚</span><span class="qbtn__lbl">Pause</span>
-      </button>
-      <button class="qbtn" type="button" data-q="next" aria-label="Next review">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 18 6-6-6-6"/></svg>
-      </button>
-    </div>
+    <p class="reviews-elsewhere reveal">The UKAS, accreditation &amp; QMS recommendations now live on the <a href="Accreditation-Quality.html">Accreditation &amp; Quality page →</a></p>
   </div>
 </section>
 
 <!-- ===================== STAGE DIVIDER (reviews → work) ===================== -->
-<div class="stage-divider stage-divider--light" role="separator" aria-label="From the kind words to the work itself">
-  <div class="stage-divider__inner">
+<div class="stage-divider stage-divider--light stage-divider--collapse" role="separator">
+  <button class="stage-divider__toggle" type="button" aria-expanded="true" aria-controls="work">
     <span class="stage-divider__rule"></span>
     <span class="stage-divider__label">
       <svg class="stage-divider__mark" viewBox="0 0 100 132" aria-hidden="true">
@@ -299,9 +281,10 @@
         <path d="M40 99 L60 99 L51 128 Z" fill="#2c3e50"/>
       </svg>
       <span class="stage-divider__text"><strong>The work itself</strong> — beyond the kind words, here is the evidence</span>
+      <svg class="stage-divider__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
     </span>
     <span class="stage-divider__rule is-right"></span>
-  </div>
+  </button>
 </div>
 
 <!-- ===================== WORK ===================== -->
@@ -408,7 +391,8 @@
       <!-- Wonky Forge -->
       <article class="work-item reveal" data-screen-label="Wonky Forge">
         <div class="work-item__media">
-          <video class="media-fill" src="assets/wonky-story.mp4" controls preload="metadata" playsinline></video>
+          <!-- v2 media note: in production, swap looping GIFs + this MP4 for muted WebM (autoplay muted loop playsinline + <source type="video/webm">) — typically 70-90% lighter. Kept as muted MP4 here because the exported .webm assets don't exist yet. -->
+          <video class="media-fill" controls muted playsinline preload="metadata"><source src="assets/wonky-story.mp4" type="video/mp4" /></video>
         </div>
         <div>
           <p class="tag-row"><span class="tag">CPD passion project</span><span class="tag">branding</span><span class="tag">socials</span></p>
@@ -671,8 +655,8 @@
 </section>
 
 <!-- ===================== STAGE DIVIDER (vibe → pipeline) ===================== -->
-<div class="stage-divider stage-divider--dark" role="separator" aria-label="From bespoke tools to the Catalyst pipeline">
-  <div class="stage-divider__inner">
+<div class="stage-divider stage-divider--dark stage-divider--collapse" role="separator">
+  <button class="stage-divider__toggle" type="button" aria-expanded="true" aria-controls="pipeline">
     <span class="stage-divider__rule"></span>
     <span class="stage-divider__label">
       <svg class="stage-divider__mark" viewBox="0 0 100 132" aria-hidden="true">
@@ -682,9 +666,10 @@
         <path d="M40 99 L60 99 L51 128 Z" fill="#7f93a6"/>
       </svg>
       <span class="stage-divider__text"><strong>Scaling up</strong> — from bespoke tools to the pipeline that forges whole sets</span>
+      <svg class="stage-divider__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
     </span>
     <span class="stage-divider__rule is-right"></span>
-  </div>
+  </button>
 </div>
 
 <!-- ===================== PIPELINE ===================== -->
@@ -717,8 +702,8 @@
 </section>
 
 <!-- ===================== STAGE DIVIDER (pipeline → pricing) ===================== -->
-<div class="stage-divider stage-divider--light" role="separator" aria-label="From how it is forged to working together">
-  <div class="stage-divider__inner">
+<div class="stage-divider stage-divider--light stage-divider--collapse" role="separator">
+  <button class="stage-divider__toggle" type="button" aria-expanded="true" aria-controls="pricing">
     <span class="stage-divider__rule"></span>
     <span class="stage-divider__label">
       <svg class="stage-divider__mark" viewBox="0 0 100 132" aria-hidden="true">
@@ -728,9 +713,10 @@
         <path d="M40 99 L60 99 L51 128 Z" fill="#2c3e50"/>
       </svg>
       <span class="stage-divider__text"><strong>Working together</strong> — from how it is forged to what it takes to commission</span>
+      <svg class="stage-divider__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
     </span>
     <span class="stage-divider__rule is-right"></span>
-  </div>
+  </button>
 </div>
 
 <!-- ===================== PRICING ===================== -->
@@ -985,5 +971,18 @@
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 <script src="https://unpkg.com/lucide@0.544.0/dist/umd/lucide.min.js"></script>
 <script src="app.js"></script>
+<script>
+/* v2 — collapsible stage dividers */
+(function(){
+  document.querySelectorAll('.stage-divider__toggle').forEach(function(btn){
+    var target = document.getElementById(btn.getAttribute('aria-controls'));
+    btn.addEventListener('click', function(){
+      var expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!expanded));
+      if (target) { target.hidden = expanded; }
+    });
+  });
+})();
+</script>
 </body>
 </html>

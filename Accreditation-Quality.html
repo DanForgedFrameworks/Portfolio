@@ -56,8 +56,8 @@
   /* recommendations grid */
   .rec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); margin-top: var(--space-6); }
   @media (max-width: 820px) { .rec-grid { grid-template-columns: 1fr; } }
-  .rec { background: var(--color-surface); border: 1px solid var(--ff-paper-edge); border-top: 4px solid var(--ff-copper); border-radius: var(--radius-md); padding: clamp(22px, 2.6vw, 30px); box-shadow: var(--ff-shadow-card); display: flex; flex-direction: column; }
-  .rec__mark { font-family: var(--font-sans); font-weight: var(--fw-bold); font-size: 2.6rem; color: var(--ff-copper); line-height: 0.6; height: 1.1rem; }
+  .rec { background: var(--color-surface); border: 1px solid var(--ff-paper-edge); border-left: 4px solid var(--ff-copper); border-radius: var(--radius-md); padding: clamp(22px, 2.6vw, 30px); box-shadow: var(--ff-shadow-card); display: flex; flex-direction: column; align-items: flex-start; }
+  .rec__tag { display: inline-block; font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: .03em; color: var(--ff-copper-hot); background: var(--ff-copper-wash); border-radius: var(--radius-pill); padding: 3px 12px; margin-bottom: var(--space-4); }
   .rec p { color: var(--ff-ink); font-size: var(--fs-base); line-height: 1.6; margin: 0; }
   .rec__who { margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--ff-paper-rule); }
   .rec__who strong { color: var(--ff-ink); display: block; }
@@ -291,59 +291,70 @@
   <div class="wrap">
     <p class="kicker reveal"><i data-lucide="quote"></i>Recommendations · UKAS &amp; NHS colleagues</p>
     <h2 class="h2 reveal">What the accreditation world says</h2>
-    <p class="lead reveal" style="margin-top:var(--space-3); max-width:62ch; color:#c4cdd4;">Endorsements from fellow assessment managers, training specialists and laboratory clients across UKAS and the NHS. Transcribed verbatim from LinkedIn.</p>
+    <p class="lead reveal" style="margin-top:var(--space-3); max-width:62ch; color:#c4cdd4;">Endorsements from fellow assessment managers, training specialists and laboratory clients across UKAS and the NHS — the quality, accreditation &amp; QMS recommendations now housed here rather than on the main portfolio. Transcribed verbatim from LinkedIn.</p>
 
     <div class="rec-grid">
       <figure class="rec reveal">
-        <div class="rec__mark" aria-hidden="true">&ldquo;</div>
+        <span class="rec__tag">UKAS &amp; quality management</span>
         <p>We worked together at UKAS as fellow assessment managers for several years. Dan is a great communicator and motivator with a solid background in Pathology and Quality Management. A brilliant team player who is always at the forefront of discussion, innovation and an enthusiastic advocate of effective quality improvement. Able to work well with personnel at all levels with a skill for tailored communication style and building effective rapport.</p>
         <figcaption class="rec__who"><strong>Gary Bateman</strong><span>Scientific Laboratory Manager, University Hospitals of Leicester NHS Trust · former UKAS Assessment Manager</span></figcaption>
       </figure>
 
       <figure class="rec reveal">
-        <div class="rec__mark" aria-hidden="true">&ldquo;</div>
+        <span class="rec__tag">Accreditation &amp; training</span>
         <p>I'm very fortunate to have worked with Dan as both a Technical Assessor and a Training Specialist. Whatever he does, he gives his all! Fast thinking and an eye for detail. Whatever Dan chooses to do he will succeed due to his grit, determination, professionalism and his developmental approach. I thoroughly enjoy working with you Dan.</p>
         <figcaption class="rec__who"><strong>Rachel Boyer-Blanchard CDLP</strong><span>Senior Commercial Training Specialist, UKAS</span></figcaption>
       </figure>
 
       <figure class="rec reveal">
-        <div class="rec__mark" aria-hidden="true">&ldquo;</div>
+        <span class="rec__tag">QMS client</span>
         <p>Dan is very knowledgeable, highly professional and personable. I found him extremely supportive in the growth of our quality management system and a positive influence in the strive for continual improvement. Highly recommended.</p>
         <figcaption class="rec__who"><strong>Katie Berger</strong><span>Chief Healthcare Scientist &amp; Pathology Practice Educator, University Hospitals of North Midlands NHS Trust · client</span></figcaption>
       </figure>
 
       <figure class="rec reveal">
-        <div class="rec__mark" aria-hidden="true">&ldquo;</div>
+        <span class="rec__tag">UKAS &amp; pathology</span>
         <p>Dan is the consummate professional. His technical and subject-matter knowledge of haematology and blood transfusion is second to none. He provides a fair, honest and thorough assessment to his customers without compromising UKAS neutrality. I have worked with Dan on numerous occasions and never found him to be lacking in his professional knowledge whatsoever. On a personal level Dan is a generous, kind-hearted man with a great sense of humour.</p>
         <figcaption class="rec__who"><strong>Victoria Fereday Brown</strong><span>Head of Pathology, Phlebotomy &amp; POCT, South London &amp; Maudsley NHS FT</span></figcaption>
       </figure>
 
       <figure class="rec reveal">
-        <div class="rec__mark" aria-hidden="true">&ldquo;</div>
+        <span class="rec__tag">Quality improvement</span>
         <p>I've been fortunate enough to have worked alongside Dan for the last couple of years because not only does Dan bring a real depth and breadth of technical knowledge to our team, he has an uncompromising drive to continually improve not only his own performance, but that of the organisation we work in and the medical labs he works with in accreditation. He has time for, and engages with, all colleagues whilst being an excellent motivator and team player.</p>
         <figcaption class="rec__who"><strong>Gavin Dickinson</strong><span>Quality &amp; Improvement Manager</span></figcaption>
       </figure>
 
       <figure class="rec reveal">
-        <div class="rec__mark" aria-hidden="true">&ldquo;</div>
+        <span class="rec__tag">Accreditation</span>
         <p>Dan was a great colleague to work with, enthusiastic and involves himself wholeheartedly in his roles and responsibilities. He considers elements of a challenge which are not the most obvious, but produces more effective solutions. This level of critical thinking and self-awareness are rare traits and Dan has these in regular use.</p>
         <figcaption class="rec__who"><strong>Ryan Cooper</strong><span>Point of Care Testing Programme Lead</span></figcaption>
       </figure>
 
       <figure class="rec reveal">
-        <div class="rec__mark" aria-hidden="true">&ldquo;</div>
+        <span class="rec__tag">Accreditation</span>
+        <p>I have only worked with Daniel for a short period of time, but he is a pleasure to work with. He is knowledgeable, hard working, approachable, helpful and a great communicator. He is definitely not one to back down from a challenge, and he will always put a great deal of enthusiasm into everything that he does.</p>
+        <figcaption class="rec__who"><strong>Emma Palmer</strong><span>Customer Liaison Officer, UKAS</span></figcaption>
+      </figure>
+
+      <figure class="rec reveal">
+        <span class="rec__tag">Accreditation</span>
+        <p>Dan is very efficient, always striving to improve efficiencies and support others in their role. Dan is someone I can approach with any work-related or personal endeavours and know I can move forward with the advice. Strong team member, great communication, self-motivated with strong leadership skills.</p>
+        <figcaption class="rec__who"><strong>Nathan Saghdaoui</strong><span>Customer Liaison Officer, UKAS</span></figcaption>
+      </figure>
+
+      <figure class="rec reveal">
+        <span class="rec__tag">Accreditation</span>
         <p>Dan is dedicated, enthusiastic, knowledgeable and will work tirelessly to get the job done.</p>
         <figcaption class="rec__who"><strong>Kristel Smith</strong><span>Accreditation Specialist Development</span></figcaption>
       </figure>
 
       <figure class="rec reveal">
-        <div class="rec__mark" aria-hidden="true">&ldquo;</div>
+        <span class="rec__tag">Pathology</span>
         <p>Fantastic trainer. Great assessment manager. Nice bloke.</p>
         <figcaption class="rec__who"><strong>Christopher Kettle</strong><span>Operational Manager, NovoPath &amp; NEHODS, Newcastle upon Tyne Hospitals NHS FT</span></figcaption>
       </figure>
     </div>
 
-    <p class="reveal" style="margin-top:var(--space-7);"><a class="btn btn--on-ink" href="index.html#reviews">See all reviews on the portfolio</a></p>
   </div>
 </section>
 
