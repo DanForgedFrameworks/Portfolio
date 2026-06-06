@@ -872,6 +872,35 @@ main > section:not(.hero)::before { content: "◆"; position: absolute; top: 23p
 .tool__alt:hover { color: #e09a6b; text-decoration: underline; }
 .tool__ctas { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
 
+/* ---- Tap-to-load demo facade (mobile-crash mitigation + mini preview) ---- */
+.embed-facade { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; width: 100%; border: 0; cursor: pointer; font: inherit; color: var(--ff-ink); background: var(--ff-paper-warm); text-align: center; padding: 28px 24px; -webkit-tap-highlight-color: transparent; transition: background var(--dur-fast) var(--ease-standard); }
+.demo .embed-facade { min-height: 300px; }
+@media (max-width: 600px) { .demo .embed-facade { min-height: 240px; } }
+.video-embed .embed-facade { position: absolute; inset: 0; height: 100%; min-height: 0; background: #13110f; color: #f3ece2; }
+.embed-facade:hover { background: var(--ff-paper-hover); }
+.video-embed .embed-facade:hover { background: #1c1916; }
+.demo--ink .embed-facade { background: rgba(255,255,255,0.04); color: #eef2f4; }
+.demo--ink .embed-facade:hover { background: rgba(255,255,255,0.08); }
+.embed-facade__play { width: 64px; height: 64px; border-radius: 50%; background: var(--ff-copper); color: #fff; display: grid; place-items: center; font-size: 24px; padding-left: 5px; box-shadow: 0 8px 22px rgba(0,0,0,0.22); transition: transform var(--dur-base) var(--ease-standard); }
+.embed-facade:hover .embed-facade__play { transform: scale(1.08); }
+.embed-facade__label { font-weight: var(--fw-bold); font-size: var(--fs-base); }
+.embed-facade__sub { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--ff-ink-muted); max-width: 46ch; }
+.video-embed .embed-facade__sub, .demo--ink .embed-facade__sub { color: #b9b0a4; }
+.embed-facade.is-loading { cursor: default; }
+.embed-facade.is-loading .embed-facade__play { animation: facadePulse 1.2s ease-in-out infinite; }
+@keyframes facadePulse { 0%,100% { transform: scale(0.96); opacity: .85; } 50% { transform: scale(1.06); opacity: 1; } }
+
+/* ---- Crash / device-trouble contact banner ---- */
+.crash-help { position: fixed; left: 0; right: 0; bottom: 0; z-index: 4000; background: var(--ff-ink); color: #fff; box-shadow: 0 -6px 24px rgba(0,0,0,0.28); }
+.crash-help__inner { max-width: 1000px; margin: 0 auto; padding: 14px 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.crash-help strong { font-size: var(--fs-base); }
+.crash-help > .crash-help__inner > span { font-size: var(--fs-sm); color: #cdd6dc; }
+.crash-help__btns { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.crash-help .btn { padding: 8px 14px; font-size: var(--fs-sm); }
+.crash-help__x { background: none; border: 0; color: #cdd6dc; font-size: 1rem; cursor: pointer; padding: 6px 8px; line-height: 1; }
+.crash-help__x:hover { color: #fff; }
+@media (max-width: 600px) { .crash-help__btns { margin-left: 0; width: 100%; } }
+
 /* ---- Codex card backup link ---- */
 .block-card__backup { font-size: var(--fs-sm); color: var(--ff-ink-muted); }
 .block-card__backup a { color: var(--ff-ink-muted); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--ff-ink-muted) 40%, transparent); }

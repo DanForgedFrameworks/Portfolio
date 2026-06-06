@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Page not found — Forged Frameworks</title>
+<meta name="description" content="That page could not be found. Reach Daniel 'Wig' Boyland at Forged Frameworks directly." />
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+<style>
+  :root {
+    --paper: #fcfbf9; --paper-warm: #f6efe6; --edge: #e7ddd0;
+    --copper: #bc6c3c; --copper-hot: #a05b32; --ink: #2c3e50; --muted: #7f8c8d;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    font-family: "Atkinson Hyperlegible", "Segoe UI", Tahoma, Verdana, sans-serif;
+    background: var(--paper); color: var(--ink);
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 28px 20px; line-height: 1.6;
+  }
+  .wrap { width: 100%; max-width: 560px; text-align: center; }
+  .mark { width: 64px; height: auto; margin: 0 auto 22px; display: block; }
+  .tag {
+    display: inline-block; font-family: ui-monospace, "JetBrains Mono", monospace;
+    font-size: 12px; letter-spacing: .04em; color: var(--copper-hot);
+    background: rgba(188,108,60,0.1); border-radius: 999px; padding: 4px 13px; margin-bottom: 16px;
+  }
+  h1 { font-size: clamp(30px, 9vw, 46px); margin: 0 0 8px; line-height: 1.1; }
+  .lead { font-size: 17px; color: #45525d; margin: 0 auto 26px; max-width: 44ch; }
+  .btns { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 34px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+    font-weight: 700; font-size: 15px; padding: 12px 20px; border-radius: 5px;
+    border: 1px solid transparent; cursor: pointer; transition: .2s ease;
+  }
+  .btn--primary { background: var(--copper); color: #fff; }
+  .btn--primary:hover { background: var(--copper-hot); }
+  .btn--ghost { background: none; color: var(--ink); border-color: var(--edge); }
+  .btn--ghost:hover { border-color: var(--copper); color: var(--copper-hot); }
+  .card {
+    text-align: left; background: #fff; border: 1px solid var(--edge);
+    border-top: 4px solid var(--copper); border-radius: 8px; padding: 22px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+  .card h2 { font-size: 18px; margin: 0 0 4px; }
+  .card p { font-size: 14px; color: var(--muted); margin: 0 0 16px; }
+  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .field label { font-size: 13px; font-weight: 700; }
+  .field input, .field textarea {
+    font: inherit; font-size: 15px; padding: 10px 12px; border: 1px solid var(--edge);
+    border-radius: 5px; background: var(--paper); color: var(--ink); width: 100%;
+  }
+  .field input:focus, .field textarea:focus { outline: 2px solid var(--copper); outline-offset: 1px; border-color: var(--copper); }
+  .field textarea { resize: vertical; min-height: 92px; }
+  .direct { font-size: 14px; color: var(--muted); margin-top: 14px; text-align: center; }
+  .direct a { color: var(--copper-hot); font-weight: 700; text-decoration: none; }
+  .direct a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+  <main class="wrap">
+    <svg class="mark" viewBox="0 0 100 132" aria-hidden="true">
+      <path d="M30 14 L74 14 Q80 14 80 20 L80 40 Q80 46 74 46 L30 46 L12 30 Z" fill="#bc6c3c"/>
+      <rect x="45" y="46" width="10" height="46" fill="#2c3e50"/>
+      <rect x="40" y="90" width="20" height="9" rx="2" fill="#2c3e50"/>
+      <path d="M40 99 L60 99 L51 128 Z" fill="#2c3e50"/>
+      <line x1="50" y1="103" x2="50" y2="118" stroke="#bc6c3c" stroke-width="1.6"/>
+      <circle cx="50" cy="112" r="2.6" fill="#fcfbf9"/>
+    </svg>
+    <span class="tag">404 · forge link broke</span>
+    <h1>This page didn't load</h1>
+    <p class="lead">The link may be mistyped, or an interactive piece didn't load on this device. Head back to the portfolio — or send a quick message and I'll come straight back to you.</p>
+    <div class="btns">
+      <a class="btn btn--primary" href="index.html">← Back to the portfolio</a>
+      <a class="btn btn--ghost" href="mailto:dan.boyland@forgedframeworks.co.uk">Email me directly</a>
+    </div>
+
+    <section class="card" aria-labelledby="cf-title">
+      <h2 id="cf-title">Send a quick message</h2>
+      <p>This opens your email app pre-filled — no account or sign-in needed.</p>
+      <form id="contactForm">
+        <div class="field">
+          <label for="cf-name">Your name</label>
+          <input id="cf-name" type="text" autocomplete="name" placeholder="Jane Smith" />
+        </div>
+        <div class="field">
+          <label for="cf-msg">Message</label>
+          <textarea id="cf-msg" placeholder="Hi Dan — I was looking at your portfolio and…"></textarea>
+        </div>
+        <button class="btn btn--primary" type="submit" style="width:100%; justify-content:center;">Send via email</button>
+      </form>
+      <p class="direct">Or reach me at <a href="mailto:dan.boyland@forgedframeworks.co.uk">dan.boyland@forgedframeworks.co.uk</a> · <a href="tel:+447878602772">+44 7878 602772</a></p>
+    </section>
+  </main>
+
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var name = encodeURIComponent(document.getElementById('cf-name').value || '');
+      var msg = document.getElementById('cf-msg').value || '';
+      var body = encodeURIComponent(msg + (name ? '\n\n— ' + decodeURIComponent(name) : ''));
+      var subject = encodeURIComponent('Portfolio enquiry' + (name ? ' from ' + decodeURIComponent(name) : ''));
+      window.location.href = 'mailto:dan.boyland@forgedframeworks.co.uk?subject=' + subject + '&body=' + body;
+    });
+  </script>
+</body>
+</html>

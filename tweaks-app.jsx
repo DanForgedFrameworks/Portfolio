@@ -58,4 +58,8 @@ function FFTweaks() {
   );
 }
 
-ReactDOM.createRoot(document.getElementById('tweaks-root')).render(<FFTweaks />);
+var __ffTweakRootEl = document.getElementById('tweaks-root');
+if (__ffTweakRootEl) {
+  if (!__ffTweakRootEl.__ffRoot) __ffTweakRootEl.__ffRoot = ReactDOM.createRoot(__ffTweakRootEl);
+  __ffTweakRootEl.__ffRoot.render(<FFTweaks />);
+}

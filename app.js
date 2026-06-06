@@ -2,11 +2,47 @@
 (function () {
   'use strict';
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var isTouch = window.matchMedia('(max-width: 900px)').matches || window.matchMedia('(pointer: coarse)').matches;
+
+  /* Safety net: never let .reveal elements stay invisible if anything below throws. */
+  setTimeout(function () {
+    var hidden = document.querySelectorAll('.reveal:not(.in)');
+    for (var i = 0; i < hidden.length; i++) hidden[i].classList.add('in');
+  }, 1400);
+
+  /* Global safety: if a script fails on this device, surface a way to reach a human. */
+  (function crashGuard() {
+    var shown = false;
+    function showHelp() {
+      if (shown || !document.body) return; shown = true;
+      var bar = document.createElement('div');
+      bar.className = 'crash-help';
+      bar.setAttribute('role', 'alert');
+      bar.innerHTML = '<div class="crash-help__inner">'
+        + '<strong>Trouble loading on this device?</strong>'
+        + '<span>Some interactive parts may not run on every phone or browser — you can still reach me directly.</span>'
+        + '<span class="crash-help__btns">'
+        + '<a class="btn btn--primary" href="mailto:dan.boyland@forgedframeworks.co.uk?subject=Portfolio%20enquiry%20(from%20mobile)">Email me</a>'
+        + '<a class="btn btn--ghost" href="tel:+447878602772">Call</a>'
+        + '<button type="button" class="crash-help__x" aria-label="Dismiss">\u2715</button>'
+        + '</span></div>';
+      document.body.appendChild(bar);
+      var x = bar.querySelector('.crash-help__x');
+      if (x) x.addEventListener('click', function () { bar.parentNode && bar.parentNode.removeChild(bar); });
+    }
+    /* Only real uncaught JS errors / rejections (resource 404s don't bubble here). */
+    window.addEventListener('error', function (e) { if (e && e.message) showHelp(); });
+    window.addEventListener('unhandledrejection', function () { showHelp(); });
+  })();
 
   /* ---------- Matrix-rain forge texture ---------- */
   (function matrix() {
+    try {
     var c = document.getElementById('matrix');
     if (!c) return;
+    /* Skip the animated canvas on phones / touch devices — it's a memory &
+       battery drain and a frequent cause of mobile Safari tab crashes. */
+    if (isTouch) { c.style.display = 'none'; return; }
     var ctx = c.getContext('2d');
     var glyphs = 'FORGEDFRAMEWORKS01<>{}/\\|=+*forging01'.split('');
     var fontSize = 16, cols, drops;
@@ -33,6 +69,7 @@
     }
     if (reduceMotion) { draw(); return; }
     setInterval(draw, 70);
+    } catch (e) { /* never let the background animation kill the page */ }
   })();
 
   /* ---------- Sticky nav shadow ---------- */
@@ -160,6 +197,63 @@
     closeBtn.addEventListener('click', close);
     modal.addEventListener('click', function (e) { if (e.target === modal) close(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && modal.classList.contains('open')) close(); });
+  })();
+
+  /* ---------- Heavy iframe demos → tap-to-load mini panels ----------
+     Booting 6 live iframes + Drive players on first paint is what crashes
+     mobile Safari. Convert each to a lightweight "facade": a labelled panel
+     with a play button. On touch we load on tap; on desktop we auto-load as
+     it scrolls into view, one at a time. */
+  (function embedFacades() {
+    var embeds = Array.prototype.slice.call(
+      document.querySelectorAll('.demo > iframe[src], .video-embed > iframe[src]')
+    );
+    if (!embeds.length) return;
+    var facades = [];
+    embeds.forEach(function (f) {
+      var src = f.getAttribute('src');
+      if (!src) return;
+      f.setAttribute('data-src', src);
+      f.removeAttribute('src');
+      f.style.display = 'none';
+      var wrap = f.parentNode;
+      var bar = wrap.querySelector ? wrap.querySelector('.demo__title') : null;
+      var label = (bar && bar.textContent.trim()) || f.getAttribute('title') || 'Interactive demo';
+      var fac = document.createElement('button');
+      fac.type = 'button';
+      fac.className = 'embed-facade';
+      fac.innerHTML = '<span class="embed-facade__play" aria-hidden="true">▶</span>'
+        + '<span class="embed-facade__label">Load live demo</span>'
+        + '<span class="embed-facade__sub"></span>';
+      fac.querySelector('.embed-facade__sub').textContent = label;
+      fac.setAttribute('aria-label', 'Load live demo: ' + label);
+      function loadIt() {
+        if (f.getAttribute('src')) return;
+        fac.classList.add('is-loading');
+        var lbl = fac.querySelector('.embed-facade__label');
+        if (lbl) lbl.textContent = 'Loading…';
+        f.src = f.getAttribute('data-src');
+        f.style.display = '';
+        f.addEventListener('load', function () { if (fac.parentNode) fac.parentNode.removeChild(fac); });
+        setTimeout(function () { if (fac.parentNode) fac.parentNode.removeChild(fac); }, 8000);
+      }
+      fac.addEventListener('click', loadIt);
+      wrap.insertBefore(fac, f);
+      facades.push({ el: fac, load: loadIt });
+    });
+    /* Desktop only: auto-load as each scrolls near the viewport. */
+    if (!isTouch && 'IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (ents) {
+        ents.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          io.unobserve(en.target);
+          for (var i = 0; i < facades.length; i++) {
+            if (facades[i].el === en.target) { facades[i].load(); break; }
+          }
+        });
+      }, { rootMargin: '250px 0px' });
+      facades.forEach(function (o) { io.observe(o.el); });
+    }
   })();
 
   /* ---------- Background-animation toggle (front page) ---------- */
