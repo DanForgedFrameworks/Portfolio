@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Mobile-Enabled Myths Designer</title>
+  <style>
+    :root {
+      --brand-purple: #691eda;
+      --brand-orange: #f08838;
+      --brand-red: #e74c3c;
+      --brand-dark-red: #c0392b;
+      --brand-green: #10b981;
+      --brand-dark-green: #059669;
+      --glass-border: rgba(255, 255, 255, 0.7);
+      --shadow: 0 16px 40px rgba(31, 38, 135, 0.15);
+      --border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+    }
+
+    * { box-sizing: border-box; }
+    html { min-width: 0; }
+    body {
+      margin: 0;
+      min-width: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--text-main);
+      background: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    button, input, textarea { font: inherit; }
+
+    .digital-background {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      background:
+        radial-gradient(rgba(105, 30, 218, 0.08) 2px, transparent 2px),
+        radial-gradient(rgba(105, 30, 218, 0.08) 2px, transparent 2px);
+      background-position: 0 0, 30px 30px;
+      background-size: 60px 60px;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.6;
+      animation: drift 25s infinite alternate ease-in-out;
+    }
+    .orb-1 { width: 400px; height: 400px; top: -10%; left: -10%; background: rgba(231, 76, 60, 0.2); }
+    .orb-2 { width: 500px; height: 500px; right: -10%; bottom: -20%; background: rgba(16, 185, 129, 0.15); }
+    @keyframes drift {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(10%, 15%) scale(1.1); }
+      100% { transform: translate(-10%, 5%) scale(0.9); }
+    }
+
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(241, 245, 249, 0.94);
+      backdrop-filter: blur(12px);
+    }
+    .app-title { margin: 0; font-size: 1rem; }
+    .toggle-group { display: flex; gap: 6px; padding: 4px; border-radius: 10px; background: #e2e8f0; }
+    .mode-btn {
+      min-height: 42px;
+      padding: 8px 14px;
+      border: 0;
+      border-radius: 7px;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-weight: 800;
+    }
+    .mode-btn.active { background: #fff; color: var(--brand-purple); box-shadow: 0 2px 6px rgba(15, 23, 42, 0.1); }
+    .mode-btn:focus-visible, .fact-card-bg:focus-visible, .copy-btn:focus-visible {
+      outline: 4px solid #2563eb;
+      outline-offset: 3px;
+    }
+
+    .app-container {
+      width: min(1100px, 100%);
+      margin: 0 auto;
+      padding: 36px 20px;
+    }
+    .learner-view { width: 100%; }
+    .master-container {
+      display: flex;
+      width: 100%;
+      gap: 30px;
+      align-items: stretch;
+      animation: fade-in 1.2s ease-out both;
+    }
+    .column { min-width: 0; flex: 1; display: flex; flex-direction: column; }
+    .myth-col { margin-bottom: 110px; }
+    .fact-col { margin-top: 110px; }
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .component-card {
+      position: relative;
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+      overflow: hidden;
+      padding: 25px;
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(24px);
+    }
+    .myth-card-bg { border-color: rgba(255, 150, 150, 0.5); background: rgba(255, 210, 210, 0.85); }
+    .fact-card-bg {
+      touch-action: manipulation;
+      cursor: pointer;
+      background: rgba(220, 252, 231, 0.6);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.5s ease;
+      -webkit-tap-highlight-color: rgba(105, 30, 218, 0.18);
+    }
+    .fact-card-bg:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(31, 38, 135, 0.25); }
+    .fact-card-bg.revealed-glow {
+      background: rgba(220, 252, 231, 0.85);
+      box-shadow: 0 0 60px 20px rgba(16, 185, 129, 0.25), var(--shadow);
+    }
+
+    .premium-banner {
+      display: flex;
+      width: 100%;
+      min-height: 54px;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 4px;
+      border-top: 1.5px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .myth-banner { background: linear-gradient(135deg, var(--brand-red), var(--brand-dark-red)); }
+    .fact-banner { background: linear-gradient(135deg, var(--brand-orange), #d96f20); transition: background 0.5s ease; }
+    .banner-icon-stamp {
+      display: grid;
+      width: 46px;
+      height: 46px;
+      flex: 0 0 46px;
+      place-items: center;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .banner-label {
+      flex: 1;
+      padding: 0 8px;
+      text-align: center;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .inner-text-container {
+      display: flex;
+      min-height: 190px;
+      flex: 1;
+      align-items: center;
+      justify-content: center;
+      padding: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.6);
+      text-align: center;
+    }
+    .inner-text-container p {
+      margin: 0;
+      overflow-wrap: anywhere;
+      color: #2c3e50;
+      font-size: 1.08rem;
+      line-height: 1.55;
+    }
+    .blur-state { visibility: hidden; filter: blur(16px); opacity: 0; }
+    .shimmer-text-myth {
+      background: linear-gradient(90deg, #2c3e50, var(--brand-red), #2c3e50);
+      background-size: 200% auto;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: text-shimmer 4s infinite linear;
+      font-weight: 600;
+    }
+    .shimmer-text-fact {
+      background: linear-gradient(90deg, #064e3b, var(--brand-dark-green), #064e3b);
+      background-size: 200% auto;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: diagonal-feed 1.2s cubic-bezier(0.25, 1, 0.3, 1) forwards, text-shimmer 4s infinite linear 1.2s;
+      font-weight: 600;
+    }
+    @keyframes diagonal-feed {
+      from { clip-path: polygon(-10% 110%, -10% 110%, 110% -10%, 110% -10%); filter: blur(20px); opacity: 0; transform: scale(0.95); }
+      to { clip-path: polygon(-10% 110%, -10% -10%, 110% -10%, 110% 110%); filter: blur(0); opacity: 1; transform: scale(1); }
+    }
+    @keyframes text-shimmer {
+      from { background-position: -200%; }
+      to { background-position: 200%; }
+    }
+
+    .vs-separator { position: relative; display: flex; width: 120px; flex: 0 0 120px; align-items: center; justify-content: center; }
+    .vs-line-container {
+      position: absolute;
+      display: flex;
+      width: 4px;
+      height: 130%;
+      flex-direction: column;
+      justify-content: space-between;
+      transform: rotate(20deg);
+    }
+    .vs-line-segment { width: 100%; height: 38%; border-radius: 2px; background: rgba(105, 30, 218, 0.3); }
+    .vs-text {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      font-style: italic;
+      font-weight: 900;
+      letter-spacing: -10px;
+      text-shadow: 2px 4px 10px rgba(0, 0, 0, 0.15);
+    }
+    .v-letter { color: var(--brand-red); transform: translate(5px, -15px); }
+    .s-letter { color: var(--brand-green); transform: translate(-5px, 15px); }
+
+    .insight-panel {
+      display: none;
+      width: min(900px, 100%);
+      margin: 36px auto 0;
+      padding: 24px 30px;
+      border-left: 6px solid var(--brand-purple);
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .insight-panel.visible { display: block; opacity: 1; transform: translateY(0); }
+    .insight-panel strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--brand-purple);
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .insight-panel p { margin: 0; color: #475569; line-height: 1.6; }
+
+    .designer-view {
+      display: none;
+      width: 100%;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+    .designer-layout { display: grid; min-height: 680px; grid-template-columns: minmax(320px, 0.9fr) minmax(360px, 1.1fr); }
+    .editor-panel { min-width: 0; padding: 28px; overflow-y: auto; background: #fafafa; }
+    .export-panel { min-width: 0; display: flex; flex-direction: column; background: #1e293b; }
+    .attribution-block {
+      margin-bottom: 24px;
+      padding: 14px;
+      border-left: 4px solid var(--brand-purple);
+      border-radius: 0 8px 8px 0;
+      background: #e0e7ff;
+      color: #1e3a8a;
+      font-size: 0.82rem;
+      line-height: 1.55;
+    }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; margin-bottom: 7px; color: #475569; font-size: 0.82rem; font-weight: 800; }
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text-main);
+    }
+    .form-group textarea { min-height: 96px; resize: vertical; line-height: 1.45; }
+    .form-group input:focus, .form-group textarea:focus { outline: 3px solid rgba(37, 99, 235, 0.28); border-color: #2563eb; }
+    .export-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      color: #fff;
+    }
+    .copy-btn {
+      min-height: 40px;
+      padding: 8px 14px;
+      border: 0;
+      border-radius: 7px;
+      background: var(--brand-orange);
+      color: #fff;
+      cursor: pointer;
+      font-weight: 800;
+    }
+    .copy-status { min-height: 22px; padding: 0 18px; color: #bae6fd; font-size: 0.82rem; }
+    .html-output {
+      min-height: 560px;
+      flex: 1;
+      width: 100%;
+      padding: 18px;
+      border: 0;
+      outline: 0;
+      resize: vertical;
+      background: #0f172a;
+      color: #7dd3fc;
+      font: 0.74rem/1.45 Consolas, monospace;
+      white-space: pre;
+    }
+
+    /* Width-independent class added by device and iframe-aware JavaScript. */
+    html.mobile-layout .app-header {
+      position: relative;
+      align-items: stretch;
+      padding: max(10px, env(safe-area-inset-top)) 10px 10px;
+      flex-direction: column;
+      gap: 9px;
+    }
+    html.mobile-layout .app-title { text-align: center; }
+    html.mobile-layout .toggle-group { width: 100%; }
+    html.mobile-layout .mode-btn { min-width: 0; flex: 1; padding-inline: 8px; }
+    html.mobile-layout .app-container { padding: 14px 9px 24px; }
+    html.mobile-layout .master-container { display: block; }
+    html.mobile-layout .column { display: block; width: 100%; flex: none; }
+    html.mobile-layout .myth-col, html.mobile-layout .fact-col { margin: 0; }
+    html.mobile-layout .component-card {
+      width: 100%;
+      height: auto;
+      min-height: 0;
+      padding: 13px;
+      border-radius: 18px;
+    }
+    html.mobile-layout .premium-banner { min-height: 46px; margin-bottom: 11px; }
+    html.mobile-layout .banner-icon-stamp { width: 38px; height: 38px; flex-basis: 38px; }
+    html.mobile-layout .banner-icon-stamp svg { width: 19px; height: 19px; }
+    html.mobile-layout .banner-label { font-size: 0.87rem; letter-spacing: 0.08em; }
+    html.mobile-layout .inner-text-container { min-height: 0; flex: none; padding: 16px 14px; border-radius: 13px; }
+    html.mobile-layout .inner-text-container p { font-size: 0.97rem; line-height: 1.5; }
+    html.mobile-layout .fact-card-bg:not(.revealed-glow) .inner-text-container { display: none; }
+    html.mobile-layout .vs-separator {
+      display: grid;
+      width: 100%;
+      height: 54px;
+      margin: 7px 0;
+      grid-template-columns: minmax(28px, 1fr) 48px minmax(28px, 1fr);
+      gap: 9px;
+      align-items: center;
+    }
+    html.mobile-layout .vs-line-container { position: static; display: contents; width: auto; height: auto; transform: none; }
+    html.mobile-layout .vs-line-segment { width: 100%; height: 2px; background: linear-gradient(90deg, transparent, rgba(105, 30, 218, 0.42)); }
+    html.mobile-layout .vs-line-segment:last-child { grid-column: 3; background: linear-gradient(90deg, rgba(105, 30, 218, 0.42), transparent); }
+    html.mobile-layout .vs-text {
+      grid-column: 2;
+      grid-row: 1;
+      width: 48px;
+      height: 48px;
+      border: 1px solid rgba(105, 30, 218, 0.22);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 7px 18px rgba(31, 38, 135, 0.12);
+      font-size: 1.65rem;
+      letter-spacing: -4px;
+    }
+    html.mobile-layout .v-letter, html.mobile-layout .s-letter { transform: none; }
+    html.mobile-layout .fact-card-bg:hover { transform: none; }
+    html.mobile-layout .insight-panel { margin-top: 18px; padding: 17px 16px; border-left-width: 4px; border-radius: 14px; }
+    html.mobile-layout .designer-layout { display: block; min-height: 0; }
+    html.mobile-layout .editor-panel { width: 100%; max-height: none; padding: 18px 14px; overflow: visible; }
+    html.mobile-layout .export-panel { width: 100%; min-height: 420px; }
+    html.mobile-layout .export-header { align-items: stretch; flex-direction: column; }
+    html.mobile-layout .copy-btn { width: 100%; }
+    html.mobile-layout .html-output { min-height: 360px; font-size: 0.68rem; }
+
+    @media (max-width: 760px) {
+      .designer-layout { display: block; min-height: 0; }
+      .editor-panel, .export-panel { width: 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .orb, .master-container, .shimmer-text-myth, .shimmer-text-fact { animation: none !important; }
+      .fact-card-bg, .fact-banner, .insight-panel { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="digital-background" aria-hidden="true"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+
+  <header class="app-header" id="mode-controls">
+    <h1 class="app-title">Forged Frameworks Myths Designer</h1>
+    <div class="toggle-group" aria-label="View mode">
+      <button class="mode-btn active" id="btn-learner" type="button" onclick="switchMode('learner')">Learner Mode</button>
+      <button class="mode-btn" id="btn-designer" type="button" onclick="switchMode('designer')">Designer Mode</button>
+    </div>
+  </header>
+
+  <main class="app-container" id="app-wrapper">
+    <section id="learner-view" class="learner-view">
+      <div id="learner-container"></div>
+      <div id="insight-panel" class="insight-panel" role="status" aria-live="polite"></div>
+    </section>
+
+    <section id="designer-view" class="designer-view">
+      <div class="designer-layout">
+        <div class="editor-panel">
+          <div class="attribution-block">
+            <strong>Mobile-enabled Myths designer</strong><br>
+            Edit all seven JSON fields below. Learner Mode and exported HTML share the same compact mobile layout.
+          </div>
+          <h2>Interaction content</h2>
+          <div id="editor-fields"></div>
+        </div>
+        <div class="export-panel">
+          <div class="export-header">
+            <strong>Standalone learner HTML</strong>
+            <button class="copy-btn" type="button" onclick="copyHTML()">Copy HTML</button>
+          </div>
+          <div class="copy-status" id="copy-status" role="status" aria-live="polite"></div>
+          <textarea id="html-output" class="html-output" readonly aria-label="Standalone learner HTML"></textarea>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script id="app-data-script">
+    let appState = {
+      "mythLabel": "MYTH",
+      "mythText": "The bacterial cell wall is just a static protective shell.",
+      "prompt": "Select here to reveal the reality",
+      "factLabel": "REALITY",
+      "factText": "The bacterial cell wall is a dynamic metabolic hub. It regulates osmotic pressure, influences antibiotic susceptibility through enzymatic modification, and acts as a key interface for host-pathogen interaction and environmental sensing.",
+      "insightTitle": "LEVEL 6 SCIENTIST INSIGHT",
+      "insightText": "Microbes are far from simple bags of enzymes. From peptidoglycan cross-linking to the dormant resilience of endospores, microbial structures shape survival, laboratory identification, antimicrobial susceptibility, contamination control and patient or product outcomes."
+    };
+  </script>
+
+  <script id="app-logic-script">
+    let activeState = JSON.parse(JSON.stringify(appState));
+
+    function shouldUseMobileLayout() {
+      const narrowViewport = window.matchMedia('(max-width: 700px)').matches;
+      const coarsePortrait = window.matchMedia('(pointer: coarse) and (orientation: portrait)').matches;
+      const compactScreen = window.screen
+        ? Math.min(window.screen.width, window.screen.height) <= 768 && window.matchMedia('(orientation: portrait)').matches
+        : false;
+      return narrowViewport || coarsePortrait || compactScreen;
+    }
+
+    function syncMobileLayout() {
+      document.documentElement.classList.toggle('mobile-layout', shouldUseMobileLayout());
+    }
+
+    function renderLearnerView() {
+      const container = document.getElementById('learner-container');
+      const insight = document.getElementById('insight-panel');
+      if (!container || !insight) return;
+      insight.className = 'insight-panel';
+      insight.style.display = 'none';
+      insight.innerHTML = `<strong>${activeState.insightTitle}</strong><p>${activeState.insightText}</p>`;
+      container.innerHTML = `
+        <div class="master-container">
+          <div class="column myth-col">
+            <div class="component-card myth-card-bg">
+              <div class="premium-banner myth-banner">
+                <div class="banner-icon-stamp"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div>
+                <div class="banner-label">${activeState.mythLabel}</div>
+              </div>
+              <div class="inner-text-container"><p class="shimmer-text-myth">${activeState.mythText}</p></div>
+            </div>
+          </div>
+          <div class="vs-separator" aria-hidden="true">
+            <div class="vs-line-container"><div class="vs-line-segment"></div><div class="vs-line-segment"></div></div>
+            <div class="vs-text"><span class="v-letter">V</span><span class="s-letter">S</span></div>
+          </div>
+          <div class="column fact-col">
+            <div class="component-card fact-card-bg" id="fact-card" tabindex="0" role="button" aria-expanded="false" aria-controls="fact-p insight-panel" aria-label="${activeState.prompt}" onclick="revealFact()" onkeydown="handleFactKey(event)">
+              <div class="premium-banner fact-banner" id="fact-banner">
+                <div class="banner-icon-stamp" id="fact-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></div>
+                <div class="banner-label" id="fact-label-text">${activeState.prompt}</div>
+              </div>
+              <div class="inner-text-container"><p class="blur-state" id="fact-p" aria-hidden="true">${activeState.factText}</p></div>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function handleFactKey(event) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        revealFact();
+      }
+    }
+
+    function revealFact() {
+      const card = document.getElementById('fact-card');
+      if (!card || card.dataset.revealed === 'true') return;
+      const text = document.getElementById('fact-p');
+      text.classList.remove('blur-state');
+      text.classList.add('shimmer-text-fact');
+      text.setAttribute('aria-hidden', 'false');
+      document.getElementById('fact-banner').style.background = 'linear-gradient(135deg, var(--brand-green), var(--brand-dark-green))';
+      document.getElementById('fact-label-text').textContent = activeState.factLabel;
+      document.getElementById('fact-icon').innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+      card.classList.add('revealed-glow');
+      card.dataset.revealed = 'true';
+      card.setAttribute('aria-expanded', 'true');
+      card.setAttribute('aria-label', activeState.factLabel);
+      card.style.cursor = 'default';
+      const insight = document.getElementById('insight-panel');
+      setTimeout(() => {
+        insight.style.display = 'block';
+        requestAnimationFrame(() => insight.classList.add('visible'));
+      }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 800);
+    }
+
+    function escapeAttribute(value) {
+      return String(value).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function renderEditorUI() {
+      const fields = [
+        ['mythLabel', 'Myth label', 'input'],
+        ['mythText', 'Myth text', 'textarea'],
+        ['prompt', 'Reality reveal prompt', 'input'],
+        ['factLabel', 'Reality label', 'input'],
+        ['factText', 'Reality text', 'textarea'],
+        ['insightTitle', 'Insight title', 'input'],
+        ['insightText', 'Insight text', 'textarea']
+      ];
+      document.getElementById('editor-fields').innerHTML = fields.map(([key, label, type]) => `
+        <div class="form-group">
+          <label for="field-${key}">${label}</label>
+          ${type === 'textarea'
+            ? `<textarea id="field-${key}" oninput="updateField('${key}', this.value)">${escapeAttribute(activeState[key])}</textarea>`
+            : `<input id="field-${key}" type="text" value="${escapeAttribute(activeState[key])}" oninput="updateField('${key}', this.value)">`}
+        </div>`).join('');
+    }
+
+    function updateField(key, value) {
+      activeState[key] = value;
+      renderLearnerView();
+      updateOutput();
+    }
+
+    function updateOutput() {
+      const clone = document.documentElement.cloneNode(true);
+      clone.classList.remove('mobile-layout');
+      const controls = clone.querySelector('#mode-controls');
+      const designer = clone.querySelector('#designer-view');
+      if (controls) controls.remove();
+      if (designer) designer.remove();
+      const learner = clone.querySelector('#learner-view');
+      if (learner) learner.style.display = 'block';
+      const learnerContainer = clone.querySelector('#learner-container');
+      if (learnerContainer) learnerContainer.innerHTML = '';
+      const insight = clone.querySelector('#insight-panel');
+      if (insight) {
+        insight.className = 'insight-panel';
+        insight.style.display = 'none';
+        insight.innerHTML = '';
+      }
+      const dataScript = clone.querySelector('#app-data-script');
+      if (dataScript) dataScript.textContent = `\n    let appState = ${JSON.stringify(activeState, null, 2)};\n  `;
+      document.getElementById('html-output').value = '<!DOCTYPE html>\n' + clone.outerHTML;
+    }
+
+    function switchMode(mode) {
+      const learner = document.getElementById('learner-view');
+      const designer = document.getElementById('designer-view');
+      learner.style.display = mode === 'learner' ? 'block' : 'none';
+      designer.style.display = mode === 'designer' ? 'block' : 'none';
+      document.getElementById('btn-learner').classList.toggle('active', mode === 'learner');
+      document.getElementById('btn-designer').classList.toggle('active', mode === 'designer');
+      if (mode === 'learner') renderLearnerView();
+    }
+
+    async function copyHTML() {
+      const output = document.getElementById('html-output');
+      try {
+        await navigator.clipboard.writeText(output.value);
+        document.getElementById('copy-status').textContent = 'Standalone learner HTML copied.';
+      } catch {
+        output.select();
+        document.execCommand('copy');
+        document.getElementById('copy-status').textContent = 'Standalone learner HTML copied using the browser fallback.';
+      }
+    }
+
+    function init() {
+      syncMobileLayout();
+      window.addEventListener('resize', syncMobileLayout);
+      window.addEventListener('orientationchange', syncMobileLayout);
+      renderLearnerView();
+      if (document.getElementById('mode-controls')) {
+        renderEditorUI();
+        updateOutput();
+      } else {
+        activeState = appState;
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

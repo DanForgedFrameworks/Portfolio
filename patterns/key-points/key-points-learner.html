@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Key Takeaways Revealer</title>
+  <style>
+    /*
+    ==============================================================================
+    PROJECT: Forged Frameworks - VLE Automated Curriculum Pipeline (vC4)
+    AUTHOR: Daniel Boyland
+    ORGANISATION: Forged Frameworks
+    DESCRIPTION: Key Critical Takeaways (Standalone Learner Payload)
+    VERSION: v2.1 (Contemporary Kinesthetic UI Update)
+    ==============================================================================
+    */
+    :root {
+      --primary-colour: #8a2be2;
+      --accent-colour: #7721c5;
+      --bg-colour: #f8f4fc; 
+    }
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 450px; }
+    .interactive-container { position: relative; width: 100%; max-width: 900px; display: flex; flex-direction: column; align-items: center; }
+    
+    .unlock-pill { background-color: var(--primary-colour); color: #ffffff; padding: 16px 44px; border-radius: 50px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 20px; box-shadow: 0 4px 6px -1px rgba(138, 43, 226, 0.2), 0 2px 4px -1px rgba(138, 43, 226, 0.1); transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); position: absolute; z-index: 10; }
+    .unlock-pill:hover { transform: translateY(-2px) scale(1.02); background-color: var(--accent-colour); box-shadow: 0 20px 25px -5px rgba(138, 43, 226, 0.25), 0 10px 10px -5px rgba(138, 43, 226, 0.1); }
+    .pill-text { font-size: 18px; font-weight: 600; letter-spacing: 0.5px; }
+    
+    .icon-container { display: flex; align-items: center; position: relative; width: 100px; height: 48px; perspective: 400px; }
+    .icon-container::after { content: ''; position: absolute; top: 50%; left: 75%; transform: translate(-50%, -50%) scale(0); width: 60px; height: 60px; border-radius: 50%; background: rgba(255, 255, 255, 0.5); opacity: 0; pointer-events: none; z-index: 1; }
+    .unlock-pill.unlocked .icon-container::after { animation: unlockRipple 0.8s ease-out 0.4s forwards; }
+    @keyframes unlockRipple { 0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; } }
+    
+    .hand-key-wrapper { position: absolute; left: -15px; width: 44px; height: 44px; transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 3; }
+    .hand-key-svg { width: 100%; height: 100%; fill: #f1c40f; transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); transform-style: preserve-3d; transform-origin: center right; }
+    .lock-icon { width: 48px; height: 48px; fill: #ffffff; position: absolute; right: 0; overflow: visible; z-index: 2; transition: transform 0.3s ease; }
+    .shackle { transform-origin: 16px 10px; transform-box: view-box; transition: transform 0.6s cubic-bezier(0.5, 2.5, 0.4, 1); }
+    
+    .unlock-pill:hover .hand-key-wrapper { transform: translateX(40px); }
+    .unlock-pill.unlocked .hand-key-wrapper { transform: translateX(40px); }
+    .unlock-pill.unlocked .hand-key-svg { transform: rotateX(180deg) scale(0.92); }
+    .unlock-pill.unlocked .lock-icon { transform: translateY(2px); transition-delay: 0.4s; }
+    .unlock-pill.unlocked .shackle { transition-delay: 0.4s; transform: translateY(-5px) rotate(35deg); }
+    .unlock-pill.fade-out { opacity: 0; transform: translateY(10px) scale(0.9); pointer-events: none; }
+    
+    .cards-wrapper { display: flex; gap: 20px; width: 100%; position: relative; z-index: 5; flex-wrap: wrap; justify-content: center; padding-top: 80px; }
+    .card { flex: 1; min-width: 250px; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025); overflow: hidden; border-top: 5px solid var(--primary-colour); opacity: 0; transform: translateY(30px) scale(0.95); transition: opacity 0.7s cubic-bezier(0.25, 1, 0.5, 1), transform 0.7s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease; }
+    .card:hover { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04); transform: translateY(-4px); }
+    .card.visible { opacity: 1; transform: translateY(0) scale(1); }
+    .card-header { padding: 22px; background-color: var(--bg-colour); border-bottom: 1px solid #edf2f7; text-align: center; }
+    .card-header h3 { margin: 0; font-size: 17px; color: var(--primary-colour); font-weight: 800; letter-spacing: -0.3px; }
+    .card-body { max-height: 0; overflow: hidden; transition: max-height 0.8s cubic-bezier(0.25, 1, 0.5, 1), padding 0.8s ease; background-color: #ffffff; text-align: center; }
+    .card.expanded .card-body { max-height: 350px; padding: 24px; }
+    .card-body p { margin: 0; font-size: 15px; line-height: 1.65; color: #334155; font-weight: 400; }
+  </style>
+</head>
+<body>
+  <div class="interactive-container" id="app-root"></div>
+  <script>
+    const appState = {
+      "cards": [
+        {
+          "id": 1,
+          "header": "The Periplasmic Space",
+          "body": "The periplasmic space in Gram-negative bacteria functions as an enzymatic and transport compartment containing nutrient-binding proteins, detoxification enzymes, and cell-wall synthesis machinery."
+        },
+        {
+          "id": 2,
+          "header": "Capsular Expression",
+          "body": "Capsular expression is an important virulence factor associated with immune evasion and invasive disease potential and should be considered during biological risk assessment."
+        },
+        {
+          "id": 3,
+          "header": "Horizontal Gene Transfer",
+          "body": "Horizontal gene transfer via conjugative pili is a major mechanism for the spread of AMR; unusual resistance patterns should prompt investigation for plasmid-mediated resistance mechanisms."
+        },
+        {
+          "id": 4,
+          "header": "Efflux Pumps",
+          "body": "Efflux pumps provide a mechanism for broad-spectrum resistance; do not assume susceptibility to one drug class implies susceptibility to others when efflux is suspected."
+        },
+        {
+          "id": 5,
+          "header": "Biofilms & Eradication",
+          "body": "Biofilms require specialised sampling and eradication strategies; standard monitoring approaches may fail to detect protected microbial populations embedded within the EPS matrix."
+        },
+        {
+          "id": 6,
+          "header": "Multifaceted Virulence",
+          "body": "Virulence is a multifaceted trait; the L6 scientist must integrate phenotypic, genotypic, and clinical data to provide a comprehensive risk assessment of any isolate."
+        }
+      ]
+    };
+    
+    function renderUI() {
+      const container = document.getElementById('app-root');
+      let html = `
+        <div class="unlock-pill" id="pillButton" onclick="triggerUnlock()">
+          <span class="pill-text">Reveal Critical Takeaways</span>
+          <div class="icon-container">
+            <div class="hand-key-wrapper">
+              <svg class="hand-key-svg" viewBox="0 0 24 24">
+                <path d="M12.65 10A5.99 5.99 0 0 0 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6a5.99 5.99 0 0 0 5.65-4H17v4h4v-4h2v-4h-10.35zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
+                <path d="M4 12c1.5 0 3-1 5-1" stroke="#2c3e50" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <path d="M5 14c1 0 2-0.5 4-0.5" stroke="#2c3e50" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <svg class="lock-icon" viewBox="0 0 24 24">
+              <path class="shackle" d="M7 10V6c0-2.76 2.24-5 5-5s5 2.24 5 5v4h-2V6c0-1.66-1.34-3-3-3S9 4.34 9 6v4H7z" fill="#ffffff" />
+              <path d="M4 10h16v12H4V10zm8 3c-.83 0-1.5.67-1.5 1.5 0 .53.28 1 .7 1.28l-.7 2.72h3l-.7-2.72c.42-.28.7-.75.7-1.28 0-.83-.67-1.5-1.5-1.5z" fill="#ffffff" fill-rule="evenodd" />
+            </svg>
+          </div>
+        </div>
+        <div class="cards-wrapper" id="cardsArea">
+      `;
+      appState.cards.forEach(card => {
+        html += `
+          <div class="card">
+            <div class="card-header"><h3>${card.header}</h3></div>
+            <div class="card-body"><p>${card.body}</p></div>
+          </div>
+        `;
+      });
+      html += `</div>`;
+      container.innerHTML = html;
+    }
+    
+    function triggerUnlock() {
+      const pill = document.getElementById('pillButton');
+      if (pill.classList.contains('unlocked')) return;
+      pill.classList.add('unlocked');
+      setTimeout(() => {
+        pill.classList.add('fade-out');
+        setTimeout(() => {
+          pill.style.display = 'none';
+          const cards = document.querySelectorAll('.card');
+          cards.forEach((card, index) => {
+            setTimeout(() => card.classList.add('visible', 'expanded'), index * 200); 
+          });
+        }, 500); 
+      }, 1400); 
+    }
+    renderUI();
+  </script>
+</body>
+</html>

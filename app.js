@@ -180,18 +180,25 @@
       modal.classList.remove('open'); frame.src = 'about:blank';
       document.body.style.overflow = '';
     }
-    /* Local interactive blocks → sandboxed preview */
+    /* Local interactive blocks → sandboxed preview on desktop. On touch we let
+       the link open natively in a new tab — the in-page modal is too cramped on
+       phones and several blocks render better full-screen. */
     document.querySelectorAll('a[href^="patterns/"]').forEach(function (a) {
+      if (!a.getAttribute('target')) a.setAttribute('target', '_blank');
+      if (isTouch) return;
       a.addEventListener('click', function (e) {
         e.preventDefault();
         open(a.getAttribute('href'), a.getAttribute('href').split('/').pop());
       });
     });
-    /* Show & tell walkthroughs (Google Drive) → large player, native fullscreen */
+    /* Show & tell walkthroughs (Google Drive). On touch, open Drive's own /view
+       page in a new tab — native player, reliable playback, no cramped modal. */
     document.querySelectorAll('[data-video]').forEach(function (b) {
       b.addEventListener('click', function () {
         var src = b.getAttribute('data-video');
-        open(src, b.getAttribute('data-title') || 'Walkthrough', { video: true, viewUrl: src.replace('/preview', '/view') });
+        var viewUrl = src.replace('/preview', '/view');
+        if (isTouch) { window.open(viewUrl, '_blank', 'noopener'); return; }
+        open(src, b.getAttribute('data-title') || 'Walkthrough', { video: true, viewUrl: viewUrl });
       });
     });
     closeBtn.addEventListener('click', close);
@@ -426,5 +433,105 @@
     if (toggleBtn) toggleBtn.addEventListener('click', function () { setPaused(!userPaused); });
     if (prevBtn) prevBtn.addEventListener('click', function () { step(-1); });
     if (nextBtn) nextBtn.addEventListener('click', function () { step(1); });
+  })();
+
+  /* ---------- Accurate in-page anchor scrolling ----------
+     Lands exactly on the target despite the sticky nav and any lazy-loaded
+     media above it that shifts layout after the jump. Re-aims only when the
+     target's document position actually moves, so it never fights the in-
+     progress smooth scroll. */
+  (function anchorScroll() {
+    var navEl = document.querySelector('.nav');
+    function offset() { return (navEl ? navEl.offsetHeight : 68) + 14; }
+    function targetY(el) {
+      return Math.max(0, el.getBoundingClientRect().top + window.pageYOffset - offset());
+    }
+    function jumpTo(el) {
+      var smooth = !reduceMotion;
+      window.scrollTo({ top: targetY(el), behavior: smooth ? 'smooth' : 'auto' });
+      var last = targetY(el), tries = 0;
+      var iv = setInterval(function () {
+        tries++;
+        var now = targetY(el);
+        if (Math.abs(now - last) > 2) {     /* layout shifted above the target */
+          window.scrollTo({ top: now, behavior: smooth ? 'smooth' : 'auto' });
+          last = now;
+        }
+        if (tries >= 10) clearInterval(iv);
+      }, 200);
+    }
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest ? e.target.closest('a[href]') : null;
+      if (!a) return;
+      var href = a.getAttribute('href') || '';
+      if (href.charAt(0) !== '#' || href.length < 2) return;
+      var el;
+      try { el = document.querySelector(href); } catch (_) { el = null; }
+      if (!el) return;
+      e.preventDefault();
+      if (window.history && history.replaceState) history.replaceState(null, '', href);
+      jumpTo(el);
+    });
+    if (location.hash.length > 1) {
+      var initEl;
+      try { initEl = document.querySelector(location.hash); } catch (_) { initEl = null; }
+      if (initEl) setTimeout(function () { jumpTo(initEl); }, 250);
+    }
+  })();
+
+  /* ---------- Contact actions ----------
+     - Phone: on desktop, tel: does nothing useful, so copy the number and
+       confirm inline. On touch devices the tel: link dials natively.
+     - LinkedIn / map: force a dependable new-window open (some embedded or
+       preview contexts swallow target="_blank"). */
+  (function contactActions() {
+    var list = document.querySelector('.contact-list');
+    if (!list) return;
+
+    function copyText(text, done) {
+      function fallback() {
+        try {
+          var ta = document.createElement('textarea');
+          ta.value = text; ta.setAttribute('readonly', '');
+          ta.style.position = 'fixed'; ta.style.left = '-9999px';
+          document.body.appendChild(ta); ta.select();
+          var ok = document.execCommand('copy');
+          document.body.removeChild(ta);
+          done(ok);
+        } catch (_) { done(false); }
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done(true); }, fallback);
+      } else { fallback(); }
+    }
+
+    var phoneLi = list.querySelector('[data-phone]');
+    if (phoneLi && !isTouch) {
+      var link = phoneLi.querySelector('a[href^="tel:"]');
+      var note = phoneLi.querySelector('#phoneCopied');
+      var pretty = '+44 7878 602772';
+      var raw = phoneLi.getAttribute('data-phone');
+      var timer;
+      if (link) link.addEventListener('click', function (e) {
+        e.preventDefault();
+        copyText(raw, function (ok) {
+          if (!note) return;
+          note.textContent = ok ? '\u2713 Copied ' + pretty + ' to clipboard' : 'Could not copy \u2014 dial ' + pretty;
+          note.classList.add('show');
+          clearTimeout(timer);
+          timer = setTimeout(function () { note.classList.remove('show'); }, 4000);
+        });
+      });
+    }
+
+    list.querySelectorAll('a[target="_blank"]').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        var href = a.getAttribute('href');
+        if (!href || href.charAt(0) === '#') return;
+        e.preventDefault();
+        var win = window.open(href, '_blank', 'noopener');
+        if (!win) window.location.href = href;   /* popup blocked → same tab */
+      });
+    });
   })();
 })();

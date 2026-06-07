@@ -9,11 +9,11 @@
 # PROJECT: Forged Frameworks - VLE Automated Curriculum Pipeline
 # AUTHOR: Daniel Boyland
 # ORGANISATION: Forged Frameworks
-# DESCRIPTION: TAB6101 S03 single-resource Learning Resources block.
-# VERSION: v1.0.0 (Biofilms briefing resource)
+# DESCRIPTION: Microbiology S03 multi-resource Learning Resources block.
+# VERSION: v2.0.0 (Two assets — Media + Articles and reading)
 # ==============================================================================
 # SCRIPT ROLE: THE LIBRARY EXPLORER (Interactive Resource Asset)
-# FUNCTION: Renders a single resource card that expands into an in-flow detailed
+# FUNCTION: Renders a grid of resource cards that expand into an in-flow detailed
 #           view with action guidance, link fallback and reflective prompts.
 # ==============================================================================
 */
@@ -85,10 +85,10 @@ h1 { color: var(--deep-purple); margin: 0 0 5px 0; font-size: 2rem; line-height:
 
 .card-grid {
   display: grid;
-  grid-template-columns: minmax(240px, 520px);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   justify-content: center;
   gap: 25px;
-  max-width: 900px;
+  max-width: 820px;
   margin: 0 auto;
 }
 
@@ -393,21 +393,34 @@ h1 { color: var(--deep-purple); margin: 0 0 5px 0; font-size: 2rem; line-height:
   <div id="front-view">
     <div class="main-header">
       <h1>Further learning resources<span class="hide-cite"></span></h1>
-      <p class="subtitle">Select the resource to explore biofilms and resistance traits.<span class="hide-cite"></span></p>
+      <p class="subtitle">Select a resource to explore why microbiology matters and how it is regulated.<span class="hide-cite"></span></p>
     </div>
 
-    <p class="navigation-hint"><strong>Navigation:</strong> select the card to view the resource details. On a keyboard, use <strong>Tab</strong> to move to the card and <strong>Enter</strong> or <strong>Space</strong> to select.</p>
+    <p class="navigation-hint"><strong>Navigation:</strong> select a card to view the resource details. On a keyboard, use <strong>Tab</strong> to move between cards and <strong>Enter</strong> or <strong>Space</strong> to select.</p>
 
     <div class="card-grid">
       <button class="trigger-card" type="button" onclick="openResource('resource1', this)">
         <span class="trigger-icon" aria-hidden="true">
           <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="var(--deep-purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="15" rx="2.18" ry="2.18"></rect>
+            <polygon points="10 8 15 10.5 10 13 10 8" fill="var(--deep-purple)" stroke="none"></polygon>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="18" x2="12" y2="21"></line>
+          </svg>
+        </span>
+        <span class="trigger-title">Media<span class="hide-cite"></span></span>
+        <span class="trigger-meta">Why microbiology matters: a global perspective<span class="hide-cite"></span></span>
+      </button>
+
+      <button class="trigger-card" type="button" onclick="openResource('resource2', this)">
+        <span class="trigger-icon" aria-hidden="true">
+          <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="var(--coral-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
           </svg>
         </span>
-        <span class="trigger-title">Industry report<span class="hide-cite"></span></span>
-        <span class="trigger-meta">Biofilms: microbial life on surfaces<span class="hide-cite"></span></span>
+        <span class="trigger-title">Articles and reading<span class="hide-cite"></span></span>
+        <span class="trigger-meta">The Approved List of Biological Agents (MISC208)<span class="hide-cite"></span></span>
       </button>
     </div>
   </div>
@@ -424,21 +437,34 @@ let lastTrigger = null;
 
 const resourceData = {
   resource1: {
-    type: "Industry report",
-    title: "Biofilms: Microbial Life on Surfaces",
+    type: "Media",
+    title: "Why Microbiology Matters: A Global Perspective",
     source: "Microbiology Society",
-    cost: "Free, registration OK",
-    confidence: "High",
-    confidenceNote: "The Microbiology Society maintains a stable and authoritative archive of briefing papers; the search term is highly specific.",
-    alignment: "Virulence factors and resistance traits",
-    context: "This briefing paper from the Microbiology Society is a primary UK resource that translates complex structural biology into industrial and clinical contexts. It directly supports the cross-cutting themes of contamination investigation and real-world laboratory accountability.",
-    activity: "Read the sections on 'Biofilm formation' and 'AMR'. Identify three structural components of the Extracellular Polymeric Substance (EPS) matrix and describe how they physically impede the penetration of common laboratory disinfectants.",
+    cost: "Free, no registration",
+    alignment: "Microbial roles across health, environment and industry",
+    context: "The Microbiology Society is the premier UK professional body for this field. This resource provides a high-level, Tier 1 overview of how microbiology impacts health, environment, and industry, helping the learner see beyond the bench to global accountability.",
+    activity: "Watch the 'Health' and 'Environment' segments. Create a comparison table identifying one 'positive' microbial role and one 'pathogenic' risk for each sector, noting the specific impact on laboratory testing requirements.",
     reflection: [
-      "Perform a 'Gap Analysis' on your current laboratory's Clean-In-Place (CIP) or environmental monitoring protocols.",
-      "Based on this report, where are the structural vulnerabilities in your system that might allow biofilms to persist?"
+      "Reflect on the 'Societal Impact' of your own laboratory's output.",
+      "Using the 'Before/After' framework, describe how your understanding of the microbial role in your sector has changed after viewing this resource."
     ],
-    discussion: "Discuss with your mentor how the lab identifies biofilm-forming isolates, for example mucoid phenotypes. Ask how these structural traits change the risk communication sent to clinical or manufacturing stakeholders.",
-    url: "https://microbiologysociety.org/resource/new-briefing-towards-biofilm-innovation-how-can-we-tackle-challenges-and-unlock-their-potential.html"
+    discussion: "Ask your mentor: 'In our specific sector, which microbial group currently presents the greatest challenge to our quality assurance or diagnostic accuracy, and how does this align with the global trends mentioned by the Microbiology Society?'",
+    url: "https://youtu.be/5vUNeRS8U8w?si=Qyt7FI7mx6o7rRMG"
+  },
+  resource2: {
+    type: "Articles and reading",
+    title: "The Approved List of Biological Agents (MISC208)",
+    source: "Health and Safety Executive (HSE)",
+    cost: "Free, no registration",
+    alignment: "Biosafety, hazard groups and containment levels",
+    context: "This is the mandatory UK regulatory document for biological risk assessment. It categorises microbes into Hazard Groups based on their biological properties and potential impact on human health, bridging the gap between cell biology and professional biosafety.",
+    activity: "Download the PDF and locate the classification for three organisms handled in your lab (or three common industrial organisms like E. coli, S. aureus, and A. niger). Identify their Hazard Group and any specific 'Notes' regarding their pathogenicity or environmental impact.",
+    reflection: [
+      "Perform a 'Regulatory Alignment Check'. Compare the Hazard Groups of the organisms you handle against your lab's current containment level (CL1, CL2, etc.).",
+      "Document how this classification dictates your daily aseptic technique and PPE requirements."
+    ],
+    discussion: "Ask your mentor about the process of 'Escalation': 'If we were to identify an organism from a higher Hazard Group than our lab is rated for (e.g., a HG3 organism in a CL2 lab), what is our specific SOP for containment and reporting to the HSE?'",
+    url: "https://www.hse.gov.uk/pubns/misc208.pdf"
   }
 };
 

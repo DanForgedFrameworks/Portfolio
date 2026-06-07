@@ -171,7 +171,7 @@
           <span class="demo__title">cinematic-stat-reveal.html · live from the Codex library</span>
           <a class="demo__open" href="patterns/cinematic-stat-reveal/cinematic-stat-reveal.html" target="_blank" rel="noopener">Open full screen ↗</a>
         </div>
-        <iframe title="Cinematic Stat Reveal — live interactive demo" src="patterns/cinematic-stat-reveal/cinematic-stat-reveal.html?v=2" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+        <iframe title="Cinematic Stat Reveal — live interactive demo" src="patterns/cinematic-stat-reveal/cinematic-stat-reveal.html?v=3" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
       </div>
     </div>
   </div>
@@ -538,12 +538,23 @@
       <p class="lead">A growing, version-controlled library of self-contained HTML/CSS/JS learning interactions — built with Codex, Claude &amp; Gemini and dropped straight into Rise 360, Moodle or any VLE. Each one is accessible, responsive and customisable. Here are a few, live.</p>
     </div>
 
-    <div class="demo reveal">
-      <div class="demo__bar">
-        <span class="demo__title">myths.html · live — Select a card to test the misconception</span>
-        <a class="demo__open" href="patterns/myths/myths.html" target="_blank" rel="noopener">Open full screen ↗</a>
+    <div class="codex-spotlight-feature reveal">
+      <div class="codex-spotlight__intro">
+        <span class="codex-spotlight__tag">Featured authoring tool</span>
+        <h3 class="h3">Myth vs Fact Designer</h3>
+        <p>The live block below is a real example output — a learner taps a card to surface the reality behind a common misconception. The back-office designer lets you write your own myths, facts and feedback, set the styling and reorder cards yourself — no AI cost — then drop the finished block into Rise 360, Moodle or any VLE.</p>
       </div>
-      <iframe title="Myth vs Fact — live interactive demo" src="patterns/myths/myths.html" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+      <div class="demo">
+        <div class="demo__bar">
+          <span class="demo__title">myths.html · live — select a card to reveal the reality</span>
+          <a class="demo__open" href="patterns/myths/myths.html" target="_blank" rel="noopener">Open full screen ↗</a>
+        </div>
+        <iframe title="Myth vs Fact — live interactive demo" src="patterns/myths/myths.html" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+      </div>
+      <div class="codex-spotlight__cta">
+        <a class="btn btn--primary" href="patterns/myths/myths-designer.html" target="_blank" rel="noopener">Launch the demo ↗</a>
+        <span class="codex-spotlight__cap">Opens the back-office authoring tool.</span>
+      </div>
     </div>
 
     <div class="codex-spotlight-feature reveal">
@@ -568,8 +579,8 @@
     <h3 class="h3 reveal" style="margin:var(--space-7) 0 var(--space-5);">Browse the library</h3>
 
     <div class="codex-group reveal">
-      <p class="codex-group__lead"><span class="codex-group__tag">How to read these</span> There are two kinds of card. <strong class="hot">Launch demo ↗</strong> opens a <strong>live, standalone block</strong> right here in your browser — and the ones tagged <strong>designer mode</strong> include a <strong>built-in back-office editor</strong>, so you can change copy, scoring and logic <strong>yourself, with no AI cost</strong>. <strong class="hot">Open in Review 360 ↗</strong> opens a <strong>finished production build</strong> in Articulate's review player — also the fallback for anything that won't render in-browser.</p>
-      <!-- Category 1 — Learning & knowledge -->
+      <p class="codex-group__lead"><span class="codex-group__tag">How to read these</span> There are two kinds of entry. <strong class="hot">Launch demo ↗</strong> opens a <strong>live, standalone block</strong> right here in your browser — and the ones tagged <strong>designer mode</strong> include a <strong>built-in back-office editor</strong> — open the <strong>Designer demo</strong> to change copy, scoring and logic <strong>yourself, with no AI cost</strong>, or the <strong>Learner view</strong> for the clean, published experience. <strong class="hot">Open in Review 360 ↗</strong> opens a <strong>finished production build</strong> in Articulate's review player — also the fallback for anything that won't render in-browser.</p>
+      <div class="codex-cards">
       <div class="codex-cat">
         <div class="codex-cat__head">
           <span class="codex-cat__icon" aria-hidden="true"><i data-lucide="book-open"></i></span>
@@ -579,20 +590,26 @@
           </div>
         </div>
         <div class="codex-grid">
-          <a class="block-card reveal" href="patterns/key-points/key-points.html" target="_blank" rel="noopener">
+          <div class="block-card block-card--dual reveal">
             <img class="block-card__thumb" src="assets/thumbs/key-points.jpg" alt="Preview of the Takeaways Revealer block" loading="lazy" />
-            <span class="block-card__kind">Reveal block · designer mode</span>
+            <span class="block-card__kind">Reveal block · designer + learner</span>
             <span class="block-card__title">Takeaways Revealer</span>
-            <p class="block-card__meta">Progressive reveal of key learning points — editable in the built-in designer</p>
-            <span class="block-card__open">Launch demo ↗</span>
-          </a>
-          <a class="block-card reveal" href="patterns/benefits/benefits.html" target="_blank" rel="noopener">
+            <p class="block-card__meta">Progressive reveal of key learning points</p>
+            <span class="block-card__actions">
+              <a class="block-card__open" href="patterns/key-points/key-points.html" target="_blank" rel="noopener">Designer demo ↗</a>
+              <a class="block-card__open block-card__open--alt" href="patterns/key-points/key-points-learner.html" target="_blank" rel="noopener">Learner view ↗</a>
+            </span>
+          </div>
+          <div class="block-card block-card--dual reveal">
             <img class="block-card__thumb" src="assets/thumbs/benefits.jpg" alt="Preview of the Benefits Master block" loading="lazy" />
-            <span class="block-card__kind">Reveal block · designer mode</span>
+            <span class="block-card__kind">Reveal block · designer + learner</span>
             <span class="block-card__title">Benefits Master</span>
-            <p class="block-card__meta">Card-based benefits explainer — editable in the built-in designer</p>
-            <span class="block-card__open">Launch demo ↗</span>
-          </a>
+            <p class="block-card__meta">Radial stakeholder-impact explainer</p>
+            <span class="block-card__actions">
+              <a class="block-card__open" href="patterns/benefits/benefits.html" target="_blank" rel="noopener">Designer demo ↗</a>
+              <a class="block-card__open block-card__open--alt" href="patterns/benefits/benefits-learner.html" target="_blank" rel="noopener">Learner view ↗</a>
+            </span>
+          </div>
           <a class="block-card reveal" href="patterns/carousel/carousel-prompt-index.html" target="_blank" rel="noopener">
             <img class="block-card__thumb" src="assets/thumbs/carousel.jpg" alt="Preview of the Pharmacological Chirality carousel" loading="lazy" />
             <span class="block-card__kind">Carousel viewer</span>
@@ -625,19 +642,18 @@
             <span class="block-card__open">Open in Review 360 ↗</span>
           </a>
           <div class="block-card block-card--dual reveal">
-            <img class="block-card__thumb" src="assets/thumbs/adipic-3d.jpg" alt="Preview of the 3D Adipic Acid molecule visualiser" loading="lazy" />
+            <img class="block-card__thumb" src="assets/thumbs/adipic-3d.jpg" alt="Preview of the interactive 3D molecule viewer" loading="lazy" />
             <span class="block-card__kind">3D viewer · live demo</span>
             <span class="block-card__title">3D Molecule Viewer</span>
-            <p class="block-card__meta">Interactive 3D ball-and-stick model of adipic acid with a greener-chemistry case study</p>
+            <p class="block-card__meta">Interactive ball-and-stick models with a built-in case study — Metalaxyl-M and its agrochemical chiral switch, plus the original adipic acid greener-chemistry build</p>
             <span class="block-card__actions">
-              <a class="block-card__open" href="patterns/3d/adipic-acid-visualiser.html" target="_blank" rel="noopener">Launch demo ↗</a>
-              <a class="block-card__open block-card__open--alt" href="https://360.articulate.com/review/content/438ac80f-37c1-4fc9-9e63-bf352321f713/review" target="_blank" rel="noopener">Review 360 ↗</a>
+              <a class="block-card__open" href="patterns/3d/molecule-viewer.html" target="_blank" rel="noopener">Launch demo ↗</a>
+              <a class="block-card__open block-card__open--alt" href="patterns/3d/adipic-acid-visualiser.html" target="_blank" rel="noopener">Adipic acid ↗</a>
             </span>
           </div>
         </div>
       </div>
 
-      <!-- Category 2 — Formative assessment -->
       <div class="codex-cat">
         <div class="codex-cat__head">
           <span class="codex-cat__icon" aria-hidden="true"><i data-lucide="clipboard-check"></i></span>
@@ -654,24 +670,29 @@
             <p class="block-card__meta">Level 6 · swipe-to-decide strategic evaluation with instant feedback &amp; a results summary</p>
             <span class="block-card__open">Launch demo ↗</span>
           </a>
-          <a class="block-card reveal" href="patterns/odd-one-out/odd-one-out-quiz.html" target="_blank" rel="noopener">
+          <div class="block-card block-card--dual reveal">
             <img class="block-card__thumb" src="assets/thumbs/odd-one-out.jpg" alt="Preview of the Odd One Out quiz engine" loading="lazy" />
-            <span class="block-card__kind">Quiz engine · designer mode</span>
+            <span class="block-card__kind">Quiz engine · designer + learner</span>
             <span class="block-card__title">Odd One Out</span>
-            <p class="block-card__meta">Digital Transformation · authorable knowledge-check with image options</p>
-            <span class="block-card__open">Launch demo ↗</span>
-          </a>
-          <a class="block-card reveal" href="patterns/myths/myths.html" target="_blank" rel="noopener">
+            <p class="block-card__meta">Digital Transformation · authorable image-based knowledge check</p>
+            <span class="block-card__actions">
+              <a class="block-card__open" href="patterns/odd-one-out/odd-one-out-quiz.html" target="_blank" rel="noopener">Designer demo ↗</a>
+              <a class="block-card__open block-card__open--alt" href="patterns/odd-one-out/odd-one-out-learner.html" target="_blank" rel="noopener">Learner view ↗</a>
+            </span>
+          </div>
+          <div class="block-card block-card--dual reveal">
             <img class="block-card__thumb" src="assets/thumbs/myths.jpg" alt="Preview of the Myth vs Fact sorting block" loading="lazy" />
-            <span class="block-card__kind">Sorting block · designer mode</span>
+            <span class="block-card__kind">Sorting block · designer + learner</span>
             <span class="block-card__title">Myth vs Fact</span>
-            <p class="block-card__meta">Misconception check with feedback — editable in the built-in designer</p>
-            <span class="block-card__open">Launch demo ↗</span>
-          </a>
+            <p class="block-card__meta">Misconception check with reveal feedback</p>
+            <span class="block-card__actions">
+              <a class="block-card__open" href="patterns/myths/myths-designer.html" target="_blank" rel="noopener">Designer demo ↗</a>
+              <a class="block-card__open block-card__open--alt" href="patterns/myths/myths.html" target="_blank" rel="noopener">Learner view ↗</a>
+            </span>
+          </div>
         </div>
       </div>
 
-      <!-- Category 3 — Reflection -->
       <div class="codex-cat">
         <div class="codex-cat__head">
           <span class="codex-cat__icon" aria-hidden="true"><i data-lucide="notebook-pen"></i></span>
@@ -698,7 +719,6 @@
         </div>
       </div>
 
-      <!-- Category 4 — Resources & wayfinding -->
       <div class="codex-cat">
         <div class="codex-cat__head">
           <span class="codex-cat__icon" aria-hidden="true"><i data-lucide="compass"></i></span>
@@ -712,7 +732,7 @@
             <img class="block-card__thumb" src="assets/thumbs/resource-hub.jpg" alt="Preview of the Standards &amp; Guidance Portal" loading="lazy" />
             <span class="block-card__kind">Resource portal · live demo</span>
             <span class="block-card__title">Standards &amp; Guidance Portal</span>
-            <p class="block-card__meta">Searchable hub of standards &amp; guidance — sector references gathered in one place</p>
+            <p class="block-card__meta">Searchable hub of standards &amp; guidance — sector references in one place</p>
             <span class="block-card__open">Launch demo ↗</span>
           </a>
           <a class="block-card reveal" href="patterns/further-learning/further-learning.html" target="_blank" rel="noopener">
@@ -730,6 +750,217 @@
             <span class="block-card__open">Launch demo ↗</span>
           </a>
         </div>
+      </div>
+      </div>
+
+      <div class="codex-accs">
+      <details class="codex-cat codex-acc" open>
+        <summary class="codex-cat__head">
+          <span class="codex-cat__icon" aria-hidden="true"><i data-lucide="book-open"></i></span>
+          <div class="codex-cat__titles">
+            <h4 class="codex-cat__title">Learning &amp; knowledge blocks <span class="codex-cat__count">7 blocks</span></h4>
+            <p class="codex-cat__desc">Explainers, reveals and interactive viewers that introduce or build understanding — progressive disclosure, carousels and rich media for the teaching part of a lesson.</p>
+          </div>
+          <svg class="codex-acc__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </summary>
+        <ul class="codex-list">
+          <li class="codex-row">
+            <div class="codex-row__main">
+              <span class="codex-row__kind">Reveal block · designer + learner</span>
+              <span class="codex-row__title">Takeaways Revealer</span>
+              <p class="codex-row__meta">Progressive reveal of key learning points</p>
+            </div>
+            <div class="codex-row__actions">
+              <a class="codex-link" href="patterns/key-points/key-points.html" target="_blank" rel="noopener">Designer demo ↗</a>
+              <a class="codex-link codex-link--alt" href="patterns/key-points/key-points-learner.html" target="_blank" rel="noopener">Learner view ↗</a>
+            </div>
+          </li>
+          <li class="codex-row">
+            <div class="codex-row__main">
+              <span class="codex-row__kind">Reveal block · designer + learner</span>
+              <span class="codex-row__title">Benefits Master</span>
+              <p class="codex-row__meta">Radial stakeholder-impact explainer</p>
+            </div>
+            <div class="codex-row__actions">
+              <a class="codex-link" href="patterns/benefits/benefits.html" target="_blank" rel="noopener">Designer demo ↗</a>
+              <a class="codex-link codex-link--alt" href="patterns/benefits/benefits-learner.html" target="_blank" rel="noopener">Learner view ↗</a>
+            </div>
+          </li>
+          <li class="codex-row">
+            <div class="codex-row__main">
+              <span class="codex-row__kind">Carousel viewer</span>
+              <span class="codex-row__title">Pharmacological Chirality</span>
+              <p class="codex-row__meta">Level 6 HE · swipeable content carousel</p>
+            </div>
+            <div class="codex-row__actions">
+              <a class="codex-link" href="patterns/carousel/carousel-prompt-index.html" target="_blank" rel="noopener">Launch demo ↗</a>
+            </div>
+          </li>
+          <li class="codex-row">
+            <div class="codex-row__main">
+              <span class="codex-row__kind">Reveal styles · Review 360</span>
+              <span class="codex-row__title">Reveal Options</span>
+              <p class="codex-row__meta">Reveal, flip and progressive-disclosure card styles</p>
+            </div>
+            <div class="codex-row__actions">
+              <a class="codex-link" href="https://360.articulate.com/review/content/ce4bf4c4-569b-4952-a194-979d0c778cec/review" target="_blank" rel="noopener">Review 360 ↗</a>
+            </div>
+          </li>
+          <li class="codex-row">
+            <div class="codex-row__main">
+              <span class="codex-row__kind">Image tool</span>
+              <span class="codex-row__title">Magnify</span>
+              <p class="codex-row__meta">Interactive zoom/magnifier for detailed imagery and diagrams</p>
+            </div>
+            <div class="codex-row__actions">
+              <a class="codex-link" href="patterns/magnify/magnify.html" target="_blank" rel="noopener">Launch demo ↗</a>
+              <a class="codex-link codex-link--alt" href="https://360.articulate.com/review/content/52955237-15b1-4735-a948-9dd001060ae2/review" target="_blank" rel="noopener">Review 360 ↗</a>
+            </div>
+          </li>
+          <li class="codex-row">
+            <div class="codex-row__main">
+              <span class="codex-row__kind">Graphics-in-code · Review 360</span>
+              <span class="codex-row__title">SVG Pictograms</span>
+              <p class="codex-row__meta">Scalable inline SVG pictograms coded for crisp, lightweight visuals</p>
+            </div>
+            <div class="codex-row__actions">
+              <a class="codex-link" href="https://360.articulate.com/review/content/f520b311-9cc7-49d2-aa67-f79c8dba84ff/review" target="_blank" rel="noopener">Review 360 ↗</a>
+            </div>
+          </li>
+          <li class="codex-row">
+            <div class="codex-row__main">
+              <span class="codex-row__kind">3D viewer</span>
+              <span class="codex-row__title">3D Molecule Viewer</span>
+              <p class="codex-row__meta">Interactive ball-and-stick models with a built-in case study — Metalaxyl-M and its agrochemical chiral switch, plus the original adipic acid greener-chemistry build</p>
+            </div>
+            <div class="codex-row__actions">
+              <a class="codex-link" href="patterns/3d/molecule-viewer.html" target="_blank" rel="noopener">Launch demo ↗</a>
+              <a class="codex-link codex-link--alt" href="patterns/3d/adipic-acid-visualiser.html" target="_blank" rel="noopener">Adipic acid ↗</a>
+            </div>
+          </li>
+        </ul>
+      </details>
+
+      <details class="codex-cat codex-acc" open>
+        <summary class="codex-cat__head">
+          <span class="codex-cat__icon" aria-hidden="true"><i data-lucide="clipboard-check"></i></span>
+          <div class="codex-cat__titles">
+            <h4 class="codex-cat__title">Formative assessment blocks <span class="codex-cat__count">3 blocks</span></h4>
+            <p class="codex-cat__desc">Low-stakes knowledge checks that test understanding and surface misconceptions — instant feedback, authorable questions, no LMS scoring required.</p>
+          </div>
+          <svg class="codex-acc__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </summary>
+        <ul class="codex-list">
+          <li class="codex-row">
+            <div class="codex-row__main">
+              <span class="codex-row__kind">Swipe quiz</span>
+              <span class="codex-row__title">Swipe Quiz — Microbiology</span>
+              <p class="codex-row__meta">Level 6 · swipe-to-decide strategic evaluation with instant feedback &amp; a results summary</p>
+            </div>
+            <div class="codex-row__actions">
+              <a class="codex-link" href="patterns/swipe/swipe-quiz.html" target="_blank" rel="noopener">Launch demo ↗</a>
+            </div>
+          </li>
+          <li class="codex-row">
+            <div class="codex-row__main">
+              <span class="codex-row__kind">Quiz engine · designer + learner</span>
+              <span class="codex-row__title">Odd One Out</span>
+              <p class="codex-row__meta">Digital Transformation · authorable image-based knowledge check</p>
+            </div>
+            <div class="codex-row__actions">
+              <a class="codex-link" href="patterns/odd-one-out/odd-one-out-quiz.html" target="_blank" rel="noopener">Designer demo ↗</a>
+              <a class="codex-link codex-link--alt" href="patterns/odd-one-out/odd-one-out-learner.html" target="_blank" rel="noopener">Learner view ↗</a>
+            </div>
+          </li>
+          <li class="codex-row">
+            <div class="codex-row__main">
+              <span class="codex-row__kind">Sorting block · designer + learner</span>
+              <span class="codex-row__title">Myth vs Fact</span>
+              <p class="codex-row__meta">Misconception check with reveal feedback</p>
+            </div>
+            <div class="codex-row__actions">
+              <a class="codex-link" href="patterns/myths/myths-designer.html" target="_blank" rel="noopener">Designer demo ↗</a>
+              <a class="codex-link codex-link--alt" href="patterns/myths/myths.html" target="_blank" rel="noopener">Learner view ↗</a>
+            </div>
+          </li>
+        </ul>
+      </details>
+
+      <details class="codex-cat codex-acc" open>
+        <summary class="codex-cat__head">
+          <span class="codex-cat__icon" aria-hidden="true"><i data-lucide="notebook-pen"></i></span>
+          <div class="codex-cat__titles">
+            <h4 class="codex-cat__title">Reflection blocks <span class="codex-cat__count">2 blocks</span></h4>
+            <p class="codex-cat__desc">Private, device-stored journaling and self-assessment spaces that deepen metacognition and reflective practice — exportable, with no learner data leaving the browser.</p>
+          </div>
+          <svg class="codex-acc__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </summary>
+        <ul class="codex-list">
+          <li class="codex-row">
+            <div class="codex-row__main">
+              <span class="codex-row__kind">Reflective workbook</span>
+              <span class="codex-row__title">Reflective Notebook — English Functional skills</span>
+              <p class="codex-row__meta">Strategic Communication · exportable reflection workbook</p>
+            </div>
+            <div class="codex-row__actions">
+              <a class="codex-link" href="patterns/reflection/writing-reflection-html-english.html" target="_blank" rel="noopener">Launch demo ↗</a>
+            </div>
+          </li>
+          <li class="codex-row">
+            <div class="codex-row__main">
+              <span class="codex-row__kind">Reflective workbook</span>
+              <span class="codex-row__title">Reflective Notebook — Maths Functional skills</span>
+              <p class="codex-row__meta">Numeracy &amp; application · exportable reflection workbook</p>
+            </div>
+            <div class="codex-row__actions">
+              <a class="codex-link" href="patterns/reflection/writing-reflection-html-index-maths.html" target="_blank" rel="noopener">Launch demo ↗</a>
+            </div>
+          </li>
+        </ul>
+      </details>
+
+      <details class="codex-cat codex-acc" open>
+        <summary class="codex-cat__head">
+          <span class="codex-cat__icon" aria-hidden="true"><i data-lucide="compass"></i></span>
+          <div class="codex-cat__titles">
+            <h4 class="codex-cat__title">Resources &amp; wayfinding blocks <span class="codex-cat__count">3 blocks</span></h4>
+            <p class="codex-cat__desc">Searchable portals, curated resource explorers and careers pathways that help learners navigate standards, further reading and progression — wayfinding rather than teaching.</p>
+          </div>
+          <svg class="codex-acc__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </summary>
+        <ul class="codex-list">
+          <li class="codex-row">
+            <div class="codex-row__main">
+              <span class="codex-row__kind">Resource portal</span>
+              <span class="codex-row__title">Standards &amp; Guidance Portal</span>
+              <p class="codex-row__meta">Searchable hub of standards &amp; guidance — sector references in one place</p>
+            </div>
+            <div class="codex-row__actions">
+              <a class="codex-link" href="patterns/resource-hub/resource-hub.html" target="_blank" rel="noopener">Launch demo ↗</a>
+            </div>
+          </li>
+          <li class="codex-row">
+            <div class="codex-row__main">
+              <span class="codex-row__kind">Resource explorer</span>
+              <span class="codex-row__title">Further Learning Resources</span>
+              <p class="codex-row__meta">Curated further-reading explorer mapped to a module's sessions</p>
+            </div>
+            <div class="codex-row__actions">
+              <a class="codex-link" href="patterns/further-learning/further-learning.html" target="_blank" rel="noopener">Launch demo ↗</a>
+            </div>
+          </li>
+          <li class="codex-row">
+            <div class="codex-row__main">
+              <span class="codex-row__kind">Careers explorer</span>
+              <span class="codex-row__title">Careers Explorer</span>
+              <p class="codex-row__meta">Interactive careers &amp; progression-pathway explorer for learners</p>
+            </div>
+            <div class="codex-row__actions">
+              <a class="codex-link" href="patterns/careers/careers.html" target="_blank" rel="noopener">Launch demo ↗</a>
+            </div>
+          </li>
+        </ul>
+      </details>
       </div>
     </div>
   </div>
@@ -924,7 +1155,7 @@
       </div>
       <div class="reveal">
         <ul class="contact-list">
-          <li><a href="tel:+447878602772"><span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>(UK) +44 7878 602772</a></li>
+          <li data-phone="+447878602772"><a href="tel:+447878602772"><span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>(UK) +44 7878 602772</a><span class="contact-copied" id="phoneCopied" role="status" aria-live="polite"></span></li>
           <li><a href="mailto:dan.boyland@forgedframeworks.co.uk"><span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg></span>dan.boyland@forgedframeworks.co.uk</a></li>
           <li><a href="https://www.linkedin.com/in/daniel-boyland-577b6476/" target="_blank" rel="noopener"><span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></span>linkedin.com/in/daniel-boyland-577b6476</a></li>
           <li><a href="https://maps.app.goo.gl/AVriBuwYmjrgjDxy9" target="_blank" rel="noopener"><span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>Remote — Cwmbran, S. Wales</a></li>

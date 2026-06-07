@@ -1,0 +1,1380 @@
+<!--
+PROJECT: Forged Frameworks reusable 3D model and case-study pattern
+ROLE: Learner-facing scientific structure viewer
+VERSION: 1.0.0
+DEPENDENCY: 3Dmol.js 2.5.3, packaged locally under its BSD licence
+-->
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Model and Case Study</title>
+  <script src="https://3Dmol.org/build/3Dmol-min.js"></script>
+  <style>
+    :root {
+      --accent: #691eda;
+      --accent-strong: #691eda;
+      --highlight: #f08838;
+      --page: #e8dbf7;
+      --panel: #ffffff;
+      --viewer: #111827;
+      --text: #172033;
+      --muted: #526078;
+      --border: #d8ddea;
+      --focus: #0b6cff;
+      --danger: #a61b1b;
+      --success: #176b3a;
+      color-scheme: light;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-width: 0;
+      min-height: 100%;
+      background: var(--page);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body { padding: clamp(10px, 2vw, 24px); }
+
+    button, a { font: inherit; }
+
+    button:focus-visible, a:focus-visible, .controls:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .interaction {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      border: 1px solid rgba(91, 33, 182, 0.22);
+      border-top: 7px solid var(--accent);
+      border-radius: 18px;
+      overflow: clip;
+      background: var(--panel);
+      box-shadow: 0 18px 44px rgba(39, 22, 74, 0.14);
+    }
+
+    .intro {
+      padding: clamp(18px, 3vw, 30px);
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(135deg, #ffffff, color-mix(in srgb, var(--page) 55%, white));
+    }
+
+    .eyebrow {
+      margin: 0 0 6px;
+      color: var(--accent-strong);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 28ch;
+      font-size: clamp(1.55rem, 4vw, 2.45rem);
+      line-height: 1.12;
+      overflow-wrap: anywhere;
+    }
+
+    .instruction {
+      max-width: 78ch;
+      margin: 12px 0 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .metadata {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .metadata li {
+      min-width: 0;
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.82);
+      color: #344054;
+      font-size: 0.86rem;
+      overflow-wrap: anywhere;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.75fr);
+      align-items: stretch;
+      min-width: 0;
+    }
+
+    .viewer-column {
+      min-width: 0;
+      padding: clamp(12px, 2vw, 20px);
+      background: #f7f5fb;
+    }
+
+    .viewer-shell {
+      position: relative;
+      min-width: 0;
+      aspect-ratio: 16 / 10;
+      min-height: 360px;
+      overflow: hidden;
+      border: 1px solid #293348;
+      border-radius: 14px;
+      background: var(--viewer);
+      isolation: isolate;
+    }
+
+    #viewer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+
+    .viewer-state {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: rgba(17, 24, 39, 0.94);
+      color: #ffffff;
+      text-align: center;
+    }
+
+    .viewer-state[hidden] { display: none; }
+
+    .state-card {
+      width: min(470px, 100%);
+      padding: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      text-align: center;
+    }
+
+    .state-card strong { display: block; font-size: 1.05rem; }
+    .state-card p { margin: 9px 0 0; line-height: 1.5; color: #e5e7eb; }
+    .state-card.error { border-color: #fca5a5; background: rgba(127, 29, 29, 0.42); }
+
+    .spinner {
+      width: 34px;
+      height: 34px;
+      margin: 0 auto 14px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .control-group {
+      min-width: 0;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #ffffff;
+    }
+
+    .control-group h2 {
+      margin: 0 0 9px;
+      color: #344054;
+      font-size: 0.86rem;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(44px, 1fr));
+      gap: 7px;
+    }
+
+    .button-grid.linear { grid-template-columns: repeat(2, minmax(44px, 1fr)); }
+
+    .control-button, .primary-button, .case-close {
+      min-height: 44px;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--accent-strong);
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .control-button:hover { background: #f3efff; }
+
+    .control-button[data-direction="up"] { grid-column: 2; }
+    .control-button[data-direction="left"] { grid-column: 1; grid-row: 2; }
+    .control-button[data-direction="down"] { grid-column: 2; grid-row: 2; }
+    .control-button[data-direction="right"] { grid-column: 3; grid-row: 2; }
+
+    .primary-button {
+      width: 100%;
+      padding: 10px 14px;
+      border-color: var(--highlight);
+      background: var(--highlight);
+      color: #ffffff;
+    }
+
+    .primary-button:hover { background: #c95013; }
+
+    .model-summary {
+      margin: 14px 0 0;
+      padding: 12px 14px;
+      border-left: 4px solid var(--accent);
+      border-radius: 0 9px 9px 0;
+      background: #ffffff;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .status-line {
+      min-height: 24px;
+      margin: 10px 2px 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .case-column {
+      min-width: 0;
+      padding: clamp(16px, 2.5vw, 26px);
+      border-left: 1px solid var(--border);
+      background: #ffffff;
+    }
+
+    .case-column[hidden] { display: none; }
+
+    .case-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .case-header h2 {
+      margin: 0;
+      color: var(--accent-strong);
+      font-size: 1.18rem;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+
+    .case-close {
+      flex: 0 0 auto;
+      padding: 8px 12px;
+    }
+
+    .case-content {
+      max-height: 630px;
+      overflow-y: auto;
+      padding-right: 5px;
+      overscroll-behaviour: contain;
+    }
+
+    .case-section {
+      margin-top: 18px;
+    }
+
+    .case-section h3 {
+      margin: 0 0 6px;
+      color: #344054;
+      font-size: 0.88rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .case-section p {
+      margin: 0;
+      color: #3e4a5f;
+      line-height: 1.62;
+      overflow-wrap: anywhere;
+    }
+
+    .case-section.caution {
+      padding: 12px;
+      border-left: 4px solid #c77b00;
+      background: #fff8e6;
+    }
+
+    .source-link {
+      display: inline-block;
+      margin-top: 18px;
+      color: var(--accent-strong);
+      font-weight: 750;
+      overflow-wrap: anywhere;
+    }
+
+    .case-launch {
+      margin-top: 14px;
+    }
+
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 820px) {
+      body { padding: 8px; }
+      .workspace { grid-template-columns: 1fr; }
+      .case-column { border-top: 1px solid var(--border); border-left: 0; }
+      .viewer-shell { min-height: 390px; aspect-ratio: 4 / 3; }
+      .case-content { max-height: none; overflow: visible; }
+    }
+
+    @media (max-width: 520px) {
+      .intro, .viewer-column, .case-column { padding: 14px; }
+      .viewer-shell {
+        height: min(390px, calc(100vw - 46px));
+        min-height: 260px;
+        aspect-ratio: auto;
+      }
+      .controls { grid-template-columns: 1fr; }
+      .metadata { display: grid; grid-template-columns: 1fr; }
+      .metadata li { border-radius: 9px; }
+      .case-header { display: block; }
+      .case-close { width: 100%; margin-top: 12px; }
+    }
+
+    @media (max-height: 500px) and (orientation: landscape) {
+      .viewer-shell { min-height: 300px; aspect-ratio: 16 / 8; }
+      .controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behaviour: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Preserve the approved visualiser DNA while retaining the accessible controls. */
+    html, body {
+      width: 100%;
+      min-height: 700px;
+      background: var(--page);
+    }
+
+    body { padding: 0; }
+
+    .interaction {
+      position: relative;
+      width: 100%;
+      min-height: 700px;
+      margin: 0;
+      border: 0;
+      border-top: 8px solid var(--accent);
+      border-bottom: 8px solid var(--accent);
+      border-radius: 0;
+      overflow: hidden;
+      background: var(--page);
+      box-shadow: none;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 480px;
+      min-height: 684px;
+      background: var(--page);
+    }
+
+    .intro,
+    .element-key,
+    .controls {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+      box-shadow: 0 8px 22px rgba(42, 20, 78, 0.1);
+    }
+
+    .intro {
+      position: absolute;
+      z-index: 12;
+      top: 28px;
+      left: 20px;
+      width: min(430px, calc(100% - 540px));
+      padding: 15px;
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+    }
+
+    .eyebrow {
+      margin: 0 0 5px;
+      font-size: 0.68rem;
+    }
+
+    h1 {
+      max-width: none;
+      color: var(--accent-strong);
+      font-size: clamp(1.05rem, 2vw, 1.35rem);
+    }
+
+    .instruction {
+      margin-top: 8px;
+      font-size: 0.78rem;
+      line-height: 1.4;
+    }
+
+    .metadata {
+      display: flex;
+      gap: 5px 10px;
+      margin-top: 9px;
+    }
+
+    .metadata li {
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      font-size: 0.7rem;
+    }
+
+    .viewer-column {
+      position: relative;
+      min-width: 0;
+      min-height: 684px;
+      padding: 0;
+      overflow: hidden;
+      background: var(--page);
+    }
+
+    .viewer-shell {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      aspect-ratio: auto;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .viewer-state {
+      background: color-mix(in srgb, var(--page) 88%, transparent);
+      color: var(--text);
+    }
+
+    .state-card {
+      background: rgba(255, 255, 255, 0.9);
+      border-color: color-mix(in srgb, var(--accent) 32%, transparent);
+      color: var(--text);
+      box-shadow: 0 12px 30px rgba(42, 20, 78, 0.14);
+    }
+
+    .state-card p { color: var(--muted); }
+    .state-card.error { background: #fff0f2; color: #751824; }
+    .spinner { border-color: rgba(105, 30, 218, 0.2); border-top-color: var(--accent); }
+
+    .element-key {
+      position: absolute;
+      z-index: 11;
+      left: 20px;
+      bottom: 20px;
+      width: 170px;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    .element-key h2,
+    .controls > h2 {
+      margin: 0 0 9px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid color-mix(in srgb, var(--accent) 16%, transparent);
+      color: var(--accent-strong);
+      font-size: 0.78rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .atom-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-top: 6px;
+      font-size: 0.78rem;
+      font-weight: 650;
+    }
+
+    .atom-dot {
+      width: 13px;
+      height: 13px;
+      flex: 0 0 auto;
+      border: 1px solid rgba(0, 0, 0, 0.18);
+      border-radius: 50%;
+    }
+
+    .atom-dot.oxygen { background: #ff0d0d; }
+    .atom-dot.nitrogen { background: #3050f8; }
+    .atom-dot.carbon { background: #909090; }
+    .atom-dot.hydrogen { background: #ffffff; }
+
+    .controls {
+      position: absolute;
+      z-index: 11;
+      right: 20px;
+      bottom: 74px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      width: 320px;
+      margin: 0;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    .controls::before {
+      content: "Navigation hub";
+      grid-column: 1 / -1;
+      margin-bottom: 9px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid color-mix(in srgb, var(--accent) 16%, transparent);
+      color: var(--accent-strong);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .keyboard-hint {
+      grid-column: 1 / -1;
+      margin: 9px 0 0;
+      color: #5f6572;
+      font-size: 0.68rem;
+      line-height: 1.35;
+      text-align: center;
+    }
+
+    .control-group {
+      padding: 0;
+      border: 0;
+      background: transparent;
+    }
+
+    .control-group + .control-group { margin-left: 8px; }
+    .control-group h2 { font-size: 0.72rem; }
+    .button-grid { gap: 4px; }
+
+    .control-button {
+      min-height: 44px;
+      padding: 5px 6px;
+      border-radius: 5px;
+      font-size: 0.72rem;
+    }
+
+    .status-line {
+      position: absolute;
+      z-index: 11;
+      right: 20px;
+      bottom: 285px;
+      min-height: 0;
+      margin: 0;
+      color: #596174;
+      font-size: 0.68rem;
+    }
+
+    .model-summary {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    .case-launch {
+      position: absolute;
+      z-index: 11;
+      right: 20px;
+      bottom: 20px;
+      width: 320px;
+      margin: 0;
+    }
+
+    .primary-button {
+      min-height: 44px;
+      border-radius: 5px;
+      font-size: 0.8rem;
+    }
+
+    .case-column {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+      padding: 20px;
+      border: 0;
+      background: transparent;
+      overflow-y: auto;
+    }
+
+    .case-column::before {
+      content: "";
+      position: fixed;
+      pointer-events: none;
+    }
+
+    .case-column > * { width: 100%; }
+
+    .case-header,
+    .case-content {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .case-header {
+      padding: 24px 24px 12px;
+      border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+      border-bottom: 0;
+      border-left: 5px solid var(--highlight);
+      border-radius: 12px 12px 0 0;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    }
+
+    .case-header h2 {
+      color: var(--accent-strong);
+      font-size: 1.05rem;
+    }
+
+    .case-close {
+      min-height: 40px;
+      border-color: #d7d7dc;
+      background: #eeeeef;
+      color: #30333a;
+    }
+
+    .case-content {
+      max-height: none;
+      padding: 0 24px 24px;
+      border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+      border-top: 0;
+      border-left: 5px solid var(--highlight);
+      border-radius: 0 0 12px 12px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    }
+
+    .case-section { margin-top: 15px; }
+    .case-section h3 { color: var(--accent-strong); font-size: 0.78rem; }
+    .case-section p { font-size: 0.9rem; line-height: 1.55; }
+
+    .case-body-paragraph {
+      margin: 18px 0 0;
+      color: #444;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      text-align: justify;
+    }
+
+    .workspace.case-closed { grid-template-columns: 1fr; }
+
+    @media (min-width: 901px) {
+      html, body { height: 100%; overflow: hidden; }
+      .interaction { height: 100vh; }
+      .workspace { height: calc(100vh - 16px); min-height: 684px; }
+      .case-column { height: 100%; overflow-y: auto; }
+    }
+
+    @media (max-width: 900px) {
+      html, body { min-height: 0; }
+      .interaction { min-height: 0; overflow: visible; }
+      .workspace,
+      .workspace.case-closed { grid-template-columns: 1fr; min-height: 0; }
+      .viewer-column { min-height: 720px; }
+      .intro {
+        width: auto;
+        right: 14px;
+        top: 14px;
+        left: 14px;
+      }
+      .element-key { left: 14px; bottom: 14px; }
+      .controls { right: 14px; bottom: 70px; }
+      .case-launch { right: 14px; bottom: 14px; }
+      .status-line { right: 14px; bottom: 52px; }
+      .case-column { padding: 14px; }
+    }
+
+    @media (max-width: 560px) {
+      .viewer-column {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        padding: 12px;
+        gap: 12px;
+      }
+      .intro,
+      .viewer-shell,
+      .element-key,
+      .controls,
+      .status-line,
+      .case-launch {
+        position: relative;
+        inset: auto;
+        width: 100%;
+      }
+      .intro { order: 1; }
+      .viewer-shell {
+        order: 2;
+        height: min(430px, calc(100vw - 24px));
+        min-height: 296px;
+        border-radius: 8px;
+      }
+      .element-key { order: 3; }
+      .controls {
+        order: 4;
+        grid-template-columns: 1fr;
+      }
+      .control-group + .control-group { margin: 10px 0 0; }
+      .status-line { order: 5; }
+      .case-launch { order: 6; }
+      .metadata { display: grid; grid-template-columns: 1fr; }
+      .case-header { display: flex; }
+      .case-close { width: auto; margin-top: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main class="interaction" id="interaction">
+    <header class="intro">
+      <p class="eyebrow" id="eyebrow">Interactive 3D structure</p>
+      <h1 id="modelName">Metalaxyl-M</h1>
+      <p class="instruction" id="instruction">Drag the model to inspect it. Use the visible controls for rotation, zoom, motion and reset.</p>
+      <ul class="metadata" id="metadata"></ul>
+    </header>
+
+    <div class="workspace" id="workspace">
+      <section class="viewer-column" aria-labelledby="viewerHeading">
+        <h2 class="visually-hidden" id="viewerHeading">Interactive model viewer</h2>
+        <div class="viewer-shell" id="viewerShell">
+          <div id="viewer" role="img" aria-describedby="modelSummary"></div>
+          <div class="viewer-state" id="loadingState" role="status" aria-live="polite">
+            <div class="state-card">
+              <div class="spinner" aria-hidden="true"></div>
+              <strong>Loading 3D structure</strong>
+              <p id="loadingText">Preparing the verified structure file.</p>
+            </div>
+          </div>
+          <div class="viewer-state" id="errorState" role="alert" hidden>
+            <div class="state-card error">
+              <strong>The 3D structure could not be displayed</strong>
+              <p id="errorText">The structure file or viewer library is unavailable. Use the model summary and case study below.</p>
+            </div>
+          </div>
+        </div>
+
+        <section class="element-key" id="elementKey" aria-labelledby="elementKeyHeading">
+          <h2 id="elementKeyHeading">Element key</h2>
+          <div class="atom-row"><span class="atom-dot oxygen" aria-hidden="true"></span> Oxygen</div>
+          <div class="atom-row"><span class="atom-dot nitrogen" aria-hidden="true"></span> Nitrogen</div>
+          <div class="atom-row"><span class="atom-dot carbon" aria-hidden="true"></span> Carbon</div>
+          <div class="atom-row"><span class="atom-dot hydrogen" aria-hidden="true"></span> Hydrogen</div>
+        </section>
+
+        <div class="controls" id="controls" role="group" aria-label="Model navigation controls" tabindex="0">
+          <section class="control-group" aria-labelledby="rotationHeading">
+            <h2 id="rotationHeading">Rotate model</h2>
+            <div class="button-grid">
+              <button class="control-button hold-control" data-action="up" data-direction="up" aria-label="Rotate model upwards">Up</button>
+              <button class="control-button hold-control" data-action="left" data-direction="left" aria-label="Rotate model left">Left</button>
+              <button class="control-button hold-control" data-action="down" data-direction="down" aria-label="Rotate model downwards">Down</button>
+              <button class="control-button hold-control" data-action="right" data-direction="right" aria-label="Rotate model right">Right</button>
+            </div>
+          </section>
+
+          <section class="control-group" aria-labelledby="viewHeading">
+            <h2 id="viewHeading">View controls</h2>
+            <div class="button-grid linear">
+              <button class="control-button hold-control" data-action="zoomOut" aria-label="Zoom out from model">Zoom out</button>
+              <button class="control-button hold-control" data-action="zoomIn" aria-label="Zoom in to model">Zoom in</button>
+              <button class="control-button" id="motionToggle" aria-pressed="false">Pause rotation</button>
+              <button class="control-button" id="resetView">Reset view</button>
+            </div>
+          </section>
+          <p class="keyboard-hint" id="keyboardHint">Keyboard: Tab to a button and press Enter or Space. Focus this navigation hub to use the arrow keys and plus or minus.</p>
+        </div>
+
+        <p class="status-line" id="statusLine" role="status" aria-live="polite"></p>
+        <p class="model-summary" id="modelSummary">Interactive model summary.</p>
+        <div class="case-launch" id="caseLaunch">
+          <button class="primary-button" id="caseToggle" aria-expanded="true" aria-controls="casePanel">Close case study</button>
+        </div>
+      </section>
+
+      <aside class="case-column" id="casePanel" aria-labelledby="caseTitle">
+        <div class="case-header">
+          <h2 id="caseTitle">Case study</h2>
+          <button class="case-close" id="caseClose">Close [X]</button>
+        </div>
+        <div class="case-content" id="caseContent"></div>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    const DEFAULT_CONFIG = {
+      sourceType: "embedded",
+      sourcePath: "assets/metalaxyl-m-cid-11150163.sdf",
+      pubchemCid: "11150163",
+      modelName: "Metalaxyl-M",
+      commonName: "Mefenoxam",
+      systematicName: "methyl (2R)-2-(N-(2-methoxyacetyl)-2,6-dimethylanilino)propanoate",
+      formula: "C15H21NO4",
+      molecularMass: "279.33 g/mol",
+      identifier: "PubChem CID 11150163",
+      structureNote: "The viewer shows a packaged PubChem 3D conformer for the R-enantiomer.",
+      attribution: "Structure data: PubChem",
+      summary: "A rotatable three-dimensional conformer of Metalaxyl-M, provided to support inspection of molecular shape and stereochemical context. The visual model is supplementary and is not a complete accessible explanation by itself.",
+      caseStudy: {
+        enabled: true,
+        title: "Case Study: Chiral Switch in Agrochemicals - Metalaxyl-M",
+        context: "The fungicide Metalaxyl was originally sold as a racemate for controlling crop diseases. Extensive research demonstrated that virtually all the fungicidal activity resided in the (R)-enantiomer. The (S)-enantiomer was essentially inactive ballast.\n\nThis discovery prompted the development of Metalaxyl-M (also known as Mefenoxam), the pure (R)-enantiomer. The new product was just as effective but could be applied at half the original rate.\n\nThis 'chiral switch' was a major commercial and environmental success, reducing the chemical load on the environment, saving farmers money, and extending the product's patent life. It perfectly illustrates that the principles of stereoselectivity are just as critical in the agrochemical sector as they are in pharmaceuticals.",
+        finding: "",
+        consequence: "",
+        relevance: "",
+        reflection: "",
+        caution: "",
+        sourceLabel: "View the full BCPC publication",
+        sourceUrl: "https://www.bcpc.org/news/the-advantages-of-single-isomer-and-single-enantiomer-agrochemicals"
+      },
+      viewer: {
+        representation: "ball-and-stick",
+        background: "#e8dbf7",
+        colourScheme: "Jmol",
+        initialZoom: 0.62,
+        autoRotate: true,
+        autoRotateSpeed: 0.25
+      },
+      visual: {
+        accent: "#691eda",
+        highlight: "#f08838",
+        surrounding: "light",
+        layout: "expanded",
+        casePosition: "beside"
+      },
+      show: {
+        commonName: true,
+        systematicName: false,
+        formula: true,
+        molecularMass: true,
+        identifier: true,
+        structureNote: true,
+        attribution: true,
+        caseStudy: true,
+        externalReference: true,
+        manualRotation: true,
+        zoom: true,
+        reset: true,
+        motion: true
+      },
+      labels: {
+        eyebrow: "Interactive 3D structure",
+        instruction: "Drag the model to inspect it. Use the visible controls for rotation, zoom, motion and reset.",
+        openCaseStudy: "Open case study",
+        closeCaseStudy: "Close case study"
+      }
+    };
+
+    const EMBEDDED_MODEL_BASE64 = "MTExNTAxNjMKICAtT0VDaGVtLTA2MDYyNjE4MDIzRAoKIDQxIDQxICAwICAgICAxICAwICAwICAwICAwICAwOTk5IFYyMDAwCiAgICAzLjgyMTEgICAgMC43NTA3ICAgIDAuMzUzMCBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMS4xNDg5ICAgLTMuNDY1NSAgIC0wLjA3NDggTyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuMDE5MSAgIC0yLjMyNjMgICAgMC43MTMwIE8gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAyLjUzNzMgICAtMC42MDkwICAgLTAuOTg0MSBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMC4yNjM4ICAgLTAuMDg5MyAgICAwLjQ0OTAgTiAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuNDc2NyAgICAwLjU5MjEgICAgMC44MjI5IEMgICAwICAwICAyICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0wLjg5NzcgICAgMC43MTU3ICAgIDAuMDczOCBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMS43NjQ0ICAgIDEuMDc4NiAgICAxLjA2MzMgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTEuMDM5MyAgICAxLjA1MTAgICAtMS4yNDExIEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAxLjI4MTcgICAgMi4wOTg0ICAgIDAuNzQ3MyBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMC4xMzk2ICAgLTEuNTA4NiAgICAwLjQyNjUgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDIuNjU0OCAgICAwLjE2NjkgICAtMC4wNDA5IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0yLjg3MzAgICAgMS44NDYwICAgIDAuNzA1MyBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMi4xNDc3ICAgIDEuODE4NCAgIC0xLjU5OTEgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTEuNTg2NiAgICAwLjY5ODIgICAgMi40OTc1IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0wLjA3NDggICAgMC42NDEwICAgLTIuMzA2NSBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMy4wNjQ1ICAgIDIuMjE1OSAgIC0wLjYyNTggQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTEuMTk0NyAgIC0yLjA1NDcgICAtMC4wNDgwIEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICA0Ljk3OTAgICAgMC40MDkyICAgLTAuNDE2MyBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMi4zODEzICAgLTQuMDI4NyAgIC0wLjUxNDggQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuNzEwMCAgICAwLjI4MjEgICAgMS44NDkwIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAyLjE5NzkgICAgMi42MDA1ICAgIDEuMDg1MCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS4xMTczICAgIDIuNDY4NCAgIC0wLjI2OTQgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDAuNDk3NiAgICAyLjQ3OTcgICAgMS40MDYyIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0zLjU5NzMgICAgMi4xNjQ4ICAgIDEuNDUwMyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMi4zMTE0ICAgIDIuMTE2OSAgIC0yLjYzMTIgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTAuNjU2NCAgICAxLjEwNTggICAgMi45MDM0IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0yLjQwMTkgICAgMS4wODI3ICAgIDMuMTIwNyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMS41ODI2ICAgLTAuMzg5NiAgICAyLjYxNTggSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDAuMTU2OSAgIC0wLjQyNjIgICAtMi4yNTk2IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0wLjQ5MTAgICAgMC44MTY3ICAgLTMuMzA1MyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMC44NDk3ICAgIDEuMjIwOCAgIC0yLjIzNzMgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTMuOTI3MyAgICAyLjgxMzkgICAtMC45MDQ2IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0xLjk4MzggICAtMS43NDE1ICAgIDAuNjQxOCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMS40MDk0ICAgLTEuNjk3MCAgIC0xLjA1NzkgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDUuODM1NyAgICAwLjk0MjUgICAgMC4wMDQyIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICA0Ljg0NzQgICAgMC43MjEwICAgLTEuNDU2OCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNS4xNzAzICAgLTAuNjY2NCAgIC0wLjM1NTYgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTMuMTkzMyAgIC0zLjc0OTEgICAgMC4xNjM0IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0yLjI4MTYgICAtNS4xMTc0ICAgLTAuNTExNCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMi42MDk1ICAgLTMuNzAwOCAgIC0xLjUzMzUgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAxIDEyICAxICAwICAwICAwICAwCiAgMSAxOSAgMSAgMCAgMCAgMCAgMAogIDIgMTggIDEgIDAgIDAgIDAgIDAKICAyIDIwICAxICAwICAwICAwICAwCiAgMyAxMSAgMiAgMCAgMCAgMCAgMAogIDQgMTIgIDIgIDAgIDAgIDAgIDAKICA1ICA2ICAxICAwICAwICAwICAwCiAgNSAgNyAgMSAgMCAgMCAgMCAgMAogIDUgMTEgIDEgIDAgIDAgIDAgIDAKICA2IDEwICAxICAwICAwICAwICAwCiAgNiAxMiAgMSAgMCAgMCAgMCAgMAogIDYgMjEgIDEgIDAgIDAgIDAgIDAKICA3ICA4ICAyICAwICAwICAwICAwCiAgNyAgOSAgMSAgMCAgMCAgMCAgMAogIDggMTMgIDEgIDAgIDAgIDAgIDAKICA4IDE1ICAxICAwICAwICAwICAwCiAgOSAxNCAgMiAgMCAgMCAgMCAgMAogIDkgMTYgIDEgIDAgIDAgIDAgIDAKIDEwIDIyICAxICAwICAwICAwICAwCiAxMCAyMyAgMSAgMCAgMCAgMCAgMAogMTAgMjQgIDEgIDAgIDAgIDAgIDAKIDExIDE4ICAxICAwICAwICAwICAwCiAxMyAxNyAgMiAgMCAgMCAgMCAgMAogMTMgMjUgIDEgIDAgIDAgIDAgIDAKIDE0IDE3ICAxICAwICAwICAwICAwCiAxNCAyNiAgMSAgMCAgMCAgMCAgMAogMTUgMjcgIDEgIDAgIDAgIDAgIDAKIDE1IDI4ICAxICAwICAwICAwICAwCiAxNSAyOSAgMSAgMCAgMCAgMCAgMAogMTYgMzAgIDEgIDAgIDAgIDAgIDAKIDE2IDMxICAxICAwICAwICAwICAwCiAxNiAzMiAgMSAgMCAgMCAgMCAgMAogMTcgMzMgIDEgIDAgIDAgIDAgIDAKIDE4IDM0ICAxICAwICAwICAwICAwCiAxOCAzNSAgMSAgMCAgMCAgMCAgMAogMTkgMzYgIDEgIDAgIDAgIDAgIDAKIDE5IDM3ICAxICAwICAwICAwICAwCiAxOSAzOCAgMSAgMCAgMCAgMCAgMAogMjAgMzkgIDEgIDAgIDAgIDAgIDAKIDIwIDQwICAxICAwICAwICAwICAwCiAyMCA0MSAgMSAgMCAgMCAgMCAgMApNICBFTkQKPiA8UFVCQ0hFTV9DT01QT1VORF9DSUQ+CjExMTUwMTYzCgo+IDxQVUJDSEVNX0NPTkZPUk1FUl9STVNEPgowLjgKCj4gPFBVQkNIRU1fQ09ORk9STUVSX0RJVkVSU0VPUkRFUj4KMQoxNQoyOQoyMQoyNAoxNAoyOAoyMgozNwo0CjIwCjEzCjYKMgozNQoxOAoyNgoxNgoxOQozNAoyMwozMQoyNwozMAozMgoxMAozNgo1CjE3CjMzCjExCjEyCjcKOAoyNQo5CjMKCj4gPFBVQkNIRU1fTU1GRjk0X1BBUlRJQUxfQ0hBUkdFUz4KMjIKMSAtMC40MwoxMSAwLjU3CjEyIDAuNjYKMTMgLTAuMTUKMTQgLTAuMTUKMTUgMC4xNAoxNiAwLjE0CjE3IC0wLjE1CjE4IDAuMzQKMTkgMC4yOAoyIC0wLjU2CjIwIDAuMjgKMjUgMC4xNQoyNiAwLjE1CjMgLTAuNTcKMzMgMC4xNQo0IC0wLjU3CjUgLTAuNDgKNiAwLjM2CjcgMC4xMgo4IC0wLjE0CjkgLTAuMTQKCj4gPFBVQkNIRU1fRUZGRUNUSVZFX1JPVE9SX0NPVU5UPgo3Cj4gPFBVQkNIRU1fSEVBVllfQVRPTV9DT1VOVD4KMjAKPiA8UFVCQ0hFTV9BVE9NX0RFRl9TVEVSRU9fQ09VTlQ+CjEKPiA8UFVCQ0hFTV9DT01QT05FTlRfQ09VTlQ+CjEKPiA8UFVCQ0hFTV9DT09SRElOQVRFX1RZUEU+CjIKNQoxMAoKJCQkJAo=";
+
+    let config = sanitiseConfig(DEFAULT_CONFIG);
+    let viewer = null;
+    let modelLoaded = false;
+    let initialView = null;
+    let animationFrame = 0;
+    let autoRotate = false;
+    let previewModelData = "";
+    const activeInputs = { up: false, down: false, left: false, right: false, zoomIn: false, zoomOut: false };
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const elements = {};
+
+    document.addEventListener("DOMContentLoaded", initialise);
+
+    function initialise() {
+      [
+        "interaction", "workspace", "modelName", "eyebrow", "instruction", "metadata", "viewer", "viewerShell",
+        "loadingState", "loadingText", "errorState", "errorText", "controls", "motionToggle", "resetView",
+        "statusLine", "modelSummary", "caseLaunch", "caseToggle", "casePanel", "caseTitle", "caseContent", "caseClose"
+      ].forEach(id => elements[id] = document.getElementById(id));
+
+      applyConfig();
+      bindControls();
+      loadModel();
+
+      window.addEventListener("resize", resizeViewer);
+      window.addEventListener("blur", stopAllInputs);
+      window.addEventListener("message", handlePreviewMessage);
+      reducedMotion.addEventListener?.("change", handleMotionPreference);
+    }
+
+    function sanitiseConfig(input) {
+      const source = input && typeof input === "object" ? input : {};
+      const merged = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+      mergeKnown(merged, source);
+      merged.viewer.initialZoom = clampNumber(merged.viewer.initialZoom, 0.25, 4, 1);
+      merged.viewer.autoRotateSpeed = clampNumber(merged.viewer.autoRotateSpeed, 0.05, 2, 0.25);
+      merged.pubchemCid = String(merged.pubchemCid || "").replace(/\D/g, "").slice(0, 12);
+      merged.sourcePath = safeLocalPath(merged.sourcePath, DEFAULT_CONFIG.sourcePath);
+      merged.caseStudy.sourceUrl = safeUrl(merged.caseStudy.sourceUrl);
+      merged.viewer.background = safeColour(merged.viewer.background, "#e8dbf7");
+      merged.visual.accent = safeColour(merged.visual.accent, "#691eda");
+      merged.visual.highlight = safeColour(merged.visual.highlight, "#f08838");
+      return merged;
+    }
+
+    function mergeKnown(target, source) {
+      Object.keys(target).forEach(key => {
+        if (!(key in source)) return;
+        if (target[key] && typeof target[key] === "object" && !Array.isArray(target[key])) {
+          if (source[key] && typeof source[key] === "object") mergeKnown(target[key], source[key]);
+        } else if (typeof source[key] === typeof target[key]) {
+          target[key] = source[key];
+        }
+      });
+    }
+
+    function applyConfig() {
+      document.documentElement.style.setProperty("--accent", config.visual.accent);
+      document.documentElement.style.setProperty("--accent-strong", config.visual.accent);
+      document.documentElement.style.setProperty("--highlight", config.visual.highlight);
+      document.documentElement.style.setProperty("--viewer", config.viewer.background);
+      document.body.style.background = config.visual.surrounding === "dark" ? "#1c2333" : "#e8dbf7";
+
+      setText(elements.eyebrow, config.labels.eyebrow);
+      setText(elements.modelName, config.modelName || "Untitled scientific model");
+      setText(elements.instruction, config.labels.instruction);
+      setText(elements.modelSummary, config.summary);
+      elements.viewer.setAttribute("aria-label", `Interactive 3D model: ${config.modelName || "scientific structure"}`);
+
+      renderMetadata();
+      renderCaseStudy();
+      applyVisibility();
+      setCaseOpen(Boolean(config.show.caseStudy && config.caseStudy.enabled));
+      autoRotate = Boolean(config.viewer.autoRotate && !reducedMotion.matches);
+      updateMotionButton();
+    }
+
+    function renderMetadata() {
+      elements.metadata.replaceChildren();
+      const rows = [
+        [config.show.commonName, "Common name", config.commonName],
+        [config.show.systematicName, "Systematic name", config.systematicName],
+        [config.show.formula, "Formula", config.formula],
+        [config.show.molecularMass, "Molecular mass", config.molecularMass],
+        [config.show.identifier, "Identifier", config.identifier],
+        [config.show.structureNote, "Structure note", config.structureNote],
+        [config.show.attribution, "Source", config.attribution]
+      ];
+
+      rows.forEach(([enabled, label, value]) => {
+        if (!enabled || !value) return;
+        const item = document.createElement("li");
+        const strong = document.createElement("strong");
+        strong.textContent = `${label}: `;
+        item.append(strong, document.createTextNode(value));
+        elements.metadata.append(item);
+      });
+      elements.metadata.hidden = !elements.metadata.children.length;
+    }
+
+    function renderCaseStudy() {
+      setText(elements.caseTitle, config.caseStudy.title || "Case study");
+      elements.caseContent.replaceChildren();
+      const hasStructuredSections = Boolean(
+        config.caseStudy.finding ||
+        config.caseStudy.consequence ||
+        config.caseStudy.relevance ||
+        config.caseStudy.reflection ||
+        config.caseStudy.caution
+      );
+      if (hasStructuredSections) addCaseSection("Context", config.caseStudy.context);
+      else addCaseBody(config.caseStudy.context);
+      addCaseSection("Scientific or technical finding", config.caseStudy.finding);
+      addCaseSection("Practical consequence", config.caseStudy.consequence);
+      addCaseSection("Professional or industrial relevance", config.caseStudy.relevance);
+      addCaseSection("Reflection question", config.caseStudy.reflection);
+      addCaseSection("Caution or limitation", config.caseStudy.caution, "caution");
+
+      if (config.show.externalReference && config.caseStudy.sourceLabel && config.caseStudy.sourceUrl) {
+        const link = document.createElement("a");
+        link.className = "source-link";
+        link.href = config.caseStudy.sourceUrl;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = config.caseStudy.sourceLabel;
+        elements.caseContent.append(link);
+      }
+    }
+
+    function addCaseBody(text) {
+      String(text || "").split(/\n\s*\n/).forEach(paragraphText => {
+        if (!paragraphText.trim()) return;
+        const paragraph = document.createElement("p");
+        paragraph.className = "case-body-paragraph";
+        paragraph.textContent = paragraphText.trim();
+        elements.caseContent.append(paragraph);
+      });
+    }
+
+    function addCaseSection(heading, text, className = "") {
+      if (!text) return;
+      const section = document.createElement("section");
+      section.className = `case-section ${className}`.trim();
+      const title = document.createElement("h3");
+      const paragraph = document.createElement("p");
+      title.textContent = heading;
+      paragraph.textContent = text;
+      section.append(title, paragraph);
+      elements.caseContent.append(section);
+    }
+
+    function applyVisibility() {
+      document.querySelector("[aria-labelledby='rotationHeading']").hidden = !config.show.manualRotation;
+      document.querySelectorAll("[data-action='zoomIn'], [data-action='zoomOut']").forEach(button => button.hidden = !config.show.zoom);
+      elements.resetView.hidden = !config.show.reset;
+      elements.motionToggle.hidden = !config.show.motion;
+      elements.caseLaunch.hidden = !(config.caseStudy.enabled && config.show.caseStudy);
+
+      if (config.visual.casePosition === "below") {
+        elements.workspace.style.gridTemplateColumns = "1fr";
+        elements.casePanel.style.borderLeft = "0";
+        elements.casePanel.style.borderTop = "1px solid var(--border)";
+      } else {
+        elements.workspace.style.gridTemplateColumns = "";
+        elements.casePanel.style.borderLeft = "";
+        elements.casePanel.style.borderTop = "";
+      }
+    }
+
+    async function loadModel(modelData = previewModelData) {
+      showLoading();
+      destroyViewer();
+
+      if (typeof window.$3Dmol === "undefined") {
+        showError("The packaged 3Dmol viewer library did not load.");
+        return;
+      }
+
+      try {
+        viewer = window.$3Dmol.createViewer(elements.viewer, {
+          backgroundColor: config.viewer.background,
+          antialias: true,
+          nominal_res: 64
+        });
+
+        if (config.sourceType === "error") throw new Error("The structure source is unavailable.");
+
+        let sdf = modelData || decodeEmbeddedModel();
+        if (!sdf && config.sourcePath) {
+          const response = await fetch(config.sourcePath, { cache: "no-store" });
+          if (!response.ok) throw new Error(`Structure request returned ${response.status}.`);
+          sdf = await response.text();
+        }
+        if (!sdf || !/M  END|\$\$\$\$/i.test(sdf)) throw new Error("The structure file does not contain recognisable SDF data.");
+
+        viewer.addModel(sdf, "sdf");
+        applyRepresentation();
+        viewer.zoomTo();
+        if (config.viewer.initialZoom !== 1) viewer.zoom(config.viewer.initialZoom);
+        viewer.render();
+        initialView = viewer.getView();
+        modelLoaded = true;
+        hideStates();
+        setStatus("3D structure loaded.");
+        startAnimationLoop();
+      } catch (error) {
+        showError(error && error.message ? error.message : "The structure could not be loaded.");
+      }
+    }
+
+    function applyRepresentation() {
+      const colours = config.viewer.colourScheme || "Jmol";
+      const styles = {
+        "stick": { stick: { radius: 0.14, colorscheme: colours } },
+        "sphere": { sphere: { scale: 0.34, colorscheme: colours, quality: 10 } },
+        "line": { line: { colorscheme: colours, linewidth: 1.5 } },
+        "ball-and-stick": {
+          stick: { radius: 0.12, colorscheme: colours },
+          sphere: { scale: 0.28, colorscheme: colours, quality: 10 }
+        }
+      };
+      viewer.setStyle({}, styles[config.viewer.representation] || styles["ball-and-stick"]);
+    }
+
+    function bindControls() {
+      document.querySelectorAll(".hold-control").forEach(button => {
+        const action = button.dataset.action;
+        button.addEventListener("pointerdown", event => {
+          event.preventDefault();
+          button.setPointerCapture?.(event.pointerId);
+          startInput(action);
+        });
+        ["pointerup", "pointercancel", "lostpointercapture", "pointerleave"].forEach(type => {
+          button.addEventListener(type, () => stopInput(action));
+        });
+        // Native button activation makes Enter and Space work consistently in LMS iframes.
+        button.addEventListener("click", () => nudgeModel(action));
+      });
+
+      elements.motionToggle.addEventListener("click", toggleMotion);
+      elements.resetView.addEventListener("click", resetView);
+      elements.caseToggle.addEventListener("click", () => setCaseOpen(elements.casePanel.hidden));
+      elements.caseClose.addEventListener("click", () => {
+        setCaseOpen(false);
+        elements.caseToggle.focus();
+      });
+      elements.casePanel.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          setCaseOpen(false);
+          elements.caseToggle.focus();
+        }
+      });
+      elements.controls.addEventListener("keydown", handleHubKeyboard);
+
+      elements.viewer.addEventListener("pointerdown", stopAutoRotation);
+      elements.viewer.addEventListener("wheel", stopAutoRotation, { passive: true });
+    }
+
+    function startInput(action) {
+      if (!modelLoaded || !(action in activeInputs)) return;
+      stopAutoRotation();
+      activeInputs[action] = true;
+    }
+
+    function stopInput(action) {
+      if (action in activeInputs) activeInputs[action] = false;
+    }
+
+    function stopAllInputs() {
+      Object.keys(activeInputs).forEach(key => activeInputs[key] = false);
+    }
+
+    function handleHubKeyboard(event) {
+      if (event.altKey || event.ctrlKey || event.metaKey) return;
+      const actionByKey = {
+        ArrowLeft: "left",
+        ArrowRight: "right",
+        ArrowUp: "up",
+        ArrowDown: "down",
+        "+": "zoomIn",
+        "=": "zoomIn",
+        "-": "zoomOut",
+        "_": "zoomOut"
+      };
+      const action = actionByKey[event.key];
+      if (!action) return;
+      event.preventDefault();
+      nudgeModel(action);
+    }
+
+    function nudgeModel(action) {
+      if (!viewer || !modelLoaded) {
+        setStatus("The model is still loading. Try the control again shortly.");
+        return;
+      }
+      stopAutoRotation();
+      const rotationStep = 5;
+      const zoomStep = 1.08;
+      if (action === "left") viewer.rotate(-rotationStep, "y");
+      if (action === "right") viewer.rotate(rotationStep, "y");
+      if (action === "up") viewer.rotate(-rotationStep, "x");
+      if (action === "down") viewer.rotate(rotationStep, "x");
+      if (action === "zoomIn") viewer.zoom(zoomStep);
+      if (action === "zoomOut") viewer.zoom(1 / zoomStep);
+      viewer.render();
+      setStatus(`${buttonActionLabel(action)} applied.`);
+    }
+
+    function buttonActionLabel(action) {
+      return ({
+        left: "Rotate left",
+        right: "Rotate right",
+        up: "Rotate up",
+        down: "Rotate down",
+        zoomIn: "Zoom in",
+        zoomOut: "Zoom out"
+      })[action] || "View change";
+    }
+
+    function startAnimationLoop() {
+      cancelAnimationFrame(animationFrame);
+      const frame = () => {
+        if (!viewer || !modelLoaded) return;
+        let changed = false;
+        const rotationStep = 2.6;
+        const zoomStep = 1.025;
+
+        if (autoRotate) { viewer.rotate(config.viewer.autoRotateSpeed, "y"); changed = true; }
+        if (activeInputs.left) { viewer.rotate(-rotationStep, "y"); changed = true; }
+        if (activeInputs.right) { viewer.rotate(rotationStep, "y"); changed = true; }
+        if (activeInputs.up) { viewer.rotate(-rotationStep, "x"); changed = true; }
+        if (activeInputs.down) { viewer.rotate(rotationStep, "x"); changed = true; }
+        if (activeInputs.zoomIn) { viewer.zoom(zoomStep); changed = true; }
+        if (activeInputs.zoomOut) { viewer.zoom(1 / zoomStep); changed = true; }
+        if (changed) viewer.render();
+        animationFrame = requestAnimationFrame(frame);
+      };
+      animationFrame = requestAnimationFrame(frame);
+    }
+
+    function toggleMotion() {
+      if (!modelLoaded) return;
+      autoRotate = !autoRotate;
+      updateMotionButton();
+      setStatus(autoRotate ? "Automatic rotation resumed." : "Automatic rotation paused.");
+    }
+
+    function stopAutoRotation() {
+      if (!autoRotate) return;
+      autoRotate = false;
+      updateMotionButton();
+      setStatus("Automatic rotation paused after manual interaction.");
+    }
+
+    function updateMotionButton() {
+      elements.motionToggle.textContent = autoRotate ? "Pause rotation" : "Resume rotation";
+      elements.motionToggle.setAttribute("aria-pressed", String(autoRotate));
+    }
+
+    function resetView() {
+      if (!viewer || !initialView) return;
+      stopAllInputs();
+      viewer.setView(initialView);
+      viewer.render();
+      autoRotate = Boolean(config.viewer.autoRotate && !reducedMotion.matches);
+      updateMotionButton();
+      setStatus("The initial view has been restored.");
+    }
+
+    function setCaseOpen(open) {
+      const allowed = Boolean(config.caseStudy.enabled && config.show.caseStudy);
+      const isOpen = allowed && open;
+      elements.casePanel.hidden = !isOpen;
+      elements.workspace.classList.toggle("case-closed", !isOpen);
+      elements.caseToggle.setAttribute("aria-expanded", String(isOpen));
+      elements.caseToggle.textContent = isOpen ? config.labels.closeCaseStudy : config.labels.openCaseStudy;
+      resizeViewer();
+    }
+
+    function handleMotionPreference() {
+      if (reducedMotion.matches) {
+        autoRotate = false;
+        updateMotionButton();
+        setStatus("Automatic rotation is paused because reduced motion is enabled.");
+      }
+    }
+
+    function handlePreviewMessage(event) {
+      const data = event.data;
+      if (!data || data.type !== "3d-model-case-study-preview") return;
+      config = sanitiseConfig(data.config);
+      previewModelData = typeof data.modelData === "string" ? data.modelData : "";
+      applyConfig();
+      loadModel(previewModelData);
+    }
+
+    function showLoading() {
+      modelLoaded = false;
+      elements.loadingState.hidden = false;
+      elements.errorState.hidden = true;
+      setStatus("Loading 3D structure.");
+    }
+
+    function hideStates() {
+      elements.loadingState.hidden = true;
+      elements.errorState.hidden = true;
+    }
+
+    function showError(message) {
+      modelLoaded = false;
+      elements.loadingState.hidden = true;
+      elements.errorState.hidden = false;
+      setText(elements.errorText, `${message} The text summary and case study remain available.`);
+      setStatus("3D structure failed to load.");
+      cancelAnimationFrame(animationFrame);
+    }
+
+    function destroyViewer() {
+      cancelAnimationFrame(animationFrame);
+      stopAllInputs();
+      modelLoaded = false;
+      initialView = null;
+      elements.viewer.replaceChildren();
+      viewer = null;
+    }
+
+    function resizeViewer() {
+      window.setTimeout(() => {
+        if (viewer) {
+          viewer.resize();
+          viewer.render();
+        }
+      }, 30);
+    }
+
+    function setStatus(message) { setText(elements.statusLine, message); }
+    function setText(element, value) { element.textContent = String(value || ""); }
+    function clampNumber(value, min, max, fallback) {
+      const number = Number(value);
+      return Number.isFinite(number) ? Math.min(max, Math.max(min, number)) : fallback;
+    }
+    function safeColour(value, fallback) {
+      return /^#[0-9a-f]{6}$/i.test(String(value || "")) ? value : fallback;
+    }
+    function safeUrl(value) {
+      try {
+        const url = new URL(String(value || ""));
+        return ["http:", "https:"].includes(url.protocol) ? url.href : "";
+      } catch (_) {
+        return "";
+      }
+    }
+    function safeLocalPath(value, fallback) {
+      const path = String(value || "");
+      return /^(?![a-z]+:|\/\/)[a-z0-9_./-]+$/i.test(path) ? path : fallback;
+    }
+    function decodeEmbeddedModel() {
+      if (!EMBEDDED_MODEL_BASE64) return "";
+      try {
+        const binary = atob(EMBEDDED_MODEL_BASE64);
+        const bytes = Uint8Array.from(binary, character => character.charCodeAt(0));
+        return new TextDecoder("utf-8").decode(bytes);
+      } catch (_) {
+        return "";
+      }
+    }
+  </script>
+</body>
+</html>
