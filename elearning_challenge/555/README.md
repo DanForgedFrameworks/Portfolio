@@ -16,23 +16,26 @@ content design — delivered as a playable experience rather than a slide deck.
 
 ## How to preview / run
 
-**Just open `build/index.html` in any modern browser.** Double-click it, or serve the
-folder and visit it. No build step, no server, no internet connection required — the
-runtime, fonts and styles are inlined into that single file.
+**Just open `build/index.html` in any modern browser.** Double-click it, or host the
+folder and visit it. No build step and no server required.
 
-The interaction loads its videos, voiceover and jury images from the sibling `assets/`
-folder using relative paths, so **keep `build/` and `assets/` next to each other** (i.e.
-preserve the repo structure). If you move `index.html`, move `assets/` with it or the
-media won't resolve.
+Three things must stay next to each other for it to run (they already are in this package):
+
+- `build/index.html` — the interaction (entry point)
+- `build/support.js` — the small runtime that renders it (loaded by `index.html`)
+- `assets/` — the videos, voiceover and jury images, referenced via relative `../assets/` paths
+
+So keep the `build/` and `assets/` folders together exactly as shipped. The only external
+call at runtime is to Google Fonts (Montserrat + Lato); online that loads automatically,
+offline it falls back to system fonts and everything else still works.
 
 > Tip: because audio autoplays, most browsers require one click/keypress before HARMONY's
 > voice starts — entering a name and pressing **Get started** satisfies this. A **Sound**
 > toggle, **CC** captions and a **Transcript** are available in the top-left throughout.
 
 ### Editing the source
-`build/The Confirmation Test.dc.html` is the editable source (a Design Component).
-`build/index.html` is the compiled, self-contained output generated from it — **edit the
-`.dc.html`, then re-compile**; don't hand-edit `index.html`.
+`build/index.html` and `build/The Confirmation Test.dc.html` are the **same source** (the
+latter is the named working copy). Edit either and keep `support.js` beside it.
 
 ---
 
@@ -66,8 +69,9 @@ media won't resolve.
 ├── HARMONY_voice_script_v2.md             ← HARMONY's full voiceover script
 │
 ├── build/
-│   ├── index.html                         ← ▶ RUN THIS — self-contained interaction
-│   └── The Confirmation Test.dc.html       ← editable source (Design Component)
+│   ├── index.html                         ← ▶ RUN THIS — the interaction (entry point)
+│   ├── support.js                         ← runtime that renders index.html (keep alongside)
+│   └── The Confirmation Test.dc.html       ← same source, named working copy
 │
 └── assets/
     ├── video/
@@ -89,9 +93,9 @@ media won't resolve.
 
 ## Tech notes for whoever pushes / hosts this
 
-- **Static.** `build/index.html` is the entry point. Any static host (GitHub Pages, Netlify,
-  plain file open) works. For GitHub Pages, either host the repo subfolder or point the
-  site at `build/index.html`, ensuring `assets/` ships alongside.
+- **Static.** `build/index.html` is the entry point and needs `build/support.js` beside it.
+  Any static host (GitHub Pages, Netlify, plain file open) works. Ship `build/` and
+  `assets/` together; nothing is fetched from this authoring session at runtime.
 - **Relative paths only** — no absolute URLs, no CDN dependencies at runtime.
 - **Total media ≈ 8.5 MB** (the Tim Robinson clip is the bulk at ~4.5 MB).
 - Built to the **Forged Frameworks** copper-on-cream palette; type is Montserrat + Lato.
