@@ -1,0 +1,97 @@
+# The Confirmation Test — E-Learning Challenge #555
+
+An interactive, darkly comic "toxic-org onboarding" piece. The learner is welcomed
+by **HARMONY**, a cheerful AI onboarding assistant, and asked to confirm they'll
+design learning "the way we like it designed." Across three scenarios the interaction
+**inverts** normal e-learning feedback: agreeing with the organisation's myths is
+rewarded (confetti, praise, applause); giving the evidence-based answer is met with a
+passive-aggressive "Are you sure?" — and the more you resist, the more HARMONY's mask
+slips. A silent jury "analyses" each response before the result lands, and the learner's
+running tally routes them to one of three endings.
+
+It is a critique of measurement theatre, learning-styles myths, and shiny-over-substance
+content design — delivered as a playable experience rather than a slide deck.
+
+---
+
+## How to preview / run
+
+**Just open `build/index.html` in any modern browser.** Double-click it, or serve the
+folder and visit it. No build step, no server, no internet connection required — the
+runtime, fonts and styles are inlined into that single file.
+
+The interaction loads its videos, voiceover and jury images from the sibling `assets/`
+folder using relative paths, so **keep `build/` and `assets/` next to each other** (i.e.
+preserve the repo structure). If you move `index.html`, move `assets/` with it or the
+media won't resolve.
+
+> Tip: because audio autoplays, most browsers require one click/keypress before HARMONY's
+> voice starts — entering a name and pressing **Get started** satisfies this. A **Sound**
+> toggle, **CC** captions and a **Transcript** are available in the top-left throughout.
+
+### Editing the source
+`build/The Confirmation Test.dc.html` is the editable source (a Design Component).
+`build/index.html` is the compiled, self-contained output generated from it — **edit the
+`.dc.html`, then re-compile**; don't hand-edit `index.html`.
+
+---
+
+## The experience, briefly
+
+- **Hero** — HARMONY greets the learner and captures their name (Enter or *Get started*).
+- **3 scenarios** — learning styles, "nobody reads" (infographics/gamify), and measurement
+  theatre (completion + leaderboards). Each offers a *conform* (org myth) and a *rebel*
+  (evidence-based) answer.
+- **"Are you sure?" physics** — confirming the myth is frictionless; choosing the evidence
+  answer triggers escalating resistance (a magnetic button, a doubled prompt, and on the
+  final scenario a whole panel that dodges your cursor). The exit is always reachable.
+- **HARMONY's mood** — her face morphs on a live gradient as your cursor moves between the
+  buttons: wide-eyed and wary toward the "wrong" answer, beaming toward the org-approved one.
+- **Fake-analysis jury** — three silent judges "deliberate" (Processing… / Hmm. / Noted.)
+  before each verdict.
+- **Inverted feedback** — myth answers get celebration + applause; evidence answers get a
+  cold, glitchy HARMONY and a note "for the team."
+- **Three endings** by myth tally — full conform (access granted + an impossible first
+  project), mixed (watchful), or full competence (reassignment/"readjustment").
+- **Start over** is available at any point.
+
+---
+
+## File manifest
+
+```
+.
+├── README.md                              ← this file
+├── Confirmation_Test_Master_Design_Spec.md ← the design specification (source of truth)
+├── HARMONY_voice_script_v2.md             ← HARMONY's full voiceover script
+│
+├── build/
+│   ├── index.html                         ← ▶ RUN THIS — self-contained interaction
+│   └── The Confirmation Test.dc.html       ← editable source (Design Component)
+│
+└── assets/
+    ├── video/
+    │   ├── tim-robinson-you-sure.mp4       ← "Are you sure?" beat, scenario 1
+    │   └── john-cena-are-you-sure.mp4      ← "Are you sure?" beat, scenario 2
+    ├── audio/                              ← HARMONY voiceover (one MP3 per beat)
+    │   ├── harmony-onboarding.mp3
+    │   ├── harmony-s1.mp3 / -s1-conform.mp3 / -s1-rebel.mp3
+    │   ├── harmony-s2.mp3 / -s2-conform.mp3 / -s2-rebel.mp3
+    │   ├── harmony-s3.mp3 / -s3-conform.mp3 / -s3-rebel.mp3
+    │   └── harmony-ending-conform.mp3 / -mixed.mp3 / -rebel.mp3
+    └── jury/
+        ├── jury-chan.jpg
+        ├── jury-judy.jpeg
+        └── jury-glasses.jpeg
+```
+
+---
+
+## Tech notes for whoever pushes / hosts this
+
+- **Static.** `build/index.html` is the entry point. Any static host (GitHub Pages, Netlify,
+  plain file open) works. For GitHub Pages, either host the repo subfolder or point the
+  site at `build/index.html`, ensuring `assets/` ships alongside.
+- **Relative paths only** — no absolute URLs, no CDN dependencies at runtime.
+- **Total media ≈ 8.5 MB** (the Tim Robinson clip is the bulk at ~4.5 MB).
+- Built to the **Forged Frameworks** copper-on-cream palette; type is Montserrat + Lato.

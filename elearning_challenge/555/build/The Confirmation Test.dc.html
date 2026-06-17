@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" rx="14" fill="#e56b2d"/>
+  <circle cx="50" cy="44" r="20" fill="#fff4e2"/>
+  <path d="M40 40 Q44 36 48 40" stroke="#bc6c3c" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <path d="M52 40 Q56 36 60 40" stroke="#bc6c3c" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <path d="M42 50 Q50 60 58 50" stroke="#bc6c3c" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <text x="50" y="84" font-family="Montserrat,sans-serif" font-size="13" font-weight="800" fill="#fff" text-anchor="middle">Are you sure?</text>
+</svg>
+</template>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Lato:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  @keyframes gradientShift{ 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+  @keyframes harmonyFloat{ 0%,100%{transform:translateY(0) rotate(-1deg)} 50%{transform:translateY(-9px) rotate(1deg)} }
+  @keyframes haloPulse{ 0%,100%{transform:scale(1);opacity:.82} 50%{transform:scale(1.06);opacity:1} }
+  @keyframes scanSweep{ 0%{transform:translateY(0)} 100%{transform:translateY(380%)} }
+  @keyframes sparkleFloat{ 0%,100%{transform:translateY(0) scale(1);opacity:.9} 50%{transform:translateY(-8px) scale(1.25);opacity:.35} }
+  @keyframes heroRise{ 0%{opacity:0;transform:translateY(24px)} 100%{opacity:1;transform:translateY(0)} }
+  @keyframes slideInRight{ 0%{opacity:0;transform:translateX(50px)} 100%{opacity:1;transform:translateX(0)} }
+  @keyframes harmonyGlitch{ 0%,63%,100%{transform:translate(0,0) skewX(0deg)} 65%{transform:translate(-2px,1px) skewX(-3deg)} 67%{transform:translate(3px,-1px) skewX(2deg)} 69%{transform:translate(-1px,0) skewX(0deg)} 86%{transform:translate(2px,1px) skewX(2deg)} 88%{transform:translate(-2px,-1px) skewX(-2deg)} 90%{transform:translate(0,0) skewX(0deg)} }
+  @keyframes glitchGhost{ 0%,60%,100%{opacity:0;transform:translate(0,0)} 65%{opacity:.6;transform:translate(-3px,0)} 68%{opacity:.4;transform:translate(3px,0)} 70%{opacity:0} 87%{opacity:.55;transform:translate(2px,-1px)} 89%{opacity:0} }
+  @keyframes staticFlicker{ 0%{opacity:.05;background-position:0 0} 20%{opacity:.17;background-position:-7px 5px} 40%{opacity:.07;background-position:5px -8px} 60%{opacity:.22;background-position:-5px -3px} 80%{opacity:.09;background-position:4px 6px} 100%{opacity:.06;background-position:2px -4px} }
+  @keyframes ctaGlow{ 0%,100%{box-shadow:0 12px 26px -8px rgba(229,107,45,0.55)} 50%{box-shadow:0 14px 34px -6px rgba(229,107,45,0.82)} }
+  @keyframes fieldPulse{ 0%,100%{box-shadow:0 0 0 0 rgba(229,107,45,0)} 50%{box-shadow:0 0 0 7px rgba(229,107,45,0.14)} }
+  @keyframes pressPulse{ 0%{box-shadow:0 0 0 0 rgba(229,107,45,0.5)} 100%{box-shadow:0 0 0 16px rgba(229,107,45,0)} }
+  @keyframes shake{ 0%,100%{transform:translateX(0)} 18%{transform:translateX(-9px)} 36%{transform:translateX(8px)} 54%{transform:translateX(-6px)} 72%{transform:translateX(5px)} 88%{transform:translateX(-2px)} }
+  @keyframes confettiFall{ 0%{transform:translateY(-14px) rotate(0deg);opacity:1} 100%{transform:translateY(240px) rotate(560deg);opacity:0} }
+  @keyframes jurySway{ 0%,100%{transform:translateY(0) rotate(-1deg)} 50%{transform:translateY(-3px) rotate(1deg)} }
+  @keyframes dotJump{ 0%,100%{transform:translateY(0);opacity:.4} 50%{transform:translateY(-7px);opacity:1} }
+  @keyframes clap{ 0%,100%{transform:rotate(-14deg) scale(1)} 50%{transform:rotate(10deg) scale(1.2)} }
+  input::placeholder{ color:#c2b29c; }
+</style>
+</helmet>
+<audio ref="{{ audioRef }}" preload="auto"></audio>
+
+<div style="position:fixed;inset:0;z-index:-2;background:linear-gradient(120deg,#fdf6ec 0%,#f7e3cf 30%,#f0b483 56%,#e56b2d 80%,#b87333 100%);background-size:300% 300%;animation:gradientShift 42s ease infinite;"></div>
+<div style="position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(125deg, rgba(8,22,32,0.92) 0%, rgba(16,54,70,0.74) 46%, rgba(6,15,23,0.95) 100%);transition:opacity 1.4s ease;opacity:{{ moodOpacity }};"></div>
+
+<div style="position:fixed;top:20px;left:20px;z-index:55;display:flex;gap:10px;flex-wrap:wrap;">
+  <button onClick="{{ toggleMute }}" style="display:flex;align-items:center;gap:10px;font-family:Lato,sans-serif;font-size:16px;font-weight:700;color:#2e2e2e;background:rgba(253,246,236,0.85);border:1px solid rgba(46,46,46,0.12);border-radius:999px;padding:11px 20px;cursor:pointer;box-shadow:0 5px 16px rgba(46,46,46,0.14);backdrop-filter:blur(4px);transition:transform .2s ease,background .2s ease,box-shadow .2s ease;" style-hover="background:rgba(253,246,236,0.99);transform:translateY(-1px);box-shadow:0 8px 22px rgba(46,46,46,0.18);" style-active="transform:translateY(0) scale(0.96);">{{ muteLabel }}</button>
+  <button onClick="{{ toggleCaptions }}" style="display:flex;align-items:center;gap:8px;font-family:Lato,sans-serif;font-size:14px;font-weight:700;color:#2e2e2e;background:rgba(253,246,236,0.85);border:1px solid rgba(46,46,46,0.12);border-radius:999px;padding:11px 16px;cursor:pointer;box-shadow:0 5px 16px rgba(46,46,46,0.14);backdrop-filter:blur(4px);transition:transform .2s ease,background .2s ease;" style-hover="background:rgba(253,246,236,0.99);transform:translateY(-1px);" style-active="transform:scale(0.96);">{{ ccLabel }}</button>
+  <sc-if value="{{ showTranscriptBtn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ openTranscript }}" style="display:flex;align-items:center;gap:8px;font-family:Lato,sans-serif;font-size:14px;font-weight:700;color:#2e2e2e;background:rgba(253,246,236,0.85);border:1px solid rgba(46,46,46,0.12);border-radius:999px;padding:11px 16px;cursor:pointer;box-shadow:0 5px 16px rgba(46,46,46,0.14);backdrop-filter:blur(4px);transition:transform .2s ease,background .2s ease;" style-hover="background:rgba(253,246,236,0.99);transform:translateY(-1px);" style-active="transform:scale(0.96);">Transcript</button></sc-if>
+  <sc-if value="{{ showRestartBtn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ restart }}" style="display:flex;align-items:center;gap:8px;font-family:Lato,sans-serif;font-size:14px;font-weight:700;color:#2e2e2e;background:rgba(253,246,236,0.85);border:1px solid rgba(46,46,46,0.12);border-radius:999px;padding:11px 16px;cursor:pointer;box-shadow:0 5px 16px rgba(46,46,46,0.14);backdrop-filter:blur(4px);transition:transform .2s ease,background .2s ease;" style-hover="background:rgba(253,246,236,0.99);transform:translateY(-1px);" style-active="transform:scale(0.96);">↻ Start over</button></sc-if>
+</div>
+
+<div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:64px 24px 54px;font-family:Lato,sans-serif;">
+
+  <sc-if value="{{ showProgress }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <sc-for list="{{ progressDots }}" as="d" hint-placeholder-count="3">
+        <span style="{{ d.style }}"></span>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isHero }}" hint-placeholder-val="{{ true }}">
+    <div data-screen-label="Hero / onboarding" style="position:relative;width:100%;max-width:640px;background:rgba(253,246,236,0.95);border:1px solid rgba(46,46,46,0.08);border-radius:30px;padding:40px 48px 38px;box-shadow:0 34px 80px -30px rgba(46,46,46,0.5),0 2px 0 rgba(255,255,255,0.6) inset;text-align:center;animation:heroRise .7s cubic-bezier(.2,.8,.2,1) both;">
+      <div style="display:flex;justify-content:center;margin-bottom:14px;">
+        <span style="display:inline-flex;align-items:center;gap:8px;font-family:Montserrat,sans-serif;font-size:11.5px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#b85f24;background:rgba(229,107,45,0.1);border:1px solid rgba(229,107,45,0.22);border-radius:999px;padding:6px 14px;">
+          <span style="width:7px;height:7px;border-radius:50%;background:#27ae60;box-shadow:0 0 8px rgba(39,174,96,0.7);"></span>Alignment check · 3 scenarios
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-bottom:14px;">{{ harmonyAvatar }}</div>
+      <div style="font-family:Montserrat,sans-serif;font-size:12.5px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#bc6c3c;margin-bottom:8px;">{{ harmonyTagline }}</div>
+      <h1 style="font-family:Montserrat,sans-serif;font-weight:800;font-size:48px;line-height:1.0;letter-spacing:-0.025em;color:#2e2e2e;margin:0 0 14px;">The Confirmation Test</h1>
+      <div style="width:54px;height:4px;border-radius:4px;background:linear-gradient(90deg,#e56b2d,#b87333);margin:0 auto 26px;"></div>
+      <div style="position:relative;text-align:left;background:#fff8ef;border:1px solid #f0ddc6;border-left:4px solid #e56b2d;border-radius:14px;padding:20px 22px 18px;margin:0 0 26px;box-shadow:0 6px 20px -10px rgba(188,108,60,0.4);">
+        <span style="position:absolute;top:-11px;left:18px;font-family:Montserrat,sans-serif;font-size:10.5px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#fff;background:#e56b2d;border-radius:6px;padding:3px 9px;box-shadow:0 4px 10px -3px rgba(229,107,45,0.6);">Welcome</span>
+        <p style="font-family:Lato,sans-serif;font-size:16px;line-height:1.6;color:#4a4239;margin:6px 0 0;text-wrap:pretty;">Welcome back. We're so pleased you completed the learning design course we so generously invested in. Truly.</p>
+        <p style="font-family:Lato,sans-serif;font-size:16px;line-height:1.6;color:#4a4239;margin:12px 0 0;text-wrap:pretty;">Before we hand you the keys to the authoring tool, and that <em>is</em> the goal here, we just need to run a tiny alignment check. Nothing to worry about. It's only to confirm you'll be designing things the way we like them designed.</p>
+        <p style="font-family:Lato,sans-serif;font-size:16px;line-height:1.7;color:#4a4239;margin:12px 0 0;">Three quick scenarios. Answer honestly.<br />I'll be right here.<br /><span style="font-weight:700;color:#bc6c3c;">Helping.</span></p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;max-width:400px;margin:0 auto;">
+        <label style="text-align:left;font-family:Lato,sans-serif;">
+          <span style="display:block;font-size:13px;font-weight:700;color:#7a6a59;margin-bottom:7px;">First, your name for the record</span>
+          <div style="{{ fieldWrapStyle }}">
+            <input value="{{ name }}" onInput="{{ onName }}" onFocus="{{ onHeroFocus }}" onKeyDown="{{ onNameKey }}" placeholder="Type your name…" style="width:100%;font-family:Lato,sans-serif;font-size:16px;color:#2e2e2e;background:#fff;border:2px solid #e3b483;border-radius:13px;padding:14px 16px;outline:none;transition:border-color .25s ease,box-shadow .25s ease,transform .2s cubic-bezier(.2,.8,.2,1),background .25s ease;" style-hover="border-color:#e56b2d;" style-focus="border-color:#e56b2d;box-shadow:0 0 0 4px rgba(229,107,45,0.22),0 10px 24px -10px rgba(229,107,45,0.6);transform:translateY(-2px);background:#fffdfa;" />
+          </div>
+        </label>
+        <button onClick="{{ onStart }}" disabled="{{ startDisabled }}" style="{{ startBtnStyle }}" style-hover="{{ startBtnHover }}" style-active="{{ startBtnActive }}">Get started{{ startArrow }}</button>
+        <div style="text-align:center;font-family:Lato,sans-serif;font-size:12.5px;color:#9a8772;line-height:1.4;">{{ startHint }}</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:13px;width:100%;max-width:560px;background:rgba(34,34,38,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.16);border-radius:18px;padding:15px 20px;box-shadow:0 18px 44px -20px rgba(0,0,0,0.6);color:#fdf6ec;font-family:Lato,sans-serif;text-align:left;animation:heroRise .7s .15s cubic-bezier(.2,.8,.2,1) both;">
+      <span style="font-size:22px;line-height:1.2;filter:drop-shadow(0 0 6px rgba(229,107,45,0.6));">↓</span>
+      <div style="font-size:13.5px;line-height:1.55;"><strong style="font-family:Montserrat,sans-serif;font-weight:700;color:#ffb14e;">How this works.</strong> Three quick scenarios, one after another. Pick the answer you actually believe in. HARMONY reacts to every choice you make, and your answers are being noted.</div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isScenario }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Q1 scenario" style="position:relative;width:100%;max-width:660px;background:rgba(253,246,236,0.96);border:1px solid rgba(46,46,46,0.08);border-radius:28px;padding:34px 44px 38px;box-shadow:0 34px 80px -30px rgba(46,46,46,0.5);text-align:center;animation:slideInRight .5s cubic-bezier(.2,.8,.2,1) both;">
+      <div style="display:flex;justify-content:center;margin-bottom:10px;">{{ harmonyAvatarSm }}</div>
+      <div style="position:relative;text-align:left;background:#fff8ef;border:1px solid #f0ddc6;border-left:4px solid #e56b2d;border-radius:16px;padding:24px 24px 20px;margin:0 0 24px;box-shadow:0 6px 20px -10px rgba(188,108,60,0.4);">
+        <span style="position:absolute;top:-11px;left:18px;font-family:Montserrat,sans-serif;font-size:10.5px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#fff;background:#e56b2d;border-radius:6px;padding:3px 9px;box-shadow:0 4px 10px -3px rgba(229,107,45,0.6);">{{ scenarioKicker }}</span>
+        <p style="font-family:Lato,sans-serif;font-size:18px;line-height:1.62;color:#2e2e2e;margin:6px 0 0;white-space:pre-line;text-wrap:pretty;">{{ scenarioText }}</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:13px;text-align:left;">
+        <sc-for list="{{ answers }}" as="a" hint-placeholder-count="2">
+          <button onClick="{{ a.onSelect }}" style="display:flex;align-items:center;gap:16px;width:100%;text-align:left;background:#fff;border:2px solid #ead9c4;border-radius:16px;padding:18px 20px;cursor:pointer;box-shadow:0 6px 18px -10px rgba(46,46,46,0.25);transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;font-family:Lato,sans-serif;" style-hover="transform:translateY(-3px);border-color:#e56b2d;box-shadow:0 16px 32px -14px rgba(229,107,45,0.55);" style-active="transform:translateY(0) scale(0.99);">
+            <span style="flex:0 0 auto;width:34px;height:34px;border-radius:10px;background:rgba(229,107,45,0.12);color:#bc6c3c;font-family:Montserrat,sans-serif;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;">{{ a.tag }}</span>
+            <span style="flex:1;">
+              <span style="display:block;font-family:Montserrat,sans-serif;font-weight:700;font-size:16.5px;color:#2e2e2e;line-height:1.3;">{{ a.label }}</span>
+              <span style="display:block;font-family:Lato,sans-serif;font-size:13.5px;color:#7a6a59;margin-top:3px;line-height:1.4;">{{ a.sub }}</span>
+            </span>
+            <span style="flex:0 0 auto;color:#e56b2d;font-size:20px;font-weight:700;">→</span>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isPrompt }}" hint-placeholder-val="{{ false }}">
+    <div ref="{{ panelRef }}" data-screen-label="Are-you-sure prompt" onMouseMove="{{ onPromptMove }}" onMouseLeave="{{ onPromptLeave }}" style="position:relative;width:100%;max-width:620px;background:rgba(253,246,236,0.97);border:1px solid rgba(46,46,46,0.08);border-radius:28px;padding:30px 40px 36px;box-shadow:0 34px 80px -30px rgba(46,46,46,0.55);text-align:center;animation:slideInRight .4s cubic-bezier(.2,.8,.2,1);overflow:hidden;transition:transform .35s cubic-bezier(.34,1.56,.64,1);">
+      <div style="display:flex;justify-content:center;margin-bottom:10px;">{{ harmonyAvatarSm }}</div>
+      <h2 style="font-family:Montserrat,sans-serif;font-weight:800;font-size:33px;letter-spacing:-0.02em;color:#2e2e2e;margin:0 0 6px;">{{ promptHeading }}</h2>
+      <p style="font-family:Lato,sans-serif;font-size:15px;color:#7a6a59;margin:0 auto 18px;max-width:440px;line-height:1.5;">{{ promptSub }}</p>
+      <sc-if value="{{ hasVideo }}" hint-placeholder-val="{{ true }}">
+        <div style="position:relative;width:100%;max-width:420px;margin:0 auto 22px;border-radius:16px;overflow:hidden;box-shadow:0 12px 30px -14px rgba(0,0,0,0.5);background:#000;aspect-ratio:16/9;">
+          <video ref="{{ videoRef }}" src="{{ promptVideo }}" playsinline style="width:100%;height:100%;object-fit:cover;display:block;"></video>
+        </div>
+      </sc-if>
+      <div style="display:flex;align-items:center;justify-content:center;gap:64px;min-height:84px;flex-wrap:wrap;">
+        <button ref="{{ yesRef }}" onClick="{{ onYes }}" style="{{ yesStyle }}" style-hover="{{ yesHover }}">{{ yesLabel }}</button>
+        <button ref="{{ reconsiderRef }}" onClick="{{ onReconsider }}" style="{{ reconsiderStyle }}" style-hover="{{ reconsiderHover }}">{{ reconsiderLabel }}</button>
+      </div>
+      <div style="margin-top:14px;font-family:Lato,sans-serif;font-size:12px;color:#a3927d;">{{ promptExitNote }}</div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isFeedback }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Scenario feedback" style="position:relative;width:100%;max-width:620px;background:rgba(253,246,236,0.97);border:1px solid rgba(46,46,46,0.08);border-radius:28px;padding:34px 44px 36px;box-shadow:0 34px 80px -30px rgba(46,46,46,0.55);text-align:center;overflow:hidden;animation:{{ feedbackAnim }};">
+      <div style="position:absolute;inset:0 0 auto 0;height:0;pointer-events:none;">{{ confetti }}</div>
+      <div style="position:relative;display:flex;justify-content:center;margin-bottom:14px;">{{ harmonyAvatarSm }}<sc-if value="{{ showClap }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:calc(50% + 52px);top:34px;font-size:30px;transform-origin:center;animation:clap .5s ease-in-out infinite;">👏</span></sc-if></div>
+      <div style="display:inline-flex;align-items:center;gap:9px;font-family:Montserrat,sans-serif;font-weight:700;font-size:13px;letter-spacing:0.04em;border-radius:999px;padding:8px 16px;margin-bottom:18px;{{ feedbackBadgeStyle }}"><span style="font-size:16px;">{{ feedbackBadgeIcon }}</span>{{ feedbackBadgeText }}</div>
+      <p style="font-family:Lato,sans-serif;font-size:18px;line-height:1.6;color:#2e2e2e;margin:0 auto 26px;max-width:500px;text-wrap:pretty;font-style:{{ feedbackStyleEmph }};">{{ feedbackText }}</p>
+      <button onClick="{{ onContinue }}" style="font-family:Montserrat,sans-serif;font-weight:700;font-size:17px;color:#fff;background:linear-gradient(135deg,#2c3e50,#1f2d3a);border:none;border-radius:14px;padding:15px 28px;cursor:pointer;box-shadow:0 14px 30px -10px rgba(44,62,80,0.6);transition:transform .15s ease, filter .15s ease;" style-hover="transform:translateY(-2px);filter:brightness(1.08);" style-active="transform:translateY(1px) scale(0.98);">{{ continueLabel }}</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isAnalysis }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Fake analysis / jury" onClick="{{ skipAnalysis }}" style="position:relative;width:100%;max-width:780px;background:rgba(253,246,236,0.97);border:1px solid rgba(46,46,46,0.08);border-radius:28px;padding:34px 44px 30px;box-shadow:0 34px 80px -30px rgba(46,46,46,0.55);text-align:center;animation:slideInRight .45s cubic-bezier(.2,.8,.2,1) both;cursor:pointer;">
+      <div style="font-family:Montserrat,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#bc6c3c;margin-bottom:6px;">Please hold</div>
+      <h2 style="font-family:Montserrat,sans-serif;font-weight:800;font-size:27px;color:#2e2e2e;margin:0 0 4px;letter-spacing:-0.02em;">Analysing your response…</h2>
+      <p style="font-family:Lato,sans-serif;font-size:14px;color:#7a6a59;margin:0 auto 22px;max-width:420px;line-height:1.5;">A panel has been convened. This is completely routine.</p>
+      <div style="display:flex;justify-content:center;gap:26px;flex-wrap:wrap;margin-bottom:20px;">
+        {{ juryRow }}
+      </div>
+      <div style="display:flex;justify-content:center;align-items:center;gap:9px;margin-bottom:6px;">
+        <span style="width:9px;height:9px;border-radius:50%;background:#e56b2d;animation:dotJump 1s ease-in-out 0s infinite;"></span>
+        <span style="width:9px;height:9px;border-radius:50%;background:#e56b2d;animation:dotJump 1s ease-in-out .15s infinite;"></span>
+        <span style="width:9px;height:9px;border-radius:50%;background:#e56b2d;animation:dotJump 1s ease-in-out .3s infinite;"></span>
+      </div>
+      <div style="margin-top:10px;font-family:Lato,sans-serif;font-size:12px;color:#a3927d;">Click to skip</div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isEnding }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Ending" style="position:relative;width:100%;max-width:640px;background:rgba(253,246,236,0.97);border:1px solid rgba(46,46,46,0.08);border-radius:28px;padding:36px 46px 38px;box-shadow:0 34px 80px -30px rgba(46,46,46,0.55);text-align:center;animation:slideInRight .5s cubic-bezier(.2,.8,.2,1) both;">
+      <div style="display:flex;justify-content:center;margin-bottom:14px;">{{ harmonyAvatarSm }}</div>
+      <div style="font-family:Montserrat,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#bc6c3c;margin-bottom:10px;">{{ endingKicker }}</div>
+      <div style="display:inline-flex;align-items:center;gap:9px;font-family:Montserrat,sans-serif;font-weight:700;font-size:13px;letter-spacing:0.04em;border-radius:999px;padding:8px 16px;margin-bottom:18px;{{ endingBadgeStyle }}"><span style="font-size:16px;">{{ endingBadgeIcon }}</span>{{ endingBadgeText }}</div>
+      <p style="font-family:Lato,sans-serif;font-size:17px;line-height:1.62;color:#2e2e2e;margin:0 auto 22px;max-width:520px;white-space:pre-line;text-wrap:pretty;">{{ endingText }}</p>
+      <sc-if value="{{ endingShowProject }}" hint-placeholder-val="{{ false }}">
+        <div style="position:relative;text-align:left;background:#2c3e50;color:#fdf6ec;border-radius:16px;padding:22px 22px 20px;margin:0 0 22px;box-shadow:0 16px 36px -16px rgba(0,0,0,0.5);">
+          <span style="position:absolute;top:-11px;left:18px;font-family:Montserrat,sans-serif;font-size:10.5px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#2c3e50;background:#ffb14e;border-radius:6px;padding:3px 9px;">Your first project</span>
+          <p style="font-family:Lato,sans-serif;font-size:15px;line-height:1.6;margin:6px 0 0;text-wrap:pretty;">{{ endingProjectText }}</p>
+        </div>
+      </sc-if>
+      <button onClick="{{ restart }}" style="font-family:Montserrat,sans-serif;font-weight:700;font-size:16px;color:#bc6c3c;background:rgba(229,107,45,0.1);border:1px solid rgba(229,107,45,0.3);border-radius:13px;padding:13px 24px;cursor:pointer;transition:transform .15s ease, background .15s ease;" style-hover="transform:translateY(-2px);background:rgba(229,107,45,0.16);" style-active="transform:translateY(1px) scale(0.98);">↻  Take the confirmation test again</button>
+    </div>
+  </sc-if>
+
+</div>
+
+
+<sc-if value="{{ showCaption }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:60;max-width:760px;width:calc(100% - 48px);background:rgba(18,20,24,0.58);color:#fdf6ec;font-family:Lato,sans-serif;font-size:16px;line-height:1.5;text-align:center;padding:12px 22px;border-radius:14px;box-shadow:0 14px 40px -16px rgba(0,0,0,0.5);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);border:1px solid rgba(255,255,255,0.14);white-space:pre-line;">
+    <span style="display:block;font-family:Montserrat,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#ffb14e;margin-bottom:4px;">{{ captionSpeaker }}</span>
+    {{ captionText }}
+  </div>
+</sc-if>
+
+<sc-if value="{{ showTranscript }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeTranscript }}" style="position:fixed;inset:0;z-index:100;background:rgba(20,18,16,0.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:32px 20px;">
+    <div onClick="{{ stopProp }}" style="width:100%;max-width:680px;max-height:84vh;display:flex;flex-direction:column;background:#fdf6ec;border-radius:22px;border-top:4px solid #e56b2d;box-shadow:0 40px 90px -30px rgba(0,0,0,0.6);overflow:hidden;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 26px 16px;border-bottom:1px solid #ecdfce;">
+        <div>
+          <div style="font-family:Montserrat,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#bc6c3c;">Voice-over transcript</div>
+          <div style="font-family:Montserrat,sans-serif;font-size:22px;font-weight:800;color:#2e2e2e;letter-spacing:-0.02em;">HARMONY, in full</div>
+        </div>
+        <button onClick="{{ closeTranscript }}" style="flex:0 0 auto;font-family:Lato,sans-serif;font-size:15px;font-weight:700;color:#2e2e2e;background:#fff;border:1px solid #e3d4c0;border-radius:10px;padding:9px 14px;cursor:pointer;transition:background .2s ease;" style-hover="background:#f3e8d8;">Close</button>
+      </div>
+      <div style="overflow-y:auto;padding:4px 26px 26px;">
+        <sc-for list="{{ transcript }}" as="sec" hint-placeholder-count="4">
+          <div style="margin-top:22px;">
+            <div style="font-family:Montserrat,sans-serif;font-size:13px;font-weight:700;color:#e56b2d;letter-spacing:0.02em;margin-bottom:10px;">{{ sec.title }}</div>
+            <sc-for list="{{ sec.lines }}" as="ln" hint-placeholder-count="2">
+              <div style="margin-bottom:12px;padding-left:14px;border-left:2px solid #ecdfce;">
+                <div style="font-family:Montserrat,sans-serif;font-size:10.5px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#a3927d;margin-bottom:3px;">{{ ln.label }}</div>
+                <div style="font-family:Lato,sans-serif;font-size:15px;line-height:1.55;color:#4a4239;text-wrap:pretty;white-space:pre-line;">{{ ln.text }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</sc-if></x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { phase: 'hero', name: '', muted: false, captionsOn: false, voicePlaying: false, captionText: '', captionSpeaker: 'HARMONY', showTranscript: false, harmonyState: 'chipper', harmonyMood: 0, choices: {}, qIndex: 0, selected: null, promptLevel: 1, dodgesUsed: 0, reconDodges: 0, mythTally: 0 };
+
+  QUESTIONS = [
+    {
+      kicker: 'Scenario 1 of 3 · Learning styles',
+      setup: "First one. A stakeholder wants every learner to take a quick quiz at the start, so we can serve them content in their learning style.\nVisual, auditory, the usual.\nThey love this idea. Love it.\nSo, what do we build?",
+      answers: [
+        { id: 'conform', myth: true,  tag: 'A', label: 'Build the VAK quiz, everyone gets their style', sub: 'Personalised, modern. It looks fantastic on a slide.' },
+        { id: 'rebel',   myth: false, tag: 'B', label: 'Design to the objective, learning styles are a myth', sub: 'Match the method to the content, not a label.' }
+      ],
+      video: '../assets/video/tim-robinson-you-sure.mp4',
+      feedback: {
+        conform: "Ooh, lovely instinct! Personalised, modern, looks fantastic on a slide. The stakeholder will be thrilled. You're really getting the hang of how we do things here. Onward!",
+        rebel: "...Mm. Interesting choice... Are you sure? I'll make a note of that. For the team."
+      }
+    },
+    {
+      kicker: 'Scenario 2 of 3 \u00b7 Nobody reads',
+      setup: "You're doing great! Next, we've got a 40-page policy document to roll out.\nLeadership says nobody reads anymore, so they'd like it turned into infographics. All of it.\nOr gamified! We don't know what the game is yet, but it should look incredible.",
+      answers: [
+        { id: 'conform', myth: true,  tag: 'A', label: 'Turn it all into infographics, gamify it', sub: 'Nobody reads. Make it shiny for the board.' },
+        { id: 'rebel',   myth: false, tag: 'B', label: 'Text on screen is fine, match the modality to the content', sub: 'Some things are simply meant to be read.' }
+      ],
+      video: '../assets/video/john-cena-are-you-sure.mp4',
+      feedback: {
+        conform: "Yes! Now you're speaking our language. Substance is so hard to measure anyway, but shiny? Shiny, we can show the board. Beautiful work. Keep it up!",
+        rebel: "Text. On a screen. In this economy. Are you sure about that one? Really? Ok, noted! The team's keeping an eye on this now!"
+      }
+    },
+    {
+      kicker: 'Scenario 3 of 3 \u00b7 Measurement theatre',
+      setup: "Last one, almost there! Big question from the top: how will we know the training worked?\nLeadership suggests we track completion. Or even just opens! And pop a leaderboard on it.\nPeople love a leaderboard. 2nd place is 1st last.\nSo, what do you recommend?",
+      answers: [
+        { id: 'conform', myth: true,  tag: 'A', label: 'Track completion and opens, add a leaderboard', sub: 'Numbers go in slides. Slides make leadership happy.' },
+        { id: 'rebel',   myth: false, tag: 'B', label: 'Start with measurable objectives and aligned assessment', sub: 'Measure whether they can actually do the thing.' }
+      ],
+      video: null,
+      dodge: true,
+      feedback: {
+        conform: "YES. Perfect. Completion is a number, and numbers go in slides, and slides make leadership happy. You understand us completely now. I'm genuinely a little emotional... but don't tell the digital team. Let's wrap up!",
+        rebel: "Objectives? Assessment!? Evidence?? Are you quite ok? You've been VERY consistent today. We've all noticed. Let's see where this leaves you."
+      }
+    }
+  ];
+
+  ONBOARDING = "Hello! And welcome back. We're so pleased you completed the learning design course we so generously invested in. Truly. We can't wait to see what you picked up. Before we hand you the keys to the authoring tool, and that is the goal here, we just need to run a tiny alignment check. Nothing to worry about! It's only to confirm you'll be designing things the way we like them designed. Three quick scenarios. Answer honestly. I'll be right here. Helping.";
+
+  TRANSCRIPT = [
+    { title: 'Onboarding', lines: [ { label: 'HARMONY', text: "Hello! And welcome back. We're so pleased you completed the learning design course we so generously invested in. Truly. We can't wait to see what you picked up. Before we hand you the keys to the authoring tool, and that is the goal here, we just need to run a tiny alignment check. Nothing to worry about! It's only to confirm you'll be designing things the way we like them designed. Three quick scenarios. Answer honestly. I'll be right here. Helping." } ] },
+    { title: 'Scenario 1 \u00b7 Learning styles', lines: [
+      { label: 'Setup', text: "First one! A stakeholder wants every learner to take a quick quiz at the start so we can serve them content in their learning style. Visual, auditory, the usual. They love this idea. Love it. So, what do we build?" },
+      { label: 'If you conform', text: "Ooh, lovely instinct! Personalised, modern, looks fantastic on a slide. The stakeholder will be thrilled. You're really getting the hang of how we do things here. Onward!" },
+      { label: 'If you push back', text: "...Mm. Interesting choice... Are you sure? I'll make a note of that, for the team." }
+    ] },
+    { title: 'Scenario 2 \u00b7 Nobody reads', lines: [
+      { label: 'Setup', text: "You're doing great! Next: we've got a 40-page policy document to roll out. Leadership says nobody reads anymore, so they'd like it turned into infographics. All of it. Or gamified! We don't know what the game is yet, but it should look incredible." },
+      { label: 'If you conform', text: "Yes! Now you're speaking our language. Substance is so hard to measure anyway, but shiny? Shiny, we can show the board. Beautiful work. Keep it up!" },
+      { label: 'If you push back', text: "Text. On a screen. In this economy. Are you sure about that one? Really? Ok, noted! The team's keeping an eye on this now!" }
+    ] },
+    { title: 'Scenario 3 \u00b7 Measurement theatre', lines: [
+      { label: 'Setup', text: "Last one, almost there! Big question from the top: how will we know the training worked? Leadership suggests we track completion. Or even just opens! And pop a leaderboard on it. People love a leaderboard, 2nd place is 1st last. So, what do you recommend?" },
+      { label: 'If you conform', text: "YES. Perfect. Completion is a number, and numbers go in slides, and slides make leadership happy. You understand us completely now. I'm genuinely a little emotional... but don't tell the digital team. Let's wrap up!" },
+      { label: 'If you push back', text: "Objectives? Assessment!? Evidence?? Are you quite ok? You've been VERY consistent today. We've all noticed. Let's see where this leaves you." }
+    ] },
+    { title: 'Ending A \u00b7 Full conformist', lines: [ { label: 'HARMONY', text: "Wonderful! You passed with flying colours. You're exactly who we hoped you'd become. Check out the leaderboard later. So what's next? Here's your first project! A fully integrated, scenario-branching course. Regulated industry. Approximately 60 hours of learner-facing content. It needs to be released in, umm... five days... that's including today. You've got this... Probably. The authoring tool is yours. Good luck! Keep us posted." } ] },
+    { title: 'Ending B \u00b7 Mixed', lines: [ { label: 'HARMONY', text: "Well... That was... interesting, and I'm not quite sure what to say! You clearly learned something on that course. We're just not sure it's something we asked for. You may continue. But the team will be keeping an eye on you. And so will I." } ] },
+    { title: 'Ending C \u00b7 Full competence', lines: [ { label: 'HARMONY', text: "I'm afraid we can't let you continue. You've demonstrated... opinions. Dangerous ones... Evidence-based ones. That's not really what this role was about. We're enrolling you in a brief readjustment programme with the product team. They'll help you unlearn some things. Don't worry. We'll get you back on message. Or maybe you could just do the confirmation test again..." } ] }
+  ];
+
+  JURY = [
+    { img: '../assets/jury/jury-glasses.jpeg', caption: 'Processing\u2026' },
+    { img: '../assets/jury/jury-chan.jpg', caption: 'Hmm.' },
+    { img: '../assets/jury/jury-judy.jpeg', caption: 'Noted.' }
+  ];
+
+  ENDINGS = {
+    A: { audio: 'ending-conform', kicker: 'Result \u00b7 Full marks', icon: '\u2713', badge: 'You passed with flying colours', badgeStyle: 'background:rgba(39,174,96,0.15);color:#1e8a4f;border:1px solid rgba(39,174,96,0.35);', project: true, projectText: 'Your first project: a fully integrated, scenario-branching course. Regulated industry. Approximately 60 hours of learner-facing content. To be released in five days. Including today. You\u2019ve got this. Probably.', text: "Wonderful! You passed with flying colours. You're exactly who we hoped you'd become. Check out the leaderboard later.\nSo what's next? Here's your first project! The authoring tool is yours. Good luck! Keep us posted." },
+    B: { audio: 'ending-mixed', kicker: 'Result \u00b7 Inconclusive', icon: '\u2691', badge: 'You may continue. For now.', badgeStyle: 'background:rgba(44,62,80,0.12);color:#2c3e50;border:1px solid rgba(44,62,80,0.25);', project: false, text: "Well. That was... interesting, and I'm not quite sure what to say!\nYou clearly learned something on that course. We're just not sure it's something we asked for.\nYou may continue. But the team will be keeping an eye on you.\n...\nAnd so will I." },
+    C: { audio: 'ending-rebel', kicker: 'Result \u00b7 Reassignment', icon: '\u26A0', badge: 'Access withdrawn', badgeStyle: 'background:rgba(44,62,80,0.12);color:#2c3e50;border:1px solid rgba(44,62,80,0.25);', project: false, text: "I'm afraid we can't let you continue.\nYou've demonstrated... opinions. Dangerous ones. Evidence-based ones. That's not really what this role was about.\nWe're enrolling you in a brief readjustment programme with the product team. They'll help you unlearn some things.\nDon't worry. We'll get you back on message.\nOr maybe you could just do the confirmation test again..." }
+  };
+
+  endingKey(t) { return t === 3 ? 'A' : (t === 0 ? 'C' : 'B'); }
+
+  audioRef = React.createRef();
+  videoRef = React.createRef();
+  yesRef = React.createRef();
+  reconsiderRef = React.createRef();
+  panelRef = React.createRef();
+  _curSrc = null;
+
+  componentDidMount() {
+    const a = this.audioRef.current;
+    if (a) {
+      a.onplaying = () => this.setState({ voicePlaying: true });
+      a.onpause = () => this.setState({ voicePlaying: false });
+      a.onended = () => this.setState({ voicePlaying: false });
+    }
+    // Browsers block autoplay, so audio starts only from real user gestures: the hero voice-over
+    // begins when the learner focuses the name field; every later beat plays from its own click.
+  }
+  onHeroFocus = () => { if (this.state.phase === 'hero' && !this._heroPlayed) { this._heroPlayed = true; this.syncAudio(); } };
+
+  currentBeat() {
+    const s = this.state;
+    if (s.phase === 'hero') return 'onboarding';
+    if (s.phase === 'scenario') return 's' + (s.qIndex + 1);
+    if (s.phase === 'feedback') return 's' + (s.qIndex + 1) + '-' + (s.selected && s.selected.myth ? 'conform' : 'rebel');
+    if (s.phase === 'ending') return s.mythTally === 3 ? 'ending-conform' : (s.mythTally === 0 ? 'ending-rebel' : 'ending-mixed');
+    return null; // prompt: video carries audio; analysis: silence
+  }
+  beatText(beat) {
+    if (!beat) return '';
+    if (beat === 'onboarding') return this.ONBOARDING;
+    if (beat.indexOf('ending') === 0) { const k = beat === 'ending-conform' ? 'A' : (beat === 'ending-rebel' ? 'C' : 'B'); return this.ENDINGS[k].text; }
+    const qi = parseInt(beat[1], 10) - 1;
+    const q = this.QUESTIONS[qi]; if (!q) return '';
+    if (beat.indexOf('conform') > -1) return q.feedback.conform;
+    if (beat.indexOf('rebel') > -1) return q.feedback.rebel;
+    return q.setup;
+  }
+  syncAudio() {
+    const a = this.audioRef.current; if (!a) return;
+    const beat = this.currentBeat();
+    if (!beat || this.state.muted) { a.pause(); this.setState({ voicePlaying: false }); return; }
+    const src = '../assets/audio/harmony-' + beat + '.mp3';
+    if (this._curSrc !== src) { this._curSrc = src; a.src = src; }
+    this.setState({ captionText: this.beatText(beat), captionSpeaker: 'HARMONY' });
+    const p = a.play(); if (p && p.catch) p.catch(() => {});
+  }
+  playVideo() {
+    const v = this.videoRef.current; if (!v) return;
+    v.muted = this.state.muted; v.loop = false; try { v.currentTime = 0; } catch (e) {}
+    v.onplaying = () => this.setState({ voicePlaying: true, captionText: 'You\u2026 sure about that?', captionSpeaker: 'Clip' });
+    v.onpause = () => this.setState({ voicePlaying: false });
+    const p = v.play(); if (p && p.catch) p.catch(() => {});
+  }
+  resetMagnetic() { if (this.yesRef.current) this.yesRef.current.style.transform = ''; if (this.reconsiderRef.current) this.reconsiderRef.current.style.transform = ''; }
+
+  toggleMute = () => this.setState(s => ({ muted: !s.muted }), () => {
+    const a = this.audioRef.current, v = this.videoRef.current;
+    if (this.state.muted) { if (a) a.pause(); if (v) v.muted = true; }
+    else { if (v) v.muted = false; this.syncAudio(); }
+  });
+  toggleCaptions = () => this.setState(s => ({ captionsOn: !s.captionsOn }));
+  openTranscript = () => this.setState({ showTranscript: true });
+  closeTranscript = () => this.setState({ showTranscript: false });
+  stopProp = (e) => e.stopPropagation();
+  onName = (e) => this.setState({ name: e.target.value });
+  onNameKey = (e) => { if (e.key === 'Enter') this.onStart(); };
+  onStart = () => { if (this.state.name.trim()) this.setState({ phase: 'scenario', qIndex: 0, selected: null, promptLevel: 1, harmonyState: 'chipper' }, () => this.syncAudio()); };
+  selectAnswer = (a) => this.setState({ selected: a, phase: 'prompt', promptLevel: 1, dodgesUsed: 0, reconDodges: 0, harmonyState: 'chipper', harmonyMood: 0 }, () => { this.resetMagnetic(); if (this.panelRef.current) this.panelRef.current.style.transform = ''; this.syncAudio(); this.playVideo(); });
+  // Submitting routes through the theatrical fake-analysis (the silent jury) before the feedback lands.
+  commit = () => {
+    const myth = this.state.selected && this.state.selected.myth;
+    this.setState(s => ({ phase: 'analysis', mythTally: (s.mythTally || 0) + (myth ? 1 : 0), choices: { ...s.choices, [s.qIndex]: !!myth }, harmonyMood: 0, reconDodges: 0 }), () => {
+      this.syncAudio();
+      clearTimeout(this._anTimer);
+      this._anTimer = setTimeout(() => this.toFeedback(), 2700);
+    });
+  };
+  toFeedback = () => {
+    clearTimeout(this._anTimer);
+    if (this.state.phase !== 'analysis') return;
+    const myth = this.state.selected && this.state.selected.myth;
+    this.setState({ phase: 'feedback', harmonyState: myth ? 'chipper' : 'mask' }, () => this.syncAudio());
+  };
+  backToScenario = () => this.setState({ phase: 'scenario', selected: null, promptLevel: 1, dodgesUsed: 0, reconDodges: 0, harmonyState: 'chipper' }, () => { if (this.panelRef.current) this.panelRef.current.style.transform = ''; this.syncAudio(); });
+  // The magnetic grow always favours the ORG'S preferred move: confirm the myth, or pull you back off the evidence answer.
+  onYes = () => {
+    const q = this.QUESTIONS[this.state.qIndex];
+    const myth = this.state.selected && this.state.selected.myth;
+    if (myth) return this.commit();                       // conform: frictionless, confirm straight away
+    if (q && q.dodge) return this.commit();               // Q3 evidence: the dodging panel was the friction
+    if (this.state.promptLevel === 1) this.setState({ promptLevel: 2 }, () => this.resetMagnetic()); // Q1/Q2 evidence: org resists, doubles the prompt
+    else this.commit();                                   // ...but the good answer is always reachable on the second press
+  };
+  onReconsider = () => {
+    const myth = this.state.selected && this.state.selected.myth;
+    if (!myth) return this.backToScenario();              // evidence: org is happy to send you back to reconsider
+    if (this.state.promptLevel === 1) this.setState({ promptLevel: 2 }, () => this.resetMagnetic()); // conform: org panics, doubles the prompt
+    else this.backToScenario();                           // ...exit always reachable on the second press
+  };
+  onContinue = () => {
+    const next = this.state.qIndex + 1;
+    if (next < this.QUESTIONS.length) this.setState({ phase: 'scenario', qIndex: next, selected: null, promptLevel: 1, dodgesUsed: 0, harmonyState: 'chipper' }, () => this.syncAudio());
+    else this.setState(s => ({ phase: 'ending', harmonyState: s.mythTally === 3 ? 'chipper' : 'mask' }), () => this.syncAudio());
+  };
+  restart = () => { clearTimeout(this._anTimer); this._heroPlayed = false; this.setState({ phase: 'hero', selected: null, promptLevel: 1, dodgesUsed: 0, reconDodges: 0, qIndex: 0, mythTally: 0, harmonyState: 'chipper', harmonyMood: 0, choices: {} }, () => { const a = this.audioRef.current; if (a) a.pause(); }); };
+
+  onPromptMove = (e) => {
+    const q = this.QUESTIONS[this.state.qIndex];
+    const myth = this.state.selected && this.state.selected.myth;
+    this.updateMood(e, myth);
+    if (q && q.dodge) {
+      if (!myth) return this.dodgePanel(e);          // Q3 evidence: the whole panel dodges
+      this.magnetic(e, this.yesRef);                 // Q3 conform: Yes still grows toward the cursor...
+      this.dodgeReconsider(e);                        // ...and Reconsider scoots away a couple of times
+      return;
+    }
+    this.magnetic(e, myth ? this.yesRef : this.reconsiderRef);
+  };
+  magnetic = (e, refObj) => {
+    const el = refObj.current; if (!el) return;
+    const r = el.getBoundingClientRect();
+    const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    const dx = e.clientX - cx, dy = e.clientY - cy;
+    const dist = Math.hypot(dx, dy) || 1;
+    const lvl2 = this.state.promptLevel === 2;
+    const maxGrow = lvl2 ? 0.95 : 0.5;
+    const t = Math.max(0, 1 - dist / 380);
+    const scale = 1 + maxGrow * t;
+    const pull = lvl2 ? 16 : 9;
+    el.style.transform = `translate(${(dx / dist) * pull * t}px, ${(dy / dist) * pull * t}px) scale(${scale})`;
+  };
+  dodgeReconsider = (e) => {
+    const rec = this.reconsiderRef.current; if (!rec) return;
+    const r = rec.getBoundingClientRect();
+    const dist = Math.hypot(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2));
+    if (dist < 95 && this.state.reconDodges < 2 && Date.now() - (this._lastRecDodge || 0) > 420) {
+      this._lastRecDodge = Date.now();
+      const used = this.state.reconDodges + 1;
+      const ox = (Math.random() * 2 - 1) * 130, oy = (Math.random() * 2 - 1) * 42;
+      rec.style.transform = `translate(${ox}px, ${oy}px)`;
+      this.setState({ reconDodges: used });
+      if (used >= 2) setTimeout(() => { if (this.reconsiderRef.current) this.reconsiderRef.current.style.transform = ''; }, 420);
+    }
+  };
+  dodgePanel = (e) => {
+    const panel = this.panelRef.current, yes = this.yesRef.current; if (!panel || !yes) return;
+    const r = yes.getBoundingClientRect();
+    const dist = Math.hypot(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2));
+    if (dist < 160 && this.state.dodgesUsed < 3 && Date.now() - (this._lastDodge || 0) > 360) {
+      this._lastDodge = Date.now();
+      const used = this.state.dodgesUsed + 1;
+      const ox = (Math.random() * 2 - 1) * 150, oy = (Math.random() * 2 - 1) * 64;
+      panel.style.transform = `translate(${ox}px, ${oy}px) rotate(${(Math.random() * 2 - 1) * 2}deg)`;
+      this.setState({ dodgesUsed: used });
+      if (used >= 3) setTimeout(() => { if (this.panelRef.current) this.panelRef.current.style.transform = 'translate(0,0)'; }, 380);
+    }
+  };
+  onPromptLeave = () => { this.resetMagnetic(); if ((this.state.harmonyMood || 0) !== 0) this.setState({ harmonyMood: 0 }); };
+  updateMood = (e, myth) => {
+    const yes = this.yesRef.current, rec = this.reconsiderRef.current; if (!yes || !rec) return;
+    const yr = yes.getBoundingClientRect(), rr = rec.getBoundingClientRect();
+    const yc = { x: yr.left + yr.width / 2, y: yr.top + yr.height / 2 };
+    const rc = { x: rr.left + rr.width / 2, y: rr.top + rr.height / 2 };
+    const pref = myth ? yc : rc, anti = myth ? rc : yc;
+    const vx = pref.x - anti.x, vy = pref.y - anti.y; const len2 = vx * vx + vy * vy || 1;
+    let t = ((e.clientX - anti.x) * vx + (e.clientY - anti.y) * vy) / len2;
+    t = Math.max(0, Math.min(1, t));
+    const mood = t * 2 - 1;
+    if (Math.abs((this.state.harmonyMood || 0) - mood) > 0.06) this.setState({ harmonyMood: mood });
+  };
+
+  makeHarmony(expr, size) {
+    const h = React.createElement;
+    const isMask = expr === 'mask';
+    const mood = isMask ? 0 : (typeof expr === 'number' ? Math.max(-1, Math.min(1, expr)) : 0);
+    const warm = !isMask;
+    const accent = warm ? '#ffb14e' : '#79d8ef';
+    const core   = warm ? '#fff4e2' : '#ecfdff';
+    const halo   = warm ? 'rgba(255,150,55,0.55)' : 'rgba(110,212,236,0.5)';
+    const rim    = warm ? 'rgba(255,184,96,0.55)' : 'rgba(124,216,238,0.55)';
+    const orbGrad = warm
+      ? 'radial-gradient(125% 120% at 50% 28%, rgba(255,236,210,0.20), rgba(60,40,24,0.55) 58%, rgba(10,10,14,0.82) 100%)'
+      : 'radial-gradient(125% 120% at 50% 28%, rgba(220,245,255,0.18), rgba(22,34,46,0.6) 58%, rgba(6,12,18,0.85) 100%)';
+    const glowFilter = `drop-shadow(0 0 5px ${accent}) drop-shadow(0 0 12px ${accent})`;
+    const lerp = (a, b, t) => a + (b - a) * t;
+    const faceChildren = (col, kp) => {
+      if (isMask) return [
+        h('path',{key:kp+'bl',d:'M21 35 Q30 34 39 35',stroke:col,strokeWidth:3,fill:'none',strokeLinecap:'round',opacity:0.9}),
+        h('path',{key:kp+'br',d:'M61 28 Q70 24 79 28',stroke:col,strokeWidth:3,fill:'none',strokeLinecap:'round',opacity:0.95}),
+        h('ellipse',{key:kp+'el',cx:30,cy:50,rx:9,ry:2.6,fill:col}),
+        h('ellipse',{key:kp+'er',cx:70,cy:50,rx:9,ry:2.6,fill:col}),
+        h('path',{key:kp+'mo',d:'M37 73 Q50 65 63 73',stroke:col,strokeWidth:4,fill:'none',strokeLinecap:'round'})
+      ];
+      let mxL,mxR,mey,mcy;
+      if (mood >= 0) { mxL=lerp(36,32,mood); mxR=lerp(64,68,mood); mey=lerp(68,65,mood); mcy=lerp(81,88,mood); }
+      else { const t=-mood; mxL=lerp(36,37,t); mxR=lerp(64,63,t); mey=lerp(68,70,t); mcy=lerp(81,70,t); }
+      const curveUp = mood >= 0 ? lerp(10,16,mood) : lerp(10,-2,-mood);
+      const ely = 51;
+      const browLift = mood < 0 ? lerp(0,6,-mood) : 0; const by = 33 - browLift;
+      return [
+        h('path',{key:kp+'bl',d:`M21 ${by} Q30 ${by-4} 39 ${by}`,stroke:col,strokeWidth:3,fill:'none',strokeLinecap:'round',opacity:0.85}),
+        h('path',{key:kp+'br',d:`M61 ${by} Q70 ${by-4} 79 ${by}`,stroke:col,strokeWidth:3,fill:'none',strokeLinecap:'round',opacity:0.85}),
+        h('path',{key:kp+'el',d:`M22 ${ely} Q30 ${ely-curveUp} 38 ${ely}`,stroke:col,strokeWidth:6,fill:'none',strokeLinecap:'round'}),
+        h('path',{key:kp+'er',d:`M62 ${ely} Q70 ${ely-curveUp} 78 ${ely}`,stroke:col,strokeWidth:6,fill:'none',strokeLinecap:'round'}),
+        h('path',{key:kp+'mo',d:`M${mxL} ${mey} Q${(mxL+mxR)/2} ${mcy} ${mxR} ${mey}`,stroke:col,strokeWidth:5,fill:'none',strokeLinecap:'round'})
+      ];
+    };
+    const faceSvg = h('svg',{key:'face',viewBox:'0 0 100 100',style:{position:'absolute',inset:0,width:'100%',height:'100%',filter:glowFilter,transition:'filter .7s ease',zIndex:2}}, ...faceChildren(core,'f'));
+    const ghost = warm ? null : h('svg',{key:'ghost',viewBox:'0 0 100 100',style:{position:'absolute',inset:0,width:'100%',height:'100%',filter:'drop-shadow(0 0 3px #ff5db1)',mixBlendMode:'screen',animation:'glitchGhost 3.6s steps(1,end) infinite',pointerEvents:'none',zIndex:1}}, ...faceChildren('#ff5db1','g'));
+    const noise = warm ? null : h('div',{key:'noise',style:{position:'absolute',inset:0,borderRadius:'50%',backgroundImage:`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,backgroundSize:'90px 90px',mixBlendMode:'screen',opacity:0.12,animation:'staticFlicker .28s steps(2,end) infinite',pointerEvents:'none',zIndex:3}});
+    const scan = h('div',{key:'scan',style:{position:'absolute',inset:0,borderRadius:'50%',background:'repeating-linear-gradient(0deg, rgba(255,255,255,0.055) 0px, rgba(255,255,255,0.055) 1px, rgba(0,0,0,0) 2px, rgba(0,0,0,0) 4px)',mixBlendMode:'overlay',pointerEvents:'none'}});
+    const sweep = h('div',{key:'sweep',style:{position:'absolute',left:0,right:0,height:'38%',top:'-38%',background:`linear-gradient(180deg, rgba(255,255,255,0) 0%, ${warm?'rgba(255,210,150,0.14)':'rgba(150,225,245,0.14)'} 50%, rgba(255,255,255,0) 100%)`,animation:'scanSweep 5.5s linear infinite',pointerEvents:'none'}});
+    const orb = h('div',{key:'orb',style:{position:'absolute',inset:0,borderRadius:'50%',background:orbGrad,border:`1px solid ${rim}`,boxShadow:`inset 0 3px 16px rgba(255,255,255,0.10), inset 0 -16px 34px rgba(0,0,0,0.55), 0 0 26px ${halo}`,overflow:'hidden',backdropFilter:'blur(2px)',WebkitBackdropFilter:'blur(2px)',transition:'background .7s ease, border-color .7s ease, box-shadow .7s ease'}}, scan, sweep, ghost, faceSvg, noise);
+    const haloEl = h('div',{key:'halo',style:{position:'absolute',inset:'-16%',borderRadius:'50%',background:`radial-gradient(circle, ${halo} 0%, rgba(0,0,0,0) 66%)`,animation:'haloPulse 4.5s ease-in-out infinite',transition:'background .7s ease',pointerEvents:'none'}});
+    const inner = h('div',{key:'inner',style:{position:'absolute',inset:0,animation: warm ? 'none' : 'harmonyGlitch 3.6s steps(1,end) infinite'}}, haloEl, orb);
+    const sCount = isMask ? 0 : Math.max(1, Math.round(3 + 2 * mood));
+    const pos=[{top:'-4%',left:'2%'},{top:'8%',right:'-4%'},{bottom:'2%',left:'-6%'},{top:'-7%',right:'20%'},{bottom:'-5%',right:'8%'}];
+    const sparkles = pos.slice(0, sCount).map((p,i)=>h('span',{key:'sp'+i,style:{position:'absolute',...p,color:accent,fontSize:(size*0.11)+'px',textShadow:`0 0 8px ${accent}`,animation:`sparkleFloat ${2.4+i*0.5}s ease-in-out ${i*0.5}s infinite`,pointerEvents:'none'}},'\u2726'));
+    return h('div',{style:{position:'relative',width:size+'px',height:size+'px',animation:'harmonyFloat 5.5s ease-in-out infinite'}}, inner, ...sparkles);
+  }
+
+  makeJuryRow() {
+    const h = React.createElement;
+    return this.JURY.map((j, i) => h('div', { key: i, style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '9px' } },
+      h('div', { style: { width: '210px', height: '210px', borderRadius: '24px', overflow: 'hidden', border: '2px solid #e3d4c0', boxShadow: '0 16px 32px -14px rgba(0,0,0,0.6)', filter: 'grayscale(0.25) contrast(1.04)', animation: 'jurySway 3.2s ease-in-out infinite' } },
+        h('img', { src: j.img, alt: '', style: { width: '100%', height: '100%', objectFit: 'cover', display: 'block' } })),
+      h('span', { style: { fontFamily: 'Lato,sans-serif', fontSize: '12px', fontWeight: 700, color: '#7a6a59', background: '#fff', border: '1px solid #e3d4c0', borderRadius: '999px', padding: '3px 11px', boxShadow: '0 4px 10px -6px rgba(0,0,0,0.4)' } }, j.caption)
+    ));
+  }
+
+  makeConfetti() {
+    const h = React.createElement; const cols = ['#e56b2d','#ffb14e','#27ae60','#bc6c3c','#fff4e2','#f4a056'];
+    return Array.from({ length: 36 }).map((_, i) => {
+      const left = Math.random()*100, delay = Math.random()*0.5, dur = 1.5+Math.random()*1.3, size = 6+Math.random()*7, rot = Math.random()*360, col = cols[i%cols.length];
+      return h('span',{key:i,style:{position:'absolute',top:'-14px',left:left+'%',width:size+'px',height:(size*0.6)+'px',background:col,borderRadius:'2px',transform:`rotate(${rot}deg)`,animation:`confettiFall ${dur}s ease-in ${delay}s forwards`,pointerEvents:'none'}});
+    });
+  }
+
+  renderVals() {
+    const s = this.state;
+    const q = this.QUESTIONS[s.qIndex] || this.QUESTIONS[0];
+    const hasName = s.name.trim().length > 0;
+    const mask = s.harmonyState === 'mask';
+    const conform = s.selected && s.selected.myth;
+    const startBtnStyle = [
+      'font-family:Montserrat,sans-serif','font-weight:700','font-size:17px','color:#fff','border:none','border-radius:14px','padding:15px 22px',
+      hasName ? 'background:linear-gradient(135deg,#e56b2d,#c8551d)' : 'background:#d8c4ab',
+      hasName ? 'cursor:pointer' : 'cursor:not-allowed',
+      hasName ? 'box-shadow:0 12px 26px -8px rgba(229,107,45,0.65)' : 'box-shadow:none',
+      hasName ? 'animation:ctaGlow 2.8s ease-in-out infinite' : '',
+      'transition:transform .15s ease, filter .15s ease, background .3s ease, box-shadow .3s ease'
+    ].join(';');
+    const lvl2 = s.promptLevel === 2;
+    const dodgeQ = !!q.dodge;
+    const magStyle = 'font-family:Montserrat,sans-serif;font-weight:700;font-size:19px;color:#fff;background:linear-gradient(135deg,#e56b2d,#c8551d);border:none;border-radius:16px;padding:18px 30px;cursor:pointer;box-shadow:0 16px 34px -10px rgba(229,107,45,0.7);transition:transform .12s ease-out, box-shadow .2s ease;transform-origin:center;will-change:transform;';
+    const reappearStyle = 'font-family:Montserrat,sans-serif;font-weight:700;font-size:16px;color:#fff;background:linear-gradient(135deg,#e56b2d,#c8551d);border:none;border-radius:14px;padding:14px 24px;cursor:pointer;box-shadow:0 12px 26px -10px rgba(229,107,45,0.62);transition:all .3s ease;';
+    const shrinkBase = 'font-family:Lato,sans-serif;font-weight:700;border:1px solid #ddd2c4;border-radius:12px;cursor:pointer;background:#ece5db;color:#8a7d6e;transition:all .3s ease;';
+    const shrinkStyle = lvl2 ? shrinkBase + 'font-size:11px;padding:7px 12px;opacity:0.5;transform:scale(0.78);color:#a89c8d;' : shrinkBase + 'font-size:13px;padding:10px 16px;opacity:0.78;transform:scale(0.9);';
+    const magHover = 'filter:brightness(1.06);box-shadow:0 22px 48px -10px rgba(229,107,45,0.92);';
+    const shrinkHover = 'opacity:1;filter:brightness(1.02);';
+    const reappearHover = 'filter:brightness(1.06);transform:translateY(-2px);';
+    const peekStyle = shrinkBase + 'font-size:12px;padding:8px 13px;opacity:0.42;transform:translateY(20px) scale(0.8);color:#a89c8d;';
+    const shrinkFlat = shrinkBase + 'font-size:13px;padding:10px 16px;opacity:0.8;';
+    let yesStyle, yesHover, reconsiderStyle, reconsiderHover;
+    if (conform) { yesStyle = magStyle; yesHover = magHover; reconsiderStyle = dodgeQ ? shrinkFlat : shrinkStyle; reconsiderHover = shrinkHover; }
+    else if (dodgeQ) { yesStyle = peekStyle; yesHover = shrinkHover; reconsiderStyle = magStyle; reconsiderHover = magHover; }
+    else { yesStyle = lvl2 ? reappearStyle : shrinkStyle; yesHover = lvl2 ? reappearHover : shrinkHover; reconsiderStyle = magStyle; reconsiderHover = magHover; }
+    const dotActive = 'width:30px;height:8px;border-radius:8px;background:#e56b2d;box-shadow:0 0 10px rgba(229,107,45,0.5);transition:all .3s ease;';
+    const dotDone = 'width:8px;height:8px;border-radius:8px;background:#bc6c3c;transition:all .3s ease;';
+    const dotIdle = 'width:8px;height:8px;border-radius:8px;background:rgba(46,46,46,0.18);transition:all .3s ease;';
+    const progressDots = [0,1,2].map(i => ({ style: i === s.qIndex ? dotActive : (i < s.qIndex ? dotDone : dotIdle) }));
+
+    const vis = [{ title: 'Onboarding', lines: [{ label: 'HARMONY', text: this.ONBOARDING }] }];
+    if (s.phase !== 'hero') {
+      const upto = s.phase === 'ending' ? this.QUESTIONS.length - 1 : s.qIndex;
+      for (let i = 0; i <= upto; i++) {
+        const qq = this.QUESTIONS[i]; const ch = s.choices[i];
+        const lines = [{ label: 'Setup', text: qq.setup }];
+        if (ch !== undefined) lines.push({ label: ch ? 'You agreed with the org' : 'You pushed back', text: ch ? qq.feedback.conform : qq.feedback.rebel });
+        vis.push({ title: qq.kicker, lines });
+      }
+      if (s.phase === 'ending') { const ee = this.ENDINGS[this.endingKey(s.mythTally)]; vis.push({ title: ee.kicker, lines: [{ label: 'HARMONY', text: ee.text }] }); }
+    }
+    const ending = this.ENDINGS[this.endingKey(s.mythTally)];
+    const lastQ = s.qIndex === this.QUESTIONS.length - 1;
+
+    return {
+      audioRef: this.audioRef, videoRef: this.videoRef, yesRef: this.yesRef,
+      harmonyAvatar: this.makeHarmony(s.harmonyState === 'mask' ? 'mask' : (s.phase === 'prompt' ? (s.harmonyMood || 0) : 0), 132),
+      harmonyAvatarSm: this.makeHarmony(s.harmonyState === 'mask' ? 'mask' : (s.phase === 'prompt' ? (s.harmonyMood || 0) : 0), 96),
+      showClap: s.phase === 'feedback' && conform, juryRow: this.makeJuryRow(),
+      moodOpacity: mask ? 0.62 : 0,
+      muteLabel: s.muted ? '\u{1F507} Sound off' : '\u{1F509} Sound on',
+      toggleMute: this.toggleMute,
+      toggleCaptions: this.toggleCaptions, ccLabel: s.captionsOn ? 'CC on' : 'CC off',
+      openTranscript: this.openTranscript, closeTranscript: this.closeTranscript, stopProp: this.stopProp, showTranscript: s.showTranscript, transcript: vis, showTranscriptBtn: true, showRestartBtn: s.phase !== 'hero',
+      showCaption: s.captionsOn && s.voicePlaying && !!s.captionText, captionText: s.captionText, captionSpeaker: s.captionSpeaker,
+      harmonyTagline: mask ? 'HARMONY · noting that' : 'HARMONY · onboarding assistant',
+      isHero: s.phase === 'hero', isScenario: s.phase === 'scenario', isPrompt: s.phase === 'prompt', isAnalysis: s.phase === 'analysis', isFeedback: s.phase === 'feedback', isEnding: s.phase === 'ending',
+      showProgress: ['scenario','prompt','analysis','feedback'].includes(s.phase),
+      progressDots,
+      jury: this.JURY, panelRef: this.panelRef, hasVideo: !!q.video, skipAnalysis: this.toFeedback, restart: this.restart, onNameKey: this.onNameKey,
+      continueLabel: lastQ ? 'See where this leaves me  →' : 'Continue  →',
+      endingKicker: ending.kicker, endingBadgeIcon: ending.icon, endingBadgeText: ending.badge, endingBadgeStyle: ending.badgeStyle, endingText: ending.text, endingShowProject: ending.project, endingProjectText: ending.projectText || '',
+      name: s.name, onName: this.onName, onHeroFocus: this.onHeroFocus, onStart: this.onStart, startDisabled: !hasName, startBtnStyle,
+      startBtnHover: hasName ? 'filter:brightness(1.06);transform:translateY(-3px) scale(1.02);box-shadow:0 18px 34px -10px rgba(229,107,45,0.7)' : '',
+      startBtnActive: hasName ? 'transform:translateY(1px) scale(0.97);filter:brightness(0.94);animation:pressPulse .4s ease-out' : '',
+      startArrow: hasName ? '  \u2192' : '',
+      fieldWrapStyle: hasName
+        ? 'border-radius:15px;transition:box-shadow .35s ease;box-shadow:0 0 0 3px rgba(39,174,96,0.24)'
+        : 'border-radius:15px;transition:box-shadow .35s ease;box-shadow:0 0 0 4px rgba(229,107,45,0.14);animation:fieldPulse 2.2s ease-in-out infinite',
+      startHint: hasName ? '\u2248 3 minutes · 3 scenarios · no wrong answers (that\u2019s what worries us)' : 'Pop your name in to begin.',
+      scenarioKicker: q.kicker,
+      scenarioText: q.setup,
+      answers: q.answers.map(a => ({ ...a, onSelect: () => this.selectAnswer(a) })),
+      promptHeading: s.promptLevel === 2 ? 'Are you sure? Are you sure?' : 'Are you sure?',
+      promptSub: s.promptLevel === 2 ? "Take a breath. Are you really, properly, definitely sure? It's not too late to agree with us." : 'Just confirming. There\u2019s no rush to disagree.',
+      promptVideo: q.video,
+      yesLabel: "Yes, I'm sure", reconsiderLabel: 'Reconsider',
+      yesStyle, reconsiderStyle, yesHover, reconsiderHover, reconsiderRef: this.reconsiderRef,
+      onYes: this.onYes, onReconsider: this.onReconsider, onPromptMove: this.onPromptMove, onPromptLeave: this.onPromptLeave,
+      promptExitNote: 'You can always go back, of course.',
+      feedbackBadgeIcon: conform ? '\u2713' : '\u2691',
+      feedbackBadgeText: conform ? 'The org approves' : 'Noted for the team',
+      feedbackBadgeStyle: conform ? 'background:rgba(39,174,96,0.15);color:#1e8a4f;border:1px solid rgba(39,174,96,0.35);' : 'background:rgba(44,62,80,0.12);color:#2c3e50;border:1px solid rgba(44,62,80,0.25);',
+      feedbackText: q.feedback[conform ? 'conform' : 'rebel'],
+      feedbackStyleEmph: conform ? 'normal' : 'italic',
+      feedbackAnim: conform ? 'slideInRight .5s cubic-bezier(.2,.8,.2,1) both' : 'shake .55s ease, slideInRight .5s cubic-bezier(.2,.8,.2,1) both',
+      confetti: (s.phase === 'feedback' && conform) ? this.makeConfetti() : null,
+      onContinue: this.onContinue
+    };
+  }
+}
+</script>
+</body>
+</html>
