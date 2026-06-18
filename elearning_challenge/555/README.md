@@ -99,3 +99,12 @@ latter is the named working copy). Edit either and keep `support.js` beside it.
 - **Relative paths only** — no absolute URLs, no CDN dependencies at runtime.
 - **Total media ≈ 8.5 MB** (the Tim Robinson clip is the bulk at ~4.5 MB).
 - Built to the **Forged Frameworks** copper-on-cream palette; type is Montserrat + Lato.
+- **Favicon + social preview.** `build/` ships `favicon.png` / `favicon-32.png` /
+  `apple-touch-icon.png` and `og.png` (the 1200×630 link-unfurl card). The favicon links
+  live in the `.dc.html` `<helmet>`, so they survive a recompile. **The Open Graph /
+  Twitter tags, however, live in the *static* `<head>` of `index.html`** (between the
+  viewport `<meta>` and the `support.js` `<script>`) — link-preview crawlers don't run JS,
+  so they can't sit in the helmet. A recompile from the `.dc.html` regenerates that static
+  head and **drops the OG block, so re-add it after every rebuild.** `og:image`/`og:url`
+  are absolute Pages URLs — update them if the repo, path, or host ever changes. Regenerate
+  the images with `make_assets.py` (kept with the build sources).
