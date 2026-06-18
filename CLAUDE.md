@@ -17,6 +17,39 @@ Follow every step below on **every push**, no exceptions.
 
 ---
 
+## Deploy config
+<!-- Read by the /push-build skill. Keep filenames lowercase. -->
+
+- **Repo:** `DanForgedFrameworks/Portfolio`
+- **Branch:** `main`
+- **Repo root:** `C:\Users\celt_\OneDrive\VLE e-Learning Documents\FFW Portfolio\Forged Frameworks Portfolio\github-deploy`
+- **Bundle source pattern:** a sibling `Forged Frameworks Portfolio <version>\github-deploy` folder
+- **Live URL base:** `https://danforgedframeworks.github.io/Portfolio/`
+- **Entry page:** `index.html` (the "Choose your path" gateway)
+
+- **Core pages** (must exist at root after deploy):
+  - `index.html`
+  - `learning-design.html`
+  - `accreditation-quality.html`
+  - `404.html`
+
+- **Entry-page navigation targets** (gateway must fire each via `FFTransition.fire(...)`; each must exist at root):
+  - `learning-design.html`
+  - `accreditation-quality.html`
+
+- **Known retired / stale filenames** (must NOT appear in deployed *.html / *.js, and must be `git rm`'d if present in the repo):
+  - `gateway.html`
+  - `Accreditation-Quality.html` (retired in favour of lowercase `accreditation-quality.html`)
+  - `Accreditation-Quality v2.html`
+  - `Forged Frameworks Portfolio.html`, `Forged Frameworks Portfolio v2.html`
+  - `tweaks-app.jsx`, `tweaks-panel.jsx`
+
+- **Extra QA checks** (mirror anything the bundle's handover doc specifies):
+  - If `index.html` stamps cache-busters, confirm `site.css?v=NNN` and `app.js?v=NNN` were bumped
+  - `transition.js` present at root (drives the gateway page transitions)
+
+---
+
 ## Standard push workflow — follow every step in order
 
 ### STEP 1 — Locate the source bundle
