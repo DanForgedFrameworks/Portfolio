@@ -188,7 +188,7 @@
       if (isTouch) return;
       a.addEventListener('click', function (e) {
         e.preventDefault();
-        open(a.getAttribute('href'), a.getAttribute('href').split('/').pop());
+        open(a.getAttribute('href'), a.getAttribute('data-title') || a.getAttribute('href').split('/').pop());
       });
     });
     /* Show & tell walkthroughs (Google Drive). On touch, open Drive's own /view
@@ -204,6 +204,27 @@
     closeBtn.addEventListener('click', close);
     modal.addEventListener('click', function (e) { if (e.target === modal) close(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && modal.classList.contains('open')) close(); });
+  })();
+
+  /* ---------- Programme journey mini-players ----------
+     Live preview iframes on desktop; on touch we leave the branded poster
+     and let the card link open natively (no 4 canvas iframes booting on phones). */
+  (function journeyPlayers() {
+    var frames = document.querySelectorAll('.journey__frame[data-src]');
+    if (!frames.length || isTouch) return;
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (ents) {
+        ents.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          var f = en.target;
+          if (!f.src) f.src = f.getAttribute('data-src');
+          io.unobserve(f);
+        });
+      }, { rootMargin: '300px' });
+      frames.forEach(function (f) { io.observe(f); });
+    } else {
+      frames.forEach(function (f) { f.src = f.getAttribute('data-src'); });
+    }
   })();
 
   /* ---------- Heavy iframe demos → tap-to-load mini panels ----------

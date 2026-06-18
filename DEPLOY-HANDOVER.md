@@ -1,4 +1,10 @@
-# Forged Frameworks — Portfolio · DEPLOY HANDOVER (v2.5)
+# Forged Frameworks — Portfolio · DEPLOY HANDOVER (v2.6)
+
+> **v2.6 — new:** `learning-design.html` now opens its "Level-specific modules" section
+> with a **Programme journeys** block — four live mini-players (Applied Biosciences,
+> Applied Chemical Sciences, Applied Materials Science, Laboratory Manager) that open
+> larger in the in-page preview modal. The animations live in `patterns/journeys/` and
+> are self-contained. Nothing new to configure — they ship inside `patterns/`.
 
 **Read this first.** This folder is the **complete, deployable site**. Everything in
 it must land at the **root of the GitHub Pages repo** (`DanForgedFrameworks/Portfolio`).

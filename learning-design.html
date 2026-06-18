@@ -513,8 +513,65 @@
     <div class="sec-head reveal" style="max-width:64ch;">
       <p class="kicker"><i data-lucide="graduation-cap"></i>level-specific modules</p>
       <h2 class="h1">Show &amp; tell — by level</h2>
-      <p class="lead" style="color:#d7dee3;">Walkthroughs of full modules I've designed and built, from Level 3 to Level 6 — interactions, reflective bookends and engagement features shown in context.</p>
+      <p class="lead" style="color:#d7dee3;">From animated programme front pages that map a whole learner journey, to walkthroughs of full modules I've designed and built — Level 3 to Level 6, shown in context.</p>
     </div>
+
+    <!-- ----- Programme journeys (live mini-players) ----- -->
+    <div class="journeys reveal">
+      <div class="journeys__head">
+        <p class="journeys__label"><i data-lucide="route"></i>Programme journeys</p>
+        <p class="journeys__lead">Learner-facing front pages that open a course — every module on one connected pathway, auto-touring level by level. Each preview is live; select one to open it larger and explore it yourself.</p>
+      </div>
+      <div class="journeys-grid">
+
+        <a class="journey" href="patterns/journeys/applied-biosciences.html" data-title="Applied Biosciences — learner journey" target="_blank" rel="noopener" aria-label="Open the Applied Biosciences learner-journey pathway, larger and interactive">
+          <span class="journey__player">
+            <iframe class="journey__frame" data-src="patterns/journeys/applied-biosciences.html" title="Applied Biosciences learner-journey preview" loading="lazy" sandbox="allow-scripts allow-same-origin" tabindex="-1" aria-hidden="true"></iframe>
+            <span class="journey__poster journey__poster--bio" aria-hidden="true"></span>
+            <span class="journey__expand"><i data-lucide="maximize-2"></i>View larger</span>
+          </span>
+          <span class="journey__meta">Levels 4–6 · Biosciences</span>
+          <span class="journey__title">Applied Biosciences</span>
+          <span class="journey__d">The whole degree pathway as one connected map, level by level.</span>
+        </a>
+
+        <a class="journey" href="patterns/journeys/applied-chemical-sciences.html" data-title="Applied Chemical Sciences — learner journey" target="_blank" rel="noopener" aria-label="Open the Applied Chemical Sciences learner-journey pathway, larger and interactive">
+          <span class="journey__player">
+            <iframe class="journey__frame" data-src="patterns/journeys/applied-chemical-sciences.html" title="Applied Chemical Sciences learner-journey preview" loading="lazy" sandbox="allow-scripts allow-same-origin" tabindex="-1" aria-hidden="true"></iframe>
+            <span class="journey__poster journey__poster--chem" aria-hidden="true"></span>
+            <span class="journey__expand"><i data-lucide="maximize-2"></i>View larger</span>
+          </span>
+          <span class="journey__meta">Levels 4–6 · Chemical Sciences</span>
+          <span class="journey__title">Applied Chemical Sciences</span>
+          <span class="journey__d">Organic, inorganic and frontier topics, mapped end to end.</span>
+        </a>
+
+        <a class="journey" href="patterns/journeys/applied-materials-science.html" data-title="Applied Materials Science — learner journey" target="_blank" rel="noopener" aria-label="Open the Applied Materials Science learner-journey pathway, larger and interactive">
+          <span class="journey__player">
+            <iframe class="journey__frame" data-src="patterns/journeys/applied-materials-science.html" title="Applied Materials Science learner-journey preview" loading="lazy" sandbox="allow-scripts allow-same-origin" tabindex="-1" aria-hidden="true"></iframe>
+            <span class="journey__poster journey__poster--materials" aria-hidden="true"></span>
+            <span class="journey__expand"><i data-lucide="maximize-2"></i>View larger</span>
+          </span>
+          <span class="journey__meta">Levels 4–6 · Materials Science</span>
+          <span class="journey__title">Applied Materials Science</span>
+          <span class="journey__d">A characterisation-to-synthesis pathway across three levels.</span>
+        </a>
+
+        <a class="journey" href="patterns/journeys/laboratory-manager.html" data-title="Laboratory Manager — learner journey" target="_blank" rel="noopener" aria-label="Open the Laboratory Manager learner-journey pathway, larger and interactive">
+          <span class="journey__player">
+            <iframe class="journey__frame" data-src="patterns/journeys/laboratory-manager.html" title="Laboratory Manager learner-journey preview" loading="lazy" sandbox="allow-scripts allow-same-origin" tabindex="-1" aria-hidden="true"></iframe>
+            <span class="journey__poster journey__poster--network" aria-hidden="true"></span>
+            <span class="journey__expand"><i data-lucide="maximize-2"></i>View larger</span>
+          </span>
+          <span class="journey__meta">Flat pathway · to End-Point Assessment</span>
+          <span class="journey__title">Laboratory Manager</span>
+          <span class="journey__d">Six modules into one route, ending with EPA preparation.</span>
+        </a>
+
+      </div>
+    </div>
+
+    <p class="journeys__divider reveal"><span><i data-lucide="play-circle"></i>Module walkthroughs</span></p>
     <div class="modules-grid">
       <article class="module reveal">
         <button class="module__poster" type="button" data-video="https://drive.google.com/file/d/1Bq1B1mp0Aw3J1Hm9RMb_wr0XA9nSf0bo/preview" data-title="Asbestos — show &amp; tell (Level 3)" aria-label="Play the Asbestos show &amp; tell walkthrough">
@@ -1505,5 +1562,6 @@
   setTimeout(finish, allIn + HOLD + (WORDS.length * OUT_STAGGER) + OUT_DUR + 1400);
 }());
 </script>
+<!-- Tweaks authoring panel (React/Babel) is intentionally not shipped in the public build. -->
 </body>
 </html>

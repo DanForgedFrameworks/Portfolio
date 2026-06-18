@@ -1,4 +1,4 @@
-# Forged Frameworks — Portfolio (GitHub Pages build · v2.5)
+# Forged Frameworks — Portfolio (GitHub Pages build · v2.6)
 
 Static site for **Daniel 'Wig' Boyland — Forged Frameworks**. No build step, no
 dependencies: plain HTML/CSS/JS plus media assets and the live interactive demos
