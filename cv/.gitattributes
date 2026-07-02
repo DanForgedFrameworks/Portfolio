@@ -1,3 +1,4 @@
 # The Adaptable CV is a self-contained, pre-built bundle. Preserve its exact
 # bytes — no CRLF/LF rewriting, no diff/merge noise on the ~5 MB inlined file.
 index.html -text
+*.pdf binary
