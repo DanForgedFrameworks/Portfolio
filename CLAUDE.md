@@ -48,6 +48,9 @@ Follow every step below on **every push**, no exceptions.
   - If `index.html` stamps cache-busters, confirm `site.css?v=NNN` and `app.js?v=NNN` were bumped
   - `transition.js` present at root (drives the gateway page transitions)
 
+- **Standalone pages** (NOT part of the versioned bundle — preserve on every deploy, **never `git rm`**):
+  - `cv/` — self-contained "Adaptable CV" launcher (a single, fully inlined `index.html`; no external assets). Served at `https://danforgedframeworks.github.io/Portfolio/cv/`. Intentionally **not** linked from the gateway — it's a direct-link standalone page, updated independently of the main site bundle. **Exclude `cv/` from the STEP 2 stale-file diff and never remove it**, even though it will never appear in a versioned `github-deploy` bundle.
+
 ---
 
 ## Standard push workflow — follow every step in order
@@ -67,7 +70,7 @@ Follow every step below on **every push**, no exceptions.
 Before copying new files, diff the incoming bundle against the current repo root:
 
 ```bash
-diff -rq --exclude=".git" "<source>/github-deploy" "<repo-root>"
+diff -rq --exclude=".git" --exclude="cv" "<source>/github-deploy" "<repo-root>"
 ```
 
 Files present in the repo but **absent from the incoming bundle** are stale and must be
@@ -79,7 +82,7 @@ removed with `git rm` before the copy step. Common culprits across versions:
 - `tweaks-app.jsx` / `tweaks-panel.jsx`
 - Any `*.html` at root not in the v-manifest
 
-**Never delete or modify the `.git` directory.**
+**Never delete or modify the `.git` directory.** Likewise, **never `git rm` the `cv/` folder** — it's a standalone page (see Deploy config → *Standalone pages*), not part of the versioned bundle, so it will always look "absent from the incoming bundle."
 
 ---
 
@@ -195,3 +198,4 @@ GitHub Pages on Linux is **case-sensitive**. Always use lowercase filenames:
 - Never `git push --force` to `main` unless explicitly asked
 - Never skip the QA checks (Step 4) even if "nothing seems to have changed"
 - Never assume the v2.x folder and the deployed repo are in sync — always diff
+- Never `git rm` or overwrite the `cv/` standalone page during a main-site deploy — it lives independently (see *Standalone pages* under Deploy config)
