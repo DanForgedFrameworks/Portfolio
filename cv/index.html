@@ -65,9 +65,16 @@
       setTimeout(function () { if (f.parentNode) f.parentNode.removeChild(f); }, 750);
     }
 
+    function injectFavicon() {
+      if (!document.head || document.querySelector('link[rel="icon"]')) return;
+      var lnk = document.createElement('link');
+      lnk.rel = 'icon'; lnk.type = 'image/svg+xml'; lnk.href = '../assets/favicon.svg';
+      document.head.appendChild(lnk);
+    }
+
     // Window timers survive documentElement.replaceWith() — poll until injected
     [150, 300, 550, 900, 1500, 2500].forEach(function (ms) {
-      setTimeout(function () { injectFade(); injectBack(); }, ms);
+      setTimeout(function () { injectFavicon(); injectFade(); injectBack(); }, ms);
     });
   }());
   </script>
