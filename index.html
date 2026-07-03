@@ -284,7 +284,7 @@ body {
   font-family: var(--font-mono);
   font-size: clamp(0.66rem, 0.95vw, 0.76rem);
   color: var(--ff-ink-muted); letter-spacing: 0.02em;
-  opacity: 0.55;
+  opacity: 0.8;
   transition: opacity 0.22s ease, color 0.22s ease;
   display: inline-flex; align-items: center; gap: 6px;
   min-height: 44px;
@@ -494,7 +494,8 @@ if (sessionStorage.getItem('ff-to-gateway') === '1') {
       cvs.width = window.innerWidth; cvs.height = window.innerHeight;
       var w = cvs.width, h = cvs.height;
       var cols = Math.floor(w / fs), drops = [];
-      for (var i = 0; i < cols; i++) drops[i] = Math.random() * -30;
+      // Start drops spread across the full height so rain fills the screen immediately
+      for (var i = 0; i < cols; i++) drops[i] = Math.random() * (h / fs);
       var raf;
       function drawSilver() {
         ctx.fillStyle = 'rgba(26,26,26,0.09)'; ctx.fillRect(0, 0, w, h);
@@ -508,10 +509,12 @@ if (sessionStorage.getItem('ff-to-gateway') === '1') {
         raf = requestAnimationFrame(drawSilver);
       }
       raf = requestAnimationFrame(drawSilver);
+      // Fade the overlay to white at 750ms, navigate at 1050ms for a smooth exit
+      setTimeout(function () { overlay.style.transition = 'background 0.35s ease'; overlay.style.background = '#faf9f5'; }, 750);
       setTimeout(function () {
         cancelAnimationFrame(raf);
         window.location.href = 'cv/index.html';
-      }, 720);
+      }, 1050);
     });
   }
 

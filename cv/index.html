@@ -11,6 +11,51 @@
     #__bundler_thumbnail svg { width: 100%; height: 100%; object-fit: contain; }
     #__bundler_placeholder { color: #999; font-size: 14px; }
   </style>
+  <!-- Back-link + fade-in: registered on window before documentElement.replaceWith() wipes the DOM -->
+  <script>
+  (function () {
+    var BACK_ID = 'ff-back-to-portal';
+    var fadeInjected = false;
+
+    function injectBack() {
+      if (!document.body || document.getElementById(BACK_ID)) return;
+      var d = document.createElement('div');
+      d.id = BACK_ID;
+      d.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:2147483647;pointer-events:auto;';
+      var btn = document.createElement('button');
+      btn.style.cssText = 'background:rgba(26,26,26,0.88);color:#cccccc;border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:11px 22px;font:600 13px/1 -apple-system,BlinkMacSystemFont,sans-serif;cursor:pointer;letter-spacing:0.03em;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);white-space:nowrap;min-height:44px;';
+      btn.textContent = '← Want to see my full portfolio?';
+      btn.addEventListener('mouseover', function () { this.style.background = 'rgba(40,40,40,0.95)'; this.style.color = '#fff'; });
+      btn.addEventListener('mouseout',  function () { this.style.background = 'rgba(26,26,26,0.88)'; this.style.color = '#ccc'; });
+      btn.addEventListener('click', function () {
+        try { sessionStorage.setItem('ff-to-gateway', '1'); } catch (e) {}
+        window.location.href = '../index.html';
+      });
+      d.appendChild(btn);
+      document.body.appendChild(d);
+    }
+
+    function injectFade() {
+      if (fadeInjected || !document.body) return;
+      // Only create once the bundle has replaced the documentElement
+      // (heuristic: __bundler_thumbnail gone means bundle finished)
+      if (document.getElementById('__bundler_thumbnail')) return;
+      fadeInjected = true;
+      var f = document.createElement('div');
+      f.style.cssText = 'position:fixed;inset:0;background:#faf9f5;z-index:2147483646;pointer-events:none;transition:opacity 0.55s ease;';
+      document.body.appendChild(f);
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { f.style.opacity = '0'; });
+      });
+      setTimeout(function () { if (f.parentNode) f.parentNode.removeChild(f); }, 750);
+    }
+
+    // Window timers survive documentElement.replaceWith() — poll until injected
+    [150, 300, 550, 900, 1500, 2500].forEach(function (ms) {
+      setTimeout(function () { injectFade(); injectBack(); }, ms);
+    });
+  }());
+  </script>
   <noscript>
     <style>#__bundler_loading { display: none; }</style>
     <div style="position:fixed;bottom:12px;left:12px;font:13px/1.4 -apple-system,BlinkMacSystemFont,sans-serif;color:#999;background:rgba(255,255,255,0.9);padding:6px 12px;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,0.08);z-index:10000;">
@@ -23,16 +68,6 @@
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#bc6c3c"></rect><text x="50" y="52" font-family="Georgia, 'Times New Roman', serif" font-size="34" font-weight="700" fill="#fcfbf9" text-anchor="middle" dominant-baseline="central">DB</text></svg>
   </div>
   <div id="__bundler_loading">Unpacking...</div>
-
-  <!-- ← Back to portfolio (injected overlay — survives bundle unpack; see CLAUDE.md maintenance note) -->
-  <div id="ff-back-to-portal" style="position:fixed;bottom:20px;left:20px;z-index:99999;pointer-events:auto;">
-    <button
-      onclick="(function(){try{sessionStorage.setItem('ff-to-gateway','1')}catch(e){}window.location.href='../index.html'})()"
-      onmouseover="this.style.background='rgba(40,40,40,0.95)';this.style.color='#ffffff'"
-      onmouseout="this.style.background='rgba(26,26,26,0.82)';this.style.color='#cccccc'"
-      style="background:rgba(26,26,26,0.82);color:#cccccc;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:9px 16px;font:600 12px/1 -apple-system,BlinkMacSystemFont,sans-serif;cursor:pointer;letter-spacing:0.04em;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:background 0.2s,color 0.2s;min-height:44px;"
-    >&larr; Back to portfolio</button>
-  </div>
 
   <script>
     
