@@ -263,6 +263,39 @@ body {
 #gw-entry.is-done { opacity: 0; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { #gw-entry { display: none !important; } }
 
+/* ---- CV silver-rain exit overlay ---- */
+#cv-exit {
+  position: fixed; inset: 0; z-index: 9999;
+  background: #1a1a1a;
+  display: none;
+}
+#cv-exit canvas { display: block; position: absolute; inset: 0; width: 100%; height: 100%; }
+@media (prefers-reduced-motion: reduce) { #cv-exit { display: none !important; } }
+
+/* ---- CV footnote nudge ---- */
+.gw-cv-nudge {
+  display: flex; justify-content: center; align-self: center;
+  flex: 0 0 auto;
+  margin-top: clamp(2px, 0.5vh, 8px);
+}
+.gw-cv-nudge__btn {
+  background: none; border: none; cursor: pointer;
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: clamp(0.66rem, 0.95vw, 0.76rem);
+  color: var(--ff-ink-muted); letter-spacing: 0.02em;
+  opacity: 0.55;
+  transition: opacity 0.22s ease, color 0.22s ease;
+  display: inline-flex; align-items: center; gap: 6px;
+  min-height: 44px;
+}
+.gw-cv-nudge__btn:hover,
+.gw-cv-nudge__btn:focus-visible { opacity: 1; color: var(--ff-ink); outline: none; }
+.gw-cv-nudge__btn:focus-visible { outline: 2px solid var(--ff-copper); outline-offset: 3px; border-radius: 3px; }
+.gw-cv-nudge__arrow { transition: transform 0.2s ease; display: inline-block; }
+.gw-cv-nudge__btn:hover .gw-cv-nudge__arrow,
+.gw-cv-nudge__btn:focus-visible .gw-cv-nudge__arrow { transform: translateX(4px); }
+
 /* ---- Enter CTA ---- */
 .portal__enter {
   display: inline-flex; align-items: center; gap: 8px;
@@ -298,6 +331,8 @@ if (sessionStorage.getItem('ff-to-gateway') === '1') {
 <canvas id="matrix" aria-hidden="true"></canvas>
 <!-- Gateway cleansing entry rain -->
 <div id="gw-entry" aria-hidden="true"><canvas id="gw-entry-canvas"></canvas></div>
+<!-- CV silver exit rain -->
+<div id="cv-exit" aria-hidden="true"><canvas id="cv-exit-canvas"></canvas></div>
 
 <div class="gateway">
 
@@ -372,6 +407,14 @@ if (sessionStorage.getItem('ff-to-gateway') === '1') {
 
   </div>
 
+  <!-- ===== CV nudge ===== -->
+  <div class="gw-cv-nudge">
+    <button type="button" id="cv-nudge-btn" class="gw-cv-nudge__btn" aria-label="View CV">
+      Just here for my CV? But you'll miss all the fun.
+      <span class="gw-cv-nudge__arrow" aria-hidden="true">&rarr;</span>
+    </button>
+  </div>
+
   <!-- ===== Footer ===== -->
   <footer class="gw-footer">
     <p>Whichever path you choose, <strong>you can always cross over</strong> — every page links between both worlds.</p>
@@ -429,6 +472,46 @@ if (sessionStorage.getItem('ff-to-gateway') === '1') {
     pISO.addEventListener('click', function () {
       if (isoTriggered) return; isoTriggered = true;
       FFTransition.fire('iso', 'accreditation-quality.html');
+    });
+  }
+
+  /* ── CV nudge — silver rain exit ── */
+  var cvNudge = document.getElementById('cv-nudge-btn');
+  if (cvNudge) {
+    var cvTriggered = false;
+    cvNudge.addEventListener('click', function () {
+      if (cvTriggered) return; cvTriggered = true;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        window.location.href = 'cv/index.html'; return;
+      }
+      var overlay = document.getElementById('cv-exit');
+      var cvs = document.getElementById('cv-exit-canvas');
+      if (!overlay || !cvs) { window.location.href = 'cv/index.html'; return; }
+      overlay.style.display = 'block';
+      var ctx = cvs.getContext('2d');
+      var chars = 'FORGEDFRAMEWORKS01アイ∆◊#&=><[]{}|~'.split('');
+      var fs = 16;
+      cvs.width = window.innerWidth; cvs.height = window.innerHeight;
+      var w = cvs.width, h = cvs.height;
+      var cols = Math.floor(w / fs), drops = [];
+      for (var i = 0; i < cols; i++) drops[i] = Math.random() * -30;
+      var raf;
+      function drawSilver() {
+        ctx.fillStyle = 'rgba(26,26,26,0.09)'; ctx.fillRect(0, 0, w, h);
+        ctx.font = fs + "px 'JetBrains Mono', monospace";
+        for (var i = 0; i < drops.length; i++) {
+          ctx.fillStyle = Math.random() > 0.4 ? '#cccccc' : '#ffffff';
+          ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * fs, drops[i] * fs);
+          if (drops[i] * fs > h && Math.random() > 0.975) drops[i] = 0;
+          drops[i] += 0.65;
+        }
+        raf = requestAnimationFrame(drawSilver);
+      }
+      raf = requestAnimationFrame(drawSilver);
+      setTimeout(function () {
+        cancelAnimationFrame(raf);
+        window.location.href = 'cv/index.html';
+      }, 720);
     });
   }
 

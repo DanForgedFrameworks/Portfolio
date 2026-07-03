@@ -24,6 +24,16 @@
   </div>
   <div id="__bundler_loading">Unpacking...</div>
 
+  <!-- ← Back to portfolio (injected overlay — survives bundle unpack; see CLAUDE.md maintenance note) -->
+  <div id="ff-back-to-portal" style="position:fixed;bottom:20px;left:20px;z-index:99999;pointer-events:auto;">
+    <button
+      onclick="(function(){try{sessionStorage.setItem('ff-to-gateway','1')}catch(e){}window.location.href='../index.html'})()"
+      onmouseover="this.style.background='rgba(40,40,40,0.95)';this.style.color='#ffffff'"
+      onmouseout="this.style.background='rgba(26,26,26,0.82)';this.style.color='#cccccc'"
+      style="background:rgba(26,26,26,0.82);color:#cccccc;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:9px 16px;font:600 12px/1 -apple-system,BlinkMacSystemFont,sans-serif;cursor:pointer;letter-spacing:0.04em;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:background 0.2s,color 0.2s;min-height:44px;"
+    >&larr; Back to portfolio</button>
+  </div>
+
   <script>
     
 document.addEventListener('DOMContentLoaded', async function() {

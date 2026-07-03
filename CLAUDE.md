@@ -49,7 +49,8 @@ Follow every step below on **every push**, no exceptions.
   - `transition.js` present at root (drives the gateway page transitions)
 
 - **Standalone pages** (NOT part of the versioned bundle — preserve on every deploy, **never `git rm`**):
-  - `cv/` — self-contained "Adaptable CV" launcher (a single, fully inlined `index.html`; no external assets). Served at `https://danforgedframeworks.github.io/Portfolio/cv/`. Intentionally **not** linked from the gateway — it's a direct-link standalone page, updated independently of the main site bundle. **Exclude `cv/` from the STEP 2 stale-file diff and never remove it**, even though it will never appear in a versioned `github-deploy` bundle.
+  - `cv/` — self-contained "Adaptable CV" launcher (a single, fully inlined `index.html`; no external assets). Served at `https://danforgedframeworks.github.io/Portfolio/cv/`. Linked from the gateway via the CV footnote nudge. **Exclude `cv/` from the STEP 2 stale-file diff and never remove it**, even though it will never appear in a versioned `github-deploy` bundle.
+    > ⚠️ **Back-link maintenance:** `cv/index.html` has a `#ff-back-to-portal` fixed button injected before the bundle scripts — it sets `sessionStorage('ff-to-gateway','1')` and navigates to `../index.html`, triggering the gateway entry rain on return. **If the `adaptable-cv` skill or any other process regenerates `cv/index.html`, this back-link must be re-injected.** Without it, visitors who land on the CV have no way back to the portfolio. Verify after every CV update: open `cv/index.html` and confirm the "← Back to portfolio" button is visible in the bottom-left corner.
 
 ---
 
