@@ -422,7 +422,7 @@ if (sessionStorage.getItem('ff-to-gateway') === '1') {
 
 </div>
 
-<script src="transition.js"></script>
+<script src="transition.js?v=243"></script>
 <script>
 (function () {
   'use strict';
@@ -444,7 +444,7 @@ if (sessionStorage.getItem('ff-to-gateway') === '1') {
     }
     resize();
     window.addEventListener('resize', resize);
-    setInterval(function () {
+    function draw() {
       ctx.fillStyle = 'rgba(252,251,249,0.09)';
       ctx.fillRect(0, 0, c.width, c.height);
       ctx.fillStyle = '#bc6c3c'; ctx.font = fs + 'px monospace';
@@ -453,7 +453,20 @@ if (sessionStorage.getItem('ff-to-gateway') === '1') {
         if (drops[i] * fs > c.height && Math.random() > 0.975) drops[i] = 0;
         drops[i] += 0.4;
       }
-    }, 64);
+    }
+    /* Start/stop-able so the site-wide background off-switch (FFBackground in
+       transition.js) halts the work rather than just hiding the canvas. The
+       stored key is read directly so this does not depend on script order. */
+    function bgOff() {
+      try { return localStorage.getItem('ff-bg-off') === '1'; } catch (e) { return false; }
+    }
+    var timer = null;
+    function start() { if (!timer) timer = setInterval(draw, 64); }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+    if (!bgOff()) start();
+    window.addEventListener('ff-bg-change', function (e) {
+      if (e && e.detail && e.detail.off) stop(); else start();
+    });
   })();
 
   /* ── 4. Portal interactions ── */

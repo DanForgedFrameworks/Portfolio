@@ -7,7 +7,7 @@
 <meta name="description" content="Forged Frameworks — a portfolio by Daniel 'Wig' Boyland: digital learning content design, GenAI content pipelines, and accessibility-first instructional design." />
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
 <link rel="stylesheet" href="assets/colors_and_type.css" />
-<link rel="stylesheet" href="site.css?v=242" />
+<link rel="stylesheet" href="site.css?v=243" />
 <style id="v2-overrides">
   /* ===== v2 — static learning-design review grid (navy band) ===== */
   #reviews .quote-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); align-items: start; }
@@ -136,12 +136,18 @@
 <div id="ld-intro" aria-hidden="true"><div id="ld-intro__bg"><canvas id="ld-intro-canvas"></canvas></div><div id="ld-intro__words"></div><div id="ld-intro__skip">tap to skip</div></div>
 <canvas id="matrix" aria-hidden="true"></canvas>
 <a class="skip-link" href="#about">Skip to content</a>
-<button class="bg-fab" id="bgToggle" type="button" aria-pressed="false" title="Toggle the background forge-rain animation">◍ Background: on</button>
+<!-- data-bg-toggle is what binds this to FFBackground (transition.js). Hidden on
+     touch by site.css; the in-drawer .nav__bg control below serves there instead. -->
+<button class="bg-fab" id="bgToggle" type="button" data-bg-toggle aria-pressed="false" title="Toggle the background forge-rain animation">◍ Background: on</button>
 
 <!-- ===================== NAV ===================== -->
 <header class="nav">
   <div class="wrap-wide nav__inner">
-    <a class="brand" href="#top" aria-label="Forged Frameworks — home">
+    <!-- Points at the gateway, not #top: on mobile .nav__gateway-link is hidden unless the
+         burger is open, so the brand was the only always-visible control and it went nowhere.
+         a[href="index.html"] is picked up by the handler below, which sets the ff-to-gateway
+         flag so the gateway plays its entry rain on arrival. -->
+    <a class="brand" href="index.html" aria-label="Forged Frameworks — home">
       <svg viewBox="0 0 100 132" aria-hidden="true">
         <path d="M30 14 L74 14 Q80 14 80 20 L80 40 Q80 46 74 46 L30 46 L12 30 Z" fill="#bc6c3c"/>
         <rect x="45" y="46" width="10" height="46" fill="#2c3e50"/>
@@ -171,6 +177,10 @@
       <a href="index.html" class="nav__gateway-link">&larr; Portfolio gateway</a>
       <a href="accreditation-quality.html" class="nav__cross-link">Accreditation &amp; quality &rarr;</a>
       <a href="#contact" class="nav__cta">Let's work together</a>
+      <!-- Mobile home for the background switch: the floating .bg-fab is hidden on
+           touch, so the burger hosts it there. Shown only <=860px by site.css.
+           Bound by data-bg-toggle; label and aria-pressed are set by FFBackground. -->
+      <button class="nav__bg" type="button" data-bg-toggle aria-pressed="false" title="Toggle the background forge-rain animation">◍ Background: on</button>
     </nav>
     <button class="nav__toggle" aria-label="Menu" aria-expanded="false" aria-controls="primary-menu">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -388,7 +398,7 @@
       <!-- Prevent -->
       <article class="work-item reveal" id="prevent" data-screen-label="Prevent Duty Module">
         <div class="work-item__media">
-          <div class="video-embed"><iframe src="https://drive.google.com/file/d/17ljVRnCzFZRxQsBIG4jol69VcADajPAA/preview" title="Prevent Duty Module walkthrough" allow="autoplay" allowfullscreen></iframe></div>
+          <video class="media-fill" controls playsinline preload="metadata" title="Prevent Duty Module walkthrough"><source src="assets/prevent-duty.mp4" type="video/mp4" /></video>
         </div>
         <div>
           <p class="tag-row"><span class="tag">Prevent</span><span class="tag">Moodle</span><span class="tag">HTML coding</span></p>
@@ -455,7 +465,7 @@
       <!-- Canva style video -->
       <article class="work-item work-item--rev reveal" id="creative" data-screen-label="Canva style video">
         <div class="work-item__media">
-          <div class="video-embed"><iframe src="https://drive.google.com/file/d/1_uKX2cGpkx46ta72kIURAIrdbpJxkxQw/preview" title="Canva-style learning video" allow="autoplay" allowfullscreen></iframe></div>
+          <video class="media-fill" controls playsinline preload="metadata" title="Canva-style learning video"><source src="assets/canva-style.mp4" type="video/mp4" /></video>
         </div>
         <div>
           <p class="tag-row"><span class="tag">CPD</span><span class="tag">Canva</span><span class="tag">motion</span></p>
@@ -1442,7 +1452,7 @@
 
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 <script src="https://unpkg.com/lucide@0.544.0/dist/umd/lucide.min.js"></script>
-<script src="app.js?v=242"></script>
+<script src="app.js?v=243"></script>
 <script>
 /* v2 — collapsible stage dividers */
 (function(){
@@ -1456,7 +1466,7 @@
   });
 })();
 </script>
-<script src="transition.js"></script>
+<script src="transition.js?v=243"></script>
 <script>
 /* Cross-page transitions — play the shared CHOICE / word-rain (same as the gateway portal cards) */
 (function () {

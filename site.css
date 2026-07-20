@@ -245,12 +245,60 @@ p { line-height: var(--lh-relaxed); }
     border-bottom: 1px solid var(--ff-paper-edge);
     padding: var(--space-4);
     box-shadow: var(--ff-shadow-modal);
-    transform: translateY(-120%);
-    transition: transform var(--dur-base) var(--ease-out);
+    /* The drawer is position:fixed, so it adds nothing to document scroll height:
+       without its own max-height + overflow-y it simply cannot be scrolled, and
+       rows past the viewport bottom (incl. the CTA) are unreachable.
+       overscroll-behavior stops the drag chaining to the page behind. */
+    max-height: calc(100vh - 68px);
+    max-height: calc(100dvh - 68px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    /* translateY(-120%) only clears the viewport if the drawer is tall enough:
+       the closed bottom edge sits at 68 - 0.2H, so ANY drawer under ~340px tall
+       leaves a strip on screen. accreditation-quality.html (H~140-206px, and no
+       toggle to ever open it) bleeds ~27-40px — the sliced "Let's work together"
+       seen at the top of that page. learning-design.html does the same in
+       landscape once max-height clamps it. visibility + pointer-events make the
+       closed state genuinely absent at every height, and stop that off-screen
+       strip from swallowing taps aimed at the page beneath it. */
+    visibility: hidden;
+    pointer-events: none;
+    /* -100% - 120px instead of -120%: the closed bottom edge then lands at a
+       fixed 68 - 120 = -52px for ANY drawer height, rather than 68 - 0.2H which
+       only clears the viewport above ~340px tall. The 120px also covers the
+       --ff-shadow-modal spread. Geometry alone now guarantees no bleed — the
+       visibility/pointer-events pair below is belt-and-braces, so the fix does
+       not depend on the delayed visibility transition firing. */
+    transform: translateY(calc(-100% - 120px));
+    transition: transform var(--dur-base) var(--ease-out),
+                visibility 0s linear var(--dur-base);
   }
-  .nav__links.open { transform: translateY(0); }
+  .nav__links.open {
+    transform: translateY(0);
+    visibility: visible;
+    pointer-events: auto;
+    /* no delay on the way in; the delay above only defers HIDING until the
+       slide-out has finished, so the drawer still animates in both directions */
+    transition: transform var(--dur-base) var(--ease-out), visibility 0s;
+  }
   .nav__links a { padding: var(--space-4); font-size: var(--fs-md); }
+  /* Submenu rows carry a <small> sub-line. The tap-target rule above makes every
+     nav link a row-direction flex container, which puts the sub-line BESIDE the
+     title; restore the intended stacking for these rows only. */
+  .nav__menu a { flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; }
   .nav__toggle { display: inline-flex; align-items: center; justify-content: center; }
+  /* The drawer is position:fixed inside .nav, so as a positioned descendant it paints
+     ABOVE the non-positioned brand and toggle — the opaque panel sweeps over the logo
+     and burger for most of the 300ms travel, then pops them back. Promoting these two
+     above it removes the flash. Done this way round (rather than pushing the drawer
+     behind with a negative z-index) so the drawer can never end up hidden. */
+  .brand,
+  .nav__toggle { position: relative; z-index: 1; }
+}
+
+@media (max-width: 860px) and (prefers-reduced-motion: reduce) {
+  .nav__links { transition: none; }
 }
 
 /* ---------------------------------------------------------- */
@@ -777,7 +825,10 @@ main > section:not(.hero)::before { content: "◆"; position: absolute; top: 23p
 /* Landscape video frame — fits the video's 16:9 play size, lifted off-page */
 .work-item__media .video-embed { width: 100%; }
 .video-embed { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--video-lift); background: #000; border: 1px solid var(--ff-paper-edge); }
-.video-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+/* min-height:0 resets the 300px floor inherited from .work-item__media iframe above —
+   without it the iframe outgrows this 16:9 box on any viewport under ~573px and
+   overflow:hidden crops the bottom of the player (35-48% on a phone). */
+.video-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; min-height: 0; border: 0; }
 .video-embed video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #000; border: 0; display: block; }
 
 /* ---------------------------------------------------------- */
@@ -921,7 +972,44 @@ main > section:not(.hero)::before { content: "◆"; position: absolute; top: 23p
 .bg-fab { position: fixed; bottom: 20px; left: 20px; z-index: 1000; display: inline-flex; align-items: center; gap: 8px; background: var(--color-surface); border: 1px solid var(--ff-paper-edge); color: var(--ff-ink); font-family: var(--font-sans); font-size: var(--fs-sm); font-weight: var(--fw-bold); padding: 9px 16px; border-radius: var(--radius-pill); cursor: pointer; box-shadow: var(--ff-shadow-fab); transition: border-color var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard); }
 .bg-fab:hover { border-color: var(--ff-copper); color: var(--ff-copper-hot); }
 .bg-fab[aria-pressed="true"] { color: var(--ff-ink-muted); }
-@media (max-width: 600px) { .bg-fab { bottom: 14px; left: 14px; padding: 11px 14px; min-height: 45px; } }
+/* app.js disables the #matrix canvas outright on touch/narrow (isTouch =
+   max-width:900px OR pointer:coarse), so this control governs nothing there.
+   It was previously only ever made BIGGER on mobile (~150x45px, ~40% of a 375px
+   viewport) for a no-op. Hidden on exactly the same condition app.js uses.
+   Safe for accessibility: prefers-reduced-motion is honoured separately in app.js. */
+@media (max-width: 900px), (pointer: coarse) { .bg-fab { display: none; } }
+
+/* Background off-switch — state owned by FFBackground in transition.js.
+   !important because the canvas scripts set an inline style.display on
+   #matrix; a plain class rule would lose to it. Covers all three pages'
+   canvases at once, whichever script drew them. */
+html.ff-bg-off #matrix { display: none !important; }
+
+/* In-drawer variant of the background control. The floating .bg-fab is
+   hidden on touch (it governed a canvas that is off there anyway and ate
+   ~40% of a 375px viewport), so on mobile the control lives in the burger
+   instead. Hidden on desktop, where .bg-fab already serves. */
+.nav__bg { display: none; }
+@media (max-width: 860px) {
+  .nav__bg {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 45px;
+    padding: var(--space-4);
+    margin-top: var(--space-1);
+    background: none;
+    border: 1px solid var(--ff-paper-edge);
+    border-radius: var(--radius-sm);
+    color: var(--ff-ink-muted);
+    font: inherit;
+    font-size: var(--fs-md);
+    font-weight: var(--fw-bold);
+    text-align: left;
+    cursor: pointer;
+  }
+  .nav__bg[aria-pressed="true"] { color: var(--ff-copper-hot); border-color: var(--ff-copper); }
+}
 
 /* in-page block preview modal (avoids new-tab preview-token gate) */
 .blockmodal { position: fixed; inset: 0; z-index: 3000; display: none; align-items: center; justify-content: center; background: rgba(28,32,38,0.72); padding: clamp(12px, 3vw, 40px); }

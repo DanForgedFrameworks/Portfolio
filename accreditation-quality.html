@@ -7,7 +7,7 @@
 <meta name="description" content="The technical CV behind Forged Frameworks: more than a decade in ISO 15189, 17025 and 17043 environments — UKAS assessment, training and QMS governance, plus NHS biomedical science roles." />
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
 <link rel="stylesheet" href="assets/colors_and_type.css" />
-<link rel="stylesheet" href="site.css" />
+<link rel="stylesheet" href="site.css?v=243" />
 <style>
   /* ---- Secret accreditation page — local layer over site.css ---- */
   .secret-tag {
@@ -467,7 +467,7 @@
   // Lucide icons
   if (window.lucide) lucide.createIcons();
 </script>
-<script src="transition.js"></script>
+<script src="transition.js?v=243"></script>
 <script>
 /* Cross-page transitions — play the shared CHOICE / word-rain (same as the gateway portal cards) */
 (function () {
@@ -543,7 +543,19 @@
         drops[i] += 0.45;
       }
     }
-    if (!reduce) setInterval(draw, 64);
+    /* Start/stop-able so the site-wide background off-switch (FFBackground in
+       transition.js) actually halts the work instead of just hiding the canvas.
+       The stored key is read directly so this does not depend on script order. */
+    function bgOff() {
+      try { return localStorage.getItem('ff-bg-off') === '1'; } catch (e) { return false; }
+    }
+    var timer = null;
+    function start() { if (!timer && !reduce) timer = setInterval(draw, 64); }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+    if (!bgOff()) start();
+    window.addEventListener('ff-bg-change', function (e) {
+      if (e && e.detail && e.detail.off) stop(); else start();
+    });
   })();
 
   // ISO page reveal — only fires when arriving from the gateway portal

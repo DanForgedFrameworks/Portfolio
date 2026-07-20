@@ -68,7 +68,20 @@
       }
     }
     if (reduceMotion) { draw(); return; }
-    setInterval(draw, 70);
+    /* Loop is start/stop-able so the background off-switch actually stops the
+       work rather than just hiding the canvas. State lives in FFBackground
+       (transition.js); the stored key is read directly here because app.js
+       loads BEFORE transition.js on this page, so the object may not exist yet. */
+    var timer = null;
+    function bgOff() {
+      try { return localStorage.getItem('ff-bg-off') === '1'; } catch (e) { return false; }
+    }
+    function start() { if (!timer) timer = setInterval(draw, 70); }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+    if (!bgOff()) start();
+    window.addEventListener('ff-bg-change', function (e) {
+      if (e && e.detail && e.detail.off) stop(); else start();
+    });
     } catch (e) { /* never let the background animation kill the page */ }
   })();
 
@@ -284,19 +297,12 @@
     }
   })();
 
-  /* ---------- Background-animation toggle (front page) ---------- */
-  (function bgToggle() {
-    var m = document.getElementById('matrix');
-    var btn = document.getElementById('bgToggle');
-    if (!m) return;
-    var off = localStorage.getItem('ff-bg-off') === '1';
-    function apply() {
-      m.style.display = off ? 'none' : '';
-      if (btn) { btn.textContent = off ? '◍ Background: off' : '◍ Background: on'; btn.setAttribute('aria-pressed', String(off)); }
-    }
-    apply();
-    if (btn) btn.addEventListener('click', function () { off = !off; localStorage.setItem('ff-bg-off', off ? '1' : '0'); apply(); });
-  })();
+  /* ---------- Background-animation toggle ----------
+     Moved to FFBackground in transition.js, which every page loads, so the
+     setting is site-wide instead of front-page-only. Controls are bound by
+     [data-bg-toggle] there. Deliberately NOT re-implemented here: the old
+     version set an inline style.display on #matrix, which would fight the
+     `html.ff-bg-off #matrix` rule and re-show the canvas on load. */
 
   /* ---------- Secret-page egg smash ---------- */
   (function egg() {
