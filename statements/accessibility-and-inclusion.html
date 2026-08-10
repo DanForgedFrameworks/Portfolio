@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Accessibility and Inclusion Statement — Forged Frameworks</title>
+<meta name="description" content="How Forged Frameworks handles accessibility and inclusion in the learning content it designs and builds. Public statement FF-AC-01.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1C1F26;
+  --slate:#5A6270;
+  --paper:#F6F5F2;
+  --surface:#FFFFFF;
+  --copper:#BC6C3C;
+  --deep-red:#A01E1E;
+  --rule:#DEDBD4;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --sans:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:17px;
+  line-height:1.65;
+  font-feature-settings:"cv05" 1,"ss01" 1;
+}
+.wrap{max-width:47rem;margin:0 auto;padding:0 1.5rem 5rem}
+
+/* ---- focus ---- */
+a:focus-visible,summary:focus-visible{
+  outline:3px solid var(--deep-red);
+  outline-offset:3px;
+  border-radius:2px;
+}
+
+/* ---- document header ---- */
+.doc-head{border-top:6px solid var(--copper);padding-top:2.5rem;margin-top:0}
+.brandline{display:flex;align-items:center;gap:.7rem;margin-bottom:2.75rem}
+.brandline img{width:34px;height:34px;object-fit:contain;display:block}
+.brandline b{font-weight:800;font-size:.95rem;letter-spacing:-.01em}
+.eyebrow{
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--deep-red);margin:0 0 .85rem
+}
+h1{
+  font-size:clamp(2.1rem,6vw,3.1rem);font-weight:900;letter-spacing:-.035em;
+  line-height:1.05;margin:0 0 1.5rem;max-width:16ch
+}
+.standfirst{font-size:1.15rem;color:var(--slate);margin:0 0 2.5rem;max-width:52ch}
+
+/* ---- document control block ---- */
+.control{
+  border:1px solid var(--rule);background:var(--surface);
+  border-radius:3px;padding:1.1rem 1.25rem;margin:0 0 3.5rem;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(8.5rem,1fr));gap:1rem 1.5rem
+}
+.control div{margin:0}
+.control dt{
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--slate);margin:0 0 .3rem
+}
+.control dd{margin:0;font-family:var(--mono);font-size:.83rem;font-weight:500;color:var(--ink)}
+
+/* ---- sections ---- */
+section{margin-bottom:3.5rem}
+h2{
+  font-size:1.35rem;font-weight:800;letter-spacing:-.02em;line-height:1.2;
+  margin:0 0 1.1rem;padding-bottom:.7rem;border-bottom:1px solid var(--rule)
+}
+p{margin:0 0 1.1rem}
+p:last-child{margin-bottom:0}
+
+/* ---- clause ledger (signature element) ---- */
+.clauses{list-style:none;margin:0;padding:0;counter-reset:clause}
+.clause{
+  background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--copper);
+  border-radius:0 3px 3px 0;padding:1.5rem 1.6rem;margin-bottom:1rem
+}
+.clause-no{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;color:var(--slate);
+  display:block;margin-bottom:.45rem
+}
+.clause h3{
+  font-size:1.08rem;font-weight:700;letter-spacing:-.012em;line-height:1.3;
+  margin:0 0 .8rem;color:var(--ink)
+}
+.clause p{font-size:.98rem;margin-bottom:1rem}
+.verify{
+  border-top:1px dashed var(--rule);padding-top:.85rem;margin:0;
+  font-family:var(--mono);font-size:.8rem;line-height:1.55;color:var(--slate)
+}
+.verify b{color:var(--deep-red);font-weight:500;display:block;margin-bottom:.15rem;
+  letter-spacing:.06em;text-transform:uppercase;font-size:.68rem}
+
+/* ---- limits ---- */
+.limits{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:1.75rem 1.6rem}
+.limits h2{margin-top:0}
+.limits ul{margin:0;padding-left:1.1rem}
+.limits li{margin-bottom:.85rem;font-size:.98rem}
+.limits li:last-child{margin-bottom:0}
+.limits li::marker{color:var(--copper)}
+
+/* ---- footer ---- */
+footer{border-top:1px solid var(--rule);padding-top:1.75rem;font-size:.9rem;color:var(--slate)}
+footer a{color:var(--deep-red);text-decoration-thickness:1px;text-underline-offset:2px}
+footer a:hover{text-decoration-thickness:2px}
+.sig{font-family:var(--mono);font-size:.8rem;margin-top:1.25rem;color:var(--slate)}
+
+/* ---- motion ---- */
+@media(prefers-reduced-motion:no-preference){
+  .doc-head,.control{animation:rise .5s ease-out both}
+  .control{animation-delay:.1s}
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+}
+
+/* ---- print ---- */
+@media print{
+  body{background:#fff;font-size:11pt}
+  .wrap{max-width:none;padding:0}
+  .clause,.control,.limits{break-inside:avoid;border-color:#999}
+  .doc-head{border-top-width:3px}
+  h1{font-size:24pt}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="doc-head">
+  <div class="brandline">
+    <img src="../assets/forge-mark.png" alt="">
+    <b>Forged Frameworks</b>
+  </div>
+  <p class="eyebrow">Public statement</p>
+  <h1>Accessibility and inclusion</h1>
+  <p class="standfirst">Every claim below is written so that someone can check it. If a claim cannot be checked, it is in the limitations section instead.</p>
+</header>
+
+<dl class="control">
+  <div><dt>Reference</dt><dd>FF-AC-01</dd></div>
+  <div><dt>Version</dt><dd>1.0</dd></div>
+  <div><dt>Issued</dt><dd>10 Aug 2026</dd></div>
+  <div><dt>Next review</dt><dd>Aug 2027</dd></div>
+</dl>
+
+<main>
+
+<section>
+  <h2>Scope</h2>
+  <p>Forged Frameworks is the trading name of Daniel Boyland, a one-person learning design consultancy working in regulated and technical sectors. There are no employees, so this statement covers the work rather than a workforce. It sets out how accessibility and inclusion are handled in the learning content I design and build, and in how I work with clients, subject matter experts and the people who take the content.</p>
+</section>
+
+<section>
+  <h2>Commitments</h2>
+  <ol class="clauses">
+
+    <li class="clause">
+      <span class="clause-no">CLAUSE 1</span>
+      <h3>Accessibility is designed in, not retrofitted</h3>
+      <p>Every programme is built against WCAG 2.2 Level AA and EN 301 549 from the first structural decision, rather than remediated shortly before release. In practice that means colour is never the sole carrier of meaning, contrast is measured rather than assumed, headings follow a real hierarchy that a screen reader can navigate, all functionality is reachable by keyboard, and media carries captions and transcripts.</p>
+      <p class="verify"><b>Check this by</b>Running an automated and manual conformance check against any module I have delivered, or asking the client for the accessibility notes issued with it.</p>
+    </li>
+
+    <li class="clause">
+      <span class="clause-no">CLAUSE 2</span>
+      <h3>Custom interactions meet the same standard as native content</h3>
+      <p>Where standard authoring tools fall short I build custom HTML interactions: branching scenarios, sequencing exercises, decision simulations and similar. These are the easiest place for accessibility to fail quietly, because they look finished while excluding people. They are built with semantic markup, deliberate focus management, ARIA used only where native semantics genuinely cannot do the job, and a complete keyboard path through every state.</p>
+      <p class="verify"><b>Check this by</b>Tabbing through any custom interaction in a delivered programme without touching a mouse, and confirming every state is reachable and announced.</p>
+    </li>
+
+    <li class="clause">
+      <span class="clause-no">CLAUSE 3</span>
+      <h3>Content is written for the people who actually take it</h3>
+      <p>Much of my work is apprenticeship learning, which is a route into technical and scientific careers for people who did not come through university. Content is written in plain UK English, defines technical vocabulary at first use, and does not assume prior academic study. Assessment feedback is written to be useful to the learner who got it wrong, not only to the one who got it right.</p>
+      <p class="verify"><b>Check this by</b>Reading any delivered module cold and testing whether someone new to the sector could follow it without external explanation.</p>
+    </li>
+
+    <li class="clause">
+      <span class="clause-no">CLAUSE 4</span>
+      <h3>Access decisions are raised, not resolved silently</h3>
+      <p>I work directly with subject matter experts and delivery staff who see the learners. Where a design decision affects who can reach the content, or where a platform constraint forces a compromise, it is flagged to the client and recorded rather than absorbed quietly into the build.</p>
+      <p class="verify"><b>Check this by</b>Asking any client whether accessibility constraints were surfaced during the build or discovered afterwards.</p>
+    </li>
+
+    <li class="clause">
+      <span class="clause-no">CLAUSE 5</span>
+      <h3>Unpaid work is held to the same standard</h3>
+      <p>I volunteer with IIH UK, redesigning user-facing content and documents for patients, clinicians and carers. Health information is read by people who are unwell, tired, frightened or reading in a second language. That work is held to the same accessibility standard as anything a client pays for.</p>
+      <p class="verify"><b>Check this by</b>IIH UK, who can speak to the work directly.</p>
+    </li>
+
+  </ol>
+</section>
+
+<section class="limits">
+  <h2>What this statement does not claim</h2>
+  <ul>
+    <li>I hold no formal accessibility certification and no third-party audit. Conformance here is designed for and tested, not certified by anyone else.</li>
+    <li>I do not currently run structured user testing with disabled learners as standard. Automated and manual checking catches a great deal, but it is not the same thing as asking the people affected. This is a real gap, stated as one.</li>
+    <li>Where a client platform, an embedded third-party component or a corporate template constrains what is achievable, the limitation is documented and handed to the client. It is not fixed by me, because it cannot be.</li>
+    <li>This statement covers content I produce. It does not extend to a client's wider platform, their VLE configuration, or material authored by others in the same programme.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Review</h2>
+  <p>This statement is reviewed annually, or sooner if WCAG or EN 301 549 change materially. Each version is dated and superseded versions remain in the repository history, so the position can be traced over time rather than quietly rewritten.</p>
+  <p>Questions, challenges and corrections are welcome, particularly on the limitations above. Contact <a href="mailto:daniel.boyland@forgedframeworks.co.uk">daniel.boyland@forgedframeworks.co.uk</a>.</p>
+</section>
+
+</main>
+
+<footer>
+  <p>Forged Frameworks · Daniel Boyland · <a href="../index.html">Portfolio</a></p>
+  <p class="sig">FF-AC-01 v1.0 · Issued 10 August 2026</p>
+</footer>
+
+</div>
+</body>
+</html>
