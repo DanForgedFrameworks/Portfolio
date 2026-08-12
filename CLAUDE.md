@@ -59,6 +59,21 @@ Follow every step below on **every push**, no exceptions.
 - **Extra QA checks** (mirror anything the bundle's handover doc specifies):
   - If `index.html` stamps cache-busters, confirm `site.css?v=NNN` and `app.js?v=NNN` were bumped
   - `transition.js` present at root (drives the gateway page transitions)
+  - **Support link survived the copy** — each of the three pages must count `1`, and `site.css` must
+    still carry the shared rule (the class appears once per selector there, so count it, don't equality-check it):
+    ```bash
+    grep -c "buymeacoffee.com" index.html learning-design.html accreditation-quality.html
+    grep -q "ff-support__link" site.css && echo "site.css OK" || echo "site.css MISSING"
+    ```
+    The Buy Me a Coffee footer link was authored **directly in the deployed files**, not in a versioned
+    bundle. STEP 3's robocopy overwrites all four wholesale, so any bundle authored before 12 Aug 2026
+    will silently drop it. The shape differs by page:
+    - `index.html` — self-contained: inline `.gw-support` styles after `.gw-footer strong`, markup as
+      the second `<p>` inside `<footer class="gw-footer">`.
+    - `learning-design.html` / `accreditation-quality.html` — share `.ff-support__link` from `site.css`
+      (after the `.footer small` rule), markup as the last child of `.footer__inner`.
+
+    If any count returns `0`, re-add the block and fold it into the bundle source before pushing.
 
 - **Standalone pages** (NOT part of the versioned bundle — preserve on every deploy, **never `git rm`**):
   - `cv/` — self-contained "Adaptable CV" launcher (a single, fully inlined `index.html`; no external assets). Served at `https://danforgedframeworks.github.io/Portfolio/cv/`. Linked from the gateway via the CV footnote nudge. **Exclude `cv/` from the STEP 2 stale-file diff and never remove it**, even though it will never appear in a versioned `github-deploy` bundle.

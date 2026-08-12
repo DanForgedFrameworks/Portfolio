@@ -318,6 +318,32 @@ body {
   border-top: 1px solid var(--ff-paper-edge);
 }
 .gw-footer strong { color: var(--ff-ink); font-weight: 700; }
+
+/* ---- Support (Buy Me a Coffee) ---- */
+.gw-support {
+  margin-top: clamp(1px, 0.3vh, 4px);
+  font-family: var(--font-mono);
+  font-size: clamp(0.62rem, 0.9vw, 0.72rem);
+  letter-spacing: 0.02em;
+}
+.gw-support__link {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px;
+  color: var(--ff-ink-muted); text-decoration: none;
+  opacity: 0.75;
+  transition: opacity 0.22s ease, color 0.22s ease;
+}
+.gw-support__link:hover,
+.gw-support__link:focus-visible { opacity: 1; color: var(--ff-copper); outline: none; }
+.gw-support__link:focus-visible { outline: 2px solid var(--ff-copper); outline-offset: 3px; border-radius: 3px; }
+.gw-support__cup { display: inline-block; transition: transform 0.2s ease; }
+.gw-support__link:hover .gw-support__cup,
+.gw-support__link:focus-visible .gw-support__cup { transform: translateY(-2px); }
+@media (prefers-reduced-motion: reduce) {
+  .gw-support__cup { transition: none; }
+  .gw-support__link:hover .gw-support__cup,
+  .gw-support__link:focus-visible .gw-support__cup { transform: none; }
+}
 </style>
 </head>
 <body>
@@ -418,6 +444,22 @@ if (sessionStorage.getItem('ff-to-gateway') === '1') {
   <!-- ===== Footer ===== -->
   <footer class="gw-footer">
     <p>Whichever path you choose, <strong>you can always cross over</strong> — every page links between both worlds.</p>
+    <p class="gw-support">
+      <a class="gw-support__link"
+         href="https://buymeacoffee.com/iYo8k7Sc88"
+         target="_blank" rel="noopener noreferrer"
+         aria-label="Buy me a coffee — opens in a new tab">
+        <svg class="gw-support__cup" viewBox="0 0 24 24" width="15" height="15" fill="none"
+             stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 9h12v5a6 6 0 0 1-12 0V9Z"/>
+          <path d="M16 10.5h1.5a2.5 2.5 0 0 1 0 5H16"/>
+          <path d="M3 21h14"/>
+          <path d="M8 2.5c-.8 1-.8 2 0 3"/>
+          <path d="M12 2.5c-.8 1-.8 2 0 3"/>
+        </svg>
+        Found something useful here? Buy me a coffee.
+      </a>
+    </p>
   </footer>
 
 </div>

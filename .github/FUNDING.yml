@@ -1,0 +1,4 @@
+# Renders the "Sponsor" button on github.com/DanForgedFrameworks/Portfolio.
+# Public repos only — a private repo ignores this file.
+# Matches the footer support link on the live gateway (index.html → .gw-support).
+buy_me_a_coffee: iYo8k7Sc88
