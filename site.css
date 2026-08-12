@@ -710,20 +710,22 @@ details.disc > summary:hover { color: var(--ff-copper-hot); }
 
 /* Buy Me a Coffee support link (footer) — see also .gw-support in index.html */
 .ff-support__link {
-  display: inline-flex; align-items: center; gap: 8px;
+  display: inline-flex; align-items: center; gap: 10px;
   font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: 0.02em;
   color: var(--ff-ink-muted); text-decoration: none;
-  padding: 6px 12px;
-  border: 1px solid var(--ff-paper-edge); border-radius: var(--radius-pill);
+  padding: 9px 16px;
+  background: var(--ff-copper-wash);
+  border: 1px solid rgba(188, 108, 60, 0.18); border-radius: var(--radius-pill);
   transition: color 0.22s ease, border-color 0.22s ease, background 0.22s ease;
 }
 .ff-support__link:hover,
 .ff-support__link:focus-visible {
   color: var(--ff-copper-hot);
   border-color: var(--ff-copper);
-  background: var(--ff-copper-wash);
+  background: rgba(188, 108, 60, 0.17);
   outline: none;
 }
+.ff-support__cup { width: 20px; height: 20px; }
 .ff-support__link:focus-visible { outline: 2px solid var(--ff-copper); outline-offset: 3px; }
 .ff-support__cup { flex: 0 0 auto; transition: transform 0.2s ease; }
 .ff-support__link:hover .ff-support__cup,
