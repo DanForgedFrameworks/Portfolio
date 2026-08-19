@@ -225,6 +225,16 @@
   (function journeyPlayers() {
     var frames = document.querySelectorAll('.journey__frame[data-src]');
     if (!frames.length || isTouch) return;
+    /* v3 calm mode: stay on the branded poster; boot the live preview on hover/focus */
+    if (document.body.hasAttribute('data-calm')) {
+      frames.forEach(function (f) {
+        var card = f.closest('.journey') || f.parentNode;
+        function boot(){ if (!f.src) f.src = f.getAttribute('data-src'); }
+        card.addEventListener('mouseenter', boot, { once: true });
+        card.addEventListener('focus', boot, { once: true });
+      });
+      return;
+    }
     if ('IntersectionObserver' in window) {
       var io = new IntersectionObserver(function (ents) {
         ents.forEach(function (en) {
@@ -282,8 +292,9 @@
       wrap.insertBefore(fac, f);
       facades.push({ el: fac, load: loadIt });
     });
-    /* Desktop only: auto-load as each scrolls near the viewport. */
-    if (!isTouch && 'IntersectionObserver' in window) {
+    /* Desktop only: auto-load as each scrolls near the viewport.
+       v3 calm mode opts out entirely, so the facades stay genuinely click-only. */
+    if (!isTouch && !document.body.hasAttribute('data-calm') && 'IntersectionObserver' in window) {
       var io = new IntersectionObserver(function (ents) {
         ents.forEach(function (en) {
           if (!en.isIntersecting) return;
