@@ -1,0 +1,119 @@
+WEBVTT
+
+00:00.000 --> 00:07.960
+Okay, so it looks like you've already updated the kind of closing date and everything else.
+
+00:07.960 --> 00:14.360
+So adding questions. Adding questions comes from here. We'll have to change the maximum
+
+00:14.360 --> 00:20.180
+grade to 30 because it's 30 questions first. We won't shuffle because there's question
+
+00:20.180 --> 00:23.000
+numbers in there, so we'll have to confuse them, but you know, probably not too much
+
+00:23.000 --> 00:29.080
+of an issue. And then for the question bank. And this is where you needed to go. So it's
+
+00:29.160 --> 00:39.920
+the default for six ACS because there's 30 questions in there. I've checked them against
+
+00:39.920 --> 00:48.560
+the current ones, which technique would separate, which technique would separate. If I do show
+
+00:48.560 --> 01:01.120
+all as well. It looks like it's quite odd because obviously it does it by number, which
+
+01:01.120 --> 01:07.120
+is a bit strange, but there we go. So you then select all those, add selected questions
+
+01:07.120 --> 01:16.400
+to quiz. Now you could fluff about and re-sort all these. Probably better just to remove
+
+01:16.480 --> 01:26.640
+the question number, but it is what it is. If you re-paginate though, to have unlimited
+
+01:26.640 --> 01:30.880
+questions per page, that will then mean that essentially they can just scroll through all
+
+01:30.880 --> 01:38.520
+the questions. You could re-sort all these, but I don't know how much value is in that.
+
+01:38.520 --> 01:45.320
+But yeah, I'll probably end up sorting it because I can't help it. I'll be a bit anal
+
+01:45.360 --> 01:53.680
+about it. So I'll re-sort all those. And then you just save. And then if we go back to the
+
+01:53.680 --> 02:04.440
+quiz then, and we preview quiz, tell me I've started it. The quizzes in there then. In
+
+02:04.440 --> 02:13.000
+fact, it doesn't look like I need to re-sort, does it? No, that's quite useful. Because
+
+02:13.000 --> 02:17.960
+the number doesn't come up. That's quite useful. Didn't even need to sort it. That's fine.
+
+02:17.960 --> 02:27.720
+So I will update that. If I go back to that, probably. Yeah, I can go there. Can I change
+
+02:27.720 --> 02:40.680
+the name? Settings, no longer empty. And I'll figure out how to either password now. So
+
+02:40.760 --> 02:46.360
+I'll be the next bit. One important thing you need to do when all that's done is save and
+
+02:46.360 --> 02:50.560
+display or save and return to course. Doesn't really matter. So just make sure you save as
+
+02:50.560 --> 02:55.040
+well when you're doing that. And forgot to record this when I first did it. So you're
+
+02:55.040 --> 03:00.520
+going to have to see it being done. So to add, I've duplicated the course. I did it as extra
+
+03:00.520 --> 03:09.600
+time. And as I said, I belt and brace this one. So what I've done is restricted access. And I put
+
+03:09.600 --> 03:13.920
+in student must match the following. They must have a user profile field with an email address
+
+03:13.920 --> 03:20.720
+that is equal to LHS email address. And what that does then, this was defaulted to all learners
+
+03:20.720 --> 03:27.360
+can see it, which is a bit odd, even if they didn't meet that condition, but I don't think they
+
+03:27.360 --> 03:32.960
+could get in. So I've hidden entirely if student doesn't meet this condition. So if Lucy is having
+
+03:32.960 --> 03:43.200
+options, probably best to switch that off. And then extra restrictions on attempts. Now, weirdly,
+
+03:45.600 --> 03:53.120
+extra restrictions on attempts, I think it's misleading. So I put the password in as that. So
+
+03:53.120 --> 03:57.680
+again, if they are an issue, so they can see it, but the password isn't working. Maybe take the
+
+03:57.680 --> 04:02.800
+password out. Like I said, I've built and braced it just in case anyone can see it. And if someone
+
+04:02.800 --> 04:08.480
+does for some reason that Lucian may be signed into Lucy's, then they can't access it without
+
+04:08.480 --> 04:16.400
+that password as well. So that is adding a password in. Make sure to save it. As you go,
+
+04:16.400 --> 04:24.560
+I've added the 57 minutes in and updated that to 57 minutes as well. Yeah, hopefully that's
+
+04:24.560 --> 04:30.240
+helpful, mate. And hopefully that little walkthrough, feel free to share that with anyone, of course.
+
+04:30.480 --> 04:36.560
+But yeah, again, not precious about this stuff. I'm just very familiar with it. So it was quicker
+
+04:36.560 --> 04:46.560
+for me. Sorry that you had to waste so much time on it. Yeah, enjoy.
+

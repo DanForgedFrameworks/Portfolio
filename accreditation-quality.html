@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Accreditation &amp; Quality (v2 prototype) — Daniel 'Wig' Boyland</title>
+<title>Accreditation &amp; quality — Daniel 'Wig' Boyland</title>
 <meta name="description" content="The technical CV behind Forged Frameworks: more than a decade in ISO 15189, 17025 and 17043 environments — UKAS assessment, training and QMS governance, plus NHS biomedical science roles." />
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-<link rel="stylesheet" href="assets/colors_and_type.css" />
-<link rel="stylesheet" href="site.css?v=243" />
+<link rel="stylesheet" href="assets/colors_and_type.css?v=245" />
+<link rel="stylesheet" href="site.css?v=246" />
 <style>
   /* ---- Secret accreditation page — local layer over site.css ---- */
   .secret-tag {
@@ -474,6 +474,12 @@
     </a>
   </div>
 </footer>
+
+<!-- Motion control. Delegated by data-bg-toggle (transition.js); label and
+     aria-pressed are set by FFBackground on paint. --solo keeps it visible on
+     touch, since this page has no burger drawer to host the .nav__bg variant. -->
+<button class="bg-fab bg-fab--solo" type="button" data-bg-toggle aria-pressed="false" title="Turn page motion on or off — the forge-rain background">◍ Motion: on</button>
+
 
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 <script src="https://unpkg.com/lucide@0.544.0/dist/umd/lucide.min.js"></script>

@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Daniel 'Wig' Boyland — Forged Frameworks Portfolio (v2 prototype)</title>
+<title>Daniel 'Wig' Boyland — Forged Frameworks Portfolio</title>
 <meta name="description" content="Forged Frameworks — a portfolio by Daniel 'Wig' Boyland: digital learning content design, GenAI content pipelines, and accessibility-first instructional design." />
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-<link rel="stylesheet" href="assets/colors_and_type.css" />
-<link rel="stylesheet" href="site.css?v=243" />
+<link rel="stylesheet" href="assets/colors_and_type.css?v=245" />
+<link rel="stylesheet" href="site.css?v=246" />
 <style id="v2-overrides">
   /* ===== v2 — static learning-design review grid (navy band) ===== */
   #reviews .quote-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); align-items: start; }
@@ -45,9 +45,9 @@
   .stage-divider__toggle:focus-visible { outline: 2px solid var(--ff-copper); outline-offset: 3px; border-radius: var(--radius-sm); }
   .band[hidden] { display: none !important; }
 
-  /* ===== v2 — media (GIF/MP4 swapped to muted WebM video) ===== */
+  /* ===== v4 — media: every animated GIF is now a muted WebM/MP4 video ===== */
   video.hero__logo-big { display: block; width: 100%; height: auto; }
-  .gif-strip video { display: block; width: 100%; height: auto; border-radius: var(--radius-md); }
+  .motion-strip video { display: block; width: 100%; height: auto; border-radius: var(--radius-md); }
   video.media-fill { display: block; width: 100%; height: 100%; object-fit: cover; }
   video.waving-head { display: block; }
   .pipe-figure video { display: block; width: 100%; height: auto; }
@@ -133,8 +133,7 @@
 .codex-shot__t{font-weight:var(--fw-bold);color:var(--ff-ink);font-size:var(--fs-sm);line-height:1.3}
 .codex-shot__k{font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--ff-ink-muted)}
 #matrix{opacity:.08}
-.gif-strip figure{position:relative}
-.gif-strip canvas.gif-freeze{position:absolute;top:0;left:0;width:100%;height:auto;border-radius:var(--radius-md);pointer-events:none}
+.motion-strip figure{position:relative}
 
 :root{--content:1200px;--wide:1420px}
 /* v3: the nav row needs more room than the 860px collapse allows — raise it to 1020px */
@@ -205,8 +204,9 @@ details.disc.disc--ink{background:rgba(255,255,255,0.04);border-color:rgba(224,1
 <canvas id="matrix" aria-hidden="true"></canvas>
 <a class="skip-link" href="#about">Skip to content</a>
 <!-- data-bg-toggle is what binds this to FFBackground (transition.js). Hidden on
-     touch by site.css; the in-drawer .nav__bg control below serves there instead. -->
-<button class="bg-fab" id="bgToggle" type="button" data-bg-toggle aria-pressed="false" title="Toggle the background forge-rain animation">◍ Background: on</button>
+     touch by site.css; the in-drawer .nav__bg control below serves there instead.
+     Governs the #matrix canvas AND every video[data-motion] — see videoMotion() in app.js. -->
+<button class="bg-fab" id="bgToggle" type="button" data-bg-toggle aria-pressed="false" title="Turn page motion on or off — the forge-rain background and any autoplaying video">◍ Motion: on</button>
 
 <!-- ===================== NAV ===================== -->
 <header class="nav">
@@ -245,10 +245,10 @@ details.disc.disc--ink{background:rgba(255,255,255,0.04);border-color:rgba(224,1
       <a href="index.html" class="nav__gateway-link">&larr; Portfolio gateway</a>
       <a href="accreditation-quality.html" class="nav__cross-link">Accreditation &amp; quality &rarr;</a>
       <a href="#contact" class="nav__cta">Let's work together</a>
-      <!-- Mobile home for the background switch: the floating .bg-fab is hidden on
+      <!-- Mobile home for the motion switch: the floating .bg-fab is hidden on
            touch, so the burger hosts it there. Shown only <=860px by site.css.
            Bound by data-bg-toggle; label and aria-pressed are set by FFBackground. -->
-      <button class="nav__bg" type="button" data-bg-toggle aria-pressed="false" title="Toggle the background forge-rain animation">◍ Background: on</button>
+      <button class="nav__bg" type="button" data-bg-toggle aria-pressed="false" title="Turn page motion on or off — the forge-rain background and any autoplaying video">◍ Motion: on</button>
     </nav>
     <button class="nav__toggle" aria-label="Menu" aria-expanded="false" aria-controls="primary-menu">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -276,7 +276,7 @@ details.disc.disc--ink{background:rgba(255,255,255,0.04);border-color:rgba(224,1
       </a>
     </div>
     <div class="hero__mark hero__mark--logo reveal in">
-      <img class="hero__logo-big" src="assets/logo-animated.gif" alt="Forged Frameworks — animated hammer-and-nib mark" />
+      <video class="hero__logo-big" data-motion muted loop playsinline preload="metadata" poster="assets/poster-logo-animated.jpg" aria-label="Forged Frameworks — animated hammer-and-nib mark"><source src="assets/logo-animated.webm" type="video/webm" /><source src="assets/logo-animated.mp4" type="video/mp4" /></video>
     </div>
   </div>
 </section>
@@ -434,7 +434,7 @@ details.disc.disc--ink{background:rgba(255,255,255,0.04);border-color:rgba(224,1
         <img src="assets/itm-asb-2.jpg" alt="Asbestos ITM — decontamination, PPE and Type-H vacuums lesson" loading="lazy" />
         <img src="assets/itm-asb-3.jpg" alt="Asbestos ITM — reflection notebook guidance with downloadable PDF" loading="lazy" />
       </figure>
-      <p class="muted" style="margin-top:var(--space-4); color:#aeb9c0;">Inside the Level&nbsp;3 Asbestos Industry Technical Module (<span class="term" tabindex="0">ITM<span class="term__pop"><strong>Industry Technical Module (ITM)</strong> — developed to support the specific Level&nbsp;3 Laboratory Technician Apprenticeship Standard (ST0248).<span class="term__codes"><span><strong>S17 (Skill)</strong> — identify relevant information from scientific sources (e.g. supervisors, literature, digital tools) in order to contribute to problem-solving.</span><span><strong>K21 (Knowledge)</strong> — demonstrate theoretical knowledge of a named or recognised scientific subject appropriate to the workplace sector (e.g. pharmacology, biotechnology, dental, or chemical).</span></span></span></span>, Rise 360) — enabling Bulk &amp; Analysis and Air Analysts toward the L3 lab-technician standard and RSPH qualifications.</p>
+      <p class="muted" style="margin-top:var(--space-4); color:#aeb9c0;">Inside the Level&nbsp;3 Asbestos Industry Technical Module (<button type="button" class="term">ITM<span class="term__pop"><strong>Industry Technical Module (ITM)</strong> — developed to support the specific Level&nbsp;3 Laboratory Technician Apprenticeship Standard (ST0248).<span class="term__codes"><span><strong>S17 (Skill)</strong> — identify relevant information from scientific sources (e.g. supervisors, literature, digital tools) in order to contribute to problem-solving.</span><span><strong>K21 (Knowledge)</strong> — demonstrate theoretical knowledge of a named or recognised scientific subject appropriate to the workplace sector (e.g. pharmacology, biotechnology, dental, or chemical).</span></span></span></button>, Rise 360) — enabling Bulk &amp; Analysis and Air Analysts toward the L3 lab-technician standard and RSPH qualifications.</p>
       <div class="adv-grid" style="margin-top:var(--space-5);">
         <div class="adv"><div class="adv__num">95%+</div><p class="adv__t">Completion rate across the first cohorts</p></div>
         <div class="adv"><div class="adv__num">Pre/post</div><p class="adv__t">Objective knowledge-gain measures, not just averages</p></div>
@@ -727,8 +727,7 @@ details.disc.disc--ink{background:rgba(255,255,255,0.04);border-color:rgba(224,1
       <!-- Wonky Forge -->
       <article class="work-item reveal" data-screen-label="Wonky Forge">
         <div class="work-item__media">
-          <!-- v2 media note: in production, swap looping GIFs + this MP4 for muted WebM (autoplay muted loop playsinline + <source type="video/webm">) — typically 70-90% lighter. Kept as muted MP4 here because the exported .webm assets don't exist yet. -->
-          <video class="media-fill" controls muted playsinline preload="metadata"><source src="assets/wonky-story.mp4" type="video/mp4" /></video>
+          <video class="media-fill" controls muted playsinline preload="metadata" title="Wonky Story learning video"><source src="assets/wonky-story.mp4" type="video/mp4" /></video>
         </div>
         <div>
           <p class="tag-row"><span class="tag">CPD passion project</span><span class="tag">branding</span><span class="tag">socials</span></p>
@@ -750,11 +749,12 @@ details.disc.disc--ink{background:rgba(255,255,255,0.04);border-color:rgba(224,1
         <p class="tag-row"><span class="tag">branding</span><span class="tag">motion</span><span class="tag">GIF</span></p>
         <h3 class="h2" style="margin-bottom:var(--space-3);">Branding &amp; motion studies</h3>
         <p class="muted" style="margin:0 0 var(--space-5); max-width:62ch;">Identity and motion experiments from the same CPD strand — looping logo forges and animated marks made for web, social and email.</p>
-        <div class="gif-strip">
-          <figure><img src="assets/gif-forge.gif" alt="Animated Forged Frameworks hammer-and-nib logo forging itself" loading="lazy" /><figcaption>The forge mark, animated</figcaption></figure>
-          <figure><img src="assets/gif-cpd-nature.gif" alt="Animated organic 'nature head' identity concept" loading="lazy" /><figcaption>Organic &lsquo;nature-head&rsquo; identity study</figcaption></figure>
-          <figure><img src="assets/gif-cpd-v1.gif" alt="Early CPD motion-branding identity study" loading="lazy" /><figcaption>Early CPD motion-branding study</figcaption></figure>
-          <figure><img src="assets/logo-animated.gif" alt="Animated Forged Frameworks logo from the top of the page" loading="lazy" /><figcaption>The Forged Frameworks animated mark</figcaption></figure>
+        <!-- data-motion-hover: held on the poster still until hovered or focused, as the GIF strip was -->
+        <div class="gif-strip motion-strip">
+          <figure><video data-motion data-motion-hover tabindex="0" muted loop playsinline preload="metadata" poster="assets/poster-gif-forge.jpg" aria-label="Animated Forged Frameworks hammer-and-nib logo forging itself"><source src="assets/gif-forge.webm" type="video/webm" /><source src="assets/gif-forge.mp4" type="video/mp4" /></video><figcaption>The forge mark, animated</figcaption></figure>
+          <figure><video data-motion data-motion-hover tabindex="0" muted loop playsinline preload="metadata" poster="assets/poster-gif-cpd-nature.jpg" aria-label="Animated organic 'nature head' identity concept"><source src="assets/gif-cpd-nature.webm" type="video/webm" /><source src="assets/gif-cpd-nature.mp4" type="video/mp4" /></video><figcaption>Organic &lsquo;nature-head&rsquo; identity study</figcaption></figure>
+          <figure><video data-motion data-motion-hover tabindex="0" muted loop playsinline preload="metadata" poster="assets/poster-gif-cpd-v1.jpg" aria-label="Early CPD motion-branding identity study"><source src="assets/gif-cpd-v1.webm" type="video/webm" /><source src="assets/gif-cpd-v1.mp4" type="video/mp4" /></video><figcaption>Early CPD motion-branding study</figcaption></figure>
+          <figure><video data-motion data-motion-hover tabindex="0" muted loop playsinline preload="metadata" poster="assets/poster-logo-animated.jpg" aria-label="Animated Forged Frameworks logo from the top of the page"><source src="assets/logo-animated.webm" type="video/webm" /><source src="assets/logo-animated.mp4" type="video/mp4" /></video><figcaption>The Forged Frameworks animated mark</figcaption></figure>
         </div>
       </div>
     </div>
@@ -772,7 +772,7 @@ details.disc.disc--ink{background:rgba(255,255,255,0.04);border-color:rgba(224,1
 
     <div class="tools-grid">
       <article class="tool reveal">
-        <div class="tool__media"><video class="tool__vid" src="assets/digital-maturity.mp4" controls preload="metadata" playsinline></video></div>
+        <div class="tool__media"><video class="tool__vid" src="assets/digital-maturity.mp4" controls preload="metadata" playsinline title="Digital maturity tool walkthrough"></video></div>
         <div class="tool__body">
           <p class="tool__lvl">Level 5 · Lab Management</p>
           <h3 class="h3">Digital Maturity Diagnostic</h3>
@@ -781,7 +781,7 @@ details.disc.disc--ink{background:rgba(255,255,255,0.04);border-color:rgba(224,1
         </div>
       </article>
       <article class="tool reveal">
-        <div class="tool__media"><video class="tool__vid" src="assets/fibre-id.mp4" controls preload="metadata" playsinline></video></div>
+        <div class="tool__media"><video class="tool__vid" src="assets/fibre-id.mp4" controls preload="metadata" playsinline title="Asbestos fibre identification tool walkthrough"></video></div>
         <div class="tool__body">
           <p class="tool__lvl">Level 3 · Asbestos</p>
           <h3 class="h3">Asbestos Identification Matrix</h3>
@@ -844,8 +844,8 @@ details.disc.disc--ink{background:rgba(255,255,255,0.04);border-color:rgba(224,1
       <div class="adv"><div class="adv__num">No repeats</div><p class="adv__t">Anti-repetition memory keeps a module fresh</p></div>
     </div>
     <figure class="pipe-figure reveal">
-      <img src="assets/ai-pipeline.gif" alt="Animated diagram of the Catalyst content pipeline stages" loading="lazy" />
-      <figcaption>The Catalyst pipeline, animated end to end.</figcaption>
+      <img src="assets/ai-pipeline.png" alt="Diagram of the Catalyst content pipeline, from scheme-of-work and calibration inputs through to the four forged documents" loading="lazy" />
+      <figcaption>The Catalyst pipeline, end to end.</figcaption>
     </figure>
       </div>
     </details>
@@ -1023,7 +1023,7 @@ details.disc.disc--ink{background:rgba(255,255,255,0.04);border-color:rgba(224,1
   </div>
   <div class="wrap">
     <div class="secret-banner reveal" style="margin-bottom:var(--space-7);">
-      <img class="waving-head" src="assets/waving-head.gif" alt="Daniel waving hello" style="margin:0 auto var(--space-4);" />
+      <video class="waving-head" data-motion muted loop playsinline preload="metadata" poster="assets/poster-waving-head.jpg" style="margin:0 auto var(--space-4);" aria-label="Daniel waving hello"><source src="assets/waving-head.webm" type="video/webm" /><source src="assets/waving-head.mp4" type="video/mp4" /></video>
       <p class="cy">Shwmae · Da Iawn</p>
       <h2 class="h1" style="margin-top:var(--space-3);">Still here? These are my secret pages.</h2>
       <p class="lead" style="margin:var(--space-4) auto 0;">The full skills inventory, the AI personas behind the pipeline, and the detail for the curious.</p>
@@ -1183,7 +1183,7 @@ details.disc.disc--ink{background:rgba(255,255,255,0.04);border-color:rgba(224,1
 
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 <script src="https://unpkg.com/lucide@0.544.0/dist/umd/lucide.min.js"></script>
-<script src="app.js?v=244"></script>
+<script src="app.js?v=246"></script>
 <script>
 /* v2 — collapsible stage dividers */
 (function(){
@@ -1194,25 +1194,6 @@ details.disc.disc--ink{background:rgba(255,255,255,0.04);border-color:rgba(224,1
       btn.setAttribute('aria-expanded', String(!expanded));
       if (target) { target.hidden = expanded; }
     });
-  });
-})();
-</script>
-<script>
-/* v3 — GIF strip: hold the first frame until hover */
-(function(){
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  document.querySelectorAll('.gif-strip figure').forEach(function(fig){
-    var img = fig.querySelector('img'); if (!img) return;
-    function freeze(){
-      if (fig.querySelector('.gif-freeze') || !img.naturalWidth) return;
-      var c = document.createElement('canvas');
-      c.className = 'gif-freeze'; c.width = img.naturalWidth; c.height = img.naturalHeight;
-      try { c.getContext('2d').drawImage(img, 0, 0); } catch (e) { return; }
-      fig.insertBefore(c, img.nextSibling);
-      fig.addEventListener('mouseenter', function(){ c.style.display = 'none'; });
-      fig.addEventListener('mouseleave', function(){ c.style.display = ''; });
-    }
-    if (img.complete) freeze(); else img.addEventListener('load', freeze);
   });
 })();
 </script>

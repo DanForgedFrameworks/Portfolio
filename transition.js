@@ -34,7 +34,8 @@
 }());
 
 /* ============================================================
-   Forged Frameworks — shared background-animation preference.
+   Forged Frameworks — shared motion preference. Governs the #matrix canvas
+   and every autoplaying video on the page (see videoMotion() in app.js).
 
    One setting, three pages. Each page draws its own #matrix
    forge-rain from its own script (app.js on the learning-design
@@ -70,7 +71,7 @@
     if (off) root.classList.add(KEY); else root.classList.remove(KEY);
     var btns = document.querySelectorAll('[data-bg-toggle]');
     for (var i = 0; i < btns.length; i++) {
-      btns[i].textContent = off ? '◍ Background: off' : '◍ Background: on';
+      btns[i].textContent = off ? '◍ Motion: off' : '◍ Motion: on';
       btns[i].setAttribute('aria-pressed', String(off));
     }
   }

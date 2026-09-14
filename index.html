@@ -9,22 +9,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" />
-<link rel="stylesheet" href="assets/colors_and_type.css" />
+<link rel="stylesheet" href="assets/colors_and_type.css?v=245" />
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-:root {
-  --ff-paper:        #fcfbf9;
-  --ff-paper-edge:   #e0e0e0;
-  --ff-copper:       #bc6c3c;
-  --ff-copper-hot:   #a05b32;
-  --ff-copper-wash:  rgba(188,108,60,0.10);
-  --ff-ink:          #2c3e50;
-  --ff-ink-muted:    #7f8c8d;
-  --ff-ink-faint:    #bdc3c7;
-  --font-sans:       'Atkinson Hyperlegible', 'Segoe UI', Tahoma, Verdana, sans-serif;
-  --font-mono:       'JetBrains Mono', ui-monospace, 'Courier New', monospace;
-}
+/* Tokens come from assets/colors_and_type.css — never redeclared here. */
 
 html {
   height: 100%;
@@ -34,12 +23,7 @@ html {
 }
 
 body {
-  height: 100%;
-  overflow: hidden;
-}
-
-@media (max-width: 680px) {
-  body { overflow: auto; }
+  min-height: 100%;
 }
 
 /* ---- Skip link ---- */
@@ -61,12 +45,9 @@ body {
 .gateway {
   position: relative; z-index: 1;
   display: flex; flex-direction: column; justify-content: center;
-  height: 100dvh;
+  min-height: 100dvh;
   padding: clamp(14px, 2.5vh, 28px) clamp(16px, 3.5vw, 48px) clamp(10px, 1.5vh, 20px);
   gap: clamp(10px, 1.8vh, 20px);
-}
-@media (max-width: 680px) {
-  .gateway { height: auto; min-height: 100dvh; }
 }
 
 /* ---- Header ---- */
@@ -82,12 +63,12 @@ body {
   font-size: clamp(1rem, 2vw, 1.4rem); color: var(--ff-ink);
 }
 .gw-brand__sub {
-  font-family: var(--font-mono); font-size: clamp(0.62rem, 1.1vw, 0.78rem);
+  font-family: var(--font-mono); font-size: clamp(0.82rem, 1.1vw, 0.88rem);
   color: var(--ff-ink-muted); letter-spacing: 0.04em; margin-top: 3px; white-space: nowrap;
 }
 .gw-welcome {
   font-size: clamp(0.9rem, 1.5vw, 1.05rem); color: var(--ff-ink);
-  max-width: 52ch; line-height: 1.6;
+  max-width: 52ch; line-height: 1.6; text-wrap: pretty;
 }
 .gw-welcome strong { color: var(--ff-copper-hot); font-weight: 700; }
 
@@ -185,50 +166,9 @@ body {
   margin-bottom: clamp(4px, 0.5vh, 7px); color: var(--ff-ink);
 }
 .portal__pitch {
-  font-size: clamp(0.74rem, 1.1vw, 0.86rem);
+  font-size: clamp(0.85rem, 1.1vw, 0.95rem);
   color: var(--ff-ink-muted); line-height: 1.55; max-width: 36ch;
-  margin-bottom: clamp(8px, 1vh, 14px);
-}
-@media (max-width: 480px) { .portal__pitch { display: none; } }
-
-/* ---- Chip rows ---- */
-.portal__chips { display: flex; flex-direction: column; gap: 7px; flex: 1; }
-.chip-row { display: flex; flex-wrap: wrap; gap: 5px; }
-
-.chip {
-  display: inline-block;
-  font-family: var(--font-mono); font-size: clamp(0.6rem, 0.95vw, 0.7rem);
-  font-weight: 400; border-radius: 4px;
-  padding: 3px 9px; line-height: 1.5;
-  white-space: nowrap; letter-spacing: 0.02em;
-}
-.chip--heavy {
-  font-weight: 700; font-size: clamp(0.64rem, 1vw, 0.74rem);
-  border-left: 3px solid;
-}
-
-/* LD chips — amber */
-.portal--ld .chip {
-  color: var(--ff-copper-hot); background: var(--ff-copper-wash);
-  border: 1px solid rgba(188,108,60,0.20);
-}
-.portal--ld .chip--heavy {
-  background: rgba(188,108,60,0.14);
-  border-left-color: var(--ff-copper);
-}
-
-/* ISO chips — navy */
-.portal--iso .chip {
-  color: #2c3e50; background: rgba(44,62,80,0.07);
-  border: 1px solid rgba(44,62,80,0.17);
-}
-.portal--iso .chip--heavy {
-  background: rgba(44,62,80,0.13);
-  border-left-color: #2c3e50;
-}
-
-@media (max-width: 480px) {
-  .portal__chips .chip-row:nth-child(2) { display: none; }
+  margin-bottom: clamp(8px, 1vh, 14px); text-wrap: pretty;
 }
 
 /* ---- Hover info panel ---- */
@@ -244,7 +184,7 @@ body {
   text-align: left;
 }
 .portal__info p {
-  font-size: clamp(0.72rem, 1.05vw, 0.82rem);
+  font-size: clamp(0.85rem, 1.05vw, 0.92rem);
   line-height: 1.6; margin: 0;
   color: #c8d4da;
 }
@@ -282,26 +222,28 @@ body {
   background: none; border: none; cursor: pointer;
   padding: 8px 12px;
   font-family: var(--font-mono);
-  font-size: clamp(0.66rem, 0.95vw, 0.76rem);
+  font-size: clamp(0.82rem, 0.95vw, 0.88rem);
   color: var(--ff-ink-muted); letter-spacing: 0.02em;
   opacity: 0.8;
   transition: opacity 0.22s ease, color 0.22s ease;
-  display: inline-flex; align-items: center; gap: 6px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  text-align: center;
   min-height: 44px;
 }
 .gw-cv-nudge__btn:hover,
 .gw-cv-nudge__btn:focus-visible { opacity: 1; color: var(--ff-ink); outline: none; }
 .gw-cv-nudge__btn:focus-visible { outline: 2px solid var(--ff-copper); outline-offset: 3px; border-radius: 3px; }
-.gw-cv-nudge__arrow { transition: transform 0.2s ease; display: inline-block; }
+.gw-cv-nudge__label { text-wrap: pretty; }
+.gw-cv-nudge__arrow { transition: transform 0.2s ease; display: inline-block; flex: none; }
 .gw-cv-nudge__btn:hover .gw-cv-nudge__arrow,
 .gw-cv-nudge__btn:focus-visible .gw-cv-nudge__arrow { transform: translateX(4px); }
 
 /* ---- Enter CTA ---- */
 .portal__enter {
-  display: inline-flex; align-items: center; gap: 8px;
+  display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
   margin-top: clamp(12px, 1.8vh, 22px);
   font-family: var(--font-mono); font-weight: 700;
-  font-size: clamp(0.7rem, 1.15vw, 0.82rem); letter-spacing: 0.05em;
+  font-size: clamp(0.82rem, 1.15vw, 0.9rem); letter-spacing: 0.05em;
   transition: gap 0.22s ease, color 0.22s ease;
 }
 .portal--ld  .portal__enter { color: var(--ff-copper-hot); }
@@ -319,11 +261,28 @@ body {
 }
 .gw-footer strong { color: var(--ff-ink); font-weight: 700; }
 
+/* ---- Motion control ---- */
+.gw-motion {
+  position: fixed; bottom: 14px; left: 14px; z-index: 900;
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono);
+  font-size: clamp(0.78rem, 0.95vw, 0.86rem); letter-spacing: 0.02em;
+  padding: 7px 15px;
+  color: var(--ff-ink-muted);
+  background: var(--ff-copper-wash);
+  border: 1px solid rgba(188, 108, 60, 0.18); border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.22s ease, background 0.22s ease, border-color 0.22s ease;
+}
+.gw-motion:hover { color: var(--ff-copper-hot); border-color: var(--ff-copper); }
+.gw-motion[aria-pressed="true"] { color: var(--ff-ink); }
+@media (max-width: 600px) { .gw-motion { bottom: 10px; left: 10px; padding: 6px 12px; } }
+
 /* ---- Support (Buy Me a Coffee) ---- */
 .gw-support {
   margin-top: clamp(1px, 0.3vh, 4px);
   font-family: var(--font-mono);
-  font-size: clamp(0.66rem, 0.95vw, 0.76rem);
+  font-size: clamp(0.82rem, 0.95vw, 0.88rem);
   letter-spacing: 0.02em;
 }
 .gw-support__link {
@@ -374,7 +333,7 @@ if (sessionStorage.getItem('ff-to-gateway') === '1') {
     <div class="gw-brand">
       <img class="gw-brand__mark" src="assets/forge-mark.png" alt="" aria-hidden="true" />
       <div class="gw-brand__text">
-        <span class="gw-brand__name">Forged Frameworks</span>
+        <h1 class="gw-brand__name">Forged Frameworks</h1>
         <span class="gw-brand__sub">Portfolio Gateway</span>
       </div>
     </div>
@@ -443,7 +402,7 @@ if (sessionStorage.getItem('ff-to-gateway') === '1') {
   <!-- ===== CV nudge ===== -->
   <div class="gw-cv-nudge">
     <button type="button" id="cv-nudge-btn" class="gw-cv-nudge__btn" aria-label="View CV">
-      Just here for my CV? But you'll miss all the fun.
+      <span class="gw-cv-nudge__label">Just here for my CV? But you'll miss all the fun.</span>
       <span class="gw-cv-nudge__arrow" aria-hidden="true">&rarr;</span>
     </button>
   </div>
@@ -468,6 +427,12 @@ if (sessionStorage.getItem('ff-to-gateway') === '1') {
       </a>
     </p>
   </footer>
+
+<!-- Motion control. Delegated by data-bg-toggle (transition.js); label and
+     aria-pressed are set by FFBackground on paint. The gateway runs #matrix with
+     no other control, so this is the only way to stop it. -->
+<button class="gw-motion" type="button" data-bg-toggle aria-pressed="false" title="Turn the forge-rain background on or off">◍ Motion: on</button>
+
 
 </div>
 

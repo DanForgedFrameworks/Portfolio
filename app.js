@@ -136,32 +136,45 @@
     });
   });
 
-  /* ---------- Pause/play the pipeline GIF (canvas-freeze trick) ---------- */
-  (function pipeGif() {
-    var gif = document.getElementById('pipeGif');
-    var btn = document.querySelector('.pipe-pause');
-    if (!gif || !btn) return;
-    var liveSrc = gif.getAttribute('src');
-    btn.addEventListener('click', function () {
-      var playing = btn.getAttribute('data-playing') === 'true';
-      if (playing) {
-        try {
-          var c = document.createElement('canvas');
-          c.width = gif.naturalWidth || gif.clientWidth;
-          c.height = gif.naturalHeight || gif.clientHeight;
-          c.getContext('2d').drawImage(gif, 0, 0, c.width, c.height);
-          gif.src = c.toDataURL('image/png');
-        } catch (e) { /* if tainted, just leave it */ }
-        btn.setAttribute('data-playing', 'false');
-        btn.setAttribute('aria-label', 'Play animation');
-        btn.textContent = '► Play';
-      } else {
-        gif.src = liveSrc + (liveSrc.indexOf('?') > -1 ? '&' : '?') + 'r=' + Date.now();
-        btn.setAttribute('data-playing', 'true');
-        btn.setAttribute('aria-label', 'Pause animation');
-        btn.textContent = '❚❚ Pause';
-      }
+  /* ---------- Video media: honour reduced motion, and follow the site-wide
+     background off-switch so one visible control pauses every moving thing ---------- */
+  (function videoMotion() {
+    var vids = Array.prototype.slice.call(document.querySelectorAll('video[data-motion]'));
+    if (!vids.length) return;
+
+    /* No 'autoplay' in the markup: motion is opt-in from here, so a blocked or
+       slow script leaves every video still rather than looping unstoppably. */
+    /* Stopping reloads the element so its poster still shows again. Several of these
+       animations open on a blank frame, so rewinding alone left an empty box. */
+    function pause(v) {
+      try {
+        if (v.paused && !v.currentTime) return;
+        v.pause(); v.load();
+      } catch (e) {}
+    }
+    function play(v) { try { var p = v.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {} }
+    function bgOff() { try { return localStorage.getItem('ff-bg-off') === '1'; } catch (e) { return false; } }
+    function still() { return reduceMotion || bgOff(); }
+    function isHover(v) { return v.hasAttribute('data-motion-hover'); }
+
+    function apply() {
+      vids.forEach(function (v) {
+        if (still() || isHover(v)) pause(v); else play(v);
+      });
+    }
+
+    /* Strip videos wait on their poster until hovered or focused */
+    vids.filter(isHover).forEach(function (v) {
+      function start() { if (!still()) play(v); }
+      function stop() { pause(v); }
+      v.addEventListener('mouseenter', start);
+      v.addEventListener('focus', start);
+      v.addEventListener('mouseleave', stop);
+      v.addEventListener('blur', stop);
     });
+
+    apply();
+    window.addEventListener('ff-bg-change', apply);
   })();
 
   /* ---------- In-page block preview modal (avoids new-tab preview-token) ---------- */

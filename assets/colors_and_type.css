@@ -30,14 +30,15 @@
 
   /* Copper / Forge Orange — the signature brand color.
      Named for the hammer-head in the logo. */
-  --ff-copper:          #bc6c3c;   /* primary action, accents */
-  --ff-copper-hot:      #a05b32;   /* hover / pressed copper */
+  --ff-copper:          #bc6c3c;   /* accents, rules, icons, washes — 3.9:1 on paper, so graphics only, never behind text */
+  --ff-copper-hot:      #a05b32;   /* solid copper behind white text — 5.2:1 */
+  --ff-copper-deep:     #8a4e2b;   /* its hover / pressed state — 6.5:1 */
   --ff-copper-wash:     rgba(188, 108, 60, 0.10);  /* tinted bg */
   --ff-copper-glow:     rgba(188, 108, 60, 0.40);  /* pulse / focus ring */
 
   /* Ink / Navy — the handle of the pen, body text, headings */
   --ff-ink:          #2c3e50;   /* primary text + headings */
-  --ff-ink-muted:    #7f8c8d;   /* secondary text, hints */
+  --ff-ink-muted:    #5f6e6f;   /* secondary text, hints — 5.2:1 on paper. Was #7f8c8d (3.4:1) */
   --ff-ink-faint:    #bdc3c7;   /* disabled, placeholder icons */
 
   /* Terminal — the "Live Telemetry Feed" surface */
@@ -73,7 +74,9 @@
   --color-fg:            var(--ff-ink);
   --color-fg-muted:      var(--ff-ink-muted);
   --color-fg-faint:      var(--ff-ink-faint);
-  --color-fg-on-copper:  #ffffff;
+  --color-fg-on-copper:  #ffffff;   /* only over --color-accent-solid; white on --color-accent is 3.9:1 */
+  --color-accent-solid:     var(--ff-copper-hot);    /* filled button / chip background */
+  --color-accent-solid-hot: var(--ff-copper-deep);   /* its hover */
   --color-fg-on-term:    var(--ff-term-text);
 
   --color-accent:        var(--ff-copper);
@@ -99,7 +102,8 @@
   --fw-bold:     700;
   --fw-black:    800;
 
-  /* Sizes — matching the app's literal px values */
+  /* Sizes — 13px (--fs-sm) is the floor for body and UI text;
+     --fs-xs is for non-essential captions only */
   --fs-xs:   12px;   /* stage hints, small captions */
   --fs-sm:   13px;   /* file-status, modal selects, terminal text */
   --fs-base: 14px;   /* secondary body */
@@ -115,11 +119,12 @@
   --lh-normal:  1.4;   /* terminal log */
   --lh-relaxed: 1.6;
 
-  /* Tracking — the brand likes uppercase + letter-spacing */
+  /* Tracking — no ALL-CAPS and no positive tracking on runs of words.
+     Emphasis comes from weight, size and colour instead. */
   --ls-tight:   -0.01em;
   --ls-normal:   0;
-  --ls-wide:     1px;      /* button CAPS */
-  --ls-widest:   2px;      /* page H1 CAPS */
+  --ls-wide:     0.04em;   /* short mono labels and codes only, never sentences */
+  --ls-widest:   0.04em;   /* retired — kept so older rules do not break */
 
   /* ============================================================
      SPACING / RADIUS / MOTION
@@ -257,6 +262,5 @@ body {
   background: var(--color-accent-wash);
   border-left: 3px solid var(--color-accent);
   padding: 2px var(--space-3);
-  text-transform: uppercase;
   letter-spacing: var(--ls-wide);
 }
