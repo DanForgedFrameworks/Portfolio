@@ -218,6 +218,36 @@
     };
   })();
 
+  /* ---------- Forge line (index only) ----------
+     Primes the line to its start state, then runs it once the section is a
+     third of the way into view: the line draws, and each document drops in
+     as the line reaches it (delays come from each item's --d). */
+  var forgeLine = (function () {
+    var ol = document.getElementById('forgeLine');
+    if (!ol) return { start: function () {}, stop: function () {} };
+    var io = null;
+    return {
+      start: function () {
+        if (io || ol.classList.contains('is-run') || ol.classList.contains('is-ran')) return;
+        ol.classList.add('is-primed');
+        void ol.offsetHeight;
+        io = new IntersectionObserver(function (entries) {
+          if (!entries[0].isIntersecting) return;
+          io.disconnect(); io = null;
+          ol.classList.add('is-run');
+          ol.classList.remove('is-primed');
+          /* Once finished, drop the staggered transitions so card hover is instant again */
+          setTimeout(function () { ol.classList.remove('is-run'); ol.classList.add('is-ran'); }, 2600);
+        }, { threshold: 0.35 });
+        io.observe(ol);
+      },
+      stop: function () {
+        if (io) { io.disconnect(); io = null; }
+        ol.classList.remove('is-primed');
+      }
+    };
+  })();
+
   /* ---------- Silver rain page transitions ---------- */
   var linkPattern = body.getAttribute('data-rain-links');
   if (linkPattern) {
@@ -270,7 +300,7 @@
     var go = allowed();
     if (go === running) return;
     running = go;
-    [rain, terminal, reveals, lights].forEach(function (m) { go ? m.start() : m.stop(); });
+    [rain, terminal, reveals, lights, forgeLine].forEach(function (m) { go ? m.start() : m.stop(); });
   }
   function boot() {
     if (document.hidden) {
