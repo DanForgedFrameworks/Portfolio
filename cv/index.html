@@ -17,10 +17,22 @@
     var BACK_ID = 'ff-back-to-portal';
     var fadeInjected = false;
 
-    // Silver glyph rain out to the main site: the same two-beat transition as the
-    // main site's forge.js. Pour: glyphs fill a dark overlay. Drop-off: no new
-    // glyphs start, the ones on screen fall off the bottom while the ground lifts
-    // to paper, then the page loads (hard cap so a throttled tab still navigates).
+    // Arrived from the main site through its silver rain? That page ended on a
+    // dark ground and set 'ff-rain-in', so the CV fades in from dark rather than
+    // flashing the light loading screen first. One-shot.
+    var fromRain = false;
+    try { fromRain = sessionStorage.getItem('ff-rain-in') === '1'; sessionStorage.removeItem('ff-rain-in'); } catch (e) {}
+    if (fromRain) {
+      var st = document.createElement('style');
+      st.textContent = 'html,body,#__bundler_thumbnail{background:#1a1a1a !important}#__bundler_thumbnail>*{opacity:0 !important}';
+      document.head.appendChild(st);
+    }
+
+    // Silver glyph rain out to the main site, the same transition as the main
+    // site's forge.js rainOut(). Pour: glyphs fill a dark overlay. Slough: no new
+    // glyphs start and the whole curtain slides down off the screen until the
+    // dark ground is clear. Then the main site loads and fades in from that dark
+    // (it reads 'ff-rain-in'). Hard cap so a throttled tab still navigates.
     // Skipped under reduced motion or with the site's Motion switch off ('ff-bg-off').
     function rainTo(href) {
       var calm = false;
@@ -38,44 +50,49 @@
       var chars = 'FORGEDFRAMEWORKS01∆◊#&=><[]{}|~'.split('');
       var cols = Math.floor(w / fs), drops = [];
       for (var i = 0; i < cols; i++) drops.push(Math.random() * h / fs);
-      var raf = 0, falling = false, boost = 0, finished = false;
+      var raf = 0, snap = null, offset = 0, speed = 2, finished = false;
       function finish() {
         if (finished) return;
         finished = true;
         cancelAnimationFrame(raf);
+        try { sessionStorage.setItem('ff-rain-in', '1'); } catch (e) {}
         window.location.href = href;
       }
-      function draw() {
-        if (falling) {
-          ctx.globalCompositeOperation = 'destination-out';
-          ctx.fillStyle = 'rgba(0,0,0,0.22)';
-          ctx.fillRect(0, 0, w, h);
-          ctx.globalCompositeOperation = 'source-over';
-          boost += 0.3;
-        } else {
-          ctx.fillStyle = 'rgba(26,26,26,0.09)';
-          ctx.fillRect(0, 0, w, h);
-        }
+      function pour() {
+        ctx.fillStyle = 'rgba(26,26,26,0.09)';
+        ctx.fillRect(0, 0, w, h);
         ctx.font = fs + 'px "JetBrains Mono", monospace';
-        var left = 0;
         for (var i = 0; i < cols; i++) {
-          if (falling && drops[i] * fs > h + fs) continue;
-          left++;
-          ctx.fillStyle = falling ? (Math.random() > 0.4 ? '#8a939a' : '#5f6e6f') : (Math.random() > 0.4 ? '#cccccc' : '#ffffff');
+          ctx.fillStyle = Math.random() > 0.4 ? '#cccccc' : '#ffffff';
           ctx.fillText(chars[(Math.random() * chars.length) | 0], i * fs, drops[i] * fs);
-          if (!falling && drops[i] * fs > h && Math.random() > 0.975) drops[i] = 0;
-          drops[i] += 0.65 + boost;
+          if (drops[i] * fs > h && Math.random() > 0.975) drops[i] = 0;
+          drops[i] += 0.65;
         }
-        if (falling && left === 0) { setTimeout(finish, 120); return; }
-        raf = requestAnimationFrame(draw);
       }
-      raf = requestAnimationFrame(draw);
+      function slough() {
+        ctx.clearRect(0, 0, w, h);
+        ctx.globalAlpha = Math.max(0, 1 - offset / h * 0.6);
+        ctx.drawImage(snap, 0, offset);
+        ctx.globalAlpha = 1;
+        offset += speed;
+        speed *= 1.14;
+        return offset < h;
+      }
+      function frame() {
+        if (snap) {
+          if (!slough()) { setTimeout(finish, 90); return; }
+        } else {
+          pour();
+        }
+        raf = requestAnimationFrame(frame);
+      }
+      raf = requestAnimationFrame(frame);
       setTimeout(function () {
-        falling = true;
-        ov.style.transition = 'background 0.4s ease';
-        ov.style.background = '#fcfbf9';
-      }, 700);
-      setTimeout(finish, 1900);
+        snap = document.createElement('canvas');
+        snap.width = w; snap.height = h;
+        snap.getContext('2d').drawImage(cvs, 0, 0);
+      }, 750);
+      setTimeout(finish, 2100);
     }
     // Coming back to the CV with the browser's Back button restores the page from cache with the overlay still up
     window.addEventListener('pageshow', function (e) {
@@ -125,14 +142,23 @@
       if (document.getElementById('__bundler_thumbnail')) return;
       fadeInjected = true;
       var f = document.createElement('div');
-      f.style.cssText = 'position:fixed;inset:0;background:#faf9f5;z-index:2147483646;pointer-events:none;transition:opacity 0.55s ease;';
+      f.style.cssText = 'position:fixed;inset:0;background:' + (fromRain ? '#1a1a1a' : '#faf9f5') + ';z-index:2147483646;pointer-events:none;transition:opacity ' + (fromRain ? '0.7s' : '0.55s') + ' ease;';
       document.body.appendChild(f);
       requestAnimationFrame(function () {
         requestAnimationFrame(function () { f.style.opacity = '0'; });
       });
-      setTimeout(function () { if (f.parentNode) f.parentNode.removeChild(f); }, 750);
+      setTimeout(function () { if (f.parentNode) f.parentNode.removeChild(f); }, fromRain ? 950 : 750);
     }
 
+    // The bundle swaps in a new documentElement; catch that the moment it happens
+    // so the fade cover lands before the CV can paint uncovered.
+    try {
+      var mo = new MutationObserver(function () {
+        injectFade(); injectBack();
+        if (fadeInjected && document.getElementById(BACK_ID)) mo.disconnect();
+      });
+      mo.observe(document, { childList: true, subtree: true });
+    } catch (e) {}
     // Window timers survive documentElement.replaceWith() — poll until injected
     [150, 300, 550, 900, 1500, 2500].forEach(function (ms) {
       setTimeout(function () { injectFade(); injectBack(); }, ms);

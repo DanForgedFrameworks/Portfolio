@@ -19,6 +19,12 @@ h1, h2, h3, p, ul, ol, figure, blockquote { margin: 0; }
 .skip-link { position: absolute; left: 12px; top: -60px; z-index: 100; background: var(--ff-ink); color: #fff; padding: 10px 16px; border-radius: var(--radius-sm); text-decoration: none; }
 .skip-link:focus { top: 12px; color: #fff; }
 
+/* ---------- Arriving after a rain transition ----------
+   transition.js stamps html.ff-arrive before first paint when the previous
+   page ended on the dark rain ground; the page then fades in from that dark. */
+html.ff-arrive body::after { content: ""; position: fixed; inset: 0; z-index: 10000; background: #1a1a1a; pointer-events: none; animation: ffArrive 0.7s ease 0.05s forwards; }
+@keyframes ffArrive { to { opacity: 0; visibility: hidden; } }
+
 /* ---------- Rain canvas ---------- */
 #matrix { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; opacity: 0.1; pointer-events: none; }
 html.ff-bg-off #matrix { display: none; }

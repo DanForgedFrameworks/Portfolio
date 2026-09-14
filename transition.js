@@ -34,6 +34,22 @@
 }());
 
 /* ============================================================
+   Arrival after a silver rain transition. The previous page (forge.js
+   rainOut, or the CV back button) ends on a dark ground and sets
+   'ff-rain-in'; stamping html.ff-arrive here, in <head>, before first
+   paint lets forge.css fade this page in from that dark. One-shot.
+   ============================================================ */
+(function () {
+  'use strict';
+  try {
+    if (sessionStorage.getItem('ff-rain-in') === '1') {
+      sessionStorage.removeItem('ff-rain-in');
+      document.documentElement.classList.add('ff-arrive');
+    }
+  } catch (e) { /* storage unavailable — no fade, page simply appears */ }
+}());
+
+/* ============================================================
    Forged Frameworks — shared motion preference. Governs the #matrix canvas
    and every autoplaying video on the page (see videoMotion() in app.js).
 
