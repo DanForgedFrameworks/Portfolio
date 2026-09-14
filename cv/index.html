@@ -17,6 +17,49 @@
     var BACK_ID = 'ff-back-to-portal';
     var fadeInjected = false;
 
+    // Silver glyph rain out to the main site: the same transition the main site
+    // plays on the way in (forge.js). Skipped under reduced motion or with the
+    // site's Motion switch off ('ff-bg-off').
+    function rainTo(href) {
+      var calm = false;
+      try { calm = matchMedia('(prefers-reduced-motion: reduce)').matches || localStorage.getItem('ff-bg-off') === '1'; } catch (e) {}
+      if (calm || !document.body) { window.location.href = href; return; }
+      var ov = document.createElement('div');
+      ov.setAttribute('aria-hidden', 'true');
+      ov.setAttribute('data-ff-rain', '');
+      ov.style.cssText = 'position:fixed;inset:0;z-index:2147483647;background:#1a1a1a;';
+      var cvs = document.createElement('canvas');
+      ov.appendChild(cvs);
+      document.body.appendChild(ov);
+      var ctx = cvs.getContext('2d'), fs = 16;
+      var w = cvs.width = innerWidth, h = cvs.height = innerHeight;
+      var chars = 'FORGEDFRAMEWORKS01∆◊#&=><[]{}|~'.split('');
+      var cols = Math.floor(w / fs), drops = [];
+      for (var i = 0; i < cols; i++) drops.push(Math.random() * h / fs);
+      var raf;
+      function draw() {
+        ctx.fillStyle = 'rgba(26,26,26,0.09)';
+        ctx.fillRect(0, 0, w, h);
+        ctx.font = fs + 'px "JetBrains Mono", monospace';
+        for (var i = 0; i < cols; i++) {
+          ctx.fillStyle = Math.random() > 0.4 ? '#cccccc' : '#ffffff';
+          ctx.fillText(chars[(Math.random() * chars.length) | 0], i * fs, drops[i] * fs);
+          if (drops[i] * fs > h && Math.random() > 0.975) drops[i] = 0;
+          drops[i] += 0.65;
+        }
+        raf = requestAnimationFrame(draw);
+      }
+      raf = requestAnimationFrame(draw);
+      setTimeout(function () { ov.style.transition = 'background 0.35s ease'; ov.style.background = '#fcfbf9'; }, 750);
+      setTimeout(function () { cancelAnimationFrame(raf); window.location.href = href; }, 1050);
+    }
+    // Coming back to the CV with the browser's Back button restores the page from cache with the overlay still up
+    window.addEventListener('pageshow', function (e) {
+      if (!e.persisted) return;
+      var n = document.querySelectorAll('[data-ff-rain]');
+      for (var i = 0; i < n.length; i++) n[i].parentNode.removeChild(n[i]);
+    });
+
     function injectBack() {
       if (!document.body || document.getElementById(BACK_ID)) return;
       var d = document.createElement('div');
@@ -39,8 +82,9 @@
         this.style.boxShadow = '0 4px 18px rgba(0,0,0,0.22)'; arrow.style.transform = 'none';
       });
       btn.addEventListener('click', function () {
+        // 'ff-to-gateway' tells the main site to return the visitor to where they were
         try { sessionStorage.setItem('ff-to-gateway', '1'); } catch (e) {}
-        window.location.href = '../index.html';
+        rainTo('../index.html');
       });
       d.appendChild(btn);
       document.body.appendChild(d);
