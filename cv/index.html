@@ -17,9 +17,11 @@
     var BACK_ID = 'ff-back-to-portal';
     var fadeInjected = false;
 
-    // Silver glyph rain out to the main site: the same transition the main site
-    // plays on the way in (forge.js). Skipped under reduced motion or with the
-    // site's Motion switch off ('ff-bg-off').
+    // Silver glyph rain out to the main site: the same two-beat transition as the
+    // main site's forge.js. Pour: glyphs fill a dark overlay. Drop-off: no new
+    // glyphs start, the ones on screen fall off the bottom while the ground lifts
+    // to paper, then the page loads (hard cap so a throttled tab still navigates).
+    // Skipped under reduced motion or with the site's Motion switch off ('ff-bg-off').
     function rainTo(href) {
       var calm = false;
       try { calm = matchMedia('(prefers-reduced-motion: reduce)').matches || localStorage.getItem('ff-bg-off') === '1'; } catch (e) {}
@@ -36,22 +38,44 @@
       var chars = 'FORGEDFRAMEWORKS01∆◊#&=><[]{}|~'.split('');
       var cols = Math.floor(w / fs), drops = [];
       for (var i = 0; i < cols; i++) drops.push(Math.random() * h / fs);
-      var raf;
+      var raf = 0, falling = false, boost = 0, finished = false;
+      function finish() {
+        if (finished) return;
+        finished = true;
+        cancelAnimationFrame(raf);
+        window.location.href = href;
+      }
       function draw() {
-        ctx.fillStyle = 'rgba(26,26,26,0.09)';
-        ctx.fillRect(0, 0, w, h);
-        ctx.font = fs + 'px "JetBrains Mono", monospace';
-        for (var i = 0; i < cols; i++) {
-          ctx.fillStyle = Math.random() > 0.4 ? '#cccccc' : '#ffffff';
-          ctx.fillText(chars[(Math.random() * chars.length) | 0], i * fs, drops[i] * fs);
-          if (drops[i] * fs > h && Math.random() > 0.975) drops[i] = 0;
-          drops[i] += 0.65;
+        if (falling) {
+          ctx.globalCompositeOperation = 'destination-out';
+          ctx.fillStyle = 'rgba(0,0,0,0.22)';
+          ctx.fillRect(0, 0, w, h);
+          ctx.globalCompositeOperation = 'source-over';
+          boost += 0.3;
+        } else {
+          ctx.fillStyle = 'rgba(26,26,26,0.09)';
+          ctx.fillRect(0, 0, w, h);
         }
+        ctx.font = fs + 'px "JetBrains Mono", monospace';
+        var left = 0;
+        for (var i = 0; i < cols; i++) {
+          if (falling && drops[i] * fs > h + fs) continue;
+          left++;
+          ctx.fillStyle = falling ? (Math.random() > 0.4 ? '#8a939a' : '#5f6e6f') : (Math.random() > 0.4 ? '#cccccc' : '#ffffff');
+          ctx.fillText(chars[(Math.random() * chars.length) | 0], i * fs, drops[i] * fs);
+          if (!falling && drops[i] * fs > h && Math.random() > 0.975) drops[i] = 0;
+          drops[i] += 0.65 + boost;
+        }
+        if (falling && left === 0) { setTimeout(finish, 120); return; }
         raf = requestAnimationFrame(draw);
       }
       raf = requestAnimationFrame(draw);
-      setTimeout(function () { ov.style.transition = 'background 0.35s ease'; ov.style.background = '#fcfbf9'; }, 750);
-      setTimeout(function () { cancelAnimationFrame(raf); window.location.href = href; }, 1050);
+      setTimeout(function () {
+        falling = true;
+        ov.style.transition = 'background 0.4s ease';
+        ov.style.background = '#fcfbf9';
+      }, 700);
+      setTimeout(finish, 1900);
     }
     // Coming back to the CV with the browser's Back button restores the page from cache with the overlay still up
     window.addEventListener('pageshow', function (e) {

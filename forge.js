@@ -277,7 +277,66 @@
     };
   })();
 
-  /* ---------- Silver rain page transitions ---------- */
+  /* ---------- Silver rain page transitions ----------
+     Two beats. Pour: silver glyphs fill a dark overlay. Drop-off: no new
+     glyphs start, the ones on screen accelerate off the bottom while the
+     trails wipe away and the ground lifts to paper; the next page loads
+     once the last column has gone (or at a hard cap, so a throttled tab
+     still navigates). Mirrored in adaptable-cv assets/back-link.html. */
+  var POUR_MS = 700, CAP_MS = 1900;
+  function rainOut(done) {
+    var ov = document.createElement('div');
+    ov.setAttribute('aria-hidden', 'true');
+    ov.setAttribute('data-ff-rain', '');
+    ov.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#1a1a1a;';
+    var cvs = document.createElement('canvas');
+    ov.appendChild(cvs);
+    document.body.appendChild(ov);
+    var ctx = cvs.getContext('2d'), fs = 16;
+    var w = cvs.width = innerWidth, h = cvs.height = innerHeight;
+    var chars = 'FORGEDFRAMEWORKS01∆◊#&=><[]{}|~'.split('');
+    var cols = Math.floor(w / fs);
+    var drops = Array.from({ length: cols }, function () { return Math.random() * h / fs; });
+    var raf = 0, falling = false, boost = 0, finished = false;
+    function finish() {
+      if (finished) return;
+      finished = true;
+      cancelAnimationFrame(raf);
+      done();
+    }
+    function draw() {
+      if (falling) {
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.fillStyle = 'rgba(0,0,0,0.22)';
+        ctx.fillRect(0, 0, w, h);
+        ctx.globalCompositeOperation = 'source-over';
+        boost += 0.3;
+      } else {
+        ctx.fillStyle = 'rgba(26,26,26,0.09)';
+        ctx.fillRect(0, 0, w, h);
+      }
+      ctx.font = fs + 'px "JetBrains Mono", monospace';
+      var left = 0;
+      for (var i = 0; i < cols; i++) {
+        if (falling && drops[i] * fs > h + fs) continue;
+        left++;
+        ctx.fillStyle = falling ? (Math.random() > 0.4 ? '#8a939a' : '#5f6e6f') : (Math.random() > 0.4 ? '#cccccc' : '#ffffff');
+        ctx.fillText(chars[(Math.random() * chars.length) | 0], i * fs, drops[i] * fs);
+        if (!falling && drops[i] * fs > h && Math.random() > 0.975) drops[i] = 0;
+        drops[i] += 0.65 + boost;
+      }
+      if (falling && left === 0) { setTimeout(finish, 120); return; }
+      raf = requestAnimationFrame(draw);
+    }
+    raf = requestAnimationFrame(draw);
+    setTimeout(function () {
+      falling = true;
+      ov.style.transition = 'background 0.4s ease';
+      ov.style.background = '#fcfbf9';
+    }, POUR_MS);
+    setTimeout(finish, CAP_MS);
+  }
+
   var linkPattern = body.getAttribute('data-rain-links');
   if (linkPattern) {
     var re = new RegExp(linkPattern);
@@ -291,37 +350,11 @@
       else if (/(^|\/)index\.html$/.test(href)) store('ff-return-go', '1');
       if (!allowed()) return;
       e.preventDefault();
-      var ov = document.createElement('div');
-      ov.setAttribute('aria-hidden', 'true');
-      ov.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#1a1a1a;';
-      var cvs = document.createElement('canvas');
-      ov.appendChild(cvs);
-      document.body.appendChild(ov);
-      var ctx = cvs.getContext('2d'), fs = 16;
-      var w = cvs.width = innerWidth, h = cvs.height = innerHeight;
-      var chars = 'FORGEDFRAMEWORKS01∆◊#&=><[]{}|~'.split('');
-      var cols = Math.floor(w / fs);
-      var drops = Array.from({ length: cols }, function () { return Math.random() * h / fs; });
-      var raf;
-      function draw() {
-        ctx.fillStyle = 'rgba(26,26,26,0.09)';
-        ctx.fillRect(0, 0, w, h);
-        ctx.font = fs + 'px "JetBrains Mono", monospace';
-        for (var i = 0; i < cols; i++) {
-          ctx.fillStyle = Math.random() > 0.4 ? '#cccccc' : '#ffffff';
-          ctx.fillText(chars[(Math.random() * chars.length) | 0], i * fs, drops[i] * fs);
-          if (drops[i] * fs > h && Math.random() > 0.975) drops[i] = 0;
-          drops[i] += 0.65;
-        }
-        raf = requestAnimationFrame(draw);
-      }
-      raf = requestAnimationFrame(draw);
-      setTimeout(function () { ov.style.transition = 'background 0.35s ease'; ov.style.background = '#fcfbf9'; }, 750);
-      setTimeout(function () { cancelAnimationFrame(raf); location.href = href; }, 1050);
+      rainOut(function () { location.href = href; });
     });
     /* Returning via the back button restores this page from cache with the overlay still up */
     addEventListener('pageshow', function (e) {
-      if (e.persisted) document.querySelectorAll('body > div[aria-hidden="true"]').forEach(function (n) { if (n.querySelector('canvas')) n.remove(); });
+      if (e.persisted) document.querySelectorAll('[data-ff-rain]').forEach(function (n) { n.remove(); });
     });
   }
 
