@@ -278,13 +278,14 @@
   })();
 
   /* ---------- Silver rain page transitions ----------
-     Pour: silver glyph rain fills a dark overlay. Slough: no new glyphs
-     start and the whole curtain of rain slides down off the screen,
-     gathering speed, until the dark ground is clear. Then the next page
-     loads and fades in from that dark (transition.js reads 'ff-rain-in'
-     and forge.css plays the fade). Hard cap so a throttled tab still
-     navigates. Mirrored in adaptable-cv assets/back-link.html. */
-  var POUR_MS = 750, CAP_MS = 2100;
+     Pour: silver glyph rain fills a dark overlay. Rain-off: no new drops
+     start at the top; every column already falling carries on at its own
+     slightly different pace with a gentle pull, its trail fading behind it,
+     so the screen empties column by column the way rain stops. When the last
+     trail has faded the next page loads and fades in from that dark
+     (transition.js reads 'ff-rain-in', forge.css plays the fade). Hard cap so
+     a throttled tab still navigates. Mirrored in adaptable-cv assets/back-link.html. */
+  var POUR_MS = 750, CAP_MS = 3000;
   function rainOut(done) {
     var ov = document.createElement('div');
     ov.setAttribute('aria-hidden', 'true');
@@ -298,7 +299,8 @@
     var chars = 'FORGEDFRAMEWORKS01∆◊#&=><[]{}|~'.split('');
     var cols = Math.floor(w / fs);
     var drops = Array.from({ length: cols }, function () { return Math.random() * h / fs; });
-    var raf = 0, snap = null, offset = 0, speed = 2, finished = false;
+    var speeds = drops.map(function () { return 0.65; });
+    var raf = 0, stopping = false, clearAt = 0, finished = false;
     function finish() {
       if (finished) return;
       finished = true;
@@ -306,40 +308,35 @@
       try { sessionStorage.setItem('ff-rain-in', '1'); } catch (e) {}
       done();
     }
-    function pour() {
-      ctx.fillStyle = 'rgba(26,26,26,0.09)';
+    function frame(t) {
+      /* Trails fade a touch faster once the rain is stopping, so the screen truly clears */
+      ctx.fillStyle = stopping ? 'rgba(26,26,26,0.12)' : 'rgba(26,26,26,0.09)';
       ctx.fillRect(0, 0, w, h);
       ctx.font = fs + 'px "JetBrains Mono", monospace';
+      var falling = 0;
       for (var i = 0; i < cols; i++) {
+        if (drops[i] * fs > h + fs) {
+          if (!stopping && Math.random() > 0.975) drops[i] = 0;
+          else continue;
+        }
+        falling++;
         ctx.fillStyle = Math.random() > 0.4 ? '#cccccc' : '#ffffff';
         ctx.fillText(chars[(Math.random() * chars.length) | 0], i * fs, drops[i] * fs);
-        if (drops[i] * fs > h && Math.random() > 0.975) drops[i] = 0;
-        drops[i] += 0.65;
+        if (stopping) speeds[i] = Math.min(speeds[i] + 0.012, 1.8);
+        drops[i] += speeds[i];
       }
-    }
-    function slough() {
-      ctx.clearRect(0, 0, w, h);
-      ctx.globalAlpha = Math.max(0, 1 - offset / h * 0.6);
-      ctx.drawImage(snap, 0, offset);
-      ctx.globalAlpha = 1;
-      offset += speed;
-      speed *= 1.14;
-      return offset < h;
-    }
-    function frame() {
-      if (snap) {
-        if (!slough()) { setTimeout(finish, 90); return; }
-      } else {
-        pour();
+      if (stopping && falling === 0) {
+        /* Canvas trails never fade to exactly black, so fade the rain layer itself to leave a clean dark ground */
+        if (!clearAt) { clearAt = t + 420; cvs.style.transition = 'opacity 0.4s ease'; cvs.style.opacity = '0'; }
+        else if (t >= clearAt) { finish(); return; }
       }
       raf = requestAnimationFrame(frame);
     }
     raf = requestAnimationFrame(frame);
     setTimeout(function () {
-      /* Freeze the rain as it stands and let the whole curtain fall */
-      snap = document.createElement('canvas');
-      snap.width = w; snap.height = h;
-      snap.getContext('2d').drawImage(cvs, 0, 0);
+      stopping = true;
+      /* Each column keeps its own pace, so they leave at different moments */
+      speeds = speeds.map(function () { return 0.6 + Math.random() * 0.45; });
     }, POUR_MS);
     setTimeout(finish, CAP_MS);
   }

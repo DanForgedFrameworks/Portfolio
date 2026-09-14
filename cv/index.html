@@ -29,9 +29,9 @@
     }
 
     // Silver glyph rain out to the main site, the same transition as the main
-    // site's forge.js rainOut(). Pour: glyphs fill a dark overlay. Slough: no new
-    // glyphs start and the whole curtain slides down off the screen until the
-    // dark ground is clear. Then the main site loads and fades in from that dark
+    // site's forge.js rainOut(). Pour: glyphs fill a dark overlay. Rain-off: no new
+    // drops start; each column already falling carries on at its own pace, its
+    // trail fading, until the dark ground is clear. Then the main site loads and fades in from that dark
     // (it reads 'ff-rain-in'). Hard cap so a throttled tab still navigates.
     // Skipped under reduced motion or with the site's Motion switch off ('ff-bg-off').
     function rainTo(href) {
@@ -50,7 +50,9 @@
       var chars = 'FORGEDFRAMEWORKS01∆◊#&=><[]{}|~'.split('');
       var cols = Math.floor(w / fs), drops = [];
       for (var i = 0; i < cols; i++) drops.push(Math.random() * h / fs);
-      var raf = 0, snap = null, offset = 0, speed = 2, finished = false;
+      var speeds = [];
+      for (var s = 0; s < cols; s++) speeds.push(0.65);
+      var raf = 0, stopping = false, clearAt = 0, finished = false;
       function finish() {
         if (finished) return;
         finished = true;
@@ -58,41 +60,36 @@
         try { sessionStorage.setItem('ff-rain-in', '1'); } catch (e) {}
         window.location.href = href;
       }
-      function pour() {
-        ctx.fillStyle = 'rgba(26,26,26,0.09)';
+      function frame(t) {
+        ctx.fillStyle = stopping ? 'rgba(26,26,26,0.12)' : 'rgba(26,26,26,0.09)';
         ctx.fillRect(0, 0, w, h);
         ctx.font = fs + 'px "JetBrains Mono", monospace';
+        var falling = 0;
         for (var i = 0; i < cols; i++) {
+          if (drops[i] * fs > h + fs) {
+            if (!stopping && Math.random() > 0.975) drops[i] = 0;
+            else continue;
+          }
+          falling++;
           ctx.fillStyle = Math.random() > 0.4 ? '#cccccc' : '#ffffff';
           ctx.fillText(chars[(Math.random() * chars.length) | 0], i * fs, drops[i] * fs);
-          if (drops[i] * fs > h && Math.random() > 0.975) drops[i] = 0;
-          drops[i] += 0.65;
+          if (stopping) speeds[i] = Math.min(speeds[i] + 0.012, 1.8);
+          drops[i] += speeds[i];
         }
-      }
-      function slough() {
-        ctx.clearRect(0, 0, w, h);
-        ctx.globalAlpha = Math.max(0, 1 - offset / h * 0.6);
-        ctx.drawImage(snap, 0, offset);
-        ctx.globalAlpha = 1;
-        offset += speed;
-        speed *= 1.14;
-        return offset < h;
-      }
-      function frame() {
-        if (snap) {
-          if (!slough()) { setTimeout(finish, 90); return; }
-        } else {
-          pour();
+        if (stopping && falling === 0) {
+          // Canvas trails never fade to exactly black, so fade the rain layer itself to leave a clean dark ground
+          if (!clearAt) { clearAt = t + 420; cvs.style.transition = 'opacity 0.4s ease'; cvs.style.opacity = '0'; }
+          else if (t >= clearAt) { finish(); return; }
         }
         raf = requestAnimationFrame(frame);
       }
       raf = requestAnimationFrame(frame);
       setTimeout(function () {
-        snap = document.createElement('canvas');
-        snap.width = w; snap.height = h;
-        snap.getContext('2d').drawImage(cvs, 0, 0);
+        stopping = true;
+        // Each column keeps its own pace, so they leave at different moments
+        for (var k = 0; k < cols; k++) speeds[k] = 0.6 + Math.random() * 0.45;
       }, 750);
-      setTimeout(finish, 2100);
+      setTimeout(finish, 3000);
     }
     // Coming back to the CV with the browser's Back button restores the page from cache with the overlay still up
     window.addEventListener('pageshow', function (e) {
