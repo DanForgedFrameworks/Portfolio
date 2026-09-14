@@ -73,7 +73,7 @@
           falling++;
           ctx.fillStyle = Math.random() > 0.4 ? '#cccccc' : '#ffffff';
           ctx.fillText(chars[(Math.random() * chars.length) | 0], i * fs, drops[i] * fs);
-          if (stopping) speeds[i] = Math.min(speeds[i] + 0.012, 1.8);
+          if (stopping) speeds[i] = Math.min(speeds[i] + 0.0065, 1.25);
           drops[i] += speeds[i];
         }
         if (stopping && falling === 0) {
@@ -87,9 +87,9 @@
       setTimeout(function () {
         stopping = true;
         // Each column keeps its own pace, so they leave at different moments
-        for (var k = 0; k < cols; k++) speeds[k] = 0.6 + Math.random() * 0.45;
+        for (var k = 0; k < cols; k++) speeds[k] = 0.42 + Math.random() * 0.33;
       }, 750);
-      setTimeout(finish, 3000);
+      setTimeout(finish, 4200);
     }
     // Coming back to the CV with the browser's Back button restores the page from cache with the overlay still up
     window.addEventListener('pageshow', function (e) {

@@ -285,7 +285,7 @@
      trail has faded the next page loads and fades in from that dark
      (transition.js reads 'ff-rain-in', forge.css plays the fade). Hard cap so
      a throttled tab still navigates. Mirrored in adaptable-cv assets/back-link.html. */
-  var POUR_MS = 750, CAP_MS = 3000;
+  var POUR_MS = 750, CAP_MS = 4200;
   function rainOut(done) {
     var ov = document.createElement('div');
     ov.setAttribute('aria-hidden', 'true');
@@ -322,7 +322,7 @@
         falling++;
         ctx.fillStyle = Math.random() > 0.4 ? '#cccccc' : '#ffffff';
         ctx.fillText(chars[(Math.random() * chars.length) | 0], i * fs, drops[i] * fs);
-        if (stopping) speeds[i] = Math.min(speeds[i] + 0.012, 1.8);
+        if (stopping) speeds[i] = Math.min(speeds[i] + 0.0065, 1.25);
         drops[i] += speeds[i];
       }
       if (stopping && falling === 0) {
@@ -336,7 +336,7 @@
     setTimeout(function () {
       stopping = true;
       /* Each column keeps its own pace, so they leave at different moments */
-      speeds = speeds.map(function () { return 0.6 + Math.random() * 0.45; });
+      speeds = speeds.map(function () { return 0.42 + Math.random() * 0.33; });
     }, POUR_MS);
     setTimeout(finish, CAP_MS);
   }
