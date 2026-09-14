@@ -20,6 +20,35 @@
   function bgOff() { try { return localStorage.getItem('ff-bg-off') === '1'; } catch (e) { return false; } }
   function allowed() { return !reduce.matches && !bgOff(); }
 
+  /* ---------- Return to where you were ----------
+     Leaving the main site for the CV or the accreditation page records the
+     scroll position. Coming back by a plain link to index.html (the accreditation
+     page's "← Learning design" / brand / footer links, or the CV's back button,
+     which sets 'ff-to-gateway') restores it. A link with a #section still wins.
+     Runs before the reveals prime, so they measure from the restored position. */
+  var RETURN_KEY = 'ff-return';
+  var isSite = !!document.getElementById('forgeLine');
+  function store(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} }
+  function read(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
+  function drop(k) { try { sessionStorage.removeItem(k); } catch (e) {} }
+  if (isSite) {
+    var wantsReturn = read('ff-return-go') === '1' || read('ff-to-gateway') === '1';
+    drop('ff-return-go'); drop('ff-to-gateway');
+    var saved = null;
+    try { saved = JSON.parse(read(RETURN_KEY) || 'null'); } catch (e) {}
+    if (wantsReturn && saved && !location.hash && Date.now() - saved.t < 2 * 60 * 60 * 1000) {
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+      var restore = function () { window.scrollTo({ top: saved.y, left: 0, behavior: 'instant' }); };
+      restore();
+      /* Fonts and late images can shift the page; land again once, unless the visitor has already moved */
+      var moved = false;
+      addEventListener('wheel', function () { moved = true; }, { once: true, passive: true });
+      addEventListener('touchstart', function () { moved = true; }, { once: true, passive: true });
+      addEventListener('keydown', function () { moved = true; }, { once: true });
+      addEventListener('load', function () { if (!moved) restore(); });
+    }
+  }
+
   /* ---------- Matrix rain ---------- */
   var rain = (function () {
     var c = document.getElementById('matrix');
@@ -258,6 +287,8 @@
       var href = a.getAttribute('href') || '';
       if (!re.test(href) || a.target === '_blank') return;
       if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      if (isSite) store(RETURN_KEY, JSON.stringify({ y: Math.round(window.scrollY), t: Date.now() }));
+      else if (/(^|\/)index\.html$/.test(href)) store('ff-return-go', '1');
       if (!allowed()) return;
       e.preventDefault();
       var ov = document.createElement('div');
