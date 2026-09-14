@@ -7,7 +7,7 @@ Follow every step below on **every push**, no exceptions.
 
 ## Wiring  <!-- read before moving or renaming anything -->
 - **Repo / branch:** github.com/DanForgedFrameworks/Portfolio · main  (full facts in *Repo facts* below)
-- **Role:** The Forged Frameworks portfolio site — the "Choose your path" gateway + sub-pages, on GitHub Pages.
+- **Role:** The Forged Frameworks portfolio site — a two-page site (`index.html` main site + `accreditation-quality.html`) plus the standalone `cv/`, on GitHub Pages. The "Choose your path" gateway was retired in Sept 2026.
 - **Skills here:** /push-build — deploys a versioned `github-deploy` bundle (parses *Deploy config* below).  ·  /adaptable-cv — regenerates the standalone `cv/` launcher.
 - **Load-bearing** (never move/rename without updating the skill via /skill-evolve):
   - the `## Deploy config` block below — parsed by /push-build (keep filenames lowercase)
@@ -37,17 +37,17 @@ Follow every step below on **every push**, no exceptions.
 - **Repo root:** `C:\Users\celt_\OneDrive\VLE e-Learning Documents\FFW Portfolio\Forged Frameworks Portfolio\github-deploy`
 - **Bundle source pattern:** a sibling `Forged Frameworks Portfolio <version>\github-deploy` folder
 - **Live URL base:** `https://danforgedframeworks.github.io/Portfolio/`
-- **Entry page:** `index.html` (the "Choose your path" gateway)
+- **Entry page:** `index.html` (the main site: hero terminal, Catalyst, work, about, engagement, contact)
 
 - **Core pages** (must exist at root after deploy):
   - `index.html`
-  - `learning-design.html`
   - `accreditation-quality.html`
+  - `learning-design.html` (redirect stub to `index.html#work`, kept so old links survive)
   - `404.html`
 
-- **Entry-page navigation targets** (gateway must fire each via `FFTransition.fire(...)`; each must exist at root):
-  - `learning-design.html`
+- **Entry-page navigation targets** (linked from `index.html` with the silver-rain transition in `forge.js`; each must exist):
   - `accreditation-quality.html`
+  - `cv/index.html`
 
 - **Known retired / stale filenames** (must NOT appear in deployed *.html / *.js, and must be `git rm`'d if present in the repo):
   - `gateway.html`
@@ -57,23 +57,19 @@ Follow every step below on **every push**, no exceptions.
   - `tweaks-app.jsx`, `tweaks-panel.jsx`
 
 - **Extra QA checks** (mirror anything the bundle's handover doc specifies):
-  - If `index.html` stamps cache-busters, confirm `site.css?v=NNN` and `app.js?v=NNN` were bumped
-  - `transition.js` present at root (drives the gateway page transitions)
-  - **Support link survived the copy** — each of the three pages must count `1`, and `site.css` must
-    still carry the shared rule (the class appears once per selector there, so count it, don't equality-check it):
+  - Both pages stamp cache-busters: confirm `forge.css?v=NNN`, `forge.js?v=NNN`, `transition.js?v=NNN`
+    and `assets/colors_and_type.css?v=NNN` were bumped together in `index.html` and `accreditation-quality.html`
+  - `transition.js` present at root (its `FFBackground` owns the Motion switch; `FFTransition` is no longer used)
+  - `forge.css` and `forge.js` present at root (shared by both pages). `site.css` and `app.js` are no longer
+    loaded by either page; they are kept only until the old layout is confirmed unwanted.
+  - **Support link survived the copy** — both pages must count `1`, and `forge.css` must still carry the rule:
     ```bash
-    grep -c "buymeacoffee.com" index.html learning-design.html accreditation-quality.html
-    grep -q "ff-support__link" site.css && echo "site.css OK" || echo "site.css MISSING"
+    grep -c "buymeacoffee.com" index.html accreditation-quality.html
+    grep -q "ff-support__link" forge.css && echo "forge.css OK" || echo "forge.css MISSING"
     ```
-    The Buy Me a Coffee footer link was authored **directly in the deployed files**, not in a versioned
-    bundle. STEP 3's robocopy overwrites all four wholesale, so any bundle authored before 12 Aug 2026
-    will silently drop it. The shape differs by page:
-    - `index.html` — self-contained: inline `.gw-support` styles after `.gw-footer strong`, markup as
-      the second `<p>` inside `<footer class="gw-footer">`.
-    - `learning-design.html` / `accreditation-quality.html` — share `.ff-support__link` from `site.css`
-      (after the `.footer small` rule), markup as the last child of `.footer__inner`.
-
-    If any count returns `0`, re-add the block and fold it into the bundle source before pushing.
+    The Buy Me a Coffee link sits in each page's footer `.footer__links`, before the Motion button.
+    It is not in the Sept 2026 design handoff, so a rebuild from that handoff will silently drop it.
+    If any count returns `0`, re-add it before pushing.
 
 - **Standalone pages** (NOT part of the versioned bundle — preserve on every deploy, **never `git rm`**):
   - `cv/` — self-contained "Adaptable CV" launcher (a single, fully inlined `index.html`; no external assets). Served at `https://danforgedframeworks.github.io/Portfolio/cv/`. Linked from the gateway via the CV footnote nudge. **Exclude `cv/` from the STEP 2 stale-file diff and never remove it**, even though it will never appear in a versioned `github-deploy` bundle.
@@ -90,7 +86,7 @@ Follow every step below on **every push**, no exceptions.
     > them risks breaking pagination): inline type at 9.5px, 10.5px and 11px on the stats, dates and
     > education lines. Raise those to 11px minimum when the page templates are next touched.
 
-    > ⚠️ **Back-link maintenance:** `cv/index.html` carries a `#ff-back-to-portal` button — the top-right **"← Want to see my full portfolio?"** link + fade-in, injected by a `<head>` window-timer `<script>` placed *before* `<noscript>` (window timers survive the bundle's `documentElement.replaceWith`, so the button lands in the new body after unpack). On click it sets `sessionStorage('ff-to-gateway','1')` and navigates to `../index.html`, triggering the gateway entry-rain on return (paired with the gateway's CV footnote nudge). **The `adaptable-cv` skill re-injects this automatically during every build (`assets/back-link.html` → before `<noscript>`) and strips it from the generated PDFs, so a normal skill deploy already includes it — no separate re-commit needed.** If `cv/index.html` is ever regenerated by some *other* process, the block must be re-added. Verify after every CV update: open `cv/index.html` and confirm the "← Want to see my full portfolio?" button appears top-right once the CV renders.
+    > ⚠️ **Back-link maintenance:** `cv/index.html` carries a `#ff-back-to-portal` button — the top-right **"← Want to see my full portfolio?"** link + fade-in, injected by a `<head>` window-timer `<script>` placed *before* `<noscript>` (window timers survive the bundle's `documentElement.replaceWith`, so the button lands in the new body after unpack). On click it sets `sessionStorage('ff-to-gateway','1')` and navigates to `../index.html`. Since the Sept 2026 rebuild nothing reads that flag (the gateway entry-rain is retired), so it is harmless; the link simply returns to the main site. **The `adaptable-cv` skill re-injects this automatically during every build (`assets/back-link.html` → before `<noscript>`) and strips it from the generated PDFs, so a normal skill deploy already includes it — no separate re-commit needed.** If `cv/index.html` is ever regenerated by some *other* process, the block must be re-added. Verify after every CV update: open `cv/index.html` and confirm the "← Want to see my full portfolio?" button appears top-right once the CV renders.
 
   - `statements/` — the public compliance statements. Self-contained single-file pages (all CSS inlined; the only externals are Google Fonts and `../assets/`). Served at:
     - `statements/accessibility-and-inclusion.html` — **FF-AC-01** Accessibility and Inclusion Statement
@@ -159,15 +155,16 @@ grep -rn "Accreditation-Quality v2" *.html *.js 2>/dev/null | grep -v "README\|H
 ```
 Both must return **no matches** in deployed pages.
 
-#### 4b — Gateway fires correct page targets
+#### 4b — Main site links to its targets
 ```bash
-grep "learning-design\.html\|accreditation-quality\.html" index.html
+grep -c "accreditation-quality\.html" index.html
+grep -c "cv/index\.html" index.html
 ```
-Both filenames must appear in `index.html`.
+Both counts must be at least `1`.
 
-#### 4c — All three core pages exist at root
+#### 4c — Core pages exist at root
 ```bash
-ls index.html learning-design.html accreditation-quality.html 404.html
+ls index.html accreditation-quality.html learning-design.html 404.html forge.css forge.js transition.js
 ```
 
 #### 4d — `.nojekyll` is present (required for GitHub Pages)
@@ -211,10 +208,10 @@ Use the version number from the bundle folder or handover doc in the commit mess
 After a successful push, always report:
 
 1. Exact files changed/added/deleted (from the commit output)
-2. Remind the user to verify these three URLs **in an incognito tab**:
+2. Remind the user to verify these URLs **in an incognito tab**:
    - `https://danforgedframeworks.github.io/Portfolio/`
-   - `https://danforgedframeworks.github.io/Portfolio/learning-design.html`
    - `https://danforgedframeworks.github.io/Portfolio/accreditation-quality.html`
+   - `https://danforgedframeworks.github.io/Portfolio/learning-design.html` (should land on the main site's work section)
 3. Note: GitHub Pages takes ~1 minute to rebuild after a push.
 
 ---
@@ -252,33 +249,31 @@ GitHub Pages on Linux is **case-sensitive**. Always use lowercase filenames:
 
 ---
 
-## Motion & media maintenance (added 13 Sept 2026)
+## Motion maintenance (rewritten for the Sept 2026 two-page site)
 
-**No animated GIFs on this site.** All seven were replaced by muted WebM/MP4 `<video>`. If a GIF
-reappears in any page, it has bypassed the motion system — `videoMotion()` in `app.js` only
-selects `video[data-motion]`.
+`forge.js` owns all motion on both pages: the `#matrix` rain, the hero terminal replay (index only),
+scroll reveals, stage/role highlighting and the silver-rain page transitions. It runs only while
+motion is allowed — `prefers-reduced-motion` is not set **and** the Motion switch is on.
 
-Three rules that are easy to break:
+Rules that are easy to break:
 
-1. **No `autoplay` in the markup.** `videoMotion()` starts playback itself, only when motion is
-   allowed. Adding `autoplay` back means a blocked or slow script leaves video looping with no way
-   to stop it, which fails `prefers-reduced-motion`.
-2. **Every decorative video needs `data-motion`.** That attribute is the whole contract with the
-   motion switch. A video without it is unstoppable.
-3. **Every `<video>` needs `title` or `aria-label`.** Without one it announces as just "video".
+1. **The page must be complete without `forge.js`.** Every section is visible in the markup and the
+   terminal ships as a finished run. The script hides below-the-fold content only at start-up, and
+   restores it the moment motion is switched off. Never hide content in CSS.
+2. **Heading words are `<span class="w" aria-hidden="true">` with the full sentence in the heading's
+   `aria-label`.** No whitespace between the spans; the gap comes from `margin-right`.
+3. **Terminal copy lives in the `#forgeScript` JSON block** in `index.html`, and the static finished
+   run above it must match its last 14 lines.
 
-The motion control is delegated on `data-bg-toggle` (`transition.js`) and must exist on all three
-pages — it governs `#matrix` and every `video[data-motion]`:
+The Motion button is in each page's footer and must carry `data-bg-toggle`:
 
 ```bash
-grep -c "data-bg-toggle" index.html accreditation-quality.html learning-design.html   # 1 1 1
+grep -c "data-bg-toggle" index.html accreditation-quality.html   # 1 1
 ```
-
-Placement differs by page, deliberately: `learning-design.html` uses `.bg-fab` plus the in-drawer
-`.nav__bg` for touch; `accreditation-quality.html` uses `.bg-fab--solo` (stays visible on touch,
-no drawer to fall back to); `index.html` uses its own inline `.gw-motion` because the gateway does
-not load `site.css`.
 
 The label is set by `FFBackground.paint()` in `transition.js`, **not** by the page. It reads
 "◍ Motion: on/off". The `localStorage` key is still `ff-bg-off` and the root class still
 `.ff-bg-off` — do not rename either, it would reset every visitor's saved preference.
+
+The WebM/MP4 animations, walkthrough videos and Codex previews from the old `learning-design.html`
+are still in `assets/` and `patterns/`; the new pages do not embed them.

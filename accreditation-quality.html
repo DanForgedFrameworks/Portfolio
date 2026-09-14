@@ -3,661 +3,256 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Accreditation &amp; quality — Daniel 'Wig' Boyland</title>
-<meta name="description" content="The technical CV behind Forged Frameworks: more than a decade in ISO 15189, 17025 and 17043 environments — UKAS assessment, training and QMS governance, plus NHS biomedical science roles." />
+<title>Accreditation and quality · Forged Frameworks · Daniel 'Wig' Boyland</title>
+<meta name="description" content="The assessor in the room: 14 years in NHS pathology and a decade assessing and training to ISO 15189, 17025 and 17043 at UKAS, and how that shapes Forged Frameworks' learning design." />
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-<link rel="stylesheet" href="assets/colors_and_type.css?v=245" />
-<link rel="stylesheet" href="site.css?v=246" />
-<style>
-  /* ---- Secret accreditation page — local layer over site.css ---- */
-  .secret-tag {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-family: var(--font-mono); font-size: var(--fs-sm);
-    color: var(--ff-copper-hot); letter-spacing: var(--ls-wide);
-    border: 1px solid var(--ff-copper-wash); background: var(--ff-copper-wash);
-    padding: 5px 14px; border-radius: var(--radius-pill); margin: 0 0 var(--space-4);
-  }
-  .acc-hero { padding: clamp(64px, 11vh, 132px) 0 clamp(40px, 6vw, 80px); }
-  .acc-hero__back { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: var(--fs-sm); color: var(--ff-ink-muted); text-decoration: none; margin-bottom: var(--space-6); }
-  .acc-hero__back:hover { color: var(--ff-copper-hot); }
-  .acc-hero__stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-5); margin-top: clamp(32px, 5vw, 56px); }
-  @media (max-width: 760px) { .acc-hero__stats { grid-template-columns: 1fr 1fr; } }
-  .acc-stat__num { font-family: var(--font-sans); font-weight: var(--fw-bold); font-size: clamp(2rem, 4vw, 3rem); color: var(--ff-copper-hot); line-height: 1; }
-  .acc-stat__label { color: var(--ff-ink-muted); font-size: var(--fs-base); margin-top: var(--space-2); line-height: 1.4; }
-  .band--ink .acc-stat__label { color: #aeb9c2; }
-
-  /* standards rail */
-  .iso-rail { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-5); }
-  .iso-pill { font-family: var(--font-mono); font-size: var(--fs-base); font-weight: var(--fw-bold); color: var(--ff-ink); background: var(--color-surface); border: 1px solid var(--ff-paper-edge); border-left: 4px solid var(--ff-copper); border-radius: var(--radius-sm); padding: 12px 18px; line-height: 1.3; }
-  .iso-pill small { display: block; font-family: var(--font-sans); font-weight: var(--fw-regular); font-size: var(--fs-sm); color: var(--ff-ink-muted); margin-top: 3px; }
-
-  /* card recipe */
-  .acc-card { background: var(--color-surface); border: 1px solid var(--ff-paper-edge); border-radius: var(--radius-md); padding: clamp(24px, 3vw, 32px); box-shadow: var(--ff-shadow-card); }
-  .acc-card h3 { display: flex; align-items: center; gap: 10px; margin: 0 0 var(--space-4); padding-bottom: var(--space-3); border-bottom: 1px solid var(--ff-paper-rule); }
-  .acc-card h3 svg { width: 22px; height: 22px; stroke-width: 2; color: var(--ff-copper); flex: none; }
-
-  /* timeline */
-  .tl { position: relative; margin-top: var(--space-6); padding-left: 0; list-style: none; }
-  .tl__group { font-family: var(--font-mono); font-size: var(--fs-sm); letter-spacing: var(--ls-wide); color: var(--ff-copper-hot); margin: var(--space-6) 0 var(--space-4); }
-  .tl__group:first-child { margin-top: 0; }
-  .tl__item { position: relative; padding: 0 0 var(--space-6) clamp(28px, 4vw, 44px); border-left: 2px solid var(--ff-paper-rule); margin-left: 6px; }
-  .tl__item:last-child { padding-bottom: 0; border-left-color: transparent; }
-  .tl__item::before { content: ""; position: absolute; left: -8px; top: 4px; width: 14px; height: 14px; border-radius: 50%; background: var(--ff-copper); box-shadow: 0 0 0 4px var(--ff-paper); }
-  .band--ink .tl__item { border-left-color: rgba(255,255,255,0.14); }
-  .band--ink .tl__item::before { box-shadow: 0 0 0 4px var(--ff-ink); }
-  .tl__when { font-family: var(--font-mono); font-size: var(--fs-sm); color: var(--ff-ink-muted); }
-  .band--ink .tl__when { color: #9fb0bd; }
-  .tl__role { font-family: var(--font-sans); font-weight: var(--fw-bold); font-size: var(--fs-lg); margin: 4px 0 2px; }
-  .tl__org { color: var(--ff-copper-hot); font-weight: var(--fw-medium); font-size: var(--fs-base); }
-  .tl__points { list-style: none; margin: var(--space-3) 0 0; padding: 0; display: grid; gap: 8px; }
-  .tl__points li { position: relative; padding-left: 20px; line-height: 1.5; font-size: var(--fs-base); }
-  .tl__points li::before { content: "›"; position: absolute; left: 2px; color: var(--ff-copper); font-weight: var(--fw-bold); }
-
-  /* recommendations grid */
-  .rec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); margin-top: var(--space-6); }
-  @media (max-width: 820px) { .rec-grid { grid-template-columns: 1fr; } }
-  .rec { background: var(--color-surface); border: 1px solid var(--ff-paper-edge); border-left: 4px solid var(--ff-copper); border-radius: var(--radius-md); padding: clamp(22px, 2.6vw, 30px); box-shadow: var(--ff-shadow-card); display: flex; flex-direction: column; align-items: flex-start; }
-  .rec__tag { display: inline-block; font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: .03em; color: var(--ff-copper-hot); background: var(--ff-copper-wash); border-radius: var(--radius-pill); padding: 3px 12px; margin-bottom: var(--space-4); }
-  .rec p { color: var(--ff-ink); font-size: var(--fs-base); line-height: 1.6; margin: 0; }
-  .rec__who { margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--ff-paper-rule); }
-  .rec__who strong { color: var(--ff-ink); display: block; }
-  .rec__who span { display: block; color: var(--ff-ink-muted); font-size: var(--fs-sm); }
-  .rec__who a { color: inherit; text-decoration: none; }
-  .rec__who a:hover strong { color: var(--ff-copper-hot); }
-
-  /* Reveal: visible by default — entrance fade is enhancement-only (see JS), never hides content */
-  .reveal { opacity: 1; transform: none; }
-
-  /* credentials */
-  .cred-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); }
-  @media (max-width: 680px) { .cred-grid { grid-template-columns: 1fr; } }
-
-  /* nav tidy for this page (no mobile menu logic here) */
-  .nav__links a { white-space: nowrap; }
-  @media (max-width: 600px) { .nav__links a:not(.nav__cta):not(.nav__cross-link) { display: none; } }
-  /* Cross-link nav button — navy blue, distinct from copper CTA */
-  .nav__cross-link {
-    background: #2c3e50 !important;
-    color: #fff !important;
-    border-radius: 5px;
-    padding: 7px 14px !important;
-    font-weight: 700 !important;
-    font-size: var(--fs-sm) !important;
-    white-space: nowrap;
-    transition: background 0.2s ease !important;
-  }
-  .nav__cross-link:hover { background: #3a5068 !important; color: #fff !important; }
-  .nav__gateway-link {
-    font-family: var(--font-mono) !important;
-    font-size: 0.72rem !important;
-    color: var(--ff-ink-muted) !important;
-    letter-spacing: 0.04em;
-  }
-  .nav__gateway-link:hover { color: var(--ff-ink) !important; background: none !important; }
-
-  /* ---- ISO page reveal: slow cascade, hold, then words rain off to expose ---- */
-  /* iso-intro: hidden by default, shown only on gateway entry */
-  #iso-intro { position: fixed; inset: 0; z-index: 9999; overflow: hidden; transition: opacity 0.6s ease; cursor: pointer; display: none; }
-  .ff-portal-entry-iso #iso-intro { display: block; }
-  #iso-intro__bg { position: absolute; inset: 0; background: #121a22; transition: opacity 1.1s ease; }
-  #iso-intro__bg canvas { display: block; width: 100%; height: 100%; }
-  #iso-intro.is-raining #iso-intro__bg { opacity: 0; }
-  #iso-intro__words { position: absolute; inset: 0; pointer-events: none; }
-  .iso-word { position: absolute; transform: translate(-50%, -50%) scale(0.9); font-family: var(--font-mono); letter-spacing: var(--ls-wide); white-space: nowrap; color: #9fb4c7; opacity: 0; transition: opacity 0.6s ease, transform 0.6s ease; text-shadow: 0 0 18px rgba(90,120,145,0.45); }
-  .iso-word.is-in { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-  .iso-word.is-out { transition: transform 1.15s cubic-bezier(0.5, 0, 0.9, 0.45), opacity 1.15s ease-in; transform: translate(-50%, 125vh) scale(1); opacity: 0; }
-  .iso-word--std { color: #d7e3ec; font-weight: 700; font-size: clamp(1rem, 2.6vw, 1.7rem); text-shadow: 0 0 24px rgba(190,212,230,0.65); }
-  .iso-word--dom { font-size: clamp(0.8rem, 1.7vw, 1.15rem); }
-  #iso-intro__skip { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: var(--ls-wide); color: rgba(190,212,230,0.55); opacity: 0; transition: opacity 0.5s ease; pointer-events: none; }
-  #iso-intro.is-hint #iso-intro__skip { opacity: 1; }
-  #iso-intro.is-done { opacity: 0; pointer-events: none; }
-  @media (prefers-reduced-motion: reduce) { #iso-intro { display: none !important; } }
-  @media (max-width: 640px) { .iso-word--dom { font-size: 0.76rem; } .iso-word--std { font-size: 1rem; } }
-</style>
+<link rel="stylesheet" href="assets/colors_and_type.css?v=250" />
+<link rel="stylesheet" href="forge.css?v=250" />
+<script src="transition.js?v=250"></script>
 </head>
-<body>
-<script>
-/* Check for gateway entry BEFORE any paint */
-(function () {
-  if (sessionStorage.getItem('ff-portal-dest') === 'iso') {
-    document.documentElement.classList.add('ff-portal-entry-iso');
-    sessionStorage.removeItem('ff-portal-dest');
-  }
-}());
-</script>
-<div id="iso-intro" aria-hidden="true"><div id="iso-intro__bg"><canvas id="iso-intro-canvas"></canvas></div><div id="iso-intro__words"></div><div id="iso-intro__skip">tap to skip</div></div>
+<body data-rain-glyphs="ISO15189170251704301∆◊#&amp;=&gt;&lt;[]{}|~" data-rain-heat="#2c3e50" data-rain-links="(^|/)(cv/index\.html|index\.html)(#.*)?$">
+<a class="skip-link" href="#main">Skip to content</a>
 <canvas id="matrix" aria-hidden="true"></canvas>
-<a class="skip-link" href="#acc-main">Skip to content</a>
+<div class="page">
 
-<!-- ===================== NAV ===================== -->
-<header class="nav">
-  <div class="wrap-wide nav__inner">
-    <a class="brand" href="index.html" aria-label="Forged Frameworks — home">
-      <svg viewBox="0 0 100 132" aria-hidden="true">
-        <path d="M30 14 L74 14 Q80 14 80 20 L80 40 Q80 46 74 46 L30 46 L12 30 Z" fill="#bc6c3c"/>
-        <rect x="45" y="46" width="10" height="46" fill="#2c3e50"/>
-        <rect x="40" y="90" width="20" height="9" rx="2" fill="#2c3e50"/>
-        <path d="M40 99 L60 99 L51 128 Z" fill="#2c3e50"/>
-        <line x1="50" y1="103" x2="50" y2="118" stroke="#bc6c3c" stroke-width="1.6"/>
-        <circle cx="50" cy="112" r="2.6" fill="#fcfbf9"/>
-      </svg>
-      <span class="brand__name">Forged Frameworks<small>Accreditation &amp; Quality</small></span>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img src="assets/forge-mark.png" alt="" width="36" height="36" />
+      <span class="brand__text"><strong>Forged Frameworks</strong><span>Accreditation and quality</span></span>
     </a>
-    <nav class="nav__links" aria-label="Primary">
-      <a href="learning-design.html" class="nav__cross-link">Learning design &rarr;</a>
-      <a href="index.html" class="nav__gateway-link">&larr; Portfolio gateway</a>
-      <a href="#contact-iso" class="nav__cta">Let's work together</a>
+    <nav class="nav" aria-label="Primary">
+      <a href="#ethos">Ethos</a>
+      <a href="#standards">Standards</a>
+      <a href="#roles">Roles</a>
+      <a href="#reviews">Recommendations</a>
+      <a href="index.html">← Learning design</a>
+      <a class="btn btn--primary" href="mailto:dan.boyland@forgedframeworks.co.uk">Email me</a>
     </nav>
   </div>
 </header>
 
-<main id="acc-main">
+<main id="main" tabindex="-1">
 
-<!-- ===================== WELCOME ===================== -->
-<section class="band" id="acc-top" data-screen-label="Welcome — Accreditation &amp; Quality" style="padding-top:clamp(72px,12vh,110px); padding-bottom:clamp(36px,5vh,56px);">
-  <div class="wrap">
-    <p class="kicker reveal"><i data-lucide="flask-conical"></i>Quality &amp; accreditation &middot; forged in the laboratory</p>
-    <h1 class="h-display reveal" style="margin-top:var(--space-4);">Daniel <span class="accent">'Wig'</span> Boyland</h1>
-    <p class="reveal" style="margin-top:var(--space-3); font-size:var(--fs-base); color:var(--ff-ink-muted); font-family:var(--font-mono);">UKAS Technical Assessor &nbsp;&middot;&nbsp; ISO Training Manager &nbsp;&middot;&nbsp; NHS Biomedical Scientist</p>
-    <p class="lead reveal" style="margin-top:var(--space-5); max-width:62ch;">From the bench to the assessment team &mdash; more than a decade forging quality, compliance and competence across ISO-accredited environments. The technical foundation behind everything Forged Frameworks builds.</p>
-    <div class="reveal" style="margin-top:var(--space-5); display:flex; gap:var(--space-4); flex-wrap:wrap;">
-      <a class="btn btn--primary" href="#iso-expertise">Explore the background</a>
-      <a class="btn btn--ghost" href="#contact-iso">Let's work together</a>
+<section class="wrap hero" data-screen-label="Hero">
+  <div class="hero__copy">
+    <p class="eyebrow" data-reveal>Quality and accreditation · forged in the laboratory</p>
+    <h1 class="h-hero" aria-label="The assessor in the room."><span class="w" aria-hidden="true">The</span><span class="w" aria-hidden="true">assessor</span><br><span class="w" aria-hidden="true">in</span><span class="w" aria-hidden="true">the</span><span class="w acc" aria-hidden="true">room.</span></h1>
+    <p class="mono muted" data-reveal style="font-size:14px;">UKAS technical assessor · ISO training manager · NHS biomedical scientist</p>
+    <p class="lead" data-reveal>Fourteen years in NHS pathology, then a decade assessing and training to ISO standards at UKAS. That is where the habits came from: evidence before opinion, competence you can demonstrate, and documentation someone else can audit. Every module Forged Frameworks builds is held to the same bar.</p>
+    <div class="btn-row" data-reveal>
+      <a class="btn btn--primary btn--md" href="#ethos">How it shapes the practice</a>
+      <a class="btn btn--outline btn--md" href="cv/index.html">Read the CV</a>
     </div>
-    <div class="acc-hero__stats reveal" style="margin-top:clamp(28px,4vw,44px);">
-      <div><div class="acc-stat__num">10+</div><div class="acc-stat__label">years in ISO 15189 / 17025 / 17043 environments</div></div>
-      <div><div class="acc-stat__num">70+</div><div class="acc-stat__label">ISO assessments conducted, onsite &amp; remote</div></div>
-      <div><div class="acc-stat__num">650+</div><div class="acc-stat__label">training days delivered per year at UKAS</div></div>
-      <div><div class="acc-stat__num">3</div><div class="acc-stat__label">ISO standards trained, assessed &amp; implemented</div></div>
-    </div>
+  </div>
+  <div class="hero-stats" data-reveal>
+    <div class="card card--top"><span class="num__n">10+</span><span class="num__l">years in ISO 15189, 17025 and 17043 environments</span></div>
+    <div class="card card--top"><span class="num__n">70+</span><span class="num__l">ISO assessments conducted, on site and remote</span></div>
+    <div class="card card--top"><span class="num__n">650+</span><span class="num__l">training days a year delivered at UKAS</span></div>
+    <div class="card card--top"><span class="num__n">14</span><span class="num__l">years in NHS pathology, from MLA to acting manager</span></div>
   </div>
 </section>
 
-<section class="band band--warm" id="iso-expertise">
-  <div class="wrap">
-    <p class="kicker reveal"><i data-lucide="shield-check"></i>ISO, quality &amp; technical expertise</p>
-    <h2 class="h2 reveal">The standards I work to</h2>
-    <div class="iso-rail reveal">
-      <span class="iso-pill">ISO 15189<small>Medical laboratories</small></span>
-      <span class="iso-pill">ISO 17025<small>Testing &amp; calibration</small></span>
-      <span class="iso-pill">ISO 17043<small>Proficiency testing</small></span>
-    </div>
-    <div class="grid grid-3" style="margin-top:var(--space-6);">
-      <div class="acc-card reveal">
-        <h3><i data-lucide="clipboard-check"></i>Assessment &amp; accreditation</h3>
-        <ul class="ticks">
-          <li>Technical assessment of Medical Laboratories, Clinical, testing, calibration and proficiency laboratories</li>
-          <li>Assessment planning, scoping and assessor competency oversight</li>
-          <li>Evidence validation, data integrity and competency assurance</li>
-          <li>Supporting organisations through accreditation, audit readiness and evidence reviews</li>
-        </ul>
+<section id="ethos" class="band--warm" data-screen-label="Ethos">
+  <div class="wrap sec stack" style="gap:32px;">
+    <div class="split" style="align-items:end;">
+      <div class="stack" style="gap:14px;">
+        <p class="eyebrow">How the background shapes the practice</p>
+        <h2 class="h-md" aria-label="The lab taught the ethos. The learning design inherited it."><span class="w" aria-hidden="true">The</span><span class="w" aria-hidden="true">lab</span><span class="w" aria-hidden="true">taught</span><span class="w" aria-hidden="true">the</span><span class="w" aria-hidden="true">ethos.</span><br><span class="w acc" aria-hidden="true">The</span><span class="w acc" aria-hidden="true">learning</span><span class="w acc" aria-hidden="true">design</span><span class="w acc" aria-hidden="true">inherited</span><span class="w acc" aria-hidden="true">it.</span></h2>
       </div>
-      <div class="acc-card reveal">
-        <h3><i data-lucide="folder-cog"></i>QMS governance</h3>
-        <ul class="ticks">
-          <li>Quality Management System assessment of IMS and LIMS platforms</li>
-          <li>Document and Record controls, Internal Audit and Change Management</li>
-          <li>Corrective, Preventive and Risk management (CAPA / risk registers)</li>
-          <li>EQA / IQA monitoring and corrective-action review cycles</li>
-          <li>Audit readiness and continual-improvement frameworks</li>
-          <li>Q Pulse &amp; iPassport quality platforms</li>
-        </ul>
+      <p class="body" data-reveal style="max-width:48ch;">Each strand of the quality career maps directly onto how learning is designed, built and signed off today. Left, what the years taught. Right, what it looks like in a module.</p>
+    </div>
+    <div class="stack" style="gap:12px;">
+        <div class="ethos-row" data-reveal>
+          <div><span class="card__k">ISO assessment · 70+ laboratories</span><strong>Evidence before opinion</strong></div>
+          <div><span class="mono muted" style="font-size:12px;">In practice</span><p>Every module carries pre- and post-assessment data, not just satisfaction scores. If a claim about learning gain cannot be shown, it is not made. The Asbestos ITM was measured this way from cohort one.</p></div>
+        </div>
+        <div class="ethos-row" data-reveal>
+          <div><span class="card__k">Competency frameworks · 150 staff, 8 sections</span><strong>Competence has to be demonstrable</strong></div>
+          <div><span class="mono muted" style="font-size:12px;">In practice</span><p>Learning outcomes are written so an assessor could observe them. Knowledge checks map to apprenticeship KSBs and RQF outcomes, and every session states what the learner can now do.</p></div>
+        </div>
+        <div class="ethos-row" data-reveal>
+          <div><span class="card__k">QMS governance · document and change control</span><strong>If it is not documented, it did not happen</strong></div>
+          <div><span class="mono muted" style="font-size:12px;">In practice</span><p>Catalyst logs every stage, every QA finding and every repair. Codex blocks ship version-controlled with change logs. A reviewer can trace any line of content back to its source document.</p></div>
+        </div>
+        <div class="ethos-row" data-reveal>
+          <div><span class="card__k">Training 650 days a year · clinicians, calibration engineers, forensic scientists</span><strong>Expertise is not the same as clarity</strong></div>
+          <div><span class="mono muted" style="font-size:12px;">In practice</span><p>Subject experts stay in charge of substance; the design carries the load of structure, pacing and plain language. Dyslexia-friendly type, sentence case and transcripts are defaults, not options.</p></div>
+        </div>
+        <div class="ethos-row" data-reveal>
+          <div><span class="card__k">Root-cause analysis · CAPA · continual improvement</span><strong>Fix the system, not the symptom</strong></div>
+          <div><span class="mono muted" style="font-size:12px;">In practice</span><p>When a module underperforms, the pipeline or template is corrected so the next twenty modules inherit the fix. Lessons-learnt logs feed back into the specs, the same way audit findings feed a QMS.</p></div>
+        </div>
+    </div>
+    <div class="card card--top head-row" data-reveal style="flex-direction:row;align-items:center;">
+      <div class="stack" style="gap:4px;">
+        <strong style="font-size:18px;">Current role: digital learning designer and learning technologist</strong>
+        <span class="muted" style="font-size:14px;">Founder, Forged Frameworks · agentic AI authoring pipelines, bespoke HTML learning blocks, WCAG 2.2 and EN 301 549 consultancy</span>
       </div>
-      <div class="acc-card reveal">
-        <h3><i data-lucide="graduation-cap"></i>Technical training</h3>
-        <ul class="ticks">
-          <li>Designed &amp; delivered training for ISO 15189, 17025 and 17043</li>
-          <li>IQA, IQC, EQA, Metrological Traceability and Measurement Uncertainty</li>
-          <li>Verification &amp; Validation, Competency and Authorisation frameworks</li>
-          <li>Internal Audit, Laboratory Management and Root Cause Analysis</li>
-          <li>(L)IMS training across blended, live and digital delivery formats</li>
-          <li>Coaching, mentoring and assessor capability development</li>
-          <li>Commercial training delivery and client-facing consultancy</li>
-        </ul>
-      </div>
+      <a class="btn btn--primary btn--sm" href="index.html">See the learning design work →</a>
     </div>
   </div>
 </section>
 
-<!-- ===================== EXPERIENCE TIMELINE ===================== -->
-<section class="band">
-  <div class="wrap">
-    <p class="kicker reveal"><i data-lucide="milestone"></i>Accreditation experience</p>
-    <h2 class="h2 reveal">From the bench to the assessment team</h2>
-    <p class="lead reveal" style="margin-top:var(--space-3); max-width:60ch;">Selected roles from the UKAS and NHS Wales years — the technical, assessment and quality work behind the learning design.</p>
-
-    <ul class="tl reveal" style="margin-top:var(--space-7);">
-      <li class="tl__group">UKAS · United Kingdom Accreditation Service · 2017–2024</li>
-
-      <li class="tl__item">
-        <p class="tl__when">Feb 2022 – Sept 2024</p>
-        <p class="tl__role">Senior Training Manager <span class="tl__org">· UKAS Training Academy</span></p>
-        <ul class="tl__points">
-          <li>Delivered training on ISO 15189, 17025 and 17043 to clinical, testing and calibration laboratories</li>
-          <li>Facilitated more than 650 training days annually across digital, live and blended formats</li>
-          <li>Worked with assessors and technical experts to ensure accuracy and regulatory alignment</li>
-        </ul>
-      </li>
-
-      <li class="tl__item">
-        <p class="tl__when">Jan 2020 – Feb 2022</p>
-        <p class="tl__role">Training Manager <span class="tl__org">· UKAS Training Academy</span></p>
-        <ul class="tl__points">
-          <li>Developed structured learning materials for ISO and clinical competency</li>
-          <li>Delivered blended and virtual training sessions</li>
-          <li>Supported assessor-workforce capability, documentation and digital delivery</li>
-        </ul>
-      </li>
-
-      <li class="tl__item">
-        <p class="tl__when">July 2018 – Jan 2020</p>
-        <p class="tl__role">Assessment Manager <span class="tl__org">· UKAS Healthcare &amp; Medical Laboratories</span></p>
-        <ul class="tl__points">
-          <li>Managed assessment planning for clinical and diagnostic laboratories</li>
-          <li>Oversaw assessor competency, evidence reviews and governance processes</li>
-          <li>Supported organisations preparing for ISO 15189 and 17025 accreditation</li>
-        </ul>
-      </li>
-
-      <li class="tl__item">
-        <p class="tl__when">2017 – 2024 · dual role</p>
-        <p class="tl__role">Independent Technical Assessor &amp; Quality Specialist <span class="tl__org">· UKAS</span></p>
-        <ul class="tl__points">
-          <li>Conducted technical assessments of laboratories</li>
-          <li>Guided audit preparation, competence frameworks and process improvement</li>
-          <li>Delivered technical training, coaching and evidence validation</li>
-        </ul>
-      </li>
-
-      <li class="tl__group">NHS Wales · Biomedical &amp; managerial roles · 2007–2018</li>
-
-      <li class="tl__item">
-        <p class="tl__when">2016 – 2018</p>
-        <p class="tl__role">Acting Automated Haematology Senior <span class="tl__org">· NHS Wales</span></p>
-        <ul class="tl__points">
-          <li>Led the transition to CPA and ISO 15189 compliance</li>
-          <li>Oversaw EQA, IQA, document control and competency validation</li>
-        </ul>
-      </li>
-
-      <li class="tl__item">
-        <p class="tl__when">2015 – 2016</p>
-        <p class="tl__role">Acting Haemoglobinopathy Diagnostic Service Manager <span class="tl__org">· NHS Wales</span></p>
-        <ul class="tl__points">
-          <li>Managed diagnostic workflows and Wales-wide screening processes</li>
-          <li>Introduced new diagnostic algorithms and operational improvements</li>
-        </ul>
-      </li>
-
-      <li class="tl__item">
-        <p class="tl__when">2009 – 2015</p>
-        <p class="tl__role">Specialist Biomedical Scientist <span class="tl__org">· NHS Wales</span></p>
-        <ul class="tl__points">
-          <li>Technical validation in transfusion, morphology and coagulation</li>
-          <li>Led EQA participation, corrective-action monitoring and mentoring</li>
-        </ul>
-      </li>
-    </ul>
-  </div>
-</section>
-
-<!-- ===================== KEY ACHIEVEMENTS ===================== -->
-<section class="band band--ink">
-  <div class="wrap">
-    <p class="kicker reveal"><i data-lucide="award"></i>ISO, assessment &amp; quality</p>
-    <h2 class="h2 reveal">Key achievements</h2>
-    <div class="acc-hero__stats" style="margin-top:var(--space-6);">
-      <div class="reveal"><div class="acc-stat__num">70+</div><div class="acc-stat__label">ISO 15189 &amp; 17025 assessments, onsite and remote</div></div>
-      <div class="reveal"><div class="acc-stat__num">3</div><div class="acc-stat__label">ISO standards designed and delivered as technical training</div></div>
-      <div class="reveal"><div class="acc-stat__num">650+</div><div class="acc-stat__label">training days facilitated annually across formats</div></div>
-      <div class="reveal"><div class="acc-stat__num">11</div><div class="acc-stat__label">years across NHS &amp; UKAS quality environments</div></div>
+<section id="standards" class="band--ink" data-screen-label="Standards">
+  <div class="wrap sec stack" style="gap:32px;">
+    <div class="split" style="align-items:end;">
+      <h2 class="h-md" aria-label="The standards the work is held to."><span class="w" aria-hidden="true">The</span><span class="w" aria-hidden="true">standards</span><span class="w" aria-hidden="true">the</span><span class="w" aria-hidden="true">work</span><span class="w" aria-hidden="true">is</span><span class="w" aria-hidden="true">held</span><span class="w acc" aria-hidden="true">to.</span></h2>
+      <div class="pills" data-reveal><div class="pill"><strong>ISO 15189</strong><span>Medical laboratories</span></div><div class="pill"><strong>ISO 17025</strong><span>Testing and calibration</span></div><div class="pill"><strong>ISO 17043</strong><span>Proficiency testing</span></div></div>
     </div>
-    <p class="lead reveal" style="margin-top:var(--space-6); max-width:64ch; color:#c4cdd4;">Supported organisations preparing for accreditation, audit readiness and evidence reviews — pairing technical credibility with evidence-led design and a steady focus on quality, clarity and confidence.</p>
-  </div>
-</section>
-
-<!-- ===================== CREDENTIALS ===================== -->
-<section class="band band--warm">
-  <div class="wrap">
-    <p class="kicker reveal"><i data-lucide="scroll-text"></i>Education &amp; professional development</p>
-    <h2 class="h2 reveal">Credentials</h2>
-    <div class="cred-grid" style="margin-top:var(--space-6);">
-      <div class="acc-card reveal">
-        <h3><i data-lucide="graduation-cap"></i>Academic</h3>
-        <ul class="ticks">
-          <li>MSc Biomedical Sciences (Immunohaematology) — Merit</li>
-          <li>BSc (Hons) Biomedical Sciences — First Class</li>
-        </ul>
-      </div>
-      <div class="acc-card reveal">
-        <h3><i data-lucide="badge-check"></i>Professional &amp; technical</h3>
-        <ul class="ticks">
-          <li>ISO 15189, 17025 and 17043 Assessor Training</li>
-          <li>IBMS Certificate of Expert Practice in Training</li>
-          <li>TAP Diploma in Learning Design</li>
-          <li>CPD: ISO 15189 Implementation, Accessibility, Universal Design, AI in Learning Design</li>
-        </ul>
-      </div>
+    <div class="cards cards--280">
+      <div class="card card--ink expertise" data-reveal><h3>Assessment and accreditation</h3><ul><li>Technical assessment of medical, clinical, testing, calibration and proficiency laboratories</li><li>Assessment planning, scoping and assessor competency oversight</li><li>Evidence validation, data integrity and competency assurance</li><li>Supporting organisations through accreditation, audit readiness and evidence reviews</li><li>International accreditation bodies: Saudi Arabia, Ukraine, Netherlands</li></ul></div>
+      <div class="card card--ink expertise" data-reveal><h3>QMS governance</h3><ul><li>Quality management system assessment of IMS and LIMS platforms</li><li>Document and record control, internal audit, change management</li><li>CAPA and risk registers</li><li>EQA and IQA monitoring and corrective-action cycles</li><li>Q-Pulse, iPassport and Ideagen platforms</li></ul></div>
+      <div class="card card--ink expertise" data-reveal><h3>Technical training</h3><ul><li>Designed and delivered ISO 15189, 17025 and 17043 training</li><li>IQA, IQC, EQA, metrological traceability and measurement uncertainty</li><li>Verification and validation, competency and authorisation frameworks</li><li>Internal audit, laboratory management and root-cause analysis</li><li>Coaching, mentoring and assessor capability development</li></ul></div>
     </div>
   </div>
 </section>
 
-<!-- ===================== UKAS RECOMMENDATIONS ===================== -->
-<section class="band band--ink">
-  <div class="wrap">
-    <p class="kicker reveal"><i data-lucide="quote"></i>Recommendations · UKAS &amp; NHS colleagues</p>
-    <h2 class="h2 reveal">What the accreditation world says</h2>
-    <p class="lead reveal" style="margin-top:var(--space-3); max-width:62ch; color:#c4cdd4;">Independent endorsements from fellow assessment managers, technical assessors and laboratory clients across UKAS and the NHS — first-hand testimony to the quality, accreditation &amp; QMS standards behind every build. Each one is reproduced verbatim from LinkedIn.</p>
+<section id="roles" class="wrap sec split" data-screen-label="Roles" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(28px,5vw,80px);">
+  <div class="sticky-col">
+    <p class="eyebrow">Accreditation experience</p>
+    <h2 class="h-xl" aria-label="From the bench to the assessment team."><span class="w" aria-hidden="true">From</span><span class="w" aria-hidden="true">the</span><span class="w" aria-hidden="true">bench</span><br><span class="w" aria-hidden="true">to</span><span class="w" aria-hidden="true">the</span><span class="w" aria-hidden="true">assessment</span><span class="w acc" aria-hidden="true">team.</span></h2>
+    <p class="body-lg" data-reveal style="max-width:44ch;">Selected roles from the UKAS and NHS Wales years. The technical, assessment and quality work behind the learning design.</p>
+    <img class="role-photo" data-reveal src="assets/me-ukas.jpg" alt="Daniel 'Wig' Boyland" loading="lazy" />
+  </div>
+  <ol class="steps">
+      <li class="step" data-stage>
+        <div class="step__meta"><span style="color:var(--ff-copper-hot);">UKAS Training Academy</span><span class="muted">Feb 2022 – Sept 2024</span></div>
+        <h3 style="margin-top:8px;">Senior training manager</h3>
+        <ul style="margin-top:8px;"><li>Delivered ISO 15189, 17025 and 17043 training to clinical, testing and calibration laboratories</li><li>Facilitated more than 650 training days a year across digital, live and blended formats</li><li>Managed trainers, budgets and external resource; drove digital transformation</li></ul>
+      </li>
+      <li class="step" data-stage>
+        <div class="step__meta"><span style="color:var(--ff-copper-hot);">UKAS Training Academy</span><span class="muted">Feb 2020 – Feb 2022</span></div>
+        <h3 style="margin-top:8px;">Training manager</h3>
+        <ul style="margin-top:8px;"><li>Moved the full UKAS Academy portfolio to virtual delivery during COVID</li><li>Developed healthcare content: measurement uncertainty, PoCT, proficiency testing, ISO 19011 audit</li><li>Supported assessor-workforce competency, documentation and digital delivery</li></ul>
+      </li>
+      <li class="step" data-stage>
+        <div class="step__meta"><span style="color:var(--ff-copper-hot);">UKAS Healthcare</span><span class="muted">July 2018 – Feb 2020</span></div>
+        <h3 style="margin-top:8px;">Assessment manager, medical laboratories</h3>
+        <ul style="margin-top:8px;"><li>Planned and led ISO 15189 assessments for clinical and diagnostic laboratories, including pan-pathology teams</li><li>Oversaw assessor competency, evidence review and governance</li><li>Supported organisations preparing for ISO 15189 and 17025 accreditation</li></ul>
+      </li>
+      <li class="step" data-stage>
+        <div class="step__meta"><span style="color:var(--ff-copper-hot);">UKAS · parallel thread</span><span class="muted">Nov 2017 – 2024</span></div>
+        <h3 style="margin-top:8px;">Technical assessor and quality specialist</h3>
+        <ul style="margin-top:8px;"><li>70+ technical assessments across healthcare, proficiency testing, forensics and calibration</li><li>Advised on competence frameworks, audit preparation and process improvement; led data-integrity checks</li><li>Supported international accreditation bodies</li></ul>
+      </li>
+      <li class="step" data-stage>
+        <div class="step__meta"><span style="color:var(--ff-copper-hot);">NHS Wales · Cardiff and Vale UHB</span><span class="muted">Dec 2016 – Jul 2018</span></div>
+        <h3 style="margin-top:8px;">Acting automated haematology senior</h3>
+        <ul style="margin-top:8px;"><li>Training remit for ~150 staff across 8 laboratory sections; chaired a 9-lead training team</li><li>Led the CPA to ISO 15189 transition and test verification (FBC, ESR, IM, MAST)</li></ul>
+      </li>
+      <li class="step" data-stage>
+        <div class="step__meta"><span style="color:var(--ff-copper-hot);">NHS Wales</span><span class="muted">May 2015 – Jun 2016</span></div>
+        <h3 style="margin-top:8px;">Acting haemoglobinopathy diagnostic service manager</h3>
+        <ul style="margin-top:8px;"><li>Wales-wide screening for 4 of 7 health boards</li><li>Redesigned sickle cell and thalassaemia antenatal screening: ~6 hours saved per patient contact, ~£42k a year saved via a new algorithm</li></ul>
+      </li>
+      <li class="step" data-stage>
+        <div class="step__meta"><span style="color:var(--ff-copper-hot);">NHS Wales</span><span class="muted">2004 – 2015</span></div>
+        <h3 style="margin-top:8px;">Biomedical scientist, from medical laboratory assistant</h3>
+        <ul style="margin-top:8px;"><li>Transfusion, morphology and coagulation validation</li><li>EQA participation, corrective-action monitoring and mentoring</li><li>Comparative study of the Yumizen H500 for paediatric PoCT, presented at ISLH</li></ul>
+      </li>
+  </ol>
+</section>
 
-    <div class="rec-grid">
-      <figure class="rec reveal">
-        <span class="rec__tag">UKAS &amp; quality management</span>
-        <p>We worked together at UKAS as fellow assessment managers for several years. Dan is a great communicator and motivator with a solid background in Pathology and Quality Management. A brilliant team player who is always at the forefront of discussion, innovation and an enthusiastic advocate of effective quality improvement. Able to work well with personnel at all levels with a skill for tailored communication style and building effective rapport.</p>
-        <figcaption class="rec__who"><strong>Gary Bateman</strong><span>Scientific Laboratory Manager, University Hospitals of Leicester NHS Trust · former UKAS Assessment Manager</span></figcaption>
-      </figure>
-
-      <figure class="rec reveal">
-        <span class="rec__tag">Accreditation &amp; training</span>
-        <p>I'm very fortunate to have worked with Dan as both a Technical Assessor and a Training Specialist. Whatever he does, he gives his all! Fast thinking and an eye for detail. Whatever Dan chooses to do he will succeed due to his grit, determination, professionalism and his developmental approach. I thoroughly enjoy working with you Dan.</p>
-        <figcaption class="rec__who"><strong>Rachel Boyer-Blanchard CDLP</strong><span>Senior Commercial Training Specialist, UKAS</span></figcaption>
-      </figure>
-
-      <figure class="rec reveal">
-        <span class="rec__tag">QMS client</span>
-        <p>Dan is very knowledgeable, highly professional and personable. I found him extremely supportive in the growth of our quality management system and a positive influence in the strive for continual improvement. Highly recommended.</p>
-        <figcaption class="rec__who"><strong>Katie Berger</strong><span>Chief Healthcare Scientist &amp; Pathology Practice Educator, University Hospitals of North Midlands NHS Trust · client</span></figcaption>
-      </figure>
-
-      <figure class="rec reveal">
-        <span class="rec__tag">UKAS &amp; pathology</span>
-        <p>Dan is the consummate professional. His technical and subject-matter knowledge of haematology and blood transfusion is second to none. He provides a fair, honest and thorough assessment to his customers without compromising UKAS neutrality. I have worked with Dan on numerous occasions and never found him to be lacking in his professional knowledge whatsoever. On a personal level Dan is a generous, kind-hearted man with a great sense of humour.</p>
-        <figcaption class="rec__who"><strong>Victoria Fereday Brown</strong><span>Head of Pathology, Phlebotomy &amp; POCT, South London &amp; Maudsley NHS FT</span></figcaption>
-      </figure>
-
-      <figure class="rec reveal">
-        <span class="rec__tag">Quality improvement</span>
-        <p>I've been fortunate enough to have worked alongside Dan for the last couple of years because not only does Dan bring a real depth and breadth of technical knowledge to our team, he has an uncompromising drive to continually improve not only his own performance, but that of the organisation we work in and the medical labs he works with in accreditation. He has time for, and engages with, all colleagues whilst being an excellent motivator and team player.</p>
-        <figcaption class="rec__who"><strong>Gavin Dickinson</strong><span>Quality &amp; Improvement Manager</span></figcaption>
-      </figure>
-
-      <figure class="rec reveal">
-        <span class="rec__tag">Accreditation</span>
-        <p>Dan was a great colleague to work with, enthusiastic and involves himself wholeheartedly in his roles and responsibilities. He considers elements of a challenge which are not the most obvious, but produces more effective solutions. This level of critical thinking and self-awareness are rare traits and Dan has these in regular use.</p>
-        <figcaption class="rec__who"><strong>Ryan Cooper</strong><span>Point of Care Testing Programme Lead</span></figcaption>
-      </figure>
-
-      <figure class="rec reveal">
-        <span class="rec__tag">Accreditation</span>
-        <p>I have only worked with Daniel for a short period of time, but he is a pleasure to work with. He is knowledgeable, hard working, approachable, helpful and a great communicator. He is definitely not one to back down from a challenge, and he will always put a great deal of enthusiasm into everything that he does.</p>
-        <figcaption class="rec__who"><strong>Emma Palmer</strong><span>Customer Liaison Officer, UKAS</span></figcaption>
-      </figure>
-
-      <figure class="rec reveal">
-        <span class="rec__tag">Accreditation</span>
-        <p>Dan is very efficient, always striving to improve efficiencies and support others in their role. Dan is someone I can approach with any work-related or personal endeavours and know I can move forward with the advice. Strong team member, great communication, self-motivated with strong leadership skills.</p>
-        <figcaption class="rec__who"><strong>Nathan Saghdaoui</strong><span>Customer Liaison Officer, UKAS</span></figcaption>
-      </figure>
-
-      <figure class="rec reveal">
-        <span class="rec__tag">Accreditation</span>
-        <p>Dan is dedicated, enthusiastic, knowledgeable and will work tirelessly to get the job done.</p>
-        <figcaption class="rec__who"><strong>Kristel Smith</strong><span>Accreditation Specialist Development</span></figcaption>
-      </figure>
-
-      <figure class="rec reveal">
-        <span class="rec__tag">Pathology</span>
-        <p>Fantastic trainer. Great assessment manager. Nice bloke.</p>
-        <figcaption class="rec__who"><strong>Christopher Kettle</strong><span>Operational Manager, NovoPath &amp; NEHODS, Newcastle upon Tyne Hospitals NHS FT</span></figcaption>
-      </figure>
-    </div>
-
+<section class="band--warm" data-screen-label="Credentials">
+  <div class="wrap sec--sm grid cards--280" style="gap:clamp(24px,4vw,48px);align-items:start;">
+    <h2 class="h-lg" aria-label="Credentials and registrations."><span class="w" aria-hidden="true">Credentials</span><span class="w acc" aria-hidden="true">and</span><span class="w acc" aria-hidden="true">registrations.</span></h2>
+    <div class="card card--top cred" data-reveal style="padding:20px;"><strong style="font-size:16px;">Academic</strong><ul><li>MSc Biomedical Sciences (Immunohaematology), Merit · Cardiff Metropolitan, 2016</li><li>BSc (Hons) Biomedical Sciences, First Class · Cardiff Metropolitan, 2007</li><li>BSc Biology, 2:1 · Portsmouth, 2003</li></ul></div>
+    <div class="card card--top cred" data-reveal style="padding:20px;"><strong style="font-size:16px;">Professional and technical</strong><ul><li>UKAS Technical and Lead Assessor: ISO 15189, 22870, 17043</li><li>IBMS Certificate of Expert Practice in Training (2017)</li><li>IBMS Specialist Diploma in Haematology and Transfusion (2010)</li><li>TAP Diploma in Learning Design (2021)</li></ul></div>
+    <div class="card card--top cred" data-reveal style="padding:20px;"><strong style="font-size:16px;">Registrations</strong><ul><li>HCPC registered Biomedical Scientist</li><li>Chartered Scientist (CSci)</li><li>IBMS Full Member</li></ul></div>
   </div>
 </section>
 
-<!-- ===================== CONTACT ===================== -->
-<section id="contact-iso" class="band band--warm">
-  <div class="wrap" style="max-width:680px;">
-    <p class="kicker reveal"><i data-lucide="mail"></i>Get in touch</p>
-    <h2 class="h2 reveal">Let's work together</h2>
-    <p class="lead reveal" style="margin-top:var(--space-4); max-width:58ch;">Whether you need technical training design, accreditation consultancy, ISO quality-system support, or regulated-sector eLearning &mdash; get in touch directly.</p>
-    <div class="reveal" style="margin-top:var(--space-6); display:flex; flex-direction:column; align-items:flex-start; gap:var(--space-4);">
-      <a href="mailto:dan.boyland@forgedframeworks.co.uk" class="btn btn--primary">dan.boyland@forgedframeworks.co.uk</a>
-      <p style="color:var(--ff-ink-muted); font-size:var(--fs-sm); margin:0;">
-        Also on <a href="https://www.linkedin.com/in/danielboyland/" target="_blank" rel="noopener" style="color:var(--ff-copper-hot); font-weight:700;">LinkedIn</a>
-        &nbsp;&middot;&nbsp;
-        <a href="learning-design.html" class="ld-cross-link" style="color:var(--ff-copper-hot); font-weight:700;">View learning design portfolio &rarr;</a>
-      </p>
+<section id="reviews" class="band--ink" data-screen-label="Recommendations">
+  <div class="wrap sec stack" style="gap:28px;">
+    <div class="stack" style="gap:14px;max-width:64ch;">
+      <p class="eyebrow">Recommendations · UKAS and NHS colleagues</p>
+      <h2 class="h-md" aria-label="What the accreditation world says."><span class="w" aria-hidden="true">What</span><span class="w" aria-hidden="true">the</span><span class="w" aria-hidden="true">accreditation</span><span class="w" aria-hidden="true">world</span><span class="w acc" aria-hidden="true">says.</span></h2>
+      <p class="body on-ink-text" data-reveal>Fellow assessment managers, technical assessors and laboratory clients across UKAS and the NHS. Each one reproduced verbatim from LinkedIn.</p>
+    </div>
+    <div class="cards cards--300">
+        <figure class="card card--ink card--top quote" data-reveal>
+          <span class="card__k">UKAS and quality management</span>
+          <blockquote>We worked together at UKAS as fellow assessment managers for several years. Dan is a great communicator and motivator with a solid background in Pathology and Quality Management. A brilliant team player who is always at the forefront of discussion, innovation and an enthusiastic advocate of effective quality improvement. Able to work well with personnel at all levels with a skill for tailored communication style and building effective rapport.</blockquote>
+          <figcaption><strong>Gary Bateman</strong><span>Scientific Laboratory Manager, University Hospitals of Leicester NHS Trust · former UKAS Assessment Manager</span></figcaption>
+        </figure>
+        <figure class="card card--ink card--top quote" data-reveal>
+          <span class="card__k">Accreditation and training</span>
+          <blockquote>I'm very fortunate to have worked with Dan as both a Technical Assessor and a Training Specialist. Whatever he does, he gives his all! Fast thinking and an eye for detail. Whatever Dan chooses to do he will succeed due to his grit, determination, professionalism and his developmental approach. I thoroughly enjoy working with you Dan.</blockquote>
+          <figcaption><strong>Rachel Boyer-Blanchard CDLP</strong><span>Senior Commercial Training Specialist, UKAS</span></figcaption>
+        </figure>
+        <figure class="card card--ink card--top quote" data-reveal>
+          <span class="card__k">QMS client</span>
+          <blockquote>Dan is very knowledgeable, highly professional and personable. I found him extremely supportive in the growth of our quality management system and a positive influence in the strive for continual improvement. Highly recommended.</blockquote>
+          <figcaption><strong>Katie Berger</strong><span>Chief Healthcare Scientist and Pathology Practice Educator, University Hospitals of North Midlands NHS Trust · client</span></figcaption>
+        </figure>
+        <figure class="card card--ink card--top quote" data-reveal>
+          <span class="card__k">UKAS and pathology</span>
+          <blockquote>Dan is the consummate professional. His technical and subject-matter knowledge of haematology and blood transfusion is second to none. He provides a fair, honest and thorough assessment to his customers without compromising UKAS neutrality. I have worked with Dan on numerous occasions and never found him to be lacking in his professional knowledge whatsoever. On a personal level Dan is a generous, kind-hearted man with a great sense of humour.</blockquote>
+          <figcaption><strong>Victoria Fereday Brown</strong><span>Head of Pathology, Phlebotomy and POCT, South London and Maudsley NHS FT</span></figcaption>
+        </figure>
+        <figure class="card card--ink card--top quote" data-reveal>
+          <span class="card__k">Quality improvement</span>
+          <blockquote>I've been fortunate enough to have worked alongside Dan for the last couple of years because not only does Dan bring a real depth and breadth of technical knowledge to our team, he has an uncompromising drive to continually improve not only his own performance, but that of the organisation we work in and the medical labs he works with in accreditation. He has time for, and engages with, all colleagues whilst being an excellent motivator and team player.</blockquote>
+          <figcaption><strong>Gavin Dickinson</strong><span>Quality and Improvement Manager</span></figcaption>
+        </figure>
+        <figure class="card card--ink card--top quote" data-reveal>
+          <span class="card__k">Accreditation</span>
+          <blockquote>Dan was a great colleague to work with, enthusiastic and involves himself wholeheartedly in his roles and responsibilities. He considers elements of a challenge which are not the most obvious, but produces more effective solutions. This level of critical thinking and self-awareness are rare traits and Dan has these in regular use.</blockquote>
+          <figcaption><strong>Ryan Cooper</strong><span>Point of Care Testing Programme Lead</span></figcaption>
+        </figure>
+        <figure class="card card--ink card--top quote" data-reveal>
+          <span class="card__k">Accreditation</span>
+          <blockquote>I have only worked with Daniel for a short period of time, but he is a pleasure to work with. He is knowledgeable, hard working, approachable, helpful and a great communicator. He is definitely not one to back down from a challenge, and he will always put a great deal of enthusiasm into everything that he does.</blockquote>
+          <figcaption><strong>Emma Palmer</strong><span>Customer Liaison Officer, UKAS</span></figcaption>
+        </figure>
+        <figure class="card card--ink card--top quote" data-reveal>
+          <span class="card__k">Accreditation</span>
+          <blockquote>Dan is very efficient, always striving to improve efficiencies and support others in their role. Dan is someone I can approach with any work-related or personal endeavours and know I can move forward with the advice. Strong team member, great communication, self-motivated with strong leadership skills.</blockquote>
+          <figcaption><strong>Nathan Saghdaoui</strong><span>Customer Liaison Officer, UKAS</span></figcaption>
+        </figure>
+        <figure class="card card--ink card--top quote" data-reveal>
+          <span class="card__k">Accreditation</span>
+          <blockquote>Dan is dedicated, enthusiastic, knowledgeable and will work tirelessly to get the job done.</blockquote>
+          <figcaption><strong>Kristel Smith</strong><span>Accreditation Specialist Development</span></figcaption>
+        </figure>
+        <figure class="card card--ink card--top quote" data-reveal>
+          <span class="card__k">Pathology</span>
+          <blockquote>Fantastic trainer. Great assessment manager. Nice bloke.</blockquote>
+          <figcaption><strong>Christopher Kettle</strong><span>Operational Manager, NovoPath and NEHODS, Newcastle upon Tyne Hospitals NHS FT</span></figcaption>
+        </figure>
     </div>
   </div>
 </section>
 
-<!-- ===================== CTA ===================== -->
-<section class="band">
-  <div class="wrap" style="text-align:center;">
-    <h2 class="h2 reveal">Built on a decade of quality foundations</h2>
-    <p class="lead reveal" style="margin:var(--space-4) auto 0; max-width:54ch;">Regulated, scientific and technical training &mdash; built by someone who has been the assessor in the room.</p>
-    <p class="reveal" style="margin-top:var(--space-6); display:flex; gap:var(--space-4); justify-content:center; flex-wrap:wrap;">
-      <a class="btn btn--primary" href="#contact-iso">Get in touch</a>
-      <a class="btn btn--ghost ld-cross-link" href="learning-design.html">Learning design &rarr;</a>
-    </p>
+<section id="contact" class="wrap contact" data-screen-label="Contact" style="padding-top:clamp(64px,9vw,130px);padding-bottom:clamp(64px,9vw,130px);">
+  <div class="stack" style="gap:18px;">
+    <h2 class="h-cta" aria-label="Built by someone who has been the assessor in the room."><span class="w" aria-hidden="true">Built</span><span class="w" aria-hidden="true">by</span><span class="w" aria-hidden="true">someone</span><span class="w" aria-hidden="true">who</span><span class="w" aria-hidden="true">has</span><span class="w" aria-hidden="true">been</span><br><span class="w acc" aria-hidden="true">the</span><span class="w acc" aria-hidden="true">assessor</span><span class="w acc" aria-hidden="true">in</span><span class="w acc" aria-hidden="true">the</span><span class="w acc" aria-hidden="true">room.</span></h2>
+    <p class="body-lg" data-reveal style="max-width:50ch;">Technical training design, accreditation consultancy, ISO quality-system support, or regulated-sector eLearning. A short email is enough.</p>
+  </div>
+  <div class="contact__links" data-reveal>
+    <a class="btn btn--primary btn--lg" href="mailto:dan.boyland@forgedframeworks.co.uk">Email me</a>
+    <a class="contact__email" href="mailto:dan.boyland@forgedframeworks.co.uk">dan.boyland@forgedframeworks.co.uk</a>
+    <a class="contact__plain" href="https://www.linkedin.com/in/daniel-boyland-577b6476/" target="_blank" rel="noopener">LinkedIn ↗</a>
+    <a class="link-strong" href="index.html#work" style="font-size:15px;">The learning design portfolio →</a>
   </div>
 </section>
 
 </main>
 
-<!-- ===================== FOOTER ===================== -->
-<footer class="footer">
-  <div class="wrap-wide footer__inner">
-    <a class="brand" href="index.html" aria-label="Forged Frameworks — home">
-      <svg viewBox="0 0 100 132" aria-hidden="true">
-        <path d="M30 14 L74 14 Q80 14 80 20 L80 40 Q80 46 74 46 L30 46 L12 30 Z" fill="#bc6c3c"/>
-        <rect x="45" y="46" width="10" height="46" fill="#2c3e50"/>
-        <rect x="40" y="90" width="20" height="9" rx="2" fill="#2c3e50"/>
-        <path d="M40 99 L60 99 L51 128 Z" fill="#2c3e50"/>
-      </svg>
-      <span class="brand__name">Forged Frameworks<small>Forging Learning</small></span>
-    </a>
-    <small>© <span id="year"></span> Daniel 'Wig' Boyland · Cwmbran, S. Wales · <a href="mailto:dan.boyland@forgedframeworks.co.uk">dan.boyland@forgedframeworks.co.uk</a></small>
-    <a class="ff-support__link"
-       href="https://buymeacoffee.com/iYo8k7Sc88"
-       target="_blank" rel="noopener noreferrer"
-       aria-label="Buy me a coffee — opens in a new tab">
-      <svg class="ff-support__cup" viewBox="0 0 24 24" width="20" height="20" fill="none"
-           stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M4 9h12v5a6 6 0 0 1-12 0V9Z"/>
-        <path d="M16 10.5h1.5a2.5 2.5 0 0 1 0 5H16"/>
-        <path d="M3 21h14"/>
-        <path d="M8 2.5c-.8 1-.8 2 0 3"/>
-        <path d="M12 2.5c-.8 1-.8 2 0 3"/>
-      </svg>
-      Buy me a coffee
-    </a>
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© Forged Frameworks · Daniel 'Wig' Boyland · Cwmbran, South Wales</span>
+    <div class="footer__links">
+      <a href="index.html">Forged Frameworks</a>
+      <a href="cv/index.html">CV</a>
+      <a class="ff-support__link" href="https://buymeacoffee.com/iYo8k7Sc88" target="_blank" rel="noopener noreferrer" aria-label="Buy me a coffee (opens in a new tab)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h12v5a6 6 0 0 1-12 0V9Z"/><path d="M16 10.5h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M7 3.5c0 1 .8 1.2.8 2.2M10.5 3.5c0 1 .8 1.2.8 2.2"/></svg>Buy me a coffee</a>
+      <button class="motion-btn" type="button" data-bg-toggle aria-pressed="false">◍ Motion: on</button>
+    </div>
   </div>
 </footer>
 
-<!-- Motion control. Delegated by data-bg-toggle (transition.js); label and
-     aria-pressed are set by FFBackground on paint. --solo keeps it visible on
-     touch, since this page has no burger drawer to host the .nav__bg variant. -->
-<button class="bg-fab bg-fab--solo" type="button" data-bg-toggle aria-pressed="false" title="Turn page motion on or off — the forge-rain background">◍ Motion: on</button>
-
-
-<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
-<script src="https://unpkg.com/lucide@0.544.0/dist/umd/lucide.min.js"></script>
-<script>
-  // Lucide icons
-  if (window.lucide) lucide.createIcons();
-</script>
-<script src="transition.js?v=243"></script>
-<script>
-/* Cross-page transitions — play the shared CHOICE / word-rain (same as the gateway portal cards) */
-(function () {
-  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  /* Learning design cross-links → LD word-rain */
-  document.querySelectorAll('a.ld-cross-link, a.nav__cross-link[href="learning-design.html"]').forEach(function (a) {
-    a.addEventListener('click', function (e) {
-      if (reduce) return;            /* let the browser navigate normally */
-      e.preventDefault();
-      FFTransition.fire('ld', 'learning-design.html');
-    });
-  });
-
-  /* Portfolio gateway links — gateway plays its own cleansing entry rain */
-  document.querySelectorAll('a[href="index.html"]').forEach(function (a) {
-    a.addEventListener('click', function (e) {
-      e.preventDefault();
-      sessionStorage.setItem('ff-to-gateway', '1');
-      window.location.href = 'index.html';
-    });
-  });
-}());
-</script>
-
-<script>
-  // Reveal-on-scroll — mirror the main site (IO, post-paint) + safety net
-  (function () {
-    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var reveals = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
-    if (!('IntersectionObserver' in window) || reduce) {
-      reveals.forEach(function (el) { el.classList.add('in'); });
-      return;
-    }
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-    reveals.forEach(function (el) { io.observe(el); });
-    // Safety net: if anything is still hidden after 2s (e.g. IO never delivered), show it.
-    setTimeout(function () {
-      document.querySelectorAll('.reveal:not(.in)').forEach(function (el) {
-        if (el.getBoundingClientRect().top < (window.innerHeight || 800)) el.classList.add('in');
-      });
-    }, 2000);
-  })();
-
-  // Matrix forge-rain — signature ambient texture (copper glyphs, 10% opacity)
-  (function () {
-    var canvas = document.getElementById('matrix');
-    if (!canvas) return;
-    var ctx = canvas.getContext('2d');
-    var chars = 'FORGEDFRAMEWORKS01アイ15189170251704{}<>/'.split('');
-    var fontSize = 16, cols, drops;
-    function resize() {
-      canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-      cols = Math.floor(canvas.width / fontSize);
-      drops = []; for (var i = 0; i < cols; i++) drops[i] = Math.random() * canvas.height / fontSize;
-    }
-    resize();
-    window.addEventListener('resize', resize);
-    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    function draw() {
-      ctx.fillStyle = 'rgba(252,251,249,0.08)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#bc6c3c';
-      ctx.font = fontSize + 'px monospace';
-      for (var i = 0; i < drops.length; i++) {
-        var ch = chars[Math.floor(Math.random() * chars.length)];
-        ctx.fillText(ch, i * fontSize, drops[i] * fontSize);
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-        drops[i] += 0.45;
-      }
-    }
-    /* Start/stop-able so the site-wide background off-switch (FFBackground in
-       transition.js) actually halts the work instead of just hiding the canvas.
-       The stored key is read directly so this does not depend on script order. */
-    function bgOff() {
-      try { return localStorage.getItem('ff-bg-off') === '1'; } catch (e) { return false; }
-    }
-    var timer = null;
-    function start() { if (!timer && !reduce) timer = setInterval(draw, 64); }
-    function stop() { if (timer) { clearInterval(timer); timer = null; } }
-    if (!bgOff()) start();
-    window.addEventListener('ff-bg-change', function (e) {
-      if (e && e.detail && e.detail.off) stop(); else start();
-    });
-  })();
-
-  // ISO page reveal — only fires when arriving from the gateway portal
-  (function () {
-    var intro = document.getElementById('iso-intro');
-    if (!intro) return;
-    // Not a gateway entry — skip entirely
-    if (!document.documentElement.classList.contains('ff-portal-entry-iso')) return;
-    function size(){ w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; cols = Math.floor(w / fs); drops = []; for (var i = 0; i < cols; i++) drops[i] = Math.random() * -40; }
-    function kill(){ if (intro && intro.parentNode) intro.parentNode.removeChild(intro); document.documentElement.style.overflow = ''; window.removeEventListener('resize', size); }
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { kill(); return; }
-    var canvas = document.getElementById('iso-intro-canvas');
-    var ctx = canvas && canvas.getContext('2d');
-    if (!ctx) { kill(); return; }
-
-    var WORDS = [
-      ['ISO 15189', 19, 15, 'std'],
-      ['QMS', 72, 12, 'dom'],
-      ['Medical Laboratories', 48, 25, 'dom'],
-      ['ISO 17025', 29, 35, 'std'],
-      ['Clinical', 79, 31, 'dom'],
-      ['NHS', 12, 44, 'dom'],
-      ['Validation', 57, 45, 'dom'],
-      ['ISO 17043', 84, 54, 'std'],
-      ['Risk', 21, 58, 'dom'],
-      ['Measurement Uncertainty', 50, 64, 'dom'],
-      ['Verification', 80, 70, 'dom'],
-      ['Haematology', 17, 73, 'dom'],
-      ['Change', 43, 80, 'dom'],
-      ['Blood Transfusion', 63, 84, 'dom'],
-      ['Haemostasis', 27, 90, 'dom']
-    ];
-    var wrap = document.getElementById('iso-intro__words'), els = [];
-    var IN_BASE = 260, IN_STAGGER = 150, IN_FADE = 600;
-    if (wrap) WORDS.forEach(function (wd, i) {
-      var el = document.createElement('span');
-      el.className = 'iso-word iso-word--' + wd[3];
-      el.textContent = wd[0];
-      el.style.left = wd[1] + '%';
-      el.style.top = wd[2] + '%';
-      wrap.appendChild(el); els.push(el);
-      setTimeout(function () { el.classList.add('is-in'); }, IN_BASE + i * IN_STAGGER);
-    });
-
-    var allIn = IN_BASE + (WORDS.length - 1) * IN_STAGGER + IN_FADE;
-    var HOLD = 3000, OUT_STAGGER = 95, OUT_DUR = 1150;
-    var exiting = false, finished = false, raf;
-
-    function beginExit(){
-      if (exiting || finished) return; exiting = true;
-      intro.classList.remove('is-hint');
-      intro.classList.add('is-raining');               // ink + glyphs fade -> page appears
-      els.forEach(function (el, i) { setTimeout(function () { el.classList.add('is-out'); }, i * OUT_STAGGER); }); // words rain off
-      setTimeout(finish, (els.length - 1) * OUT_STAGGER + OUT_DUR + 200);
-    }
-    function finish(){ if (finished) return; finished = true; if (raf) cancelAnimationFrame(raf); intro.classList.add('is-done'); document.documentElement.style.overflow = ''; setTimeout(kill, 650); }
-
-    setTimeout(function(){ if (!exiting) intro.classList.add('is-hint'); }, allIn + 250);
-    intro.addEventListener('click', function(){ exiting ? finish() : beginExit(); });
-    setTimeout(beginExit, allIn + HOLD);                // natural: hold ~3s, then rain off
-
-    var glyphs = 'FORGEDFRAMEWORKS0123456789ISO151891702517043{}<>/#%='.split('');
-    var fs = 20, cols, drops, w, h;
-    size(); window.addEventListener('resize', size);
-    document.documentElement.style.overflow = 'hidden';
-    function draw(){
-      try {
-        ctx.fillStyle = 'rgba(18,26,34,0.10)'; ctx.fillRect(0, 0, w, h);
-        ctx.font = '700 ' + fs + "px 'JetBrains Mono', ui-monospace, monospace";
-        for (var i = 0; i < drops.length; i++) {
-          var x = i * fs, y = drops[i] * fs;
-          ctx.fillStyle = '#9fb4c7'; ctx.fillText(glyphs[Math.floor(Math.random() * glyphs.length)], x, y);
-          ctx.fillStyle = '#5b7488'; ctx.fillText(glyphs[Math.floor(Math.random() * glyphs.length)], x, y - fs);
-          if (y > h && Math.random() > 0.975) drops[i] = Math.random() * -16;
-          drops[i] += 0.5;
-        }
-        if (!finished) raf = requestAnimationFrame(draw);
-      } catch (e) { finish(); }
-    }
-    raf = requestAnimationFrame(draw);
-    setTimeout(finish, allIn + HOLD + (WORDS.length * OUT_STAGGER) + OUT_DUR + 1400); // hard safety
-  })();
-</script>
+</div>
+<script src="forge.js?v=250"></script>
 </body>
 </html>

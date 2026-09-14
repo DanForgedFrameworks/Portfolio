@@ -3,583 +3,434 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Choose your path — Forged Frameworks · Daniel 'Wig' Boyland</title>
-<meta name="description" content="The portfolio of Daniel 'Wig' Boyland — Learning Design and ISO / QMS / Accreditation. Two worlds, one forge." />
+<title>Forged Frameworks · Daniel 'Wig' Boyland, digital learning designer</title>
+<meta name="description" content="Daniel 'Wig' Boyland: digital learning designer, learning technologist and ISO assessor by trade. Regulated subject matter made clear, with the Catalyst agentic AI content pipeline." />
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" />
-<link rel="stylesheet" href="assets/colors_and_type.css?v=245" />
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-/* Tokens come from assets/colors_and_type.css — never redeclared here. */
-
-html {
-  height: 100%;
-  background: var(--ff-paper);
-  font-family: var(--font-sans);
-  color: var(--ff-ink);
-}
-
-body {
-  min-height: 100%;
-}
-
-/* ---- Skip link ---- */
-.skip-link {
-  position: absolute; left: -9999px; top: auto; z-index: 10000;
-  background: var(--ff-copper); color: #fff;
-  padding: 8px 16px; border-radius: 4px; font-family: var(--font-sans);
-}
-.skip-link:focus { left: 16px; top: 16px; }
-
-/* ---- Matrix canvas ---- */
-#matrix {
-  position: fixed; top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  z-index: 0; opacity: 0.10; pointer-events: none;
-}
-
-/* ---- Gateway shell ---- */
-.gateway {
-  position: relative; z-index: 1;
-  display: flex; flex-direction: column; justify-content: center;
-  min-height: 100dvh;
-  padding: clamp(14px, 2.5vh, 28px) clamp(16px, 3.5vw, 48px) clamp(10px, 1.5vh, 20px);
-  gap: clamp(10px, 1.8vh, 20px);
-}
-
-/* ---- Header ---- */
-.gw-header {
-  display: flex; flex-direction: column; align-items: center;
-  text-align: center; gap: clamp(6px, 1vh, 12px); flex-shrink: 0;
-}
-.gw-brand { display: flex; align-items: center; gap: clamp(10px, 1.4vw, 16px); }
-.gw-brand__mark { height: clamp(42px, 5.5vh, 60px); width: auto; flex-shrink: 0; display: block; }
-.gw-brand__text { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.12; }
-.gw-brand__name {
-  font-family: var(--font-sans); font-weight: 700; white-space: nowrap;
-  font-size: clamp(1rem, 2vw, 1.4rem); color: var(--ff-ink);
-}
-.gw-brand__sub {
-  font-family: var(--font-mono); font-size: clamp(0.82rem, 1.1vw, 0.88rem);
-  color: var(--ff-ink-muted); letter-spacing: 0.04em; margin-top: 3px; white-space: nowrap;
-}
-.gw-welcome {
-  font-size: clamp(0.9rem, 1.5vw, 1.05rem); color: var(--ff-ink);
-  max-width: 52ch; line-height: 1.6; text-wrap: pretty;
-}
-.gw-welcome strong { color: var(--ff-copper-hot); font-weight: 700; }
-
-/* ---- Divider mark ---- */
-.gw-divider {
-  display: flex; align-items: center; gap: 16px; flex-shrink: 0;
-  opacity: 0.22;
-}
-.gw-divider__rule { flex: 1; height: 1px; background: var(--ff-copper); }
-.gw-divider__mark svg { width: 20px; height: auto; }
-
-/* ---- Portals grid ---- */
-.gw-portals {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: clamp(12px, 1.8vw, 24px);
-  flex: 0 0 auto; align-self: center;
-  width: 100%; max-width: 820px; margin: 0 auto;
-}
-@media (max-width: 680px) {
-  .gw-portals {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto;
-  }
-}
-
-/* ---- Portal card ---- */
-.portal {
-  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
-  overflow: hidden;
-  width: 100%; min-height: clamp(204px, 28vh, 252px);
-  border: 1px solid var(--ff-paper-edge);
-  border-top: 4px solid var(--ff-copper);
-  border-radius: 8px;
-  padding: clamp(14px, 2vw, 22px);
-  cursor: pointer;
-  font-family: var(--font-sans); color: var(--ff-ink);
-  transition: transform 0.32s cubic-bezier(0.22,0.61,0.36,1),
-              box-shadow 0.32s cubic-bezier(0.22,0.61,0.36,1),
-              background 0.28s ease, border-color 0.28s ease;
-  -webkit-tap-highlight-color: transparent;
-  appearance: none; -webkit-appearance: none;
-}
-
-/* Rest shadows — slightly lifted off the page already */
-.portal--ld  { background: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.07), 0 1px 5px rgba(0,0,0,0.04); }
-.portal--iso { background: #f3f5f7; border-color: #d4dae0; box-shadow: 0 4px 20px rgba(0,0,0,0.07), 0 1px 5px rgba(0,0,0,0.04); }
-
-/* Hover — lifts high, copper glow (LD) or navy glow (ISO) */
-.portal--ld:hover {
-  background: #fffcf9;
-  transform: translateY(-10px) scale(1.008);
-  box-shadow: 0 28px 65px rgba(0,0,0,0.16), 0 8px 22px rgba(0,0,0,0.09),
-              0 0 0 1px rgba(188,108,60,0.25), 0 0 28px rgba(188,108,60,0.10);
-  border-color: rgba(188,108,60,0.38);
-}
-.portal--iso:hover {
-  background: #ecf0f4;
-  transform: translateY(-10px) scale(1.008);
-  box-shadow: 0 28px 65px rgba(0,0,0,0.16), 0 8px 22px rgba(0,0,0,0.09),
-              0 0 0 1px rgba(44,62,80,0.28);
-  border-color: rgba(44,62,80,0.32);
-}
-
-/* Active / depression — sinks into the page */
-.portal:active {
-  transform: translateY(4px) scale(0.974) !important;
-  box-shadow: 0 1px 5px rgba(0,0,0,0.18),
-              inset 0 5px 22px rgba(0,0,0,0.16),
-              inset 0 1px 5px rgba(0,0,0,0.10) !important;
-  border-color: var(--ff-paper-edge) !important;
-  transition: transform 0.09s ease, box-shadow 0.09s ease !important;
-}
-
-/* Focus */
-.portal:focus-visible { outline: 2px solid var(--ff-copper); outline-offset: 4px; }
-
-/* ---- Portal icon ---- */
-.portal__icon {
-  display: grid; place-items: center;
-  width: clamp(34px, 3.2vw, 44px); height: clamp(34px, 3.2vw, 44px);
-  border-radius: 8px; flex-shrink: 0;
-  margin-bottom: clamp(8px, 1vh, 13px);
-  transition: background 0.28s ease;
-}
-.portal__icon svg { width: clamp(18px, 1.9vw, 24px); height: clamp(18px, 1.9vw, 24px); stroke-width: 2; }
-.portal--ld  .portal__icon { background: var(--ff-copper-wash); color: var(--ff-copper-hot); }
-.portal--iso .portal__icon { background: rgba(44,62,80,0.09); color: var(--ff-ink); }
-.portal--ld:hover  .portal__icon { background: rgba(188,108,60,0.18); }
-.portal--iso:hover .portal__icon { background: rgba(44,62,80,0.16); }
-
-/* ---- Portal text ---- */
-.portal__title {
-  font-size: clamp(1rem, 1.8vw, 1.35rem);
-  font-weight: 700; line-height: 1.1;
-  margin-bottom: clamp(4px, 0.5vh, 7px); color: var(--ff-ink);
-}
-.portal__pitch {
-  font-size: clamp(0.85rem, 1.1vw, 0.95rem);
-  color: var(--ff-ink-muted); line-height: 1.55; max-width: 36ch;
-  margin-bottom: clamp(8px, 1vh, 14px); text-wrap: pretty;
-}
-
-/* ---- Hover info panel ---- */
-.portal__info {
-  position: absolute; left: 0; right: 0; bottom: 0;
-  background: var(--ff-ink);
-  border-radius: 0 0 7px 7px;
-  padding: clamp(14px, 1.8vw, 20px) clamp(16px, 2.2vw, 24px);
-  transform: translateY(101%);
-  transition: transform 0.32s cubic-bezier(0.22,0.61,0.36,1);
-  border-top: 2px solid var(--ff-copper);
-  z-index: 2; pointer-events: none;
-  text-align: left;
-}
-.portal__info p {
-  font-size: clamp(0.85rem, 1.05vw, 0.92rem);
-  line-height: 1.6; margin: 0;
-  color: #c8d4da;
-}
-.portal:hover .portal__info,
-.portal:focus-visible .portal__info { transform: translateY(0); }
-.portal:active .portal__info { transform: translateY(101%) !important; }
-
-/* ---- Gateway entry rain ---- */
-#gw-entry {
-  position: fixed; inset: 0; z-index: 9998;
-  background: #1a1a1a; cursor: pointer;
-  display: none; transition: opacity 0.9s ease;
-}
-.ff-gateway-entry #gw-entry { display: block; }
-#gw-entry canvas { display: block; position: absolute; inset: 0; width: 100%; height: 100%; }
-#gw-entry.is-done { opacity: 0; pointer-events: none; }
-@media (prefers-reduced-motion: reduce) { #gw-entry { display: none !important; } }
-
-/* ---- CV silver-rain exit overlay ---- */
-#cv-exit {
-  position: fixed; inset: 0; z-index: 9999;
-  background: #1a1a1a;
-  display: none;
-}
-#cv-exit canvas { display: block; position: absolute; inset: 0; width: 100%; height: 100%; }
-@media (prefers-reduced-motion: reduce) { #cv-exit { display: none !important; } }
-
-/* ---- CV footnote nudge ---- */
-.gw-cv-nudge {
-  display: flex; justify-content: center; align-self: center;
-  flex: 0 0 auto;
-  margin-top: clamp(2px, 0.5vh, 8px);
-}
-.gw-cv-nudge__btn {
-  background: none; border: none; cursor: pointer;
-  padding: 8px 12px;
-  font-family: var(--font-mono);
-  font-size: clamp(0.82rem, 0.95vw, 0.88rem);
-  color: var(--ff-ink-muted); letter-spacing: 0.02em;
-  opacity: 0.8;
-  transition: opacity 0.22s ease, color 0.22s ease;
-  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-  text-align: center;
-  min-height: 44px;
-}
-.gw-cv-nudge__btn:hover,
-.gw-cv-nudge__btn:focus-visible { opacity: 1; color: var(--ff-ink); outline: none; }
-.gw-cv-nudge__btn:focus-visible { outline: 2px solid var(--ff-copper); outline-offset: 3px; border-radius: 3px; }
-.gw-cv-nudge__label { text-wrap: pretty; }
-.gw-cv-nudge__arrow { transition: transform 0.2s ease; display: inline-block; flex: none; }
-.gw-cv-nudge__btn:hover .gw-cv-nudge__arrow,
-.gw-cv-nudge__btn:focus-visible .gw-cv-nudge__arrow { transform: translateX(4px); }
-
-/* ---- Enter CTA ---- */
-.portal__enter {
-  display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
-  margin-top: clamp(12px, 1.8vh, 22px);
-  font-family: var(--font-mono); font-weight: 700;
-  font-size: clamp(0.82rem, 1.15vw, 0.9rem); letter-spacing: 0.05em;
-  transition: gap 0.22s ease, color 0.22s ease;
-}
-.portal--ld  .portal__enter { color: var(--ff-copper-hot); }
-.portal--iso .portal__enter { color: #3a5068; }
-.portal--ld:hover  .portal__enter { gap: 14px; color: var(--ff-copper); }
-.portal--iso:hover .portal__enter { gap: 14px; color: var(--ff-ink); }
-
-/* ---- Footer hint ---- */
-.gw-footer {
-  flex-shrink: 0; text-align: center;
-  font-family: var(--font-sans); font-size: clamp(0.82rem, 1.15vw, 0.95rem);
-  color: var(--ff-ink-muted); line-height: 1.6;
-  padding: clamp(6px, 0.8vh, 10px) 0;
-  border-top: 1px solid var(--ff-paper-edge);
-}
-.gw-footer strong { color: var(--ff-ink); font-weight: 700; }
-
-/* ---- Motion control ---- */
-.gw-motion {
-  position: fixed; bottom: 14px; left: 14px; z-index: 900;
-  display: inline-flex; align-items: center; gap: 8px;
-  font-family: var(--font-mono);
-  font-size: clamp(0.78rem, 0.95vw, 0.86rem); letter-spacing: 0.02em;
-  padding: 7px 15px;
-  color: var(--ff-ink-muted);
-  background: var(--ff-copper-wash);
-  border: 1px solid rgba(188, 108, 60, 0.18); border-radius: 999px;
-  cursor: pointer;
-  transition: color 0.22s ease, background 0.22s ease, border-color 0.22s ease;
-}
-.gw-motion:hover { color: var(--ff-copper-hot); border-color: var(--ff-copper); }
-.gw-motion[aria-pressed="true"] { color: var(--ff-ink); }
-@media (max-width: 600px) { .gw-motion { bottom: 10px; left: 10px; padding: 6px 12px; } }
-
-/* ---- Support (Buy Me a Coffee) ---- */
-.gw-support {
-  margin-top: clamp(1px, 0.3vh, 4px);
-  font-family: var(--font-mono);
-  font-size: clamp(0.82rem, 0.95vw, 0.88rem);
-  letter-spacing: 0.02em;
-}
-.gw-support__link {
-  display: inline-flex; align-items: center; gap: 9px;
-  padding: 7px 15px;
-  color: var(--ff-ink-muted); text-decoration: none;
-  background: var(--ff-copper-wash);
-  border: 1px solid rgba(188, 108, 60, 0.18); border-radius: 999px;
-  transition: color 0.22s ease, background 0.22s ease, border-color 0.22s ease;
-}
-.gw-support__link:hover,
-.gw-support__link:focus-visible {
-  color: var(--ff-copper-hot);
-  background: rgba(188, 108, 60, 0.17);
-  border-color: var(--ff-copper);
-  outline: none;
-}
-.gw-support__cup { width: 19px; height: 19px; }
-.gw-support__link:focus-visible { outline: 2px solid var(--ff-copper); outline-offset: 3px; border-radius: 3px; }
-.gw-support__cup { display: inline-block; transition: transform 0.2s ease; }
-.gw-support__link:hover .gw-support__cup,
-.gw-support__link:focus-visible .gw-support__cup { transform: translateY(-2px); }
-@media (prefers-reduced-motion: reduce) {
-  .gw-support__cup { transition: none; }
-  .gw-support__link:hover .gw-support__cup,
-  .gw-support__link:focus-visible .gw-support__cup { transform: none; }
-}
-</style>
+<link rel="stylesheet" href="assets/colors_and_type.css?v=250" />
+<link rel="stylesheet" href="forge.css?v=250" />
+<script src="transition.js?v=250"></script>
 </head>
-<body>
-<script>
-if (sessionStorage.getItem('ff-to-gateway') === '1') {
-  document.documentElement.classList.add('ff-gateway-entry');
-  sessionStorage.removeItem('ff-to-gateway');
-}
-</script>
-<a class="skip-link" href="#portals">Skip to portal selection</a>
+<body data-rain-glyphs="FORGEDFRAMEWORKS01∆◊#&amp;=&gt;&lt;[]{}|~" data-rain-heat="#a05b32" data-rain-links="(^|/)(cv/index\.html|accreditation-quality\.html)(#.*)?$">
+<a class="skip-link" href="#top">Skip to content</a>
 <canvas id="matrix" aria-hidden="true"></canvas>
-<!-- Gateway cleansing entry rain -->
-<div id="gw-entry" aria-hidden="true"><canvas id="gw-entry-canvas"></canvas></div>
-<!-- CV silver exit rain -->
-<div id="cv-exit" aria-hidden="true"><canvas id="cv-exit-canvas"></canvas></div>
+<div class="page">
 
-<div class="gateway">
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="#top">
+      <img src="assets/forge-mark.png" alt="" width="36" height="36" />
+      <span class="brand__text"><strong>Forged Frameworks</strong><span>Forging learning</span></span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="#catalyst">Catalyst</a>
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#engage">Engage</a>
+      <a href="cv/index.html">CV</a>
+      <a class="btn btn--primary" href="mailto:dan.boyland@forgedframeworks.co.uk">Email me</a>
+    </nav>
+  </div>
+</header>
 
-  <!-- ===== Header ===== -->
-  <header class="gw-header">
-    <div class="gw-brand">
-      <img class="gw-brand__mark" src="assets/forge-mark.png" alt="" aria-hidden="true" />
-      <div class="gw-brand__text">
-        <h1 class="gw-brand__name">Forged Frameworks</h1>
-        <span class="gw-brand__sub">Portfolio Gateway</span>
+<main id="top" tabindex="-1">
+
+<section class="wrap hero" data-screen-label="Hero">
+  <div class="hero__copy">
+    <p class="eyebrow" data-reveal>Shwmae. Daniel 'Wig' Boyland · digital learning designer · learning technologist · ISO assessor by trade</p>
+    <h1 class="h-hero" aria-label="Forging learning. Regulated subject matter, made clear."><span class="w" aria-hidden="true">Forging</span><span class="w acc" aria-hidden="true">learning.</span><span class="sub-line"><span class="w" aria-hidden="true">Regulated</span><span class="w" aria-hidden="true">subject</span><span class="w" aria-hidden="true">matter,</span><span class="w" aria-hidden="true">made</span><span class="w" aria-hidden="true">clear.</span></span></h1>
+    <p class="lead" data-reveal>Curriculum, authoring, bespoke HTML, QA and compliance, LMS publishing, then the revisions and learner support that follow. One person across the whole pipeline, with an agentic AI forge built to carry the heavy lifting and a dash of blacksmith's grit for the rest.</p>
+    <div class="btn-row" data-reveal>
+      <a class="btn btn--primary btn--md" href="mailto:dan.boyland@forgedframeworks.co.uk">Email me</a>
+      <a class="btn btn--outline btn--md" href="#work">See the work</a>
+    </div>
+  </div>
+
+  <div class="forge" data-reveal>
+    <ol class="tracker" id="tracker" aria-label="Pipeline stages">
+          <li class="is-done"><span class="tracker__dot" aria-hidden="true">✔</span><span class="tracker__label">Awaiting upload</span></li>
+          <li class="is-done"><span class="tracker__dot" aria-hidden="true">✔</span><span class="tracker__label">Parsing documents</span></li>
+          <li class="is-done"><span class="tracker__dot" aria-hidden="true">✔</span><span class="tracker__label">Generating drafts</span></li>
+          <li class="is-done"><span class="tracker__dot" aria-hidden="true">✔</span><span class="tracker__label">QA &amp; repair loops</span></li>
+          <li class="is-done"><span class="tracker__dot" aria-hidden="true">✔</span><span class="tracker__label">Levelling &amp; consolidation</span></li>
+          <li class="is-done"><span class="tracker__dot" aria-hidden="true">✔</span><span class="tracker__label">Assembling frameworks</span></li>
+          <li class="is-done"><span class="tracker__dot" aria-hidden="true">✔</span><span class="tracker__label">Final resources &amp; takeaways</span></li>
+          <li class="is-done"><span class="tracker__dot" aria-hidden="true">✔</span><span class="tracker__label">Pipeline complete</span></li>
+    </ol>
+    <div class="term">
+      <div class="term__bar"><span>Live telemetry feed</span><span class="term__status is-done" id="termStatus">Forge complete</span></div>
+      <div class="term__log" id="termLog" aria-live="off">
+            <div class="l l--line">Forging lesson script · session 1 of 8</div>
+            <div class="l l--line">Forging lesson script · session 2 of 8</div>
+            <div class="l l--line">Forging assessment pack · reflective activities · career pathways</div>
+            <div class="l l--stage">--- Stage 3: quality assurance ---</div>
+            <div class="l l--warn">Pedagogical QA · 2 issues · auto-repair pass 1 of 2</div>
+            <div class="l l--ok">Structural QA · pass</div>
+            <div class="l l--line">US spelling detected (behavior) · corrected · tut-tutted</div>
+            <div class="l l--stage">--- Stage 4: levelling &amp; consolidation ---</div>
+            <div class="l l--line">Calibrating to Level 5 · sector: laboratory management</div>
+            <div class="l l--stage">--- Stage 5: assembling frameworks ---</div>
+            <div class="l l--line">Writing Combined Framework — TAM5202.docx</div>
+            <div class="l l--stage">--- Stage 6: final resources &amp; takeaways ---</div>
+            <div class="l l--line">Final Resources — TAM5202.docx · Final Takeaways — TAM5202.docx</div>
+            <div class="l l--ok">✔ Forge complete · 7 artefacts ready for SME review</div>
+            <span class="term__caret" aria-hidden="true"></span>
       </div>
     </div>
-    <p class="gw-welcome">Welcome. This is the portfolio of <strong>Daniel 'Wig' Boyland</strong> — two very different worlds, one forge. What brings you here today?</p>
-  </header>
+    <p class="forge__cap">Catalyst pipeline · a replay of a real run, module TAM5202</p>
+    <script type="application/json" id="forgeScript">[{"t":"System idle. Awaiting inputs...","k":"idle","s":0,"d":900},{"t":"Received TAM5202-SoW-V1.4.docx · TAM5202_sme_calibration.json","k":"line","s":0,"d":700},{"t":"--- Stage 1: parsing documents ---","k":"stage","s":1,"d":500},{"t":"Scheme of work parsed · 8 sessions · 24 learning outcomes","k":"line","s":1,"d":800},{"t":"--- Stage 2: generating drafts ---","k":"stage","s":2,"d":500},{"t":"Forging lesson script · session 1 of 8","k":"line","s":2,"d":550},{"t":"Forging lesson script · session 2 of 8","k":"line","s":2,"d":550},{"t":"Forging assessment pack · reflective activities · career pathways","k":"line","s":2,"d":800},{"t":"--- Stage 3: quality assurance ---","k":"stage","s":3,"d":500},{"t":"Pedagogical QA · 2 issues · auto-repair pass 1 of 2","k":"warn","s":3,"d":800},{"t":"Structural QA · pass","k":"ok","s":3,"d":600},{"t":"US spelling detected (behavior) · corrected · tut-tutted","k":"line","s":3,"d":900},{"t":"--- Stage 4: levelling & consolidation ---","k":"stage","s":4,"d":500},{"t":"Calibrating to Level 5 · sector: laboratory management","k":"line","s":4,"d":800},{"t":"--- Stage 5: assembling frameworks ---","k":"stage","s":5,"d":500},{"t":"Writing Combined Framework — TAM5202.docx","k":"line","s":5,"d":800},{"t":"--- Stage 6: final resources & takeaways ---","k":"stage","s":6,"d":500},{"t":"Final Resources — TAM5202.docx · Final Takeaways — TAM5202.docx","k":"line","s":6,"d":900},{"t":"✔ Forge complete · 7 artefacts ready for SME review","k":"ok","s":7,"d":3200}]</script>
+  </div>
+</section>
 
-  <!-- ===== Divider ===== -->
-  <div class="gw-divider" aria-hidden="true">
-    <span class="gw-divider__rule"></span>
-    <svg viewBox="0 0 100 132" width="20" height="26" aria-hidden="true">
-      <path d="M30 14 L74 14 Q80 14 80 20 L80 40 Q80 46 74 46 L30 46 L12 30 Z" fill="#bc6c3c"/>
-      <rect x="45" y="46" width="10" height="46" fill="#2c3e50"/>
-      <rect x="40" y="90" width="20" height="9" rx="2" fill="#2c3e50"/>
-      <path d="M40 99 L60 99 L51 128 Z" fill="#2c3e50"/>
-    </svg>
-    <span class="gw-divider__rule"></span>
+<section class="band--ink" data-screen-label="Problem">
+  <div class="wrap sec split">
+    <h2 class="h-md" aria-label="A scheme of work is not a course."><span class="w" aria-hidden="true">A</span><span class="w" aria-hidden="true">scheme</span><span class="w" aria-hidden="true">of</span><span class="w" aria-hidden="true">work</span><span class="w" aria-hidden="true">is</span><span class="w" aria-hidden="true">not</span><span class="w" aria-hidden="true">a</span><span class="w acc" aria-hidden="true">course.</span></h2>
+    <div class="stack on-ink-text" data-reveal style="gap:18px;font-size:clamp(16px,1.25vw,19px);line-height:1.65;">
+      <p>Between the curriculum document and the module a learner opens sits weeks of drafting, subject-expert review, levelling, accessibility checks and rework. Quality drifts session to session. Experts spend their hours fixing structure instead of judging substance.</p>
+      <p>Forged Frameworks closes that gap. Catalyst forges the full document set from the source document, calibrated to level and sector, QA'd and repaired before an expert sees it. The expert's time goes where only an expert can spend it.</p>
+    </div>
+  </div>
+</section>
+
+<section class="wrap split" data-screen-label="Range" style="padding-top:clamp(48px,7vw,90px);">
+  <div class="stack" style="gap:14px;">
+    <p class="eyebrow">Range</p>
+    <h2 class="h-lg" aria-label="Whatever the platform, the standard holds."><span class="w" aria-hidden="true">Whatever</span><span class="w" aria-hidden="true">the</span><span class="w" aria-hidden="true">platform,</span><br><span class="w" aria-hidden="true">the</span><span class="w" aria-hidden="true">standard</span><span class="w acc" aria-hidden="true">holds.</span></h2>
+    <p class="body" data-reveal style="max-width:44ch;">Authoring tools change every few years. The instructional design, the accessibility bar and the audit trail do not. Here is the current kit.</p>
+  </div>
+  <div class="tools" data-reveal>
+      <div class="tools__row"><span class="tools__k">Authoring and media</span><span class="tools__v">Articulate 360 (Rise, Storyline) · SCORM · xAPI · Visme · Canva · Vyond · Descript · Camtasia</span></div>
+      <div class="tools__row"><span class="tools__k">LMS and VLE</span><span class="tools__v">Moodle · Totara · FutureLearn · SQL reporting · SCORM migration</span></div>
+      <div class="tools__row"><span class="tools__k">Code and AI</span><span class="tools__v">Python · HTML/CSS/JS · Claude Code · OpenAI Codex · OpenAI and Gemini APIs · Google Apps Script · NotebookLM</span></div>
+      <div class="tools__row"><span class="tools__k">Dev and hosting</span><span class="tools__v">GitHub repo management · web and content hosting · version control and change logs</span></div>
+      <div class="tools__row"><span class="tools__k">Quality systems</span><span class="tools__v">Q-Pulse · iPassport · Ideagen · ISO 15189, 17025, 17043 · ISO 19011 audit</span></div>
+  </div>
+</section>
+
+<section class="wrap" data-screen-label="By the numbers" style="padding-top:clamp(40px,6vw,72px);">
+  <div class="numbers" data-reveal>
+      <div class="num"><span class="num__n">240+</span><span class="num__l">hours of L3 to L6 blended learning, six technical sciences</span></div>
+      <div class="num"><span class="num__n">100%</span><span class="num__l">external certification success on redeveloped programmes</span></div>
+      <div class="num"><span class="num__n">40%</span><span class="num__l">content production time cut via AI automation</span></div>
+      <div class="num"><span class="num__n">70+</span><span class="num__l">ISO 15189 and 17025 laboratory assessments, UK and international</span></div>
+      <div class="num"><span class="num__n">650+</span><span class="num__l">training days a year delivered at the UKAS Academy</span></div>
+  </div>
+</section>
+
+<section id="catalyst" class="wrap sec split" data-screen-label="Catalyst stages" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(28px,5vw,80px);">
+  <div class="sticky-col">
+    <p class="eyebrow">The Catalyst pipeline</p>
+    <h2 class="h-xl" aria-label="How a module is forged."><span class="w" aria-hidden="true">How</span><span class="w" aria-hidden="true">a</span><span class="w" aria-hidden="true">module</span><span class="w" aria-hidden="true">is</span><span class="w acc" aria-hidden="true">forged.</span></h2>
+    <p class="body-lg" data-reveal style="max-width:44ch;">One source document in. A complete, level-calibrated, SME-ready document set out. Every stage is logged, every repair is recorded, and a human signs off before anything is published.</p>
+    <div class="mini-stats" data-reveal>
+      <div><b>~30%</b><span>SME time saved per module</span></div>
+      <div><b>3 layers</b><span>Structural, levelling, pedagogical QA</span></div>
+    </div>
+  </div>
+  <ol class="steps">
+      <li class="step step--num" data-stage>
+        <span class="step__n" aria-hidden="true">1</span>
+        <div class="stack" style="gap:6px;min-width:0;">
+          <h3>Ingest</h3>
+          <p>Digital content plans, module narratives or schemes of work go in as they are. Structure is read from the document, with no reformatting on your side.</p>
+          <code><b>--- Stage 1: parsing documents ---</b> sessions=8 · outcomes=24 · calibration=TAM5202_sme_calibration.json</code>
+        </div>
+      </li>
+      <li class="step step--num" data-stage>
+        <span class="step__n" aria-hidden="true">2</span>
+        <div class="stack" style="gap:6px;min-width:0;">
+          <h3>Generate</h3>
+          <p>A full, aligned document set is drafted for every session from that single source. Anti-repetition memory keeps a module fresh across sessions.</p>
+          <code><b>--- Stage 2: generating drafts ---</b> lesson_script · pedagogical_qa · digital_blueprint · assessment_pack</code>
+        </div>
+      </li>
+      <li class="step step--num" data-stage>
+        <span class="step__n" aria-hidden="true">3</span>
+        <div class="stack" style="gap:6px;min-width:0;">
+          <h3>Assure</h3>
+          <p>Three QA layers, structural, levelling and pedagogical, catch issues and auto-repair them. Anything that will not repair is flagged for a human, never hidden.</p>
+          <code><b>--- Stage 3: quality assurance ---</b> issues=2 · repaired=2 · escalated=0</code>
+        </div>
+      </li>
+      <li class="step step--num" data-stage>
+        <span class="step__n" aria-hidden="true">4</span>
+        <div class="stack" style="gap:6px;min-width:0;">
+          <h3>Calibrate</h3>
+          <p>Tone, depth and professional context are levelled to the learner, Level 3 to Level 6, and to the sector domain: laboratory, engineering, digital, HE.</p>
+          <code><b>--- Stage 4: levelling &amp; consolidation ---</b> level=5 · domain=labman · variant=vC5</code>
+        </div>
+      </li>
+      <li class="step step--num" data-stage>
+        <span class="step__n" aria-hidden="true">5</span>
+        <div class="stack" style="gap:6px;min-width:0;">
+          <h3>Publish</h3>
+          <p>Polished, branded Word outputs plus learner resources and takeaways, consistent every time and ready for SME review before the Rise 360 build.</p>
+          <code><b>--- Stage 5: assembling frameworks ---</b> Combined Framework — TAM5202.docx · Final Resources · Final Takeaways</code>
+        </div>
+      </li>
+  </ol>
+</section>
+
+<section class="band--warm" data-screen-label="Artefacts">
+  <div class="wrap sec--sm stack" style="gap:28px;">
+    <div class="head-row">
+      <h2 class="h-lg" aria-label="What comes out of the forge."><span class="w" aria-hidden="true">What</span><span class="w" aria-hidden="true">comes</span><span class="w" aria-hidden="true">out</span><span class="w" aria-hidden="true">of</span><span class="w" aria-hidden="true">the</span><span class="w acc" aria-hidden="true">forge.</span></h2>
+      <p class="muted" data-reveal style="font-size:15px;max-width:40ch;text-wrap:pretty;">Seven Word documents per module, branded and ready for subject-expert review. Plus the Rise 360 build they become.</p>
+    </div>
+    <div class="artefacts">
+        <div class="card card--top artefact hover-lift" data-reveal><span class="card__k">01</span><strong>Lesson script</strong><span>Session-by-session teaching narrative</span></div>
+        <div class="card card--top artefact hover-lift" data-reveal><span class="card__k">02</span><strong>Pedagogical QA</strong><span>Findings and repairs, logged</span></div>
+        <div class="card card--top artefact hover-lift" data-reveal><span class="card__k">03</span><strong>Digital blueprint</strong><span>Screen-by-screen build plan</span></div>
+        <div class="card card--top artefact hover-lift" data-reveal><span class="card__k">04</span><strong>Assessment pack</strong><span>Formative checks mapped to outcomes</span></div>
+        <div class="card card--top artefact hover-lift" data-reveal><span class="card__k">05</span><strong>Reflective activities</strong><span>Metacognition built in</span></div>
+        <div class="card card--top artefact hover-lift" data-reveal><span class="card__k">06</span><strong>Further learning</strong><span>Live-verified onward resources</span></div>
+        <div class="card card--top artefact hover-lift" data-reveal><span class="card__k">07</span><strong>Career pathways</strong><span>Sector routes and standards</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="work" class="wrap sec stack" data-screen-label="Case studies" style="gap:clamp(36px,5vw,64px);">
+  <div class="stack" style="gap:14px;max-width:64ch;">
+    <p class="eyebrow">Selected work</p>
+    <h2 class="h-xl" aria-label="Built, shipped, measured."><span class="w" aria-hidden="true">Built,</span><span class="w" aria-hidden="true">shipped,</span><span class="w acc" aria-hidden="true">measured.</span></h2>
+    <p class="body-lg" data-reveal>Compliance-critical modules from Level 3 to Level 6, and the interactive tooling forged alongside them.</p>
   </div>
 
-  <!-- ===== Portals ===== -->
-  <div class="gw-portals" id="portals">
-
-    <!-- Portal A: Learning Design -->
-    <button class="portal portal--ld" id="portal-ld" type="button" aria-label="Enter the learning design portfolio">
-
-      <div class="portal__icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-        </svg>
+  <article class="lead-case" data-reveal>
+    <div class="split" style="gap:clamp(20px,3vw,40px);">
+      <div class="stack" style="gap:12px;">
+        <span class="mono" style="font-size:13px;color:#e09a6b;">Lead case study · Level 3 · Rise 360</span>
+        <h3>Asbestos Industry Technical Module</h3>
+        <p style="font-size:16px;line-height:1.6;text-wrap:pretty;">For Bulk and Analysis and Air Analyst apprentices working toward the Level 3 Laboratory Technician standard (ST0248) and RSPH qualifications. Previous training was inconsistent, with few interactive elements and no objective assessment data.</p>
+        <ul>
+          <li>Fully online ITM authored to a structured framework</li>
+          <li>Scenario-based formative assessment aligned to the apprenticeship standard</li>
+          <li>Transcripts, alt text, subtitles and screen-reader compatibility from the first draft</li>
+          <li>Companion decision tool: the Asbestos Identification Matrix</li>
+        </ul>
       </div>
-
-      <h2 class="portal__title">Learning design</h2>
-      <p class="portal__pitch">I design digital learning experiences that engage and endure — from agentic AI curriculum pipelines to accessibility-first interactive content, across science, technology, and higher education.</p>
-
-      <span class="portal__enter">Enter the studio &rarr;</span>
-
-      <div class="portal__info" aria-hidden="true">
-        <p>Head here for <strong style="color:#f4b988">digital learning design</strong> — interactive eLearning, agentic AI curriculum pipelines, accessibility-first instructional design, and building impactful learner journeys across science, technology and higher education.</p>
+      <div class="lead-case__stats">
+        <div class="lead-case__stat"><b>95%+</b><span>completion across the first cohorts</span></div>
+        <div class="lead-case__stat"><b>Pre/post</b><span>objective knowledge-gain measures</span></div>
+        <div class="lead-case__stat"><b>Model</b><span>template for future health and safety ITMs</span></div>
       </div>
+    </div>
+    <div class="shots">
+      <img src="assets/itm-asb-1.jpg" alt="Asbestos ITM in Rise 360: further reading, resources and next steps lesson" loading="lazy" />
+      <img src="assets/itm-asb-2.jpg" alt="Asbestos ITM: decontamination, PPE and Type-H vacuums lesson" loading="lazy" />
+      <img src="assets/itm-asb-3.jpg" alt="Asbestos ITM: reflection notebook guidance with downloadable PDF" loading="lazy" />
+    </div>
+  </article>
 
-    </button>
-
-    <!-- Portal B: ISO / QMS / Accreditation -->
-    <button class="portal portal--iso" id="portal-iso" type="button" aria-label="Enter the accreditation and quality background">
-
-      <div class="portal__icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-          <path d="m9 12 2 2 4-4"/>
-        </svg>
-      </div>
-
-      <h2 class="portal__title">Accreditation &amp; quality</h2>
-      <p class="portal__pitch">Before the learning design came the laboratory — over a decade as a UKAS technical assessor, training manager, and NHS biomedical scientist. The quality foundation everything else is forged on.</p>
-
-      <span class="portal__enter">Enter the laboratory &rarr;</span>
-
-      <div class="portal__info" aria-hidden="true">
-        <p>Head here for the <strong style="color:#f4b988">accreditation &amp; quality background</strong> — ISO 15189, 17025 and 17043 assessment, QMS governance, NHS biomedical science, and the technical foundation behind the learning design.</p>
-      </div>
-
-    </button>
-
+  <div class="cards cards--280">
+      <article class="card" data-reveal>
+        <span class="card__k">Pharma · HCP education</span>
+        <h3>New-drug launch education</h3>
+        <p>Interactive prescribing-guidance and patient-management learning for healthcare professionals, built for a new-drug launch.</p>
+        <span class="card__foot">Bespoke HTML decision scenes, hosted</span>
+      </article>
+      <article class="card" data-reveal>
+        <span class="card__k">LMS · migration</span>
+        <h3>Cross-platform LMS migration</h3>
+        <p>Migrated a full asset library between platforms with SCORM conversion and AI-assisted metadata tagging, so nothing arrived unlabelled.</p>
+        <span class="card__foot">Moodle redesign · GenAI in the pipeline</span>
+      </article>
+      <article class="card" data-reveal>
+        <span class="card__k">Prevent Duty · Moodle</span>
+        <h3>Prevent Duty module</h3>
+        <p>Mandatory for Level 3, NVQ and HE apprentices. Built with transcripts, coded HTML and podcast-style retention aids.</p>
+        <span class="card__foot">Positive learner and Ofsted feedback</span>
+      </article>
+      <article class="card" data-reveal>
+        <span class="card__k">Level 5 · Lab Management</span>
+        <h3>Lab Management show and tell</h3>
+        <p>A dual-role build with strong reflective elements for self-directed learning, plus engagement bookends to lift retention.</p>
+        <span class="card__foot">Companion tool: Digital Maturity Diagnostic</span>
+      </article>
+      <article class="card" data-reveal>
+        <span class="card__k">Level 6 · Microbiology</span>
+        <h3>Microbiology programme</h3>
+        <p>Opening bookends and rich interactions alongside more traditional eLearning builds for a Level 6 programme.</p>
+        <span class="card__foot">Swipe quiz and molecule viewer blocks</span>
+      </article>
   </div>
 
-  <!-- ===== CV nudge ===== -->
-  <div class="gw-cv-nudge">
-    <button type="button" id="cv-nudge-btn" class="gw-cv-nudge__btn" aria-label="View CV">
-      <span class="gw-cv-nudge__label">Just here for my CV? But you'll miss all the fun.</span>
-      <span class="gw-cv-nudge__arrow" aria-hidden="true">&rarr;</span>
-    </button>
+  <div class="stack" style="gap:18px;">
+    <div class="head-row">
+      <div class="stack" style="gap:8px;max-width:60ch;">
+        <span class="eyebrow">Codex · HTML learning-asset library</span>
+        <h3 style="font-size:clamp(22px,2.4vw,30px);font-weight:700;line-height:1.15;">Interactive blocks, handed over editable</h3>
+        <p data-reveal style="font-size:15px;line-height:1.55;text-wrap:pretty;">Self-contained HTML, CSS and JS interactions that drop into Rise 360, Moodle or any VLE. Each block ships with its designer mode, so copy, scoring and branching can be changed locally with no per-edit AI cost.</p>
+      </div>
+      <a class="link-strong" href="https://danforgedframeworks.github.io/Portfolio/learning-design.html#codex" target="_blank" rel="noopener">Open the live library ↗</a>
+    </div>
+    <div class="rail" tabindex="0" aria-label="Codex blocks, scrolls sideways">
+        <a href="patterns/key-points/key-points.html" target="_blank" rel="noopener"><img src="assets/thumbs/key-points.jpg" alt="Preview of the Takeaways Revealer block" loading="lazy" width="320" height="200" /><strong>Takeaways Revealer</strong><span>Reveal block · designer + learner</span></a>
+        <a href="patterns/myths/myths.html" target="_blank" rel="noopener"><img src="assets/thumbs/myths.jpg" alt="Preview of the Myth vs Fact block" loading="lazy" width="320" height="200" /><strong>Myth vs Fact</strong><span>Sorting block</span></a>
+        <a href="patterns/swipe/swipe-quiz.html" target="_blank" rel="noopener"><img src="assets/thumbs/swipe-quiz.jpg" alt="Preview of the Microbiology swipe quiz" loading="lazy" width="320" height="200" /><strong>Swipe Quiz — Microbiology</strong><span>Swipe quiz · Level 6</span></a>
+        <a href="patterns/odd-one-out/odd-one-out-quiz.html" target="_blank" rel="noopener"><img src="assets/thumbs/odd-one-out.jpg" alt="Preview of the Odd One Out quiz engine" loading="lazy" width="320" height="200" /><strong>Odd One Out</strong><span>Quiz engine</span></a>
+        <a href="patterns/3d/molecule-viewer.html" target="_blank" rel="noopener"><img src="assets/thumbs/adipic-3d.jpg" alt="Preview of the 3D molecule viewer" loading="lazy" width="320" height="200" /><strong>3D Molecule Viewer</strong><span>Three.js · Level 6 HE</span></a>
+        <a href="patterns/careers/careers.html" target="_blank" rel="noopener"><img src="assets/thumbs/careers.jpg" alt="Preview of the Careers Explorer block" loading="lazy" width="320" height="200" /><strong>Careers Explorer</strong><span>Pathways block</span></a>
+        <a href="patterns/resource-hub/resource-hub.html" target="_blank" rel="noopener"><img src="assets/thumbs/resource-hub.jpg" alt="Preview of the Standards and Guidance Portal" loading="lazy" width="320" height="200" /><strong>Standards &amp; Guidance Portal</strong><span>Resource hub</span></a>
+        <a href="patterns/reflection/writing-reflection-html-english.html" target="_blank" rel="noopener"><img src="assets/thumbs/reflection-english.jpg" alt="Preview of the Reflective Notebook block" loading="lazy" width="320" height="200" /><strong>Reflective Notebook</strong><span>Journaling block</span></a>
+    </div>
   </div>
+</section>
 
-  <!-- ===== Footer ===== -->
-  <footer class="gw-footer">
-    <p>Whichever path you choose, <strong>you can always cross over</strong> — every page links between both worlds.</p>
-    <p class="gw-support">
-      <a class="gw-support__link"
-         href="https://buymeacoffee.com/iYo8k7Sc88"
-         target="_blank" rel="noopener noreferrer"
-         aria-label="Buy me a coffee — opens in a new tab">
-        <svg class="gw-support__cup" viewBox="0 0 24 24" width="19" height="19" fill="none"
-             stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M4 9h12v5a6 6 0 0 1-12 0V9Z"/>
-          <path d="M16 10.5h1.5a2.5 2.5 0 0 1 0 5H16"/>
-          <path d="M3 21h14"/>
-          <path d="M8 2.5c-.8 1-.8 2 0 3"/>
-          <path d="M12 2.5c-.8 1-.8 2 0 3"/>
-        </svg>
-        Found something useful here? Buy me a coffee.
-      </a>
-    </p>
-  </footer>
+<section class="band--ink" data-screen-label="Sectors and accessibility">
+  <div class="wrap sec split" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(32px,5vw,80px);">
+    <div class="stack" style="gap:18px;">
+      <p class="eyebrow">Built for UK regulated sectors</p>
+      <h2 class="h-lg" aria-label="The quality foundation came first."><span class="w" aria-hidden="true">The</span><span class="w" aria-hidden="true">quality</span><span class="w" aria-hidden="true">foundation</span><span class="w" aria-hidden="true">came</span><span class="w acc" aria-hidden="true">first.</span></h2>
+      <p class="body on-ink-text" data-reveal style="line-height:1.65;">Before learning design came the laboratory: 14 years in NHS pathology, then over a decade as a UKAS technical assessor and training manager. Content is written to the standards the learner will be assessed against, in UK English, with UK regulators as the default reference. <a class="link-ink" href="accreditation-quality.html" style="font-weight:700;text-decoration:none;">The full accreditation and quality background →</a></p>
+      <ul class="chips"><li>UKAS technical and lead assessor</li><li>ISO 15189 · 17025 · 17043</li><li>NHS pathology, 14 years</li><li>Apprenticeship standards (ST0248)</li><li>RQF outcomes</li><li>RSPH qualifications</li><li>IBMS · ATAC · BPF</li><li>RSci and RChem degree routes</li><li>Prevent Duty and safeguarding</li><li>HSE · MHRA · BSI references</li><li>Ofsted-reviewed modules</li><li>WCAG 2.2 · EN 301 549</li></ul>
+    </div>
+    <div class="stack" style="gap:18px;">
+      <p class="eyebrow">Accessibility by default</p>
+      <h2 class="h-lg" aria-label="Readable before it is clever."><span class="w" aria-hidden="true">Readable</span><span class="w" aria-hidden="true">before</span><span class="w" aria-hidden="true">it</span><span class="w" aria-hidden="true">is</span><span class="w acc" aria-hidden="true">clever.</span></h2>
+      <p class="body on-ink-text" data-reveal style="line-height:1.65;">This page is set in Atkinson Hyperlegible, with JetBrains Mono for anything technical. Sentence case throughout, no letter-spaced capitals, contrast at 4.5:1 or better, and every animation switched off when the browser asks for reduced motion. The same rules apply to every module.</p>
+      <ul class="ticks on-ink-text">
+        <li>WCAG-aligned builds with transcripts, captions and alt text</li>
+        <li>Alternative navigation and plain-language principles</li>
+        <li>Dyslexia-friendly type and high-contrast palettes</li>
+        <li>Published accessibility and inclusion statement (FF-AC-01)</li>
+      </ul>
+    </div>
+  </div>
+</section>
 
-<!-- Motion control. Delegated by data-bg-toggle (transition.js); label and
-     aria-pressed are set by FFBackground on paint. The gateway runs #matrix with
-     no other control, so this is the only way to stop it. -->
-<button class="gw-motion" type="button" data-bg-toggle aria-pressed="false" title="Turn the forge-rain background on or off">◍ Motion: on</button>
+<section class="band--warm" data-screen-label="Ethos" style="border-top:0;">
+  <div class="wrap sec--sm stack" style="gap:24px;">
+    <div class="head-row">
+      <div class="stack" style="gap:10px;">
+        <p class="eyebrow">How the background shapes the practice</p>
+        <h2 class="h-lg" aria-label="Habits from the lab, kept in the learning."><span class="w" aria-hidden="true">Habits</span><span class="w" aria-hidden="true">from</span><span class="w" aria-hidden="true">the</span><span class="w" aria-hidden="true">lab,</span><span class="w acc" aria-hidden="true">kept</span><span class="w acc" aria-hidden="true">in</span><span class="w acc" aria-hidden="true">the</span><span class="w acc" aria-hidden="true">learning.</span></h2>
+      </div>
+      <a class="link-strong" href="accreditation-quality.html#ethos">All five, with the record behind them →</a>
+    </div>
+    <div class="cards cards--280" style="gap:14px;">
+        <div class="card card--top" data-reveal><span class="card__k">ISO assessment · 70+ laboratories</span><strong style="font-size:19px;line-height:1.25;">Evidence before opinion</strong><p>Every module carries pre- and post-assessment data, not just satisfaction scores. If a claim about learning gain cannot be shown, it is not made.</p></div>
+        <div class="card card--top" data-reveal><span class="card__k">QMS governance · document and change control</span><strong style="font-size:19px;line-height:1.25;">If it is not documented, it did not happen</strong><p>Catalyst logs every stage, QA finding and repair. Codex blocks ship version-controlled with change logs. Any line of content traces back to its source.</p></div>
+        <div class="card card--top" data-reveal><span class="card__k">Training 650 days a year · clinicians to calibration engineers</span><strong style="font-size:19px;line-height:1.25;">Expertise is not the same as clarity</strong><p>Subject experts own the substance; the design carries structure, pacing and plain language. Dyslexia-friendly type, sentence case and transcripts are defaults.</p></div>
+    </div>
+  </div>
+</section>
 
+<section id="about" class="wrap sec about" data-screen-label="About">
+  <img class="portrait" data-reveal src="assets/me-portrait.jpg" alt="Daniel 'Wig' Boyland" loading="lazy" />
+  <div class="stack" style="gap:18px;">
+    <p class="eyebrow">About</p>
+    <h2 class="h-xl" aria-label="Dan Boyland. Wig, to most people."><span class="w" aria-hidden="true">Dan</span><span class="w" aria-hidden="true">Boyland.</span><br><span class="w acc" aria-hidden="true">Wig,</span><span class="w" aria-hidden="true">to</span><span class="w" aria-hidden="true">most</span><span class="w" aria-hidden="true">people.</span></h2>
+    <div class="stack body-lg" data-reveal style="gap:14px;line-height:1.65;">
+      <p>Instructional designer and founder of Forged Frameworks, based in Cwmbran, South Wales, working remotely across the UK. I have worked every stage of the learning-product pipeline: curriculum development, authoring in Rise 360, Storyline, Moodle and FutureLearn, bespoke coded HTML packages, QA and compliance checks, LMS publishing and management, then the revisions, updates and learner support that keep a course alive.</p>
+      <p>When the tooling did not exist, I built it: the Catalyst pipeline, the Codex block library, and the diagnostic engines that sit inside the modules. Everything is handed over editable and yours to keep.</p>
+    </div>
+    <div class="creds-lines" data-reveal>
+      <span>MSc Biomedical Sciences · TAP Diploma in Learning Design · Chartered Scientist (CSci) · HCPC registered</span>
+      <span>UKAS Technical and Lead Assessor, ISO 15189, 22870 and 17043</span>
+      <a href="cv/index.html" style="font-weight:700;text-decoration:none;margin-top:4px;">Read the full CV →</a>
+    </div>
+  </div>
+</section>
+
+<section class="wrap cards cards--260" data-screen-label="Asides" style="padding-bottom:clamp(56px,8vw,110px);">
+  <div class="card" data-reveal><span class="card__k">Origin story</span><h3>From the lab bench to the anvil</h3><p>14 years in NHS haematology, then 70-odd ISO assessments and 650 training days a year at UKAS taught me that a standard is only useful if people can actually learn it. So I started building the learning. Then the tools to build it faster.</p><a class="link-strong" style="margin-top:auto;padding-top:8px;" href="accreditation-quality.html">The accreditation and quality story →</a></div>
+  <div class="card" data-reveal><span class="card__k">Off the clock</span><h3>Wig's Wonky Forge</h3><p>An actual forge. Hand-forged ironwork, a small craft business and the reason the metaphor on this site is not a metaphor. Also two very opinionated cats.</p><a class="link-strong" style="margin-top:auto;padding-top:8px;" href="https://wonkyforge.co.uk" target="_blank" rel="noopener">wonkyforge.co.uk ↗</a></div>
+  <div class="card" data-reveal><span class="card__k">Where</span><h3>Cwmbran, South Wales</h3><p>Remote by default, on-site when it matters. The Welsh will occasionally leak into the copy. Da iawn if you spotted it.</p></div>
+</section>
+
+<section class="band--warm" data-screen-label="Testimonials" style="border-bottom:0;">
+  <div class="wrap sec stack" style="gap:28px;">
+    <div class="head-row">
+      <h2 class="h-lg" aria-label="What collaborators say."><span class="w" aria-hidden="true">What</span><span class="w" aria-hidden="true">collaborators</span><span class="w acc" aria-hidden="true">say.</span></h2>
+      <a class="link-strong" href="https://www.linkedin.com/in/daniel-boyland-577b6476/" target="_blank" rel="noopener">All recommendations on LinkedIn ↗</a>
+    </div>
+    <div class="cards cards--300">
+        <figure class="card card--top quote" data-reveal>
+          <span class="card__k">Project leadership</span>
+          <blockquote>I've had the pleasure of working with Dan on a number of projects and always admire his integrity, autonomy and trust-centric ways of working, coupled with his humility and constant drive to learn, grow, and help others do the same. Work with Dan never felt like 'work'. He has a flair for managing projects with perceived effortlessness, but there's a tremendous amount of thought and care that goes into his leadership of projects. His client and user-centric approach means he fits like a glove in whichever team he works in, and I cannot recommend him highly enough.</blockquote>
+          <figcaption><a href="https://www.linkedin.com/in/vashishtbhatt/" target="_blank" rel="noopener">Vashisht Bhatt ↗</a><span>Digital and productivity, commercial</span></figcaption>
+        </figure>
+        <figure class="card card--top quote" data-reveal>
+          <span class="card__k">Learning design</span>
+          <blockquote>Dan is a first rate Learning Designer. He has a deep understanding of accessibility and online pedagogy. He makes really engaging, high quality content that encourage deep learning.</blockquote>
+          <figcaption><strong>Paul Wakeling</strong><span>Founder and CEO, Assynt Lead &amp; Learn</span></figcaption>
+        </figure>
+        <figure class="card card--top quote" data-reveal>
+          <span class="card__k">Content pipeline</span>
+          <blockquote>I've been fortunate to work with Daniel on multiple digital learning modules for a growing training provider in a fast-paced environment. During the projects, it became clear that Daniel has a strong understanding of all aspects of high-quality learning content development, including accessibility, multimedia use, pedagogy, quality assurance, curriculum alignment at both national and course levels, and the overall learner experience. Daniel developed one of the most efficient workflows I've seen in the industry and ensured everyone felt supported throughout. I'm confident that his framework-oriented approach to learning design and project management would be a tremendous asset to any Learning and Development team.</blockquote>
+          <figcaption><a href="https://www.linkedin.com/in/zsolt-barath-8aa3aa140/" target="_blank" rel="noopener">Zsolt Barath ↗</a><span>Content pipeline, Level 3 specialist FE</span></figcaption>
+        </figure>
+        <figure class="card card--top quote" data-reveal>
+          <span class="card__k">Learning design, HE</span>
+          <blockquote>His depth of knowledge in content and learning development is exceptional, and his ability to transform raw material into captivating, learner-friendly content and UX was second to none.</blockquote>
+          <figcaption><a href="https://www.linkedin.com/in/cathycoulthard/" target="_blank" rel="noopener">Cathy Coulthard ↗</a><span>Project management, HE</span></figcaption>
+        </figure>
+        <figure class="card card--top quote" data-reveal>
+          <span class="card__k">Content pipeline</span>
+          <blockquote>He has a great eye for learning design, and his project management skills keep everything running smoothly. Daniel is one of those people who makes teamwork both easy and enjoyable.</blockquote>
+          <figcaption><a href="https://www.linkedin.com/in/deborah-ogbeni-3aa5aa90/" target="_blank" rel="noopener">Deborah Ogbeni ↗</a><span>Content pipeline, Biosciences and Level 5 Lab Management</span></figcaption>
+        </figure>
+        <figure class="card card--top quote" data-reveal>
+          <span class="card__k">Curriculum embedding</span>
+          <blockquote>Dan has an incredible talent for turning complex ideas into engaging, accessible learning content that really lands with learners and employers alike. He does not just design curriculum and training, he makes sure it is embedded properly so it actually works in practice and delivers results.</blockquote>
+          <figcaption><strong>Ash Backhouse</strong><span>Programme Director IFLP, SECBE</span></figcaption>
+        </figure>
+    </div>
+  </div>
+</section>
+
+<section id="engage" class="wrap sec stack" data-screen-label="Working together" style="gap:28px;">
+  <div class="stack" style="gap:14px;max-width:64ch;">
+    <p class="eyebrow">Working together</p>
+    <h2 class="h-xl" aria-label="Four ways to engage."><span class="w" aria-hidden="true">Four</span><span class="w" aria-hidden="true">ways</span><span class="w" aria-hidden="true">to</span><span class="w acc" aria-hidden="true">engage.</span></h2>
+    <p class="body-lg" data-reveal>Every project is scoped to you. Rates are £50 to £60 an hour, with fixed contract rates negotiable for long-term partnerships or bundles. Agile working, iterative builds, expedited delivery by prior agreement.</p>
+  </div>
+  <div class="cards cards--240">
+    <div class="card eng" data-reveal><span class="eng__n" aria-hidden="true">1</span><h3>Contract or interim</h3><p>Join a team for a fixed term to own the learning-product pipeline end to end, from curriculum through LMS publishing.</p><span class="card__foot">Day rate · remote-first</span></div>
+    <div class="card eng" data-reveal><span class="eng__n" aria-hidden="true">2</span><h3>Project-based studio work</h3><p>A scoped module, programme or interactive tool, built in Rise 360, Storyline, Moodle or coded HTML, delivered iteratively.</p><span class="card__foot">Fixed scope · agreed rate</span></div>
+    <div class="card eng" data-reveal><span class="eng__n" aria-hidden="true">3</span><h3>Learning-product review and uplift</h3><p>Audit existing eLearning for structure, instructional design, learner journey and maintainability, then rebuild to WCAG 2.2 and EN 301 549. Style guides and templates included so it stays consistent.</p><span class="card__foot">Day rate · £50 to £60 per hour</span></div>
+    <div class="card eng" data-reveal><span class="eng__n" aria-hidden="true">4</span><h3>Catalyst as a service</h3><p>Send the scheme of work and calibration file. Receive the forged, QA'd document set for SME review, then the Rise 360 build if wanted.</p><span class="card__foot">Per module · ~30% SME time saved</span></div>
+  </div>
+  <div class="card times" data-reveal>
+    <div><span>1 hour of learner-facing digital content</span><span>~2 to 3 hrs</span></div>
+    <div><span>AI framework build, per session</span><span>~3 hrs</span></div>
+    <div><span>5 minute Canva-style video</span><span>~3 hrs</span></div>
+    <div><span>15 minutes of video editing</span><span>~2 hrs</span></div>
+    <div><span>1 page supporting material or GIF</span><span>~1 hr</span></div>
+  </div>
+</section>
+
+<section id="contact" class="band--ink" data-screen-label="Contact">
+  <div class="wrap contact" style="padding-top:clamp(64px,9vw,130px);padding-bottom:clamp(64px,9vw,130px);">
+    <div class="stack" style="gap:18px;">
+      <h2 class="h-cta" aria-label="Send the scheme of work. See what the forge makes of it."><span class="w" aria-hidden="true">Send</span><span class="w" aria-hidden="true">the</span><span class="w" aria-hidden="true">scheme</span><span class="w" aria-hidden="true">of</span><span class="w" aria-hidden="true">work.</span><br><span class="w acc" aria-hidden="true">See</span><span class="w acc" aria-hidden="true">what</span><span class="w acc" aria-hidden="true">the</span><span class="w acc" aria-hidden="true">forge</span><span class="w acc" aria-hidden="true">makes</span><span class="w acc" aria-hidden="true">of</span><span class="w acc" aria-hidden="true">it.</span></h2>
+      <p class="body-lg on-ink-text" data-reveal style="max-width:50ch;">A short email is enough. Say what the module is, who it is for, and what platform it lands on. No forms, no booking links, no chatbot pretending to be me.</p>
+    </div>
+    <div class="contact__links" data-reveal>
+      <a class="btn btn--primary btn--lg" href="mailto:dan.boyland@forgedframeworks.co.uk">Email me</a>
+      <a class="contact__email" href="mailto:dan.boyland@forgedframeworks.co.uk">dan.boyland@forgedframeworks.co.uk</a>
+      <a class="contact__plain" href="https://www.linkedin.com/in/daniel-boyland-577b6476/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <span style="font-size:14px;color:#aeb9c0;">Remote · Cwmbran, South Wales</span>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span class="stack" style="gap:4px;"><span>© Forged Frameworks · Daniel 'Wig' Boyland</span><a class="footer__cv" href="cv/index.html">Just here for the CV? Fair enough. It's this way →</a></span>
+    <div class="footer__links">
+      <a href="statements/accessibility-and-inclusion.html">Accessibility statement</a>
+      <a href="statements/environmental-statement.html">Environmental statement</a>
+      <a href="accreditation-quality.html">Accreditation and quality</a>
+      <a class="ff-support__link" href="https://buymeacoffee.com/iYo8k7Sc88" target="_blank" rel="noopener noreferrer" aria-label="Buy me a coffee (opens in a new tab)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h12v5a6 6 0 0 1-12 0V9Z"/><path d="M16 10.5h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M7 3.5c0 1 .8 1.2.8 2.2M10.5 3.5c0 1 .8 1.2.8 2.2"/></svg>Buy me a coffee</a>
+      <button class="motion-btn" type="button" data-bg-toggle aria-pressed="false">◍ Motion: on</button>
+    </div>
+  </div>
+</footer>
 
 </div>
-
-<script src="transition.js?v=243"></script>
-<script>
-(function () {
-  'use strict';
-
-  /* ── 1. Ambient matrix rain ── */
-  (function () {
-    var c = document.getElementById('matrix');
-    if (!c) return;
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    /* Skip on touch/mobile to avoid battery drain */
-    if ('ontouchstart' in window && window.innerWidth < 768) { c.style.display = 'none'; return; }
-    var ctx = c.getContext('2d');
-    var chars = 'FORGEDFRAMEWORKS01アイ∆◊#&=><[]{}|~'.split('');
-    var fs = 15, cols, drops;
-    function resize() {
-      c.width = window.innerWidth; c.height = window.innerHeight;
-      cols = Math.floor(c.width / fs); drops = [];
-      for (var i = 0; i < cols; i++) drops[i] = Math.random() * c.height / fs;
-    }
-    resize();
-    window.addEventListener('resize', resize);
-    function draw() {
-      ctx.fillStyle = 'rgba(252,251,249,0.09)';
-      ctx.fillRect(0, 0, c.width, c.height);
-      ctx.fillStyle = '#bc6c3c'; ctx.font = fs + 'px monospace';
-      for (var i = 0; i < drops.length; i++) {
-        ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * fs, drops[i] * fs);
-        if (drops[i] * fs > c.height && Math.random() > 0.975) drops[i] = 0;
-        drops[i] += 0.4;
-      }
-    }
-    /* Start/stop-able so the site-wide background off-switch (FFBackground in
-       transition.js) halts the work rather than just hiding the canvas. The
-       stored key is read directly so this does not depend on script order. */
-    function bgOff() {
-      try { return localStorage.getItem('ff-bg-off') === '1'; } catch (e) { return false; }
-    }
-    var timer = null;
-    function start() { if (!timer) timer = setInterval(draw, 64); }
-    function stop() { if (timer) { clearInterval(timer); timer = null; } }
-    if (!bgOff()) start();
-    window.addEventListener('ff-bg-change', function (e) {
-      if (e && e.detail && e.detail.off) stop(); else start();
-    });
-  })();
-
-  /* ── 4. Portal interactions ── */
-  var ldTriggered = false, isoTriggered = false;
-
-  var pLD = document.getElementById('portal-ld');
-  if (pLD) {
-    pLD.addEventListener('click', function () {
-      if (ldTriggered) return; ldTriggered = true;
-      FFTransition.fire('ld', 'learning-design.html');
-    });
-  }
-
-  var pISO = document.getElementById('portal-iso');
-  if (pISO) {
-    pISO.addEventListener('click', function () {
-      if (isoTriggered) return; isoTriggered = true;
-      FFTransition.fire('iso', 'accreditation-quality.html');
-    });
-  }
-
-  /* ── CV nudge — silver rain exit ── */
-  var cvNudge = document.getElementById('cv-nudge-btn');
-  if (cvNudge) {
-    var cvTriggered = false;
-    cvNudge.addEventListener('click', function () {
-      if (cvTriggered) return; cvTriggered = true;
-      if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        window.location.href = 'cv/index.html'; return;
-      }
-      var overlay = document.getElementById('cv-exit');
-      var cvs = document.getElementById('cv-exit-canvas');
-      if (!overlay || !cvs) { window.location.href = 'cv/index.html'; return; }
-      overlay.style.display = 'block';
-      var ctx = cvs.getContext('2d');
-      var chars = 'FORGEDFRAMEWORKS01アイ∆◊#&=><[]{}|~'.split('');
-      var fs = 16;
-      cvs.width = window.innerWidth; cvs.height = window.innerHeight;
-      var w = cvs.width, h = cvs.height;
-      var cols = Math.floor(w / fs), drops = [];
-      // Start drops spread across the full height so rain fills the screen immediately
-      for (var i = 0; i < cols; i++) drops[i] = Math.random() * (h / fs);
-      var raf;
-      function drawSilver() {
-        ctx.fillStyle = 'rgba(26,26,26,0.09)'; ctx.fillRect(0, 0, w, h);
-        ctx.font = fs + "px 'JetBrains Mono', monospace";
-        for (var i = 0; i < drops.length; i++) {
-          ctx.fillStyle = Math.random() > 0.4 ? '#cccccc' : '#ffffff';
-          ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * fs, drops[i] * fs);
-          if (drops[i] * fs > h && Math.random() > 0.975) drops[i] = 0;
-          drops[i] += 0.65;
-        }
-        raf = requestAnimationFrame(drawSilver);
-      }
-      raf = requestAnimationFrame(drawSilver);
-      // Fade the overlay to white at 750ms, navigate at 1050ms for a smooth exit
-      setTimeout(function () { overlay.style.transition = 'background 0.35s ease'; overlay.style.background = '#faf9f5'; }, 750);
-      setTimeout(function () {
-        cancelAnimationFrame(raf);
-        window.location.href = 'cv/index.html';
-      }, 1050);
-    });
-  }
-
-  /* ── 5. Gateway entry rain ── */
-  (function () {
-    var el = document.getElementById('gw-entry');
-    if (!el || !document.documentElement.classList.contains('ff-gateway-entry')) return;
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { el.parentNode && el.parentNode.removeChild(el); return; }
-    var cvs = document.getElementById('gw-entry-canvas');
-    var ctx = cvs && cvs.getContext('2d');
-    if (!ctx) return;
-    var chars = 'FORGEDFRAMEWORKS01アイ∆◊#&=><[]{}|~'.split('');
-    var fs = 16, w = cvs.width = window.innerWidth, h = cvs.height = window.innerHeight;
-    var cols = Math.floor(w / fs), drops = [];
-    for (var i = 0; i < cols; i++) drops[i] = Math.random() * -30;
-    var done = false, raf;
-    function draw() {
-      if (done) return;
-      ctx.fillStyle = 'rgba(26,26,26,0.08)'; ctx.fillRect(0, 0, w, h);
-      ctx.fillStyle = '#bc6c3c'; ctx.font = fs + "px 'JetBrains Mono', monospace";
-      for (var i = 0; i < drops.length; i++) {
-        ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * fs, drops[i] * fs);
-        if (drops[i] * fs > h && Math.random() > 0.975) drops[i] = 0;
-        drops[i] += 0.65;
-      }
-      raf = requestAnimationFrame(draw);
-    }
-    raf = requestAnimationFrame(draw);
-    function dismiss() {
-      done = true; if (raf) cancelAnimationFrame(raf);
-      el.classList.add('is-done');
-      setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 950);
-    }
-    setTimeout(dismiss, 2400);
-    el.addEventListener('click', dismiss);
-  }());
-
-})();
-</script>
+<script src="forge.js?v=250"></script>
 </body>
 </html>

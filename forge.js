@@ -1,0 +1,286 @@
+/* ============================================================
+   Forged Frameworks — shared behaviour for index.html and
+   accreditation-quality.html.
+
+   The page is complete without this file: every section is visible,
+   the terminal shows a finished run. This script only adds motion,
+   and only while motion is allowed:
+     - prefers-reduced-motion is not set, and
+     - the Motion switch is on (localStorage 'ff-bg-off', owned by
+       FFBackground in transition.js, announced via 'ff-bg-change').
+
+   Page options come from <body data-rain-glyphs data-rain-heat
+   data-rain-links>.
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var body = document.body;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  function bgOff() { try { return localStorage.getItem('ff-bg-off') === '1'; } catch (e) { return false; } }
+  function allowed() { return !reduce.matches && !bgOff(); }
+
+  /* ---------- Matrix rain ---------- */
+  var rain = (function () {
+    var c = document.getElementById('matrix');
+    if (!c) return { start: function () {}, stop: function () {} };
+    var ctx = c.getContext('2d');
+    var chars = (body.getAttribute('data-rain-glyphs') || 'FORGEDFRAMEWORKS01∆◊#&=><[]{}|~').split('');
+    var heatColour = body.getAttribute('data-rain-heat') || '#a05b32';
+    var fs = 15, cols = 0, drops = [], heat = [], px = -1, lastMove = 0, raf = 0, acc = 0, prev = 0;
+
+    function resize() {
+      c.width = innerWidth; c.height = innerHeight;
+      cols = Math.floor(c.width / fs);
+      drops = Array.from({ length: cols }, function () { return Math.random() * c.height / fs; });
+      heat = new Array(cols).fill(0);
+    }
+    function onMove(e) {
+      var now = performance.now();
+      if (now - lastMove < 32) return;
+      lastMove = now; px = e.clientX;
+    }
+    function draw(t) {
+      raf = requestAnimationFrame(draw);
+      if (document.hidden) return;
+      acc += t - prev; prev = t;
+      if (acc < 64) return;
+      acc = 0;
+      ctx.fillStyle = 'rgba(252,251,249,0.09)';
+      ctx.fillRect(0, 0, c.width, c.height);
+      ctx.font = fs + 'px "JetBrains Mono", monospace';
+      var hc = px < 0 ? -1 : Math.floor(px / fs);
+      for (var i = 0; i < cols; i++) {
+        if (hc >= 0) { var d = Math.abs(i - hc); heat[i] = Math.max(heat[i] * 0.94, d < 6 ? 1 - d / 6 : 0); }
+        else heat[i] *= 0.94;
+        ctx.fillStyle = heat[i] > 0.05 ? heatColour : '#bc6c3c';
+        ctx.fillText(chars[(Math.random() * chars.length) | 0], i * fs, drops[i] * fs);
+        if (drops[i] * fs > c.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i] += 0.4 + heat[i] * 1.6;
+      }
+    }
+    return {
+      start: function () {
+        if (raf) return;
+        if ('ontouchstart' in window && innerWidth < 768) { c.style.display = 'none'; return; }
+        c.style.display = '';
+        resize();
+        addEventListener('resize', resize);
+        addEventListener('pointermove', onMove);
+        prev = performance.now();
+        raf = requestAnimationFrame(draw);
+      },
+      stop: function () {
+        cancelAnimationFrame(raf); raf = 0;
+        removeEventListener('resize', resize);
+        removeEventListener('pointermove', onMove);
+        ctx.clearRect(0, 0, c.width, c.height);
+      }
+    };
+  })();
+
+  /* ---------- Live forge terminal (index only) ---------- */
+  var terminal = (function () {
+    var log = document.getElementById('termLog');
+    var dataEl = document.getElementById('forgeScript');
+    if (!log || !dataEl) return { start: function () {}, stop: function () {} };
+    var script = JSON.parse(dataEl.textContent);
+    var steps = Array.prototype.slice.call(document.querySelectorAll('#tracker li'));
+    var status = document.getElementById('termStatus');
+    var caret = log.querySelector('.term__caret');
+    var finished = log.innerHTML;
+    var timer = 0, i = 0;
+
+    function setStep(step, done) {
+      steps.forEach(function (li, n) {
+        var isDone = n < step || done, active = n === step && !done;
+        li.classList.toggle('is-done', isDone);
+        li.classList.toggle('is-active', active);
+        li.querySelector('.tracker__dot').textContent = isDone ? '✔' : String(n);
+      });
+      status.classList.toggle('is-done', !!done);
+      status.classList.toggle('is-busy', !done && step > 0);
+      status.textContent = done ? 'Forge complete' : step === 0 ? 'Idle' : 'Forging documents…';
+    }
+    function addLine(l) {
+      var div = document.createElement('div');
+      div.className = 'l l--' + l.k;
+      div.textContent = l.t;
+      log.insertBefore(div, caret);
+      var lines = log.querySelectorAll('.l');
+      for (var n = 0; n < lines.length - 14; n++) lines[n].remove();
+    }
+    function clear() { log.querySelectorAll('.l').forEach(function (n) { n.remove(); }); }
+    function tick() {
+      var l = script[i];
+      addLine(l);
+      setStep(l.s, l.s === 7);
+      i++;
+      if (i >= script.length) {
+        i = 0;
+        timer = setTimeout(function () { clear(); setStep(0, false); tick(); }, l.d);
+        return;
+      }
+      timer = setTimeout(tick, l.d);
+    }
+    return {
+      start: function () {
+        if (timer) return;
+        clear(); i = 0; tick();
+      },
+      stop: function () {
+        clearTimeout(timer); timer = 0;
+        log.innerHTML = finished;
+        caret = log.querySelector('.term__caret');
+        setStep(7, true);
+      }
+    };
+  })();
+
+  /* ---------- Scroll reveals ----------
+     Only elements below the fold are hidden, and only by this script,
+     so a slow or blocked script can never leave content invisible. */
+  var reveals = (function () {
+    var io = null, sweepT = 0, primed = [];
+    function show(el, delay) {
+      el.style.transition = 'opacity 0.7s ease ' + delay + 'ms, transform 0.7s cubic-bezier(0.22,0.61,0.36,1) ' + delay + 'ms';
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+    }
+    function hide(el, y) {
+      el.style.transition = 'none';
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(' + y + ')';
+      primed.push(el);
+    }
+    function release(el) {
+      if (el.__words) el.__words.forEach(function (w, n) { show(w, n * 60); });
+      else show(el, 0);
+      el.__pending = false;
+    }
+    function below(el) { return el.getBoundingClientRect().top > innerHeight * 0.9; }
+    function sweep() {
+      document.querySelectorAll('[data-reveal],h1,h2').forEach(function (el) {
+        if (el.__pending && el.getBoundingClientRect().top <= innerHeight * 0.92) { if (io) io.unobserve(el); release(el); }
+      });
+    }
+    function onScroll() { clearTimeout(sweepT); sweepT = setTimeout(sweep, 80); }
+    return {
+      start: function () {
+        if (io || document.hidden) return;
+        io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (!en.isIntersecting) return;
+            io.unobserve(en.target);
+            release(en.target);
+          });
+        }, { rootMargin: '0px 0px -8% 0px' });
+        document.querySelectorAll('h1,h2').forEach(function (h) {
+          var words = Array.prototype.slice.call(h.querySelectorAll('.w'));
+          if (!words.length || !below(h)) return;
+          words.forEach(function (w) { hide(w, '60%'); });
+          h.__words = words; h.__pending = true;
+          io.observe(h);
+        });
+        document.querySelectorAll('[data-reveal]').forEach(function (el) {
+          if (!below(el)) return;
+          hide(el, '24px');
+          el.__pending = true;
+          io.observe(el);
+        });
+        void document.body.offsetHeight;
+        addEventListener('scroll', onScroll, { passive: true });
+      },
+      stop: function () {
+        if (io) { io.disconnect(); io = null; }
+        removeEventListener('scroll', onScroll);
+        primed.forEach(function (el) { el.style.transition = ''; el.style.opacity = ''; el.style.transform = ''; el.__pending = false; });
+        primed = [];
+      }
+    };
+  })();
+
+  /* ---------- Stage / role highlight ---------- */
+  var lights = (function () {
+    var io = null;
+    return {
+      start: function () {
+        if (io) return;
+        io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) { en.target.classList.toggle('is-lit', en.isIntersecting); });
+        }, { rootMargin: '-40% 0px -40% 0px' });
+        document.querySelectorAll('[data-stage]').forEach(function (el) { io.observe(el); });
+      },
+      stop: function () {
+        if (io) { io.disconnect(); io = null; }
+        document.querySelectorAll('[data-stage].is-lit').forEach(function (el) { el.classList.remove('is-lit'); });
+      }
+    };
+  })();
+
+  /* ---------- Silver rain page transitions ---------- */
+  var linkPattern = body.getAttribute('data-rain-links');
+  if (linkPattern) {
+    var re = new RegExp(linkPattern);
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (!a) return;
+      var href = a.getAttribute('href') || '';
+      if (!re.test(href) || a.target === '_blank') return;
+      if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      if (!allowed()) return;
+      e.preventDefault();
+      var ov = document.createElement('div');
+      ov.setAttribute('aria-hidden', 'true');
+      ov.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#1a1a1a;';
+      var cvs = document.createElement('canvas');
+      ov.appendChild(cvs);
+      document.body.appendChild(ov);
+      var ctx = cvs.getContext('2d'), fs = 16;
+      var w = cvs.width = innerWidth, h = cvs.height = innerHeight;
+      var chars = 'FORGEDFRAMEWORKS01∆◊#&=><[]{}|~'.split('');
+      var cols = Math.floor(w / fs);
+      var drops = Array.from({ length: cols }, function () { return Math.random() * h / fs; });
+      var raf;
+      function draw() {
+        ctx.fillStyle = 'rgba(26,26,26,0.09)';
+        ctx.fillRect(0, 0, w, h);
+        ctx.font = fs + 'px "JetBrains Mono", monospace';
+        for (var i = 0; i < cols; i++) {
+          ctx.fillStyle = Math.random() > 0.4 ? '#cccccc' : '#ffffff';
+          ctx.fillText(chars[(Math.random() * chars.length) | 0], i * fs, drops[i] * fs);
+          if (drops[i] * fs > h && Math.random() > 0.975) drops[i] = 0;
+          drops[i] += 0.65;
+        }
+        raf = requestAnimationFrame(draw);
+      }
+      raf = requestAnimationFrame(draw);
+      setTimeout(function () { ov.style.transition = 'background 0.35s ease'; ov.style.background = '#fcfbf9'; }, 750);
+      setTimeout(function () { cancelAnimationFrame(raf); location.href = href; }, 1050);
+    });
+    /* Returning via the back button restores this page from cache with the overlay still up */
+    addEventListener('pageshow', function (e) {
+      if (e.persisted) document.querySelectorAll('body > div[aria-hidden="true"]').forEach(function (n) { if (n.querySelector('canvas')) n.remove(); });
+    });
+  }
+
+  /* ---------- Motion on / off ---------- */
+  var running = false;
+  function apply() {
+    var go = allowed();
+    if (go === running) return;
+    running = go;
+    [rain, terminal, reveals, lights].forEach(function (m) { go ? m.start() : m.stop(); });
+  }
+  function boot() {
+    if (document.hidden) {
+      var once = function () { if (!document.hidden) { document.removeEventListener('visibilitychange', once); apply(); } };
+      document.addEventListener('visibilitychange', once);
+      return;
+    }
+    apply();
+  }
+  addEventListener('ff-bg-change', apply);
+  if (reduce.addEventListener) reduce.addEventListener('change', apply);
+  boot();
+})();
