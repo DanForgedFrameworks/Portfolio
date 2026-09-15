@@ -7,7 +7,7 @@
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 section[id] { scroll-margin-top: 64px; }
-@media (max-width: 760px) { section[id] { scroll-margin-top: 104px; } }
+@media (max-width: 1100px) { section[id] { scroll-margin-top: 104px; } }
 body { margin: 0; background: var(--ff-paper); color: var(--ff-ink); overflow-x: hidden; }
 img { max-width: 100%; }
 a { color: var(--ff-copper-hot); }
@@ -58,12 +58,16 @@ html.ff-bg-off #matrix { display: none; }
 /* Small screens: the logo keeps its own row and the menu sits beneath it, wrapping
    onto a second line when it has to. It never scrolls sideways: a link hidden past
    the edge with no cue is a link nobody finds. Tight row gap keeps the pinned header short. */
-@media (max-width: 760px) {
+/* Tablet uses the same two-row header on purpose: the one-line header does not fit below
+   about 1100px, and letting it wrap on its own left the buttons hanging off the right. */
+@media (max-width: 1100px) {
   .site-header .wrap { position: relative; flex-wrap: wrap; gap: 4px; padding-bottom: 4px; }
   .nav { width: 100%; justify-content: flex-start; gap: 0 16px; }
   .nav a:not(.btn) { padding: 6px 2px; }
   .nav .motion-btn { padding: 4px 8px; font-size: 12px; }
   .nav .btn { position: absolute; top: 12px; right: clamp(16px,4vw,40px); padding: 8px 14px; }
+}
+@media (max-width: 760px) {
   .sticky-col { position: static; }
 }
 @media (max-width: 380px) {
@@ -122,6 +126,25 @@ html.ff-bg-off #matrix { display: none; }
 .cards--260 { grid-template-columns: repeat(auto-fit, minmax(min(100%,260px),1fr)); }
 .cards--280 { grid-template-columns: repeat(auto-fit, minmax(min(100%,280px),1fr)); }
 .cards--300 { grid-template-columns: repeat(auto-fit, minmax(min(100%,300px),1fr)); }
+/* Card groups with a set number per row. A short last row stretches to fill it, so no
+   group ends on an empty slot. Six-track grid: each card spans 2 (three per row).
+   .cards--3: three per row, a last row of two goes half and half, a lone card goes full width.
+   .cards--quotes: three per row, then everything from card 7 two per row (10 cards: 3+3+2+2). */
+.cards--3, .cards--quotes { grid-template-columns: repeat(6, minmax(0,1fr)); }
+.cards--3 > *, .cards--quotes > * { grid-column: span 2; }
+@media (min-width: 1001px) {
+  .cards--3 > :nth-child(3n+1):nth-last-child(2), .cards--3 > :nth-child(3n+2):last-child { grid-column: span 3; }
+  .cards--3 > :nth-child(3n+1):last-child { grid-column: span 6; }
+  .cards--quotes > :nth-child(n+7) { grid-column: span 3; }
+}
+@media (max-width: 1000px) {
+  .cards--3, .cards--quotes { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .cards--3 > *, .cards--quotes > * { grid-column: auto; }
+  .cards--3 > :nth-child(odd):last-child, .cards--quotes > :nth-child(odd):last-child { grid-column: 1 / -1; }
+}
+@media (max-width: 640px) {
+  .cards--3, .cards--quotes { grid-template-columns: minmax(0,1fr); }
+}
 .hover-lift { transition: transform 0.3s ease, border-color 0.3s ease; }
 /* Lift only where a pointer can hover: on touch screens a tapped card would stay raised */
 @media (hover: hover) { .hover-lift:hover { transform: translateY(-4px); } }
@@ -189,15 +212,16 @@ html.ff-bg-off .term__caret { animation: none; }
    Desktop: one row, line across the top through the numbered nodes.
    Narrow: one column, line down the left. forge.js animates it on scroll by
    adding .is-primed (start state) then .is-run; without the script it is static. */
-.forge-line { list-style: none; padding: 0; position: relative; display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 12px; }
-.forge-line::before { content: ""; position: absolute; left: 14px; right: 14px; top: 13px; height: 2px; background: var(--ff-copper); transform-origin: left center; }
+.forge-line { --fl-gap: 12px; list-style: none; padding: 0; position: relative; display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: var(--fl-gap); }
+/* right: one column's width less half a node, so the line stops at the centre of node 07 */
+.forge-line::before { content: ""; position: absolute; left: 14px; right: calc((100% - 6 * var(--fl-gap)) / 7 - 14px); top: 13px; height: 2px; background: var(--ff-copper); transform-origin: left center; }
 .fl-item { position: relative; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .fl-node { position: relative; z-index: 1; width: 28px; height: 28px; border-radius: 50%; background: var(--ff-paper-warm); border: 2px solid var(--ff-copper); color: var(--ff-copper-deep); display: grid; place-items: center; font-family: var(--font-mono); font-size: var(--fs-xs); font-weight: 700; }
 .artefact { padding: 16px 14px; min-height: 150px; flex: 1; gap: 8px; }
 .artefact strong { font-size: 16px; line-height: 1.25; }
 .artefact span { font-size: 13px; line-height: 1.45; color: var(--ff-ink-muted); margin-top: auto; }
 @media (min-width: 1001px) and (max-width: 1100px) {
-  .forge-line { gap: 8px; }
+  .forge-line { --fl-gap: 8px; }
   .artefact { padding: 14px 10px; }
   .artefact strong { font-size: 15px; }
 }
@@ -223,10 +247,18 @@ html.ff-bg-off .term__caret { animation: none; }
 .lead-case h3 { font-size: clamp(24px,2.6vw,34px); line-height: 1.15; color: #fff; }
 .lead-case p, .lead-case li { color: #d7dee3; }
 .lead-case ul { padding-left: 18px; font-size: 15px; line-height: 1.6; display: flex; flex-direction: column; gap: 4px; }
+.lead-case__statwrap { container-type: inline-size; }
 .lead-case__stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; align-content: start; }
 .lead-case__stat { background: rgba(255,255,255,0.06); border: 1px solid rgba(224,154,107,0.25); border-radius: var(--radius-md); padding: 16px; }
 .lead-case__stat b { display: block; font-size: 30px; color: #e09a6b; line-height: 1; }
 .lead-case__stat span { display: block; font-size: 13px; color: #c4cdd4; margin-top: 6px; }
+/* Below 480px three tiles are narrower than "Pre/post" at 30px, so they stack, number beside caption */
+@container (max-width: 480px) {
+  .lead-case__stats { grid-template-columns: minmax(0,1fr); gap: 10px; }
+  .lead-case__stat { display: flex; align-items: baseline; gap: 16px; padding: 14px 16px; }
+  .lead-case__stat b { flex: none; min-width: 4.4em; }
+  .lead-case__stat span { margin-top: 0; }
+}
 .shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%,220px),1fr)); gap: 12px; }
 .shots img { width: 100%; aspect-ratio: 16/10; object-fit: cover; object-position: top; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.14); display: block; }
 .rail { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(200px,1fr); gap: 12px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x proximity; }
@@ -264,7 +296,10 @@ html.ff-bg-off .term__caret { animation: none; }
 /* ---------- Engagement ---------- */
 .eng__n { width: 36px; height: 36px; border-radius: 50%; background: var(--ff-copper-wash); color: var(--ff-copper-hot); display: grid; place-items: center; font-weight: 700; font-size: 15px; }
 .eng .card__foot { font-family: var(--font-mono); font-size: 12px; }
-.times { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%,200px),1fr)); gap: 12px 28px; }
+/* Footers get room for two lines side by side, so the rule above each one sits level across the row */
+@media (min-width: 761px) { .eng .card__foot { line-height: 1.5; min-height: calc(3em + 10px); } }
+.times { display: grid; grid-template-columns: minmax(0,1fr); gap: 4px 40px; }
+@media (min-width: 761px) { .times { grid-template-columns: repeat(2, minmax(0,1fr)); grid-template-rows: repeat(3, auto); grid-auto-flow: column; } }
 .times div { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--ff-paper-rule); padding: 8px 0; font-size: 14px; }
 .times span:last-child { font-family: var(--font-mono); color: var(--ff-copper-hot); white-space: nowrap; }
 
