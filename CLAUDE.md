@@ -82,6 +82,11 @@ Follow every step below on **every push**, no exceptions.
     > ```
     > If it returns anything else, replace every `#7f8c8d` with `#5f6e6f` in `cv/index.html` and
     > fold the same change into the skill's source assets so the next build ships it.
+    > **Accessibility pass (added 15 Sept 2026):** `/adaptable-cv` now runs `scripts/a11y_pass.py` on every build:
+    > the CV's accent (small text, chips, active preset button) defaults to `#a05b32` (5.2:1) instead of `#bc6c3c`
+    > (3.93:1), and the role hint uses `#5f6e6f`. After any CV build: `grep -c "P.accent || '#a05b32'" cv/index.html`
+    > must return `1`. The back-link script also sets the page title, `lang="en-GB"` and a level-1 heading on the name,
+    > and on screens 600px and narrower places the back button on its own line above the name.
     > Still outstanding in the CV (not changed, because the pages are fixed-height and re-flowing
     > them risks breaking pagination): inline type at 9.5px, 10.5px and 11px on the stats, dates and
     > education lines. Raise those to 11px minimum when the page templates are next touched.
@@ -94,7 +99,7 @@ Follow every step below on **every push**, no exceptions.
 
     Authored outside the versioned bundle, so **exclude `statements/` from the STEP 2 stale-file diff and never `git rm` it** — the same treatment as `cv/`. Left unprotected at the repo root these would have matched STEP 2's "any `*.html` at root not in the v-manifest" rule and been swept on the next deploy; the folder is what keeps them out of that sweep.
 
-    > ⚠️ **Controlled documents — version before you edit.** Each statement carries a reference, version, issue date and next-review date in its `.control` block, and repeats the reference and version in the footer `.sig`. Both say in their own *Review* section that superseded versions remain traceable in repository history. So **never quietly rewrite one in place** — bump the version and issue date in *both* the `.control` block and the footer `.sig` together, and let git history carry the previous wording. Editing the text while leaving `v1.0 · Issued 10 August 2026` in place breaks a claim the document makes about itself. Next review for both: **Aug 2027**.
+    > ⚠️ **Controlled documents — version before you edit.** Each statement carries a reference, version, issue date and next-review date in its `.control` block, and repeats the reference and version in the footer `.sig`. Both say in their own *Review* section that superseded versions remain traceable in repository history. So **never quietly rewrite one in place** — bump the version and issue date in *both* the `.control` block and the footer `.sig` together, and let git history carry the previous wording. Editing the text while leaving the old version and date in place breaks a claim the document makes about itself. Current issue for both: **v1.1 · Issued 15 September 2026** (email corrected to `dan.boyland@`, sentence-case labels). Next review for both: **Aug 2027**. The Word originals live in the owner's Google Drive business folder; a new version there is uploaded alongside the old one, not over it.
 
 ---
 
@@ -265,10 +270,11 @@ Rules that are easy to break:
 3. **Terminal copy lives in the `#forgeScript` JSON block** in `index.html`, and the static finished
    run above it must match its last 14 lines.
 
-The Motion button is in each page's footer and must carry `data-bg-toggle`:
+Each page has **two** Motion buttons, one in the header nav and one in the footer, and both must carry
+`data-bg-toggle` (a visible pause control near the moving content, not only at the foot of a long page):
 
 ```bash
-grep -c "data-bg-toggle" index.html accreditation-quality.html   # 1 1
+grep -c "data-bg-toggle" index.html accreditation-quality.html   # 2 2
 ```
 
 The label is set by `FFBackground.paint()` in `transition.js`, **not** by the page. It reads

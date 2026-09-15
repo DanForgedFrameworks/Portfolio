@@ -22,6 +22,7 @@
   --sans:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box}
+a{overflow-wrap:anywhere}
 html{-webkit-text-size-adjust:100%}
 body{
   margin:0;
@@ -47,8 +48,8 @@ a:focus-visible,summary:focus-visible{
 .brandline img{width:34px;height:34px;object-fit:contain;display:block}
 .brandline b{font-weight:800;font-size:.95rem;letter-spacing:-.01em}
 .eyebrow{
-  font-family:var(--mono);font-size:.75rem;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--deep-red);margin:0 0 .85rem
+  font-family:var(--mono);font-size:.75rem;
+  color:var(--deep-red);margin:0 0 .85rem
 }
 h1{
   font-size:clamp(2.1rem,6vw,3.1rem);font-weight:900;letter-spacing:-.035em;
@@ -64,7 +65,7 @@ h1{
 }
 .control div{margin:0}
 .control dt{
-  font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;
+  font-family:var(--mono);font-size:.68rem;
   color:var(--slate);margin:0 0 .3rem
 }
 .control dd{margin:0;font-family:var(--mono);font-size:.83rem;font-weight:500;color:var(--ink)}
@@ -85,7 +86,7 @@ p:last-child{margin-bottom:0}
   border-radius:0 3px 3px 0;padding:1.5rem 1.6rem;margin-bottom:1rem
 }
 .clause-no{
-  font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;color:var(--slate);
+  font-family:var(--mono);font-size:.72rem;color:var(--slate);
   display:block;margin-bottom:.45rem
 }
 .clause h3{
@@ -98,7 +99,7 @@ p:last-child{margin-bottom:0}
   font-family:var(--mono);font-size:.8rem;line-height:1.55;color:var(--slate)
 }
 .verify b{color:var(--deep-red);font-weight:500;display:block;margin-bottom:.15rem;
-  letter-spacing:.06em;text-transform:uppercase;font-size:.68rem}
+  font-size:.68rem}
 
 /* ---- limits ---- */
 .limits{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:1.75rem 1.6rem}
@@ -146,8 +147,8 @@ footer a:hover{text-decoration-thickness:2px}
 
 <dl class="control">
   <div><dt>Reference</dt><dd>FF-ES-01</dd></div>
-  <div><dt>Version</dt><dd>1.0</dd></div>
-  <div><dt>Issued</dt><dd>10 Aug 2026</dd></div>
+  <div><dt>Version</dt><dd>1.1</dd></div>
+  <div><dt>Issued</dt><dd>15 Sep 2026</dd></div>
   <div><dt>Next review</dt><dd>Aug 2027</dd></div>
 </dl>
 
@@ -163,28 +164,28 @@ footer a:hover{text-decoration-thickness:2px}
   <ol class="clauses">
 
     <li class="clause">
-      <span class="clause-no">CLAUSE 1</span>
+      <span class="clause-no">Clause 1</span>
       <h3>Remote by default, travel by exception</h3>
       <p>Client and subject matter expert collaboration runs online as standard. I travel where the work genuinely needs presence, such as an on-site meeting a client requires, and not as a default courtesy. Programmes spanning multiple sites and organisations are built without the associated travel.</p>
       <p class="verify"><b>Check this by</b>Asking any client how many working sessions across a full programme build were held in person.</p>
     </li>
 
     <li class="clause">
-      <span class="clause-no">CLAUSE 2</span>
+      <span class="clause-no">Clause 2</span>
       <h3>Deliverables are digital, and revisions replace rather than obsolete</h3>
       <p>Programmes are delivered through Articulate Rise 360 and Moodle. There are no print runs, no shipped workbooks and no stock of printed material to dispose of when guidance changes. When a standard is updated, the live version is corrected in place, which matters in regulated sectors where content changes more often than most.</p>
       <p class="verify"><b>Check this by</b>Asking any client what physical material was produced across a programme build.</p>
     </li>
 
     <li class="clause">
-      <span class="clause-no">CLAUSE 3</span>
+      <span class="clause-no">Clause 3</span>
       <h3>Compute is named as a footprint, not treated as free</h3>
       <p>AI-assisted build workflows are a real part of how I work and they carry an energy cost. Where a provider publishes renewable-powered regions and offers a choice of region, I select accordingly. I would rather state compute as part of the account than leave it out because it happens to be invisible.</p>
       <p class="verify"><b>Check this by</b>Asking which providers and regions were used on a given build, and checking those regions against the provider's published energy disclosures.</p>
     </li>
 
     <li class="clause">
-      <span class="clause-no">CLAUSE 4</span>
+      <span class="clause-no">Clause 4</span>
       <h3>Purchasing goes to zero waste suppliers where a real alternative exists</h3>
       <p>Consumables and supplies for the business are bought from zero waste businesses wherever a genuine alternative exists. Where none does, the purchase is made conventionally and is not dressed up as something else.</p>
       <p class="verify"><b>Check this by</b>Asking for the suppliers used. The list is short enough to share.</p>
@@ -207,14 +208,14 @@ footer a:hover{text-decoration-thickness:2px}
 <section>
   <h2>Review</h2>
   <p>This statement is reviewed annually, or sooner if the business changes shape in a way that alters the picture, for example taking on premises, staff or regular travel. Each version is dated and superseded versions remain in the repository history, so the position can be traced rather than quietly rewritten.</p>
-  <p>If any claim above looks weaker than it sounds, say so. That is what the limitations section is for, and it can be extended. Contact <a href="mailto:daniel.boyland@forgedframeworks.co.uk">daniel.boyland@forgedframeworks.co.uk</a>.</p>
+  <p>If any claim above looks weaker than it sounds, say so. That is what the limitations section is for, and it can be extended. Contact <a href="mailto:dan.boyland@forgedframeworks.co.uk">dan.boyland@forgedframeworks.co.uk</a>.</p>
 </section>
 
 </main>
 
 <footer>
   <p>Forged Frameworks · Daniel Boyland · <a href="../index.html">Portfolio</a></p>
-  <p class="sig">FF-ES-01 v1.0 · Issued 10 August 2026</p>
+  <p class="sig">FF-ES-01 v1.1 · Issued 15 September 2026</p>
 </footer>
 
 </div>
