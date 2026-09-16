@@ -274,6 +274,14 @@ GitHub Pages on Linux is **case-sensitive**. Always use lowercase filenames:
 - **The lead case's stat tiles sit in `.lead-case__statwrap`** (a container-query wrapper): under
   480px of column width they stack, because "Pre/post" at 30px is wider than a third of the row.
 - **The forge line's `::before` stops at node 07** via `--fl-gap`; change the gap in both places.
+- **Photos ship at twice their CSS box, as WebP plus a JPEG fallback** (added 16 Sept 2026 after a
+  reader reported slow loading: the portrait was 3.7 MB and the UKAS photo 9.9 MB at camera size).
+  Portrait box is 440x550 so the file is 825x1100; UKAS box is 360x450 so 1350x900; the video
+  poster tile is 320x200 so 711x400. Save JPEG quality 82 progressive and WebP quality 80, wrap in
+  `<picture><source type="image/webp" srcset="…webp"><img src="…jpg"></picture>`. `forge.css` sets
+  `picture { display: contents }` and hides its `source`, so the img stays the grid item and the
+  About and role grids do not gain a column. Do not add `width`/`height` to these imgs: the CSS
+  `aspect-ratio` already reserves the space, and the attributes override the crop.
 
 ## Design-first order (16 Sept 2026, owner decision; keep if the page is rebuilt)
 
