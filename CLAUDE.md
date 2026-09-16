@@ -272,9 +272,10 @@ GitHub Pages on Linux is **case-sensitive**. Always use lowercase filenames:
 
 ## Design-first order (16 Sept 2026, owner decision; keep if the page is rebuilt)
 
-The main page leads with the craft and follows with the tool. Section order: Hero > Problem > Range >
-Numbers > Case studies > Catalyst stages > Artefacts > Sectors > Ethos > About > Asides > Testimonials
-> Working together > Contact. Nav order matches: Work first, Catalyst second.
+The main page leads with the craft and follows with the tool. Section order: Hero > Problem > About >
+Asides > Range > Numbers > Case studies > Catalyst stages > Artefacts > Sectors > Ethos > Testimonials
+> Working together > Contact. The hero lead opens in the first person and names the owner: Forged
+Frameworks is one person and the tools he built, said in the first screen rather than 64% down. Nav order matches: Work first, Catalyst second.
 
 - **The hero's right column is the `.design-panel`** (five method lines drawn from the learning-aide
   engine: feedback that teaches, formats chosen by the content, nothing hidden behind a click, chunked
