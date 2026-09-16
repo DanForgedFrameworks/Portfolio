@@ -108,13 +108,16 @@
     };
   })();
 
-  /* ---------- Live forge terminal (index only) ---------- */
+  /* ---------- Live forge terminal (index only, beside the Catalyst stages) ---------- */
   var terminal = (function () {
     var log = document.getElementById('termLog');
     var dataEl = document.getElementById('forgeScript');
     if (!log || !dataEl) return { start: function () {}, stop: function () {} };
     var script = JSON.parse(dataEl.textContent);
     var steps = Array.prototype.slice.call(document.querySelectorAll('#tracker li'));
+    /* The five stage cards beside the terminal; script stages 1..6 map onto them (6, final resources, is still Publish) */
+    var cards = Array.prototype.slice.call(document.querySelectorAll('#catalyst .step[data-stage]'));
+    var CARD_FOR_STAGE = [-1, 0, 1, 2, 3, 4, 4, -1];
     var status = document.getElementById('termStatus');
     var caret = log.querySelector('.term__caret');
     var finished = log.innerHTML;
@@ -127,6 +130,7 @@
         li.classList.toggle('is-active', active);
         li.querySelector('.tracker__dot').textContent = isDone ? '✔' : String(n);
       });
+      cards.forEach(function (c, n) { c.classList.toggle('is-forging', !done && CARD_FOR_STAGE[step] === n); });
       status.classList.toggle('is-done', !!done);
       status.classList.toggle('is-busy', !done && step > 0);
       status.textContent = done ? 'Forge complete' : step === 0 ? 'Idle' : 'Forging documents…';

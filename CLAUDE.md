@@ -37,7 +37,7 @@ Follow every step below on **every push**, no exceptions.
 - **Repo root:** `C:\Users\celt_\OneDrive\VLE e-Learning Documents\FFW Portfolio\Forged Frameworks Portfolio\github-deploy`
 - **Bundle source pattern:** a sibling `Forged Frameworks Portfolio <version>\github-deploy` folder
 - **Live URL base:** `https://danforgedframeworks.github.io/Portfolio/`
-- **Entry page:** `index.html` (the main site: hero terminal, Catalyst, work, about, engagement, contact)
+- **Entry page:** `index.html` (the main site: hero with the design panel, the learning-design problem, range, work, Catalyst with the terminal, about, engagement, contact)
 
 - **Core pages** (must exist at root after deploy):
   - `index.html`
@@ -270,9 +270,30 @@ GitHub Pages on Linux is **case-sensitive**. Always use lowercase filenames:
   480px of column width they stack, because "Pre/post" at 30px is wider than a third of the row.
 - **The forge line's `::before` stops at node 07** via `--fl-gap`; change the gap in both places.
 
+## Design-first order (16 Sept 2026, owner decision; keep if the page is rebuilt)
+
+The main page leads with the craft and follows with the tool. Section order: Hero > Problem > Range >
+Numbers > Case studies > Catalyst stages > Artefacts > Sectors > Ethos > About > Asides > Testimonials
+> Working together > Contact. Nav order matches: Work first, Catalyst second.
+
+- **The hero's right column is the `.design-panel`** (five method lines drawn from the learning-aide
+  engine: feedback that teaches, formats chosen by the content, nothing hidden behind a click, chunked
+  and signposted, consistent across a module). It is not the terminal any more.
+- **The terminal (`.forge`: tracker, `#termLog`, caption, `#forgeScript`) lives in the Catalyst
+  section's `.sticky-col`**, beside the five stage cards. `forge.js` adds `.is-forging` to the stage
+  card matching the replay's current stage (`CARD_FOR_STAGE`), so the replay demonstrates the stages.
+- **The Problem band states the learning-design problem** (dated content, feedback that marks without
+  teaching, one format throughout) and closes on both answers, the method and Catalyst. It is not a
+  Catalyst pitch on its own.
+- **Two lead cases in Work:** the Asbestos ITM (a build from new) and the anonymised review-and-uplift
+  case (audit and rebuild, L3 NVQ to L6 HE, with the anonymised medical-education static-to-interactive
+  sub-case). The 100% and 240+ figures live in that case's stat tiles, not in the Numbers strip.
+  **Client names, drug names and live embed links for the medical-education work stay out** until
+  Touch Medical gives written permission; the sub-case is deliberately generic.
+
 ## Motion maintenance (rewritten for the Sept 2026 two-page site)
 
-`forge.js` owns all motion on both pages: the `#matrix` rain, the hero terminal replay (index only),
+`forge.js` owns all motion on both pages: the `#matrix` rain, the Catalyst terminal replay (index only, in the Catalyst section),
 scroll reveals, stage/role highlighting and the silver-rain page transitions. It runs only while
 motion is allowed — `prefers-reduced-motion` is not set **and** the Motion switch is on.
 

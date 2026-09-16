@@ -178,6 +178,18 @@ html.ff-bg-off #matrix { display: none; }
 html.ff-bg-off .term__caret { animation: none; }
 .forge__cap { font-family: var(--font-mono); font-size: 13px; color: var(--ff-ink-muted); }
 
+/* ---------- Design panel (hero, index) ----------
+   Sits where the terminal used to: the first screen states the method, the
+   terminal now demonstrates the tooling beside the Catalyst stages. */
+.design-panel { background: var(--ff-ink); color: var(--ff-paper); border-radius: var(--radius-md); border-top: 4px solid var(--ff-copper); box-shadow: var(--ff-shadow-terminal); padding: clamp(22px,3vw,34px); display: flex; flex-direction: column; gap: 16px; }
+.design-panel .eyebrow { color: #e09a6b; }
+.design-panel__title { font-size: clamp(22px,2.2vw,30px); line-height: 1.15; font-weight: 700; color: #fff; text-wrap: pretty; }
+.design-panel__list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+.design-panel__list li { position: relative; padding-left: 22px; font-size: 15px; line-height: 1.55; color: #d7dee3; text-wrap: pretty; }
+.design-panel__list li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 10px; height: 10px; border-radius: 50%; background: var(--ff-copper); }
+.design-panel__list b { color: #fff; }
+.design-panel .link-strong { color: #e09a6b; align-self: flex-start; }
+
 /* ---------- Range / numbers ---------- */
 .tools { background: #fff; border: 1px solid var(--ff-paper-edge); border-radius: var(--radius-md); box-shadow: var(--ff-shadow-card); }
 .tools__row { display: grid; grid-template-columns: minmax(120px,160px) minmax(0,1fr); gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--ff-paper-rule); align-items: baseline; }
@@ -190,14 +202,18 @@ html.ff-bg-off .term__caret { animation: none; }
 .num__l { font-size: 14px; line-height: 1.45; color: var(--ff-ink-muted); text-wrap: pretty; }
 
 /* ---------- Stages / roles ---------- */
-.sticky-col { position: sticky; top: 96px; display: flex; flex-direction: column; gap: 18px; }
+.sticky-col { position: sticky; top: 96px; display: flex; flex-direction: column; gap: 18px; container-type: inline-size; }
+/* The tracker sits in the Catalyst column now; under 440px of column it goes two across so labels stop colliding */
+@container (max-width: 440px) { .tracker { grid-template-columns: repeat(2, minmax(0,1fr)); } }
 @media (max-width: 720px) { .sticky-col { position: static; } }
 .mini-stats { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 8px; }
 .mini-stats b { display: block; font-size: 32px; font-weight: 700; color: var(--ff-copper-hot); line-height: 1; }
 .mini-stats span { display: block; font-size: 13px; color: var(--ff-ink-muted); margin-top: 4px; }
 .steps { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 14px; }
 .step { background: #fff; border: 1px solid var(--ff-paper-edge); border-radius: var(--radius-md); padding: 20px; box-shadow: var(--ff-shadow-card); transition: border-color 0.3s ease, box-shadow 0.3s ease; }
-.step.is-lit { border-color: var(--ff-copper); box-shadow: var(--ff-glow-active); }
+.step.is-lit, .step.is-forging { border-color: var(--ff-copper); box-shadow: var(--ff-glow-active); }
+/* The terminal replay lights the stage it is forging (forge.js sets .is-forging from the script's stage) */
+.step.is-forging .step__n { background: var(--ff-copper); color: #fff; transition: background 0.3s ease, color 0.3s ease; }
 .step--num { display: grid; grid-template-columns: 44px minmax(0,1fr); gap: 16px; align-items: start; }
 .step__n { width: 36px; height: 36px; border-radius: 50%; background: var(--ff-neutral); display: grid; place-items: center; font-weight: 700; font-size: 15px; }
 .step h3 { font-size: 20px; font-weight: 700; line-height: 1.2; }
