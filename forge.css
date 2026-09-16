@@ -298,6 +298,7 @@ html.ff-bg-off .term__caret { animation: none; }
 .pill span { font-size: 13px; color: #c4cdd4; }
 
 /* ---------- About ---------- */
+picture { display: contents; } picture > source { display: none; }
 .about { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%,280px),1fr)); gap: clamp(28px,5vw,72px); align-items: center; }
 .portrait { width: 100%; max-width: 440px; aspect-ratio: 4/5; object-fit: cover; border-radius: var(--radius-md); border: 1px solid var(--ff-paper-edge); box-shadow: var(--ff-shadow-modal); display: block; justify-self: center; }
 .creds-lines { display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: var(--ff-ink-muted); line-height: 1.5; }
