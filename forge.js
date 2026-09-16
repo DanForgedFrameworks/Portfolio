@@ -233,6 +233,53 @@
     };
   })();
 
+  /* ---------- Count-ups ----------
+     Every stat that is a plain number (an optional ~ in front, an optional % or + after)
+     counts from 0 to its value the first time it scrolls into view. Anything else
+     ("L3 to L6", "Pre/post", "3 layers") is left alone. The page ships the final values,
+     so with the script off or motion off the numbers simply stand. */
+  var counters = (function () {
+    var RE = /^(~?)(\d[\d,]*)([%+]?)$/;
+    var items = [];
+    document.querySelectorAll('.num__n, .lead-case__stat b, .mini-stats b').forEach(function (el) {
+      var m = el.textContent.trim().match(RE);
+      if (!m) return;
+      items.push({ el: el, pre: m[1], n: parseInt(m[2].replace(/,/g, ''), 10), post: m[3], text: el.textContent, done: false });
+    });
+    var io = null;
+    function run(it) {
+      var t0 = performance.now(), dur = 1100;
+      function step(t) {
+        var p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+        it.el.textContent = it.pre + Math.round(it.n * e) + it.post;
+        if (p < 1 && !it.done) requestAnimationFrame(step); else { it.el.textContent = it.text; it.done = true; }
+      }
+      requestAnimationFrame(step);
+    }
+    return {
+      start: function () {
+        if (io || !items.length) return;
+        io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (!en.isIntersecting) return;
+            io.unobserve(en.target);
+            run(en.target.__count);
+          });
+        }, { threshold: 0.5 });
+        items.forEach(function (it) {
+          if (it.done) return;
+          it.el.__count = it;
+          it.el.textContent = it.pre + '0' + it.post;
+          io.observe(it.el);
+        });
+      },
+      stop: function () {
+        if (io) { io.disconnect(); io = null; }
+        items.forEach(function (it) { it.done = true; it.el.textContent = it.text; });
+      }
+    };
+  })();
+
   /* ---------- Stage / role highlight ---------- */
   var lights = (function () {
     var io = null;
@@ -372,7 +419,7 @@
     var go = allowed();
     if (go === running) return;
     running = go;
-    [rain, terminal, reveals, lights, forgeLine].forEach(function (m) { go ? m.start() : m.stop(); });
+    [rain, terminal, reveals, lights, forgeLine, counters].forEach(function (m) { go ? m.start() : m.stop(); });
   }
   function boot() {
     if (document.hidden) {

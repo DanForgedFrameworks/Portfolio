@@ -264,6 +264,10 @@ html.ff-bg-off .term__caret { animation: none; }
 .lead-case p, .lead-case li { color: #d7dee3; }
 .lead-case ul { padding-left: 18px; font-size: 15px; line-height: 1.6; display: flex; flex-direction: column; gap: 4px; }
 .lead-case__statwrap { container-type: inline-size; }
+/* Stat tiles pin while the case text scrolls past, and release at the end of the panel (the split has align-items:start) */
+@media (min-width: 761px) { .lead-case .split > .lead-case__statwrap { position: sticky; top: 96px; } }
+/* A number mid count-up must not reflow its row: tabular figures keep every digit the same width */
+.num__n, .lead-case__stat b, .mini-stats b { font-variant-numeric: tabular-nums; }
 .lead-case__stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; align-content: start; }
 .lead-case__stat { background: rgba(255,255,255,0.06); border: 1px solid rgba(224,154,107,0.25); border-radius: var(--radius-md); padding: 16px; }
 .lead-case__stat b { display: block; font-size: 30px; color: #e09a6b; line-height: 1; }

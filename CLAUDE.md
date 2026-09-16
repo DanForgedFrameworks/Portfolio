@@ -286,6 +286,14 @@ Frameworks is one person and the tools he built, said in the first screen rather
 - **The Problem band states the learning-design problem** (dated content, feedback that marks without
   teaching, one format throughout) and closes on both answers, the method and Catalyst. It is not a
   Catalyst pitch on its own.
+- **The Numbers strip carries four learning-design figures** (15+ kinds of block, 50+ live interactive
+  pieces, 12 hours to produce 3 hours of content where it used to take 24, ~40% SME time saved). The
+  laboratory figures live on the accreditation hero only. **~40% is the reconciled SME-time figure**
+  (owner, 16 Sept 2026): the site said ~30% and the CV said ~60%; both now read ~40%, and the
+  adaptable-cv skill's a11y_pass keeps the CV at ~40% through a rebuild.
+- **Count-ups and sticky tiles:** `forge.js` counts every plain-number stat (`.num__n`,
+  `.lead-case__stat b`, `.mini-stats b`) from 0 on first view, motion permitting; the lead cases'
+  stat tiles are `position: sticky` above 760px. Both are motion, so both obey the Motion switch.
 - **Two lead cases in Work:** the Asbestos ITM (a build from new) and the anonymised review-and-uplift
   case (audit and rebuild, L3 NVQ to L6 HE, with the anonymised medical-education static-to-interactive
   sub-case). The 100% and 240+ figures live in that case's stat tiles, not in the Numbers strip.
