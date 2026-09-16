@@ -98,7 +98,12 @@ Follow every step below on **every push**, no exceptions.
 
     Authored outside the versioned bundle, so **exclude `statements/` from the STEP 2 stale-file diff and never `git rm` it** — the same treatment as `cv/`. Left unprotected at the repo root these would have matched STEP 2's "any `*.html` at root not in the v-manifest" rule and been swept on the next deploy; the folder is what keeps them out of that sweep.
 
-    > ⚠️ **Controlled documents — version before you edit.** Each statement carries a reference, version, issue date and next-review date in its `.control` block, and repeats the reference and version in the footer `.sig`. Both say in their own *Review* section that superseded versions remain traceable in repository history. So **never quietly rewrite one in place** — bump the version and issue date in *both* the `.control` block and the footer `.sig` together, and let git history carry the previous wording. Editing the text while leaving the old version and date in place breaks a claim the document makes about itself. Current issue for both: **v1.1 · Issued 15 September 2026** (email corrected to `dan.boyland@`, sentence-case labels). Next review for both: **Aug 2027**. The Word originals live in the owner's Google Drive business folder; a new version there is uploaded alongside the old one, not over it.
+    > ⚠️ **Controlled documents — version before you edit.** Each statement carries a reference, version, issue date and next-review date in its `.control` block, and repeats the reference and version in the footer `.sig`. Both say in their own *Review* section that superseded versions remain traceable in repository history. So **never quietly rewrite one in place** — bump the version and issue date in *both* the `.control` block and the footer `.sig` together, and let git history carry the previous wording. Editing the text while leaving the old version and date in place breaks a claim the document makes about itself. Current issue for both: **v1.1 · Issued 15 September 2026** (email corrected to `dan.boyland@`, sentence-case labels).
+    > On 16 Sept 2026 both pages were restyled to match the site (Atkinson Hyperlegible + JetBrains Mono
+    > instead of Inter + IBM Plex Mono, navy ink on site paper, copper links, a "← Back to the portfolio"
+    > link in the brandline, "Check this by" answers in body type, 12px labels). **Styling only — not a
+    > word of statement text changed, so the version and dates stayed at v1.1.** Restyling is not a
+    > version event; rewording is. Next review for both: **Aug 2027**. The Word originals live in the owner's Google Drive business folder; a new version there is uploaded alongside the old one, not over it.
 
 ---
 
@@ -252,6 +257,18 @@ GitHub Pages on Linux is **case-sensitive**. Always use lowercase filenames:
 
 
 ---
+
+## Layout rules added by the 16 Sept 2026 review (keep these if the pages are rebuilt)
+
+- **Card groups use `.cards--3` (three per row) or `.cards--quotes` (three per row, then two).**
+  Both are six-track grids so a short last row stretches to fill: never `.cards--240/260/280/300`
+  for a group that would otherwise end on an empty slot. Used by the work cards, habits, asides,
+  Credentials and Standards cards, and the accreditation recommendations (10 cards = 3+3+2+2).
+- **The two-row header runs up to 1100px**, not 760px — below that the one-line header does not fit
+  and the buttons hang off the right. `section[id]` scroll-margin follows the same breakpoint.
+- **The lead case's stat tiles sit in `.lead-case__statwrap`** (a container-query wrapper): under
+  480px of column width they stack, because "Pre/post" at 30px is wider than a third of the row.
+- **The forge line's `::before` stops at node 07** via `--fl-gap`; change the gap in both places.
 
 ## Motion maintenance (rewritten for the Sept 2026 two-page site)
 
