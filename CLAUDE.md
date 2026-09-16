@@ -296,7 +296,11 @@ Frameworks is one person and the tools he built, said in the first screen rather
   stat tiles are `position: sticky` above 760px. Both are motion, so both obey the Motion switch.
 - **Two lead cases in Work:** the Asbestos ITM (a build from new) and the anonymised review-and-uplift
   case (audit and rebuild, L3 NVQ to L6 HE, with the anonymised medical-education static-to-interactive
-  sub-case). Its tiles carry 100%, 40+ modules and 400+ hours (owner figures, 16 Sept 2026); the Numbers strip carries none of them.
+  sub-case). Its tiles carry 100%, 40+ modules and 1,500+ hours; the Numbers strip carries none of them.
+  **Hours come from the owner's capacity tracker** (Google Sheet `1AsMsXeTfnU0zhKa3aKaPBjV8nOs1PT_6Pt6GenIn8sA`,
+  planning tab, column *Hours Logged*), read 16 Sept 2026: Tiro 1,545 h across 28 module and framework
+  codes since 1 Sept 2025, Touch Medical 150 h across 5 jobs, Digistain 40 h, Tidy Butt 36 h, 2,042 h in
+  all. Re-read the sheet before changing a figure; do not estimate.
   **Client names, drug names and live embed links for the medical-education work stay out** until
   Touch Medical gives written permission; the sub-case is deliberately generic.
 
