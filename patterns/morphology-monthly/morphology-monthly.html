@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morphology Monthly — interactive blood-film CPD case | Forged Frameworks</title>
+<meta name="description" content="An interactive blood-film case for biomedical scientists, built for Only Cells: read the bloods, search the film, mark what you find, commit to a differential and download a CPD certificate.">
+<style>
+/*
+==============================================================================
+PROJECT:      Morphology Monthly - showcase page
+AUTHOR:       Daniel Boyland - Forged Frameworks
+CLIENT:       Only Cells (Anas Nasir), onlycells.co.uk
+DESCRIPTION:  Shows the teaser and points at the live cases. In Only Cells'
+              own palette and type, because that is what the asset looks like:
+              navy #001a4e, cyan #06b6d4 / #67e8f9, their system font stack,
+              headings at 800 - the same tokens the case itself uses.
+NOTE:         No interactive demo here yet. The case and its clinical content
+              belong to Only Cells (collaboration agreement, clause 3) and the
+              films are patient material cleared for THEIR publication, so a
+              playable copy on this domain waits on their say-so.
+==============================================================================
+*/
+:root{
+  --navy:#001a4e; --navy-deep:#000d29; --cyan:#06b6d4; --cyan-l:#67e8f9;
+  --ink:#0d1b34; --paper:#f5f7fa; --muted:#4a5a72; --line:rgba(0,26,78,.14);
+  --font:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:var(--font); color:var(--ink); background:var(--paper);
+  line-height:1.6; -webkit-font-smoothing:antialiased;
+}
+.hero{
+  background:radial-gradient(120% 90% at 50% 10%,#0a2c6e 0%,var(--navy) 48%,var(--navy-deep) 100%);
+  color:#fff; padding:clamp(40px,7vw,84px) 20px clamp(36px,6vw,64px);
+}
+.wrap{width:100%;max-width:1080px;margin:0 auto}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:12px;font-size:13px;font-weight:800;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--cyan-l);margin-bottom:16px;
+}
+.eyebrow i{display:inline-block;width:38px;height:3px;background:var(--cyan);border-radius:2px}
+h1{font-size:clamp(28px,4.6vw,50px);font-weight:800;line-height:1.1;letter-spacing:-.015em;max-width:20ch}
+.lede{margin-top:18px;max-width:62ch;font-size:clamp(16px,1.7vw,19px);color:#cfe1f3}
+.stage{padding:clamp(28px,5vw,56px) 20px}
+figure{margin:0}
+video{
+  display:block;width:100%;height:auto;aspect-ratio:1/1;max-width:620px;margin:0 auto;border-radius:18px;
+  background:#000;box-shadow:0 30px 70px rgba(0,26,78,.28);
+}
+figcaption{margin:14px auto 0;max-width:620px;font-size:14px;color:var(--muted);text-align:center}
+.cols{
+  display:grid;gap:clamp(24px,4vw,48px);
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));
+  padding:0 20px clamp(36px,6vw,72px);
+}
+h2{font-size:clamp(20px,2.4vw,26px);font-weight:800;letter-spacing:-.01em;margin-bottom:12px}
+p + p{margin-top:12px}
+ul{margin-top:12px;padding-left:20px}
+li{margin-bottom:10px}
+li::marker{color:var(--cyan)}
+.actions{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:26px}
+.btn{
+  display:inline-block;padding:13px 24px;border-radius:999px;font-weight:800;
+  text-decoration:none;font-size:15px;transition:transform .15s ease,box-shadow .15s ease;
+}
+.btn--go{background:var(--cyan);color:var(--navy);box-shadow:0 10px 24px rgba(6,182,212,.35)}
+.btn--back{border:2px solid var(--line);color:var(--ink)}
+.btn:hover{transform:translateY(-2px)}
+.btn--go:focus-visible,.btn--back:focus-visible{outline:3px solid var(--navy);outline-offset:3px}
+.note{
+  margin:0 20px clamp(36px,6vw,72px);padding:20px 24px;border-left:4px solid var(--cyan);
+  background:#fff;border-radius:0 14px 14px 0;box-shadow:0 8px 24px rgba(0,26,78,.06);
+  max-width:1080px;margin-left:auto;margin-right:auto;font-size:15px;color:var(--muted);
+}
+footer{
+  border-top:1px solid var(--line);padding:26px 20px 48px;font-size:14px;color:var(--muted);
+}
+footer .wrap{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
+a{color:#0b5f8a}
+@media (prefers-reduced-motion:reduce){ .btn{transition:none} .btn:hover{transform:none} }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow"><i></i>Only Cells · Morphology Monthly</span>
+    <h1>A blood film, worked the way you would on the bench</h1>
+    <p class="lede">A monthly interactive case for biomedical scientists: read the bloods and flag
+      what matters, search the film at &times;100, mark what you find, commit to a differential, and
+      take away a CPD record. Built for Only Cells, and living inside their own site.</p>
+  </div>
+</header>
+
+<section class="stage">
+  <figure>
+    <video controls preload="metadata"
+           poster="morphology-monthly-teaser-poster.jpg"
+           width="960" height="960">
+      <source src="morphology-monthly-teaser.mp4" type="video/mp4">
+      Your browser cannot play this video. It is a 36-second captioned teaser showing the case
+      being worked through, from opening the case to downloading the certificate.
+    </video>
+    <figcaption>36 seconds, sound on. Captions are burned in, so it reads without audio too.</figcaption>
+  </figure>
+</section>
+
+<div class="cols wrap">
+  <div>
+    <h2>What it is</h2>
+    <p>One real case a month, presented as a bench workflow rather than a quiz. The learner reads the
+      history and the blood count, decides which results matter, examines the film with a magnifier,
+      rings the cells they can name, builds a differential and commits to it once.</p>
+    <p>Only then do the confirmatory results open up. The case marks what they called, shows the model
+      answer with every rule-out linked back to the result that settles it, and issues a CPD record
+      and certificate they can keep.</p>
+  </div>
+  <div>
+    <h2>What I built</h2>
+    <ul>
+      <li>One self-contained page &mdash; vanilla JS, no framework, no build step &mdash; that drops
+        straight into the client's own site and inherits its theme, header and help panel.</li>
+      <li>Content lives in a structured file, not the markup, so next month's case is authored rather
+        than coded, and the build refuses a case with a broken link or a missing answer.</li>
+      <li>Checked as the real page in both themes at desktop and phone sizes: contrast measured across
+        every text node, keyboard and focus behaviour, and the certificate export verified.</li>
+      <li>Progress and reflections save locally, so a case can be picked up where it was left.</li>
+    </ul>
+    <div class="actions">
+      <a class="btn btn--go" href="https://onlycells.co.uk/cases" target="_blank" rel="noopener">See the live cases &rarr;</a>
+      <a class="btn btn--back" href="../../index.html#work">Back to the portfolio</a>
+    </div>
+  </div>
+</div>
+
+<p class="note"><strong>An interactive demo is coming.</strong> The cases and their clinical content
+belong to Only Cells, and the films are patient material cleared for publication on their site, so a
+playable copy here waits on their agreement. In the meantime the live case is one click away.</p>
+
+<footer>
+  <div class="wrap">
+    <span>Clinical content and cases &copy; Only Cells Ltd. Interactive build by Forged Frameworks.</span>
+    <span><a href="https://onlycells.co.uk" target="_blank" rel="noopener">onlycells.co.uk</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
