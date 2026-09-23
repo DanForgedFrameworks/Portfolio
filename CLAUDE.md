@@ -70,6 +70,12 @@ Follow every step below on **every push**, no exceptions.
     The Buy Me a Coffee link sits in each page's footer `.footer__links`, before the Motion button.
     It is not in the Sept 2026 design handoff, so a rebuild from that handoff will silently drop it.
     If any count returns `0`, re-add it before pushing.
+  - **Emma Lewis's testimonial survived the copy** (added 23 Sept 2026, not in any design handoff):
+    ```bash
+    grep -c "Emma Lewis" index.html   # must return 1
+    ```
+    Her LinkedIn recommendation of 18 Sept 2026 is quoted verbatim, slips included (owner decision). It is the
+    seventh card, so the Testimonials grid is `.cards--3` and card seven spans the row.
 
 - **Standalone pages** (NOT part of the versioned bundle — preserve on every deploy, **never `git rm`**):
   - `cv/` — self-contained "Adaptable CV" launcher (a single, fully inlined `index.html`; no external assets). Served at `https://danforgedframeworks.github.io/Portfolio/cv/`. Linked from the gateway via the CV footnote nudge. **Exclude `cv/` from the STEP 2 stale-file diff and never remove it**, even though it will never appear in a versioned `github-deploy` bundle.
@@ -318,6 +324,11 @@ Frameworks is one person and the tools he built, said in the first screen rather
   all. Re-read the sheet before changing a figure; do not estimate.
   **Client names, drug names and live embed links for the medical-education work stay out** until
   Touch Medical gives written permission; the sub-case is deliberately generic.
+  **Update 23 Sept 2026 (owner):** Emma Lewis, Head of Project Management at touchMEDICAL, has given
+  permission for Touch to be named, so her testimonial names touchMEDICAL. Any new showcase asset goes to
+  Touch for review before it is published here. Drug names, sponsor branding, client copy and live embed
+  links still stay out: exhibits are latinised (client copy swapped for placeholder Latin, logos removed,
+  portfolio palette) and ship as stills and clips, never as the client's source files.
 
 ## Motion maintenance (rewritten for the Sept 2026 two-page site)
 
