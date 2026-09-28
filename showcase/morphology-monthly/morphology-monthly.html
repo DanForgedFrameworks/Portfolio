@@ -15,10 +15,10 @@ DESCRIPTION:  Shows the teaser and points at the live cases. In Only Cells'
               own palette and type, because that is what the asset looks like:
               navy #001a4e, cyan #06b6d4 / #67e8f9, their system font stack,
               headings at 800 - the same tokens the case itself uses.
-NOTE:         No interactive demo here yet. The case and its clinical content
-              belong to Only Cells (collaboration agreement, clause 3) and the
-              films are patient material cleared for THEIR publication, so a
-              playable copy on this domain waits on their say-so.
+NOTE:         No playable copy here. The case and its clinical content belong
+              to Only Cells (collaboration agreement, clause 3) and run on
+              their site; the button below links there. Anas, 27 Sept 2026:
+              snippets from published cases only.
 ==============================================================================
 */
 :root{
@@ -69,11 +69,6 @@ li::marker{color:var(--cyan)}
 .btn--back{border:2px solid var(--line);color:var(--ink)}
 .btn:hover{transform:translateY(-2px)}
 .btn--go:focus-visible,.btn--back:focus-visible{outline:3px solid var(--navy);outline-offset:3px}
-.note{
-  margin:0 20px clamp(36px,6vw,72px);padding:20px 24px;border-left:4px solid var(--cyan);
-  background:#fff;border-radius:0 14px 14px 0;box-shadow:0 8px 24px rgba(0,26,78,.06);
-  max-width:1080px;margin-left:auto;margin-right:auto;font-size:15px;color:var(--muted);
-}
 footer{
   border-top:1px solid var(--line);padding:26px 20px 48px;font-size:14px;color:var(--muted);
 }
@@ -97,13 +92,14 @@ a{color:#0b5f8a}
 <section class="stage">
   <figure>
     <video controls preload="metadata"
-           poster="morphology-monthly-teaser-poster.jpg"
-           width="960" height="960">
+           poster="morphology-monthly-teaser-poster.webp"
+           width="720" height="720">
+      <source src="morphology-monthly-teaser.webm" type="video/webm">
       <source src="morphology-monthly-teaser.mp4" type="video/mp4">
-      Your browser cannot play this video. It is a 36-second captioned teaser showing the case
-      being worked through, from opening the case to downloading the certificate.
+      Your browser cannot play this video. It is a 36-second teaser showing the case being
+      worked through, from opening the case to downloading the certificate.
     </video>
-    <figcaption>36 seconds, sound on. Captions are burned in, so it reads without audio too.</figcaption>
+    <figcaption>36 seconds, with music. Each step is titled on screen, so it works with the sound off too.</figcaption>
   </figure>
 </section>
 
@@ -134,10 +130,6 @@ a{color:#0b5f8a}
     </div>
   </div>
 </div>
-
-<p class="note"><strong>An interactive demo is coming.</strong> The cases and their clinical content
-belong to Only Cells, and the films are patient material cleared for publication on their site, so a
-playable copy here waits on their agreement. In the meantime the live case is one click away.</p>
 
 <footer>
   <div class="wrap">
