@@ -76,6 +76,15 @@ Follow every step below on **every push**, no exceptions.
     ```
     Her LinkedIn recommendation of 18 Sept 2026 is quoted verbatim, slips included (owner decision). It is the
     seventh card, so the Testimonials grid is `.cards--3` and card seven spans the row.
+  - **Only Cells card survived the copy** (added 23–28 Sept 2026, not in any design handoff):
+    ```bash
+    grep -c "onlycells.co.uk/cases/" index.html   # must return 1
+    ```
+    Sixth Work card (six fills `.cards--3` as 3+3). Permission: Anas Nasir (Only Cells LTD), email of
+    27 Sept 2026: "happy for you to use it in any way you wish. However, only published cases if you
+    will be using snippets." So snippets and stills come from **published** cases only (202609 onward);
+    never the `case-mm260615` prototype (unpublished; its films are Cha Wei Lee's). Link to Anas's live
+    case on onlycells.co.uk, never the `hosted_content/onlycells` review copies.
 
 - **Standalone pages** (NOT part of the versioned bundle — preserve on every deploy, **never `git rm`**):
   - `cv/` — self-contained "Adaptable CV" launcher (a single, fully inlined `index.html`; no external assets). Served at `https://danforgedframeworks.github.io/Portfolio/cv/`. Linked from the gateway via the CV footnote nudge. **Exclude `cv/` from the STEP 2 stale-file diff and never remove it**, even though it will never appear in a versioned `github-deploy` bundle.
