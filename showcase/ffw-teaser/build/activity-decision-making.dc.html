@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="./activity/styles.css">
+  <style>
+    body { margin: 0; background: #F0EDE6; overflow: hidden; }
+    a { color: #5C6B8A; } a:hover { color: #3B4A6B; }
+    @keyframes actInA { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+    @keyframes actInB { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+    @keyframes actUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+    @keyframes actFade { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes actRoll { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+    @keyframes actNudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(3px); } }
+    @keyframes actBreathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+    @keyframes actPop { from { opacity: 0; transform: scale(.94) translateY(6px); } to { opacity: 1; transform: none; } }
+    @keyframes actSwipe { from { opacity: 0; clip-path: inset(0 100% 0 0); } to { opacity: 1; clip-path: inset(0 0 0 0); } }
+    @keyframes actTraceDraw { 0% { stroke-dashoffset: 1000; } 62% { stroke-dashoffset: 0; } 78% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -1000; } }
+    @keyframes actPulseRing { 0%, 100% { transform: scale(1); opacity: .7; } 50% { transform: scale(1.35); opacity: 0; } }
+    @keyframes actZoomIn { from { opacity: 0; transform: scale(.55); } to { opacity: 1; transform: none; } }
+    @keyframes actBarBounce { 0% { transform: scaleX(0); } 55% { transform: scaleX(1.14); } 75% { transform: scaleX(.95); } 90% { transform: scaleX(1.03); } 100% { transform: scaleX(1); } }
+    @keyframes actBob { 0%, 100% { transform: rotate(90deg) translateX(0); } 50% { transform: rotate(90deg) translateX(4px); } }
+    @keyframes actTitleRise { from { transform: translateY(150px); } to { transform: none; } }
+    @keyframes actSoft { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+    @keyframes actSoftB { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+    @keyframes actFeatHead { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    @keyframes actFeatIn { 0% { opacity: 0; transform: translateY(18px) scale(.985); } 60% { opacity: 1; } 100% { opacity: 1; transform: none; } }
+    @keyframes actFeatInB { 0% { opacity: 0; transform: translateY(18px) scale(.985); } 60% { opacity: 1; } 100% { opacity: 1; transform: none; } }
+    [data-tags="off"] .act-tag { display: none !important; }
+    /* Augue 2026-09-20: sit varius consequat purus felis ad nam quis; non neque auctor ex cras
+       malesuada hendrer, velit velit in velit in quo arcu est at auctor modo amet congue. */
+    .act-gloss { position: relative; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+    .act-gloss::after { content: ""; position: absolute; left: -6px; right: -6px; top: -10px; bottom: -10px; }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+  
+    .act-trace__bar { fill: var(--act-arctic-dark); transform-box: fill-box; transform-origin: 50% 100%; opacity: 0; }
+    .act-trace__plot { fill: var(--act-mango); transform-box: fill-box; transform-origin: 50% 50%; opacity: 0; }
+    .act-trace__rule { fill: var(--act-grey-tag); opacity: 0; }
+    @keyframes actBarIn { 0% { transform: scaleY(0); opacity: 0 } 4% { opacity: .95 } 10% { transform: scaleY(1) } 14% { opacity: .95 } 17% { transform: scaleY(1); opacity: 0 } 100% { transform: scaleY(0); opacity: 0 } }
+    @keyframes actPlotIn { 0% { transform: scale(0); opacity: 0 } 6% { transform: scale(1); opacity: 1 } 14% { opacity: 1 } 17% { opacity: 0 } 100% { transform: scale(0); opacity: 0 } }
+    @keyframes actRuleIn { 0% { opacity: 0 } 3% { opacity: .5 } 15% { opacity: .5 } 18%, 100% { opacity: 0 } }
+    @media (prefers-reduced-motion: reduce) { .act-trace__bar, .act-trace__plot, .act-trace__rule { animation: none !important; opacity: .9; transform: none } }
+  </style>
+</helmet>
+<div ref="{{ rootRef }}" class="act-root" style="position:fixed;inset:0;background:{{ rootBg }};overflow:hidden">
+<sc-if value="{{ live }}" hint-placeholder-val="{{ true }}">
+<div ref="{{ stageRef }}" data-stage="1" data-tags="{{ tagsAttr }}" class="act-screen" style="position:absolute;left:50%;top:50%;transform-origin:center center;border-radius:8px;box-shadow:0 20px 60px rgba(27,26,26,.22);grid-template-rows:76px minmax(0,1fr) 72px;height:720px;overflow:hidden;opacity:{{ stageOpacity }};transition:opacity .3s ease">
+
+  <div style="position:relative;border-bottom:4px solid #B4682F;height:76px;box-sizing:border-box">
+    <div class="act-titlebar" style="height:72px;padding-top:0;padding-bottom:0;border-bottom:0;animation:actFade .85s ease both">
+      <sc-if value="{{ isTitle }}" hint-placeholder-val="{{ true }}">
+        <span></span>
+        <span class="act-logo act-logo--activity" role="img" data-copy="placeholder" aria-label="Aliquam conubia eros" style="width:100px;height:60px;animation:actZoomIn 1.25s cubic-bezier(.16,1,.3,1) .4s both"></span>
+      </sc-if>
+      <sc-if value="{{ notTitle }}" hint-placeholder-val="{{ false }}">
+        <div class="act-titlebar__section">
+          <p class="act-micro act-micro--muted" style="white-space:nowrap;animation:actSwipe .95s cubic-bezier(.16,1,.3,1) .15s both">{{ sectionLabel }}</p>
+          <div style="display:flex;align-items:center;gap:4px;margin-left:14px;flex:0 0 auto" role="img" aria-label="{{ progressLabel }}">
+            <sc-for list="{{ progress }}" as="p" hint-placeholder-count="13"><span style="display:grid;place-items:center;width:{{ p.size }};height:{{ p.size }};border-radius:50%;background:{{ p.bg }};color:#fff;font-size:10px;font-weight:600;transition:background .4s ease,width .3s ease,height .3s ease">{{ p.num }}</span></sc-for>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;flex:0 0 auto;white-space:nowrap">
+          <sc-if value="{{ reviewTools }}" hint-placeholder-val="{{ true }}">
+            <button type="button" data-review="chrome" data-review-id="g-tags" onClick="{{ toggleTags }}" aria-pressed="{{ tagsPressed }}" aria-label="Show proposed-copy tags" title="Proposed-copy tags (review aid)" style="display:grid;place-items:center;width:32px;height:32px;border-radius:50%;border:1.5px dashed {{ tagsInk }};background:{{ tagsBg }};color:{{ tagsInk }};cursor:pointer;line-height:0;font:inherit;font-size:11px;font-weight:600">P</button>
+            <button type="button" class="act-btn act-btn--secondary" data-review="dialog" data-review-id="g-reset" onClick="{{ resetProgress }}" style="min-height:40px;padding:6px 16px;font-size:16px"><span class="act-ico act-ico--x" aria-hidden="true"></span><span data-copy="placeholder" style="white-space:nowrap">Reset progress</span></button>
+          </sc-if>
+          <button type="button" data-review="chrome" data-review-id="g-motion" onClick="{{ toggleMotion }}" aria-pressed="{{ motionPressed }}" style="display:flex;align-items:center;gap:8px;border:0;background:none;padding:0;cursor:pointer;color:#454545;font:inherit;font-size:14px">
+            <span style="display:flex;align-items:center;width:34px;height:18px;border-radius:999px;padding:2px;transition:background .25s ease;background:{{ motionTrack }}"><span style="width:14px;height:14px;border-radius:50%;background:#fff;margin-left:{{ motionKnob }};transition:margin .25s ease"></span></span>
+            <span data-copy="placeholder" style="white-space:nowrap">Background motion</span>
+          </button>
+          <button type="button" class="act-btn act-btn--secondary" data-review="dialog" data-review-id="g-walk-open" onClick="{{ openWalk }}" style="min-height:40px;padding:6px 16px;font-size:16px">
+            <span class="act-ico act-ico--info" aria-hidden="true"></span><span data-copy="placeholder" style="white-space:nowrap">How to use this</span>
+          </button>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+
+  <div ref="{{ sceneRef }}" data-review="scene" data-review-id="{{ sceneRid }}" data-review-ready="{{ readyAttr }}" class="act-screen__body" style="position:relative;min-height:0;max-height:572px;overflow:hidden;animation:{{ sceneAnim }}">
+
+    <div class="act-trace" aria-hidden="true" style="bottom:0;height:120px;z-index:0;opacity:{{ traceOpacity }}">{{ trace }}</div>
+
+    <sc-if value="{{ show1 }}" hint-placeholder-val="{{ true }}">
+      <div data-screen-label="01" style="display:flex;flex-direction:column;justify-content:center;gap:28px;max-width:820px;height:100%;position:relative;z-index:1">
+        <div class="act-accent-rule" style="animation:actFade .95s ease both"></div>
+        <p class="act-h1" style="font-size:52px;animation:actUp 1.15s cubic-bezier(.16,1,.3,1) .2s both">Vulputateeest Faucibus‑Tellus eros cum Egestas: Quis‑Purus O1I Imperdiet</p>
+        <sc-if value="{{ crossNav }}" hint-placeholder-val="{{ true }}">
+        <div class="act-row" style="animation:actUp 1.05s cubic-bezier(.16,1,.3,1) .7s both">
+          <button type="button" class="act-btn act-btn--primary" data-review="nav" data-review-id="s1-start" onClick="{{ next }}"><span data-copy="placeholder">Start the case</span><span class="act-ico act-ico--chevron" aria-hidden="true" style="animation:actNudge 3.2s ease-in-out infinite"></span></button>
+        </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ showContents }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="{{ contentsLabel }}" style="display:flex;flex-direction:column;justify-content:center;gap:20px;height:100%;position:relative;z-index:1;max-width:1000px;margin:0 auto;width:100%">
+        <sc-if value="{{ show15 }}" hint-placeholder-val="{{ false }}">
+          <div class="act-keymsg" style="align-items:center;padding:16px 20px;animation:actZoomIn 1.15s cubic-bezier(.16,1,.3,1) both">
+            <span class="act-ico-tile act-ico-tile--beige" style="color:#3F7F73"><span class="act-ico act-ico--check" aria-hidden="true"></span></span>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <p data-copy="placeholder">Congratulations, you have reached the end of this resource</p>
+              <p class="act-body" style="font-weight:400;font-size:16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span data-copy="placeholder">Is there anything you would like to revisit? Select a section below to go back to it.</span></p>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;margin-left:auto;flex-wrap:wrap;justify-content:flex-end">
+              <button type="button" class="act-btn act-btn--secondary" data-review="dialog" data-review-id="s15-references" data-copy="placeholder" onClick="{{ openRefs }}" style="min-height:40px;padding:6px 16px;font-size:16px"><span class="act-ico act-ico--info" aria-hidden="true"></span>References</button>
+              <button type="button" class="act-btn act-btn--secondary" data-review="source" data-review-id="s15-guide" data-review-label="Gravida Arcu Lorem (feugiat.quo)" onClick="{{ openGuide }}" style="min-height:40px;padding:6px 16px;font-size:16px"><span data-copy="placeholder">Maecena Amet Netus</span><span class="act-ico act-ico--chevron" aria-hidden="true"></span></button>
+            </div>
+          </div>
+        </sc-if>
+        <div style="display:flex;flex-direction:column;justify-content:space-between;gap:10px;flex:1 1 auto;min-height:0">
+          <sc-for list="{{ contents }}" as="c" hint-placeholder-count="7">
+            <div style="display:flex;align-items:center;gap:16px;padding:10px 18px;border:1.5px solid {{ c.border }};border-radius:12px;background:#fff;color:#1B1A1A;font-size:{{ c.fs }};width:{{ c.width }};min-height:{{ c.minh }};margin-left:{{ c.indent }};animation:actUp .85s cubic-bezier(.16,1,.3,1) {{ c.delay }} both">
+              <span style="display:grid;place-items:center;width:{{ c.dot }};height:{{ c.dot }};flex:0 0 {{ c.dot }};border-radius:50%;background:{{ c.dotBg }};color:#fff;font-weight:600;font-size:14px">{{ c.badge }}</span>
+              <span style="flex:1 1 auto;line-height:1.3">{{ c.label }}</span>
+              <sc-if value="{{ c.nav }}" hint-placeholder-val="{{ false }}">
+                <button type="button" class="act-btn act-btn--secondary" data-review="nav" data-review-id="s15-item-{{ c.n }}" onClick="{{ c.go }}" style="min-height:36px;padding:4px 14px;font-size:15px"><span data-copy="placeholder">Revisit</span><span class="act-ico act-ico--chevron" aria-hidden="true"></span></button>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ show3 }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="03" style="display:flex;flex-direction:column;justify-content:center;gap:24px;height:100%;position:relative;z-index:1">
+        <div class="act-accent-rule" style="animation:actFade .95s ease both"></div>
+        <p class="act-h1" style="animation:actSwipe 1.15s cubic-bezier(.16,1,.3,1) .2s both">Lorem sit amet</p>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ show4 }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="04" style="display:grid;grid-template-columns:1fr 360px;gap:48px;align-items:center;height:100%;position:relative;z-index:1">
+        <div style="display:flex;flex-direction:column;gap:22px">
+          <div style="display:flex;flex-direction:column;gap:14px;animation:actTitleRise 1.1s cubic-bezier(.16,1,.3,1) 1.6s both">
+            <div class="act-accent-rule" style="animation:actFade .95s ease both"></div>
+            <p class="act-h1" style="animation:actSwipe 1.15s cubic-bezier(.16,1,.3,1) .2s both">Lorem sit amet</p>
+          </div>
+          <p class="act-micro act-micro--muted" style="animation:actSwipe 1.1s cubic-bezier(.16,1,.3,1) 2.7s both">Tinciduntsad ex sed arcu</p>
+          <p class="act-h2" style="font-size:28px;line-height:1.3;animation:actUp 1.3s cubic-bezier(.16,1,.3,1) 3.0s both">Arcu ad u arcu et u dolor dolor amet ipsa A1O nam cum u lacinia ac mauris ridiculuss dignissi condimentu duo Lacinia duo phasellusa bibendum</p>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;height:100%;max-height:470px;animation:actZoomIn 1.6s cubic-bezier(.16,1,.3,1) 3.6s both">
+          <img src="assets/activity-device.svg" alt="Commodo Cum est nam" data-copy="placeholder" style="max-width:100%;max-height:420px;object-fit:contain">
+          <p class="act-small" style="font-size:14px;color:#6b6b6b;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;margin:0"><span>Quo nulla iaculis quo fermentum sagittis.</span><span class="act-tag" data-copy="placeholder"><span class="act-ico act-ico--info" aria-hidden="true"></span>Proposed</span></p>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ show5 }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="05" style="position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;gap:22px;height:100%">
+        <p class="act-h3" style="animation:actSwipe 1.05s cubic-bezier(.16,1,.3,1) both">Enim ridiculussat quo eleifend parturientvelit</p>
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:16px">
+          <sc-for list="{{ demo }}" as="d" hint-placeholder-count="7">
+            <div style="grid-column:span {{ d.span }};min-height:132px">
+              <sc-if value="{{ d.on }}" hint-placeholder-val="{{ true }}">
+                <div class="act-attr" style="flex-direction:row;align-items:center;gap:18px;padding:18px 20px;height:132px;position:relative;animation:actUp .9s cubic-bezier(.16,1,.3,1) both">
+                  <sc-if value="{{ d.hasRanges }}" hint-placeholder-val="{{ false }}">
+                    <sc-if value="{{ rangesOn }}" hint-placeholder-val="{{ false }}">
+                      <div data-ranges-panel="1" style="position:absolute;inset:0;z-index:2;background:#F3EFE7;border-radius:12px;padding:10px 52px 10px 16px;display:flex;flex-direction:column;justify-content:center;gap:4px;animation:actFade .4s ease both">
+                        <p style="margin:0;font-size:15px;line-height:1.35;color:#1B1A1A">Qui1u ornare varius at phasellusaet et nisi lobortis congue, pharetra vel condimentulorem, conubia, imperdiet non sit imperdiet at netus consectetueu, sed netus fermentum feugiat. Est odio maecena, e Vel1a at &lt;7.0% velit ab pharetra.<button type="button" data-review="citation" data-review-id="s5-cite-1" data-review-label="Citation 1" data-cite="1" onClick="{{ cite }}" style="display:inline-grid;place-items:center;min-width:18px;height:16px;padding:0 4px;margin-left:4px;border:0;border-radius:4px;background:#5C6B8A;color:#fff;font:inherit;font-size:10px;font-weight:600;vertical-align:super;line-height:1;cursor:pointer">1</button></p>
+                      </div>
+                    </sc-if>
+                  </sc-if>
+                  <span class="act-ico-tile" style="width:76px;height:76px;flex-basis:76px"><span class="act-ico act-ico--{{ d.icon }} act-ico--lg" aria-hidden="true" style="width:42px;height:42px;flex-basis:42px"></span></span>
+                  <p class="act-attr__label" style="display:flex;flex-direction:column;gap:2px;line-height:1.2">
+                    <sc-if value="{{ d.hasGloss }}" hint-placeholder-val="{{ false }}"><span style="font-size:19px">{{ d.pre }}<span data-review="glossary" data-review-id="{{ d.rid }}" data-gloss="{{ d.def }}" onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ glossTap }}" onKeyDown="{{ glossKey }}" role="button" tabIndex="0" class="act-gloss" style="border-bottom:1px dotted #5C6B8A;cursor:help">{{ d.abbr }}</span>{{ d.mid }}</span></sc-if>
+                    <sc-if value="{{ d.hasNum }}" hint-placeholder-val="{{ false }}"><span style="font-weight:600;font-size:34px;color:#1B1A1A;line-height:1;margin:2px 0">{{ d.num }}<span style="font-size:18px;color:#808080;font-weight:400">{{ d.unit }}</span><sc-if value="{{ d.hasRanges }}" hint-placeholder-val="{{ false }}"><button type="button" data-review="reveal" data-review-id="s5-metric-ranges" data-review-label="Non1e congue" onClick="{{ toggleRanges }}" aria-expanded="{{ rangesOpen }}" aria-label="Non1e congue" data-copy="placeholder" style="position:{{ rangesBtnPos }};top:10px;right:10px;z-index:3;display:inline-grid;place-items:center;width:32px;height:32px;margin-left:{{ rangesBtnGap }};vertical-align:middle;border-radius:50%;border:1.5px solid #5C6B8A;background:{{ rangesBtnBg }};color:{{ rangesBtnInk }};cursor:pointer;line-height:0"><span class="act-ico act-ico--info" style="width:18px;height:18px;flex-basis:18px" aria-hidden="true"></span></button></sc-if></span></sc-if>
+                    <span style="font-weight:{{ d.postWeight }};font-size:{{ d.postSize }};color:#1B1A1A">{{ d.post }}</span>
+                  </p>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+        
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ show6 }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="06" style="position:relative;z-index:1;display:flex;flex-direction:column;justify-content:flex-start;gap:14px;height:100%;min-height:0;padding-top:6px">
+        <p class="act-h3" style="font-size:20px;animation:actSwipe 1.05s cubic-bezier(.16,1,.3,1) both">Phasellusa at nam condimentu et ipsa ipsa aliquam id Lacinia donec egestas</p>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;animation:actFade .95s ease .4s both">
+          <p class="act-body">Qui gravida vel hendrer commodo suspendiss ac morbi interdum ridiculuss:</p>
+          <p class="act-small" style="color:#5C6B8A;display:flex;align-items:center;gap:8px;white-space:nowrap"><span data-copy="placeholder">Select each challenge to explore it</span></p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;align-items:stretch;flex:0 0 auto">
+          <sc-for list="{{ challenges }}" as="c" hint-placeholder-count="5">
+            <div style="display:flex;flex-direction:column;gap:10px;animation:actUp .95s cubic-bezier(.16,1,.3,1) {{ c.delay }} both">
+              <button type="button" class="act-card" data-review="reveal" data-review-id="s6-ch-{{ c.key }}" onClick="{{ c.open }}" aria-expanded="{{ c.expanded }}" style="display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:12px;min-height:176px;width:100%;font:inherit;text-align:left;cursor:pointer;border-color:{{ c.border }};background:{{ c.bg }};transition:border-color .3s ease,background .3s ease,box-shadow .3s ease;box-shadow:{{ c.shadow }}">
+                <span class="act-ico-tile" style="width:52px;height:52px;flex-basis:52px"><span class="act-ico act-ico--{{ c.icon }}" aria-hidden="true" style="width:30px;height:30px;flex-basis:30px"></span></span>
+                <span style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;width:100%"><span style="font-weight:600;font-size:18px;color:#1B1A1A;line-height:1.25">{{ c.label }}</span><sc-if value="{{ c.closed }}" hint-placeholder-val="{{ true }}"><span class="act-ico act-ico--chevron" aria-hidden="true" style="color:#5C6B8A;transform:rotate(90deg);width:20px;height:20px;flex-basis:20px;animation:actBob 1.8s ease-in-out infinite"></span></sc-if><sc-if value="{{ c.on }}" hint-placeholder-val="{{ false }}"><span class="act-ico act-ico--check" aria-hidden="true" style="color:#3F7F73;width:18px;height:18px;flex-basis:18px"></span></sc-if></span>
+                <sc-if value="{{ c.on }}" hint-placeholder-val="{{ false }}"><span style="display:flex;flex-direction:column;gap:6px;font-size:16px;line-height:1.35;color:#454545;animation:actSoft 1.1s ease both"><sc-if value="{{ c.hasGloss }}" hint-placeholder-val="{{ false }}"><span data-copy="placeholder">{{ c.pre }}<span data-review="glossary" data-review-id="s6-gloss-c" data-gloss="Consectetu maecena sollicitud" onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ glossTap }}" onKeyDown="{{ glossKey }}" role="button" tabIndex="0" class="act-gloss" style="border-bottom:1px dotted #5C6B8A;cursor:help">NAM</span>{{ c.post }}</span></sc-if><sc-if value="{{ c.noGloss }}" hint-placeholder-val="{{ true }}"><span>{{ c.detail }}</span></sc-if></span></sc-if>
+              </button>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-direction:column;flex:0 0 auto;height:162px"><sc-if value="{{ chActiveOn }}" hint-placeholder-val="{{ false }}">
+            <p class="act-h4" style="font-size:18px;color:#5C6B8A;margin:0 0 8px;animation:actFeatHead .6s cubic-bezier(.16,1,.3,1) both">Vel Hendrer pharetra qui adipiscin iaculis(i) ab hendrer odio elementum</p>
+            <div class="act-feature__answer" style="flex-direction:row;align-items:center;gap:18px;padding:12px 16px;height:126px;box-sizing:border-box;overflow:hidden;animation:{{ chPanelAnim }}">
+              <span class="act-ico-tile" style="width:52px;height:52px;flex-basis:52px"><span class="act-ico act-ico--{{ chActiveIcon }}" aria-hidden="true" style="width:30px;height:30px;flex-basis:30px"></span></span>
+              <div style="display:flex;flex-direction:column;gap:4px">
+              <p style="font-size:17px;line-height:1.3;color:#1B1A1A;margin:0">{{ chActiveFeature }}</p>
+              <sc-if value="{{ chActiveHasBullets }}" hint-placeholder-val="{{ false }}"><p class="act-micro act-micro--muted" style="font-size:10px;margin:2px 0 0;line-height:1.4">Gravida faucibus:</p><p style="font-size:17px;line-height:1.3;color:#1B1A1A;font-weight:600;margin:0">{{ chActiveBullets }}</p></sc-if>
+              </div>
+            </div>
+        </sc-if></div>
+        <div style="min-height:44px;flex:0 0 auto"><sc-if value="{{ challengesDone }}" hint-placeholder-val="{{ false }}">
+          <p class="act-h4" style="flex:0 0 auto;display:flex;align-items:center;gap:12px;font-size:19px;line-height:1.3;animation:actUp .95s cubic-bezier(.16,1,.3,1) 1.6s both"><span class="act-ico-tile" style="width:40px;height:40px;flex-basis:40px"><span class="act-ico act-ico--device" aria-hidden="true" style="width:24px;height:24px;flex-basis:24px"></span></span>Est feugiat ad quis quis morbi at scelerisq id Hendrer</p>
+        </sc-if></div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ show7 }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="07" style="position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;gap:24px;height:100%;max-width:820px">
+        <div class="act-accent-rule" style="animation:actFade .95s ease both"></div>
+        <p class="act-h1" style="animation:actSwipe 1.15s cubic-bezier(.16,1,.3,1) .2s both">Sollicitud non Hendrer</p>
+        <p class="act-h2" style="font-size:28px;line-height:1.3;display:flex;flex-wrap:wrap;align-items:center;gap:10px;animation:actUp 1.15s cubic-bezier(.16,1,.3,1) .6s both"><span data-copy="placeholder">Vel sed donec?</span></p>
+        <p class="act-body" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;animation:actUp 1.05s cubic-bezier(.16,1,.3,1) .85s both"><span data-copy="placeholder">Quo fermentum cursus. Odio gravida quo cursus quis scelerisq.</span></p>
+        <sc-if value="{{ crossNav }}" hint-placeholder-val="{{ true }}">
+        <div class="act-row" style="gap:14px;animation:actUp 1.05s cubic-bezier(.16,1,.3,1) 1.2s both">
+          <button type="button" class="act-btn act-btn--secondary" data-review="nav" data-review-id="s7-back" onClick="{{ prev }}" style="min-height:44px"><span class="act-ico act-ico--chevron" aria-hidden="true" style="transform:rotate(180deg)"></span><span data-copy="placeholder">Return to previous sections</span></button>
+          <button type="button" class="act-btn act-btn--primary" data-review="nav" data-review-id="s7-start" onClick="{{ next }}" style="min-height:44px"><span data-copy="placeholder">Start the questions</span><span class="act-ico act-ico--chevron" aria-hidden="true" style="animation:actNudge 3.2s ease-in-out infinite"></span></button>
+        </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isQ }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="{{ qLabel }}" style="position:relative;z-index:1;display:grid;grid-template-columns:5fr 4fr;grid-template-rows:minmax(0,1fr);gap:40px;align-items:center;height:100%">
+        <div class="act-stack" style="gap:{{ qGap }};min-height:0">
+          <p class="act-h3" style="font-size:{{ qSetupSize }};animation:actUp .95s cubic-bezier(.16,1,.3,1) both">{{ qSetup }}</p>
+          <div class="act-question" style="animation:actUp .95s cubic-bezier(.16,1,.3,1) .18s both">
+            <p class="act-micro act-micro--muted">Question</p>
+            <p class="act-question__stem">{{ qStem }}</p>
+            <sc-if value="{{ qMulti }}" hint-placeholder-val="{{ false }}"><p class="act-small" style="color:#808080">Options (can select multiple):</p></sc-if>
+            <ul class="act-options" role="{{ qRole }}">
+              <sc-for list="{{ qOptions }}" as="o" hint-placeholder-count="4">
+                <li style="animation:actUp .85s cubic-bezier(.16,1,.3,1) {{ o.delay }} both"><button type="button" class="act-option {{ o.cls }}" role="{{ o.role }}" aria-checked="{{ o.checked }}" data-revealed="{{ o.revealedAttr }}" disabled="{{ o.disabled }}" data-review="reveal" data-review-id="{{ o.rid }}" onClick="{{ o.pick }}" style="font-size:{{ qOptFont }};padding:{{ qOptPad }};min-height:{{ qOptMin }};border-color:{{ o.border }}"><span class="act-option__mark" style="position:relative;background:{{ o.markBg }};border-color:{{ o.markBorder }}"><sc-if value="{{ o.idle }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position:absolute;inset:-4px;border-radius:50%;border:2px solid #5C6B8A;animation:actPulseRing 2.4s ease-in-out {{ o.delay }} infinite"></span></sc-if><sc-if value="{{ o.showIco }}" hint-placeholder-val="{{ false }}"><span class="act-ico act-ico--{{ o.ico }}" style="width:16px;height:16px;flex-basis:16px" aria-hidden="true"></span></sc-if></span><sc-if value="{{ o.noGloss }}" hint-placeholder-val="{{ true }}">{{ o.text }}</sc-if><sc-if value="{{ o.hasGloss }}" hint-placeholder-val="{{ false }}"><span>{{ o.pre }}<span data-review="glossary" data-review-id="{{ o.gRid }}" data-gloss="{{ o.gDef }}" onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ glossTap }}" onKeyDown="{{ glossKey }}" role="button" tabIndex="0" class="act-gloss" style="border-bottom:1px dotted #5C6B8A;cursor:help">{{ o.gAbbr }}</span>{{ o.post }}</span></sc-if></button></li>
+              </sc-for>
+            </ul>
+            <sc-if value="{{ qShowSubmit }}" hint-placeholder-val="{{ false }}">
+              <div class="act-row" style="gap:12px;animation:actFade .3s ease both">
+                <button type="button" class="act-btn act-btn--primary" data-review="reveal" data-review-id="{{ qSubmitRid }}" disabled="{{ qSubmitDisabled }}" onClick="{{ submit }}" style="min-height:44px"><span data-copy="placeholder">Submit</span></button>
+              </div>
+            </sc-if>
+          </div>
+            <sc-if value="{{ q2Show }}" hint-placeholder-val="{{ false }}">
+            <div class="act-question" style="animation:actUp .95s cubic-bezier(.16,1,.3,1) both">
+              <p class="act-micro act-micro--muted">Question</p>
+              <p class="act-question__stem">{{ q2Stem }}</p>
+              <ul class="act-options" role="radiogroup">
+                <sc-for list="{{ q2Options }}" as="o" hint-placeholder-count="2">
+                  <li style="animation:actUp .85s cubic-bezier(.16,1,.3,1) {{ o.delay }} both"><button type="button" class="act-option {{ o.cls }}" role="{{ o.role }}" aria-checked="{{ o.checked }}" data-revealed="{{ o.revealedAttr }}" disabled="{{ o.disabled }}" data-review="reveal" data-review-id="{{ o.rid }}" onClick="{{ o.pick }}" style="font-size:{{ q2OptFont }};padding:{{ q2OptPad }};min-height:{{ q2OptMin }};border-color:{{ o.border }}"><span class="act-option__mark" style="position:relative;background:{{ o.markBg }};border-color:{{ o.markBorder }}"><sc-if value="{{ o.idle }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position:absolute;inset:-4px;border-radius:50%;border:2px solid #5C6B8A;animation:actPulseRing 2.4s ease-in-out {{ o.delay }} infinite"></span></sc-if><sc-if value="{{ o.showIco }}" hint-placeholder-val="{{ false }}"><span class="act-ico act-ico--{{ o.ico }}" style="width:16px;height:16px;flex-basis:16px" aria-hidden="true"></span></sc-if></span><sc-if value="{{ o.noGloss }}" hint-placeholder-val="{{ true }}">{{ o.text }}</sc-if><sc-if value="{{ o.hasGloss }}" hint-placeholder-val="{{ false }}"><span>{{ o.pre }}<span data-review="glossary" data-review-id="{{ o.gRid }}" data-gloss="{{ o.gDef }}" onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ glossTap }}" onKeyDown="{{ glossKey }}" role="button" tabIndex="0" class="act-gloss" style="border-bottom:1px dotted #5C6B8A;cursor:help">{{ o.gAbbr }}</span>{{ o.post }}</span></sc-if></button></li>
+                </sc-for>
+              </ul>
+              <sc-if value="{{ q2ShowSubmit }}" hint-placeholder-val="{{ false }}">
+                <div class="act-row" style="gap:12px;animation:actFade .3s ease both">
+                  <button type="button" class="act-btn act-btn--primary" data-review="reveal" data-review-id="{{ q2SubmitRid }}" disabled="{{ q2SubmitDisabled }}" onClick="{{ submit2 }}" style="min-height:44px"><span data-copy="placeholder">Submit</span></button>
+                </div>
+              </sc-if>
+            </div>
+            </sc-if>
+        </div>
+        <div class="act-stack" style="gap:10px;min-height:0;max-height:100%;overflow:auto;padding-right:4px">
+          <sc-if value="{{ qHasReadouts }}" hint-placeholder-val="{{ false }}">
+            <div class="act-panel act-stack" style="gap:6px;padding:8px 12px;justify-content:center;animation:actUp .85s cubic-bezier(.16,1,.3,1) .2s both">
+              <sc-for list="{{ qReadouts }}" as="r" hint-placeholder-count="2">
+                <div class="act-readout" style="gap:4px">
+                  <div class="act-readout__head"><p class="act-micro act-micro--muted" style="font-size:11px">{{ r.label }}</p><p class="act-readout__value {{ r.valueCls }}" style="font-size:18px">{{ r.value }}</p></div>
+                  <div class="act-bar" style="background:#fff;height:8px"><span class="act-bar__fill {{ r.fillCls }}" style="width:{{ r.fill }};transform-origin:left center;animation:actBarBounce 1.2s ease-out .2s both"></span><span class="act-bar__target" style="left:{{ r.target }}"></span></div>
+                  <div class="act-readout__legend" style="font-size:11px"><span><span class="act-swatch" style="background:{{ r.swatch }}"></span><span data-copy="placeholder">Commodo</span></span><span><span class="act-swatch" style="background:#1B1A1A"></span><span data-copy="placeholder">Target</span> {{ r.targetText }}</span></div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-for list="{{ qFeedback }}" as="fb" hint-placeholder-count="0">
+            <div class="act-feedback {{ fb.cls }}" role="status" style="padding:10px 12px;gap:10px;align-items:center;animation:actRoll .7s cubic-bezier(.16,1,.3,1) {{ fb.delay }} both">
+              <span class="act-feedback__ico"><span class="act-ico act-ico--{{ fb.ico }}" aria-hidden="true"></span></span>
+              <div class="act-feedback__head">
+                <sc-if value="{{ fb.hasOutcome }}" hint-placeholder-val="{{ false }}"><p class="act-micro" style="display:flex;align-items:center;gap:8px;color:{{ fb.outcomeInk }}"><span data-copy="placeholder">{{ fb.outcome }}</span></p></sc-if>
+                <sc-if value="{{ fb.hasLabel }}" hint-placeholder-val="{{ true }}"><p class="act-feedback__label">{{ fb.label }}</p></sc-if>
+                <sc-if value="{{ fb.noGloss }}" hint-placeholder-val="{{ true }}"><p class="act-feedback__text" style="font-size:16px;line-height:1.35;white-space:pre-line">{{ fb.text }}</p></sc-if>
+                <sc-if value="{{ fb.hasGloss }}" hint-placeholder-val="{{ false }}"><p class="act-feedback__text" style="font-size:16px;line-height:1.35;white-space:pre-line">{{ fb.pre }}<span data-review="glossary" data-review-id="{{ fb.gRid }}" data-gloss="{{ fb.gDef }}" onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ glossTap }}" onKeyDown="{{ glossKey }}" role="button" tabIndex="0" class="act-gloss" style="border-bottom:1px dotted #5C6B8A;cursor:help">{{ fb.gAbbr }}</span>{{ fb.post }}</p></sc-if>
+              </div>
+            </div>
+          </sc-for>
+          <sc-for list="{{ q2Feedback }}" as="fb" hint-placeholder-count="0">
+            <div class="act-feedback {{ fb.cls }}" role="status" style="padding:10px 12px;gap:10px;align-items:center;animation:actRoll .7s cubic-bezier(.16,1,.3,1) {{ fb.delay }} both">
+              <span class="act-feedback__ico"><span class="act-ico act-ico--{{ fb.ico }}" aria-hidden="true"></span></span>
+              <div class="act-feedback__head">
+                <sc-if value="{{ fb.hasOutcome }}" hint-placeholder-val="{{ false }}"><p class="act-micro" style="display:flex;align-items:center;gap:8px;color:{{ fb.outcomeInk }}"><span data-copy="placeholder">{{ fb.outcome }}</span></p></sc-if>
+                <sc-if value="{{ fb.hasLabel }}" hint-placeholder-val="{{ true }}"><p class="act-feedback__label">{{ fb.label }}</p></sc-if>
+                <sc-if value="{{ fb.noGloss }}" hint-placeholder-val="{{ true }}"><p class="act-feedback__text" style="font-size:16px;line-height:1.35;white-space:pre-line">{{ fb.text }}</p></sc-if>
+                <sc-if value="{{ fb.hasGloss }}" hint-placeholder-val="{{ false }}"><p class="act-feedback__text" style="font-size:16px;line-height:1.35;white-space:pre-line">{{ fb.pre }}<span data-review="glossary" data-review-id="{{ fb.gRid }}" data-gloss="{{ fb.gDef }}" onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ glossTap }}" onKeyDown="{{ glossKey }}" role="button" tabIndex="0" class="act-gloss" style="border-bottom:1px dotted #5C6B8A;cursor:help">{{ fb.gAbbr }}</span>{{ fb.post }}</p></sc-if>
+              </div>
+            </div>
+          </sc-for>
+          <sc-if value="{{ qShowSummary }}" hint-placeholder-val="{{ false }}">
+            <div class="act-panel act-stack" data-review="scene-part" data-review-id="s13-summary-panel" style="gap:8px;padding:12px 14px;animation:actUp .9s cubic-bezier(.16,1,.3,1) 1.1s both">
+              <p class="act-micro act-micro--muted" style="display:flex;gap:8px;align-items:center"><span data-copy="placeholder">Questions summary</span></p>
+              <p class="act-body" style="font-weight:600;color:#1B1A1A;font-size:15px" data-copy="placeholder">{{ scoreLine }}</p>
+              <div style="display:flex;gap:8px" role="img" aria-label="{{ scoreLine }}">
+                <sc-for list="{{ summaryQs }}" as="g" hint-placeholder-count="6"><span style="display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:{{ g.bg }};color:#fff;font-weight:600;font-size:13px">{{ g.q }}</span></sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ show14 }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="14" style="position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;height:100%">
+        <div class="act-stack" style="gap:18px">
+          <p class="act-h3" style="animation:actSwipe 1.05s cubic-bezier(.16,1,.3,1) both">Nisi ipsa faucibus</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+            <sc-for list="{{ takeHome }}" as="k" hint-placeholder-count="6">
+              <div style="height:208px"><sc-if value="{{ k.on }}" hint-placeholder-val="{{ true }}">
+              <div class="act-keymsg" style="flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px 18px;gap:10px;height:208px;box-sizing:border-box;animation:actUp .9s cubic-bezier(.16,1,.3,1) both"><span class="act-ico-tile" style="width:44px;height:44px;flex-basis:44px"><span class="act-ico act-ico--device" aria-hidden="true" style="width:26px;height:26px;flex-basis:26px"></span></span><p style="font-size:19px;line-height:1.3;text-wrap:pretty">{{ k.text }}<sc-if value="{{ k.hasSup }}" hint-placeholder-val="{{ false }}"><button type="button" data-review="citation" data-review-id="s14-cite-{{ k.cid }}" data-review-label="Sagittis {{ k.sup }}" data-cite="{{ k.sup }}" onClick="{{ cite }}" style="display:inline-grid;place-items:center;min-width:18px;height:16px;padding:0 4px;margin-left:4px;border:0;border-radius:4px;background:#5C6B8A;color:#fff;font:inherit;font-size:10px;font-weight:600;vertical-align:super;line-height:1;cursor:pointer">{{ k.sup }}</button></sc-if></p></div>
+              </sc-if></div>
+            </sc-for>
+          </div>
+          <div style="min-height:52px"><sc-if value="{{ takeDone }}" hint-placeholder-val="{{ false }}">
+            <div class="act-panel" style="display:flex;align-items:center;gap:14px;padding:10px 16px;animation:actUp 1s cubic-bezier(.16,1,.3,1) .9s both">
+              <span class="act-ico-tile act-ico-tile--beige" style="width:32px;height:32px;flex-basis:32px;color:#5C6B8A"><span class="act-ico act-ico--info" aria-hidden="true" style="width:18px;height:18px;flex-basis:18px"></span></span>
+              <p class="act-body" style="font-size:17px;color:#1B1A1A;display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span data-copy="placeholder">Quo nisi hendrer sed non ac qui amet. Tellus cum feugiat netus nam id i arcu netus nam hendrer nam ex interdum.</span></p>
+            </div>
+          </sc-if></div>
+        </div>
+      </div>
+    </sc-if>
+
+  </div>
+
+  <div class="act-footer" style="height:72px;padding-top:0;padding-bottom:0;box-sizing:border-box;background:{{ footerBg }};border-top:{{ footerLine }};position:relative;z-index:2;animation:actFade .95s ease .3s both">
+    <div style="display:flex;align-items:center;gap:18px">
+      <sc-if value="{{ showBack }}" hint-placeholder-val="{{ false }}">
+        <button type="button" class="act-btn act-btn--secondary" data-review="nav" data-review-id="g-back" data-review-label="Back" onClick="{{ prev }}" aria-label="Back" style="min-height:44px;padding:6px 16px;font-size:16px"><span class="act-ico act-ico--chevron" aria-hidden="true" style="transform:rotate(180deg)"></span><span data-copy="placeholder">Back</span></button>
+      </sc-if>
+      <sc-if value="{{ isTitle }}" hint-placeholder-val="{{ true }}">
+        <span class="act-logo act-logo--touch" role="img" aria-label="Condimentuinterdum" style="width:190px;height:52px;animation:actZoomIn 1.25s cubic-bezier(.16,1,.3,1) 1s both"></span>
+      </sc-if>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px">
+      <sc-if value="{{ showNext }}" hint-placeholder-val="{{ false }}">
+        <button type="button" class="act-btn act-btn--primary" data-review="nav" data-review-id="g-next" data-review-label="Next" onClick="{{ next }}" style="min-height:44px;animation:actFade .3s ease both"><span data-copy="placeholder">{{ nextLabel }}</span><span class="act-ico act-ico--chevron" aria-hidden="true" style="animation:actNudge 3.2s ease-in-out infinite"></span></button>
+      </sc-if>
+    </div>
+    <sc-if value="{{ showNextQ }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)">
+        <button type="button" class="act-btn act-btn--primary" data-review="nav" data-review-id="g-next-question" data-review-label="Next question" onClick="{{ next }}" style="min-height:44px;animation:actUp .5s cubic-bezier(.16,1,.3,1) both"><span data-copy="placeholder">Next question</span><span class="act-ico act-ico--chevron" aria-hidden="true" style="animation:actNudge 3.2s ease-in-out infinite"></span></button>
+      </div>
+    </sc-if>
+  </div>
+
+  <sc-if value="{{ resetAsk }}" hint-placeholder-val="{{ false }}">
+    <div data-review="chrome" data-review-id="g-reset-backdrop" onClick="{{ closeReset }}" style="position:absolute;inset:0;z-index:8;display:grid;place-items:center;background:rgba(27,26,26,.5);animation:actFade .2s ease both">
+      <div class="act-card" data-review="chrome" data-review-id="g-reset-card" onClick="{{ stopClick }}" style="width:460px;padding:0;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.3);animation:actRoll .55s cubic-bezier(.16,1,.3,1) both">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;background:#F3EFE7;border-bottom:1px solid #E6E4DF">
+          <p class="act-micro" data-copy="placeholder">Reset progress</p>
+          <button type="button" data-review="chrome" data-review-id="g-reset-close" data-review-close="1" onClick="{{ closeReset }}" aria-label="Close" style="display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1.5px solid #1B1A1A;background:#fff;color:#1B1A1A;cursor:pointer;line-height:0"><span class="act-ico act-ico--x" style="width:16px;height:16px;flex-basis:16px" aria-hidden="true"></span></button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:16px;padding:20px 24px 22px">
+          <p class="act-body" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span data-copy="placeholder">Your answers will be cleared and the case starts again from the beginning.</span></p>
+          <div class="act-row" style="gap:12px">
+            <button type="button" class="act-btn act-btn--primary" data-review="chrome" data-review-id="g-reset-confirm" onClick="{{ doReset }}" style="min-height:40px;padding:6px 18px;font-size:16px"><span data-copy="placeholder">Reset</span></button>
+            <button type="button" class="act-btn act-btn--secondary" data-review="chrome" data-review-id="g-reset-keep" onClick="{{ closeReset }}" style="min-height:40px;padding:6px 18px;font-size:16px"><span data-copy="placeholder">Keep going</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ refsOpen }}" hint-placeholder-val="{{ false }}">
+    <div data-review="chrome" data-review-id="g-refs-backdrop" onClick="{{ closeRefs }}" style="position:absolute;inset:0;z-index:8;display:grid;place-items:center;background:rgba(27,26,26,.5);animation:actFade .2s ease both">
+      <div class="act-card" data-review="chrome" data-review-id="g-refs-card" onClick="{{ stopClick }}" style="width:760px;padding:0;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.3);animation:actRoll .55s cubic-bezier(.16,1,.3,1) both">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;background:#F3EFE7;border-bottom:1px solid #E6E4DF">
+          <p class="act-micro" data-copy="placeholder">References</p>
+          <div style="display:flex;align-items:center;gap:10px">
+            <button type="button" class="act-btn act-btn--secondary" data-review="chrome" data-review-id="g-refs-export" data-review-label="Save references as PDF" onClick="{{ exportRefs }}" style="min-height:36px;padding:4px 14px;font-size:15px"><span data-copy="placeholder">Save as PDF</span></button>
+            <button type="button" data-review="chrome" data-review-id="g-refs-close" data-review-close="1" onClick="{{ closeRefs }}" aria-label="Close" style="display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1.5px solid #1B1A1A;background:#fff;color:#1B1A1A;cursor:pointer;line-height:0"><span class="act-ico act-ico--x" style="width:16px;height:16px;flex-basis:16px" aria-hidden="true"></span></button>
+          </div>
+        </div>
+        <ol class="act-footnote" style="margin:0;padding:20px 24px 22px 44px;display:flex;flex-direction:column;gap:8px;font-size:15px;line-height:1.4">
+          <sc-for list="{{ refs }}" as="r" hint-placeholder-count="7"><li style="word-break:break-word">{{ r.pre }}<em>{{ r.j }}</em>{{ r.post }}<sc-if value="{{ r.proposed }}" hint-placeholder-val="{{ false }}"> <span class="act-tag" style="font-size:9px;padding:0 6px"><span class="act-ico act-ico--info" aria-hidden="true"></span>Proposed</span></sc-if></li></sc-for>
+        </ol>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ linkOn }}" hint-placeholder-val="{{ false }}">
+    <div data-review="chrome" data-review-id="g-link-backdrop" onClick="{{ closeLink }}" style="position:absolute;inset:0;z-index:8;display:grid;place-items:center;background:rgba(27,26,26,.5);animation:actFade .2s ease both">
+      <div class="act-card" data-review="chrome" data-review-id="g-link-card" onClick="{{ stopClick }}" style="width:640px;padding:0;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.3);animation:actRoll .55s cubic-bezier(.16,1,.3,1) both">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;background:#F3EFE7;border-bottom:1px solid #E6E4DF">
+          <p class="act-micro">{{ linkTitle }}</p>
+          <button type="button" data-review="chrome" data-review-id="g-link-close" data-review-close="1" onClick="{{ closeLink }}" aria-label="Close" style="display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1.5px solid #1B1A1A;background:#fff;color:#1B1A1A;cursor:pointer;line-height:0"><span class="act-ico act-ico--x" style="width:16px;height:16px;flex-basis:16px" aria-hidden="true"></span></button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;padding:20px 24px 22px">
+          <p class="act-body" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span data-copy="placeholder">{{ linkHint }}</span></p>
+          <p style="margin:0;font-size:14px;line-height:1.45;color:#1B1A1A;overflow-wrap:anywhere;background:#F6F6F6;border-radius:8px;padding:12px 14px;max-height:220px;overflow:auto;white-space:pre-line"><sc-for list="{{ linkLines }}" as="l" hint-placeholder-count="1"><span style="display:block">{{ l.pre }}<em>{{ l.j }}</em>{{ l.post }}</span></sc-for></p>
+          <div class="act-row" style="gap:12px">
+            <sc-if value="{{ linkIsLeave }}" hint-placeholder-val="{{ false }}">
+              <button type="button" class="act-btn act-btn--primary" data-review="source" data-review-id="g-link-continue" data-review-label="Pharetra eu feugiat.qui" onClick="{{ continueLink }}" style="min-height:40px;padding:6px 18px;font-size:16px"><span data-copy="placeholder">Bibendum ab gravida.duo</span><span class="act-ico act-ico--chevron" aria-hidden="true"></span></button>
+              <button type="button" class="act-btn act-btn--secondary" data-review="chrome" data-review-id="g-link-stay" onClick="{{ closeLink }}" style="min-height:40px;padding:6px 18px;font-size:16px"><span data-copy="placeholder">Stay here</span></button>
+            </sc-if>
+            <sc-if value="{{ linkIsCopy }}" hint-placeholder-val="{{ false }}">
+              <button type="button" class="act-btn act-btn--primary" data-review="chrome" data-review-id="g-link-copy" onClick="{{ copyLink }}" style="min-height:40px;padding:6px 18px;font-size:16px"><span data-copy="placeholder">{{ copyLabel }}</span></button>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ tipOn }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;z-index:9;left:{{ tipX }};top:{{ tipY }};transform:{{ tipShift }};pointer-events:none"><div style="max-width:420px;background:#1B1A1A;color:#fff;border-radius:8px;padding:8px 12px;font-size:14px;line-height:1.4;white-space:pre-line;word-break:break-word;box-shadow:0 10px 28px rgba(27,26,26,.25);animation:actRoll .3s cubic-bezier(.16,1,.3,1) both"><sc-for list="{{ tipLines }}" as="l" hint-placeholder-count="1"><span style="display:block">{{ l.pre }}<em>{{ l.j }}</em>{{ l.post }}</span></sc-for></div></div>
+  </sc-if>
+
+  <sc-if value="{{ walkOpen }}" hint-placeholder-val="{{ false }}">
+    <div data-review="chrome" data-review-id="g-walk-backdrop" onClick="{{ closeWalk }}" style="position:absolute;inset:0;z-index:8;display:grid;place-items:center;background:rgba(27,26,26,.5);animation:actFade .2s ease both">
+      <div class="act-card" data-review="chrome" data-review-id="g-walk-card" onClick="{{ stopClick }}" style="width:540px;padding:0;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.3);animation:actRoll .55s cubic-bezier(.16,1,.3,1) both">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;background:#F3EFE7;border-bottom:1px solid #E6E4DF">
+          <p class="act-micro" data-copy="placeholder">How to use this resource</p>
+          <button type="button" data-review="chrome" data-review-id="g-walk-close" data-review-close="1" onClick="{{ closeWalk }}" aria-label="Close" style="display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1.5px solid #1B1A1A;background:#fff;color:#1B1A1A;cursor:pointer;line-height:0"><span class="act-ico act-ico--x" style="width:16px;height:16px;flex-basis:16px" aria-hidden="true"></span></button>
+        </div>
+        <div style="padding:22px 28px 8px;display:flex;flex-direction:column;gap:12px;min-height:200px">
+          <div style="display:grid;place-items:center;min-height:76px;padding:10px;border-radius:12px;background:#F6F6F6" aria-hidden="true" data-copy="placeholder">
+            <sc-if value="{{ walkIsNav }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;gap:14px;align-items:center">
+                <span class="act-btn act-btn--secondary" style="min-height:44px;padding:6px 16px;font-size:16px"><span class="act-ico act-ico--chevron" style="transform:rotate(180deg)"></span>Back</span>
+                <span class="act-btn act-btn--primary" style="min-height:44px;font-size:16px">Next<span class="act-ico act-ico--chevron"></span></span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ walkIsOption }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;gap:12px;align-items:center;width:100%">
+                <span class="act-option" style="font-size:16px;padding:10px 14px;min-height:48px;flex:1 1 auto;border-color:#5C6B8A;background:#F6F6F6"><span class="act-option__mark" style="position:relative;background:#5C6B8A;border-color:#5C6B8A"><span style="position:absolute;inset:-4px;border-radius:50%;border:2px solid #5C6B8A;animation:actPulseRing 2.4s ease-in-out infinite"></span><span class="act-ico act-ico--check" style="width:16px;height:16px;flex-basis:16px"></span></span>Dignissi cum ab pellentes ipsa</span>
+                <span class="act-btn act-btn--primary" style="min-height:44px;font-size:16px">Submit</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ walkIsConfirm }}" hint-placeholder-val="{{ false }}">
+              <div class="act-panel" style="display:flex;align-items:center;gap:12px;padding:10px 16px">
+                <span class="act-body" style="color:#1B1A1A;font-weight:600;font-size:16px">Are you sure?</span>
+                <span class="act-btn act-btn--primary" style="min-height:36px;padding:4px 14px;font-size:15px">Yes, submit</span>
+                <span class="act-btn act-btn--secondary" style="min-height:36px;padding:4px 14px;font-size:15px">Change answer</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ walkIsAnswer }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:8px;width:100%">
+                <span class="act-option" style="font-size:15px;padding:8px 14px;min-height:42px;border-color:#3F7F73"><span class="act-option__mark" style="background:#3F7F73;border-color:#3F7F73"><span class="act-ico act-ico--check" style="width:16px;height:16px;flex-basis:16px"></span></span>Recommended option</span>
+                <span class="act-option" style="font-size:15px;padding:8px 14px;min-height:42px;border-color:#C25A43"><span class="act-option__mark" style="background:#C25A43;border-color:#C25A43"><span class="act-ico act-ico--x" style="width:16px;height:16px;flex-basis:16px"></span></span>Ipsum odio cras qui aliquam quo commodo</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ walkIsChallenge }}" hint-placeholder-val="{{ false }}">
+              <span class="act-card" style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:12px 14px;width:200px"><span class="act-ico-tile" style="width:36px;height:36px;flex-basis:36px"><span class="act-ico act-ico--burnout"></span></span><span style="display:flex;align-items:center;justify-content:space-between;width:100%;font-weight:600;font-size:15px;color:#1B1A1A">Feugiat<span class="act-ico act-ico--chevron" style="color:#5C6B8A;width:18px;height:18px;flex-basis:18px;animation:actBob 1.8s ease-in-out infinite"></span></span></span>
+            </sc-if>
+            <sc-if value="{{ walkIsInfo }}" hint-placeholder-val="{{ false }}">
+              <span style="display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1.5px solid #5C6B8A;background:#fff;color:#5C6B8A;line-height:0"><span class="act-ico act-ico--info" style="width:18px;height:18px;flex-basis:18px"></span></span>
+            </sc-if>
+            <sc-if value="{{ walkIsCite }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:18px">
+                <span style="font-size:16px;color:#1B1A1A;white-space:nowrap">Tellus cursus ipsa varius<span style="display:inline-grid;place-items:center;min-width:18px;height:16px;padding:0 4px;margin-left:4px;border-radius:4px;background:#5C6B8A;color:#fff;font-size:10px;font-weight:600;vertical-align:super;line-height:1">2</span></span>
+                <span class="act-btn act-btn--secondary" style="min-height:40px;padding:6px 16px;font-size:16px"><span class="act-ico act-ico--info"></span>References</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ walkIsExport }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:14px;padding:8px 16px;border-radius:8px;background:#F3EFE7;width:100%;box-sizing:border-box"><span class="act-micro" style="flex:1 1 auto">References</span><span class="act-btn act-btn--secondary" style="min-height:36px;padding:4px 14px;font-size:15px">Save as PDF</span><span style="display:grid;place-items:center;width:30px;height:30px;border-radius:50%;border:1.5px solid #1B1A1A;background:#fff;color:#1B1A1A;line-height:0"><span class="act-ico act-ico--x" style="width:14px;height:14px;flex-basis:14px"></span></span></div>
+            </sc-if>
+            <sc-if value="{{ walkIsGate }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+                <div style="display:flex;gap:10px"><span class="act-btn act-btn--secondary" style="min-height:36px;padding:4px 14px;font-size:14px"><span class="act-ico act-ico--chevron" style="transform:rotate(180deg)"></span>Return to previous sections</span><span class="act-btn act-btn--primary" style="min-height:36px;padding:4px 14px;font-size:14px">Start the questions<span class="act-ico act-ico--chevron"></span></span></div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ walkIsProposed }}" hint-placeholder-val="{{ false }}">
+              <span style="display:flex;flex-direction:column;gap:10px;width:100%;color:#454545;font-size:14px">
+                <span style="display:flex;align-items:center;gap:10px"><span style="display:grid;place-items:center;width:26px;height:26px;border-radius:50%;border:1.5px solid #B4682F;color:#B4682F;font-weight:700;font-size:13px">P</span><span>Select to show or hide every tag</span></span>
+                <span style="display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid #E6E4DF;border-radius:8px;background:#fff"><span style="flex:1">Author AB, et al. Journal of Sample Studies. 2024.</span><span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;background:#F3EFE7;color:#C25A43;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase">Proposed</span></span>
+              </span>
+            </sc-if>
+            <sc-if value="{{ walkIsGloss }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start"><span style="font-size:16px;color:#1B1A1A">Dignissi <span style="border-bottom:1px dotted #5C6B8A">NAM</span> At a accumsan modo</span><span style="background:#1B1A1A;color:#fff;border-radius:8px;padding:6px 10px;font-size:13px">Suspendiss aliquam sollicitud</span></div>
+            </sc-if>
+            <sc-if value="{{ walkIsLink }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start"><span style="font-size:14px;color:#1B1A1A">Sit quo dolor et donec ipsa sagittis sit maecena.vel</span><div style="display:flex;gap:10px"><span class="act-btn act-btn--primary" style="min-height:34px;padding:4px 12px;font-size:14px">Bibendum ab gravida.duo<span class="act-ico act-ico--chevron"></span></span><span class="act-btn act-btn--secondary" style="min-height:34px;padding:4px 12px;font-size:14px">Stay here</span></div></div>
+            </sc-if>
+            <sc-if value="{{ walkIsMotion }}" hint-placeholder-val="{{ false }}">
+              <span style="display:flex;align-items:center;gap:16px;color:#454545;font-size:14px;flex-wrap:wrap;justify-content:center"><span style="display:flex;align-items:center;gap:8px"><span style="display:grid;place-items:center;width:22px;height:22px;border-radius:50%;border:1.5px solid #B4682F;color:#B4682F;font-weight:700;font-size:12px">P</span>Proposed tags</span><span style="display:flex;align-items:center;gap:8px"><span style="display:flex;align-items:center;width:34px;height:18px;border-radius:999px;padding:2px;background:#5C6B8A"><span style="width:14px;height:14px;border-radius:50%;background:#fff;margin-left:auto"></span></span>Background motion</span><sc-if value="{{ reviewTools }}" hint-placeholder-val="{{ true }}"><span class="act-btn act-btn--secondary" style="min-height:36px;padding:4px 14px;font-size:15px"><span class="act-ico act-ico--x"></span>Reset progress</span></sc-if></span>
+            </sc-if>
+            <sc-if value="{{ walkIsRevisit }}" hint-placeholder-val="{{ false }}">
+              <span style="display:flex;align-items:center;gap:14px;padding:8px 16px;border:1.5px solid #5C6B8A;border-radius:12px;background:#fff;color:#1B1A1A;font-size:16px;width:100%"><span style="display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#5C6B8A;color:#fff;font-weight:600;font-size:13px">2</span><span style="flex:1 1 auto">Phasellusa est Gravida (O&amp;A)</span><span class="act-btn act-btn--secondary" style="min-height:34px;padding:4px 12px;font-size:14px">Revisit<span class="act-ico act-ico--chevron"></span></span></span>
+            </sc-if>
+          </div>
+          <p class="act-h4" data-copy="placeholder">{{ walkTitle }}</p>
+          <p class="act-body" style="font-size:16px" data-copy="placeholder">{{ walkBody }}</p>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 24px 22px">
+          <div style="display:flex;gap:7px"><sc-for list="{{ walkDots }}" as="d" hint-placeholder-count="7"><span style="width:8px;height:8px;border-radius:50%;background:{{ d.bg }}"></span></sc-for></div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <button type="button" data-review="nav" data-review-id="g-walk-prev" data-review-label="Previous step" onClick="{{ walkPrev }}" aria-label="Previous step" style="display:grid;place-items:center;width:40px;height:40px;border-radius:50%;border:1.5px solid #E6E4DF;background:#fff;color:#5C6B8A;cursor:pointer;opacity:{{ walkPrevOpacity }}"><span class="act-ico act-ico--chevron" style="transform:rotate(180deg);width:18px;height:18px;flex-basis:18px" aria-hidden="true"></span></button>
+            <button type="button" data-review="nav" data-review-id="g-walk-next" data-review-label="{{ walkNextLabel }}" onClick="{{ walkNext }}" aria-label="{{ walkNextLabel }}" style="display:grid;place-items:center;width:40px;height:40px;border-radius:50%;border:1.5px solid #E6E4DF;background:#fff;color:#5C6B8A;cursor:pointer"><sc-if value="{{ walkIsLast }}" hint-placeholder-val="{{ false }}"><span class="act-ico act-ico--check" style="width:18px;height:18px;flex-basis:18px" aria-hidden="true"></span></sc-if><sc-if value="{{ walkNotLast }}" hint-placeholder-val="{{ true }}"><span class="act-ico act-ico--chevron" style="width:18px;height:18px;flex-basis:18px" aria-hidden="true"></span></sc-if></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:720},&quot;showRangeBands&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showDraftTags&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Review&quot;}}">
+class Component extends DCLogic {
+  /* Egestas Commodo. Sit neque, 14 ornare.
+     Enim ab suspendiss o2 faucibus (+ et lorem Commodo); odio in adipiscin="vulputateequo" non congue. */
+  LAST = 15;
+  /* Felis cras: u netus netus enim rutrum.SIT_VELIT neque ornare.ac lorem. Nam lorem id quis rutrum ac nisi auctor,
+     phasellusaest parturient NETUS duo ut() feugiat donec iaculis (Donec faucibus vel quis sed hendrer vel ex sed cursus), sed auctor amet
+     (U sit rutrum, Nulla eleifend) congue ut est tempor cras, bibendum at tempor quo nulla, quo quo ipsum faucibus id varius ut sed purus. */
+  SCENE = (typeof window !== "undefined" && Number.isInteger(window.ACT_SCENE)) ? window.ACT_SCENE : null;
+  KEY = "ffw-portfolio-demo-v2" + (this.SCENE ? "-s" + this.SCENE : "");
+  /* Netus 15 Quo 2026: nam lorem netus qui nulla hendrer feugiat. Ultricies 1-6 nam duo Netus donec (congue 8 netus 8-13, 11 morbi
+     accumsan 4 dolor sagittis 3), ac maecena cum est scelerisq aliquam modo faucibus sed Arcu/Amet odio feugiat vestibulu tempor ad.
+     ac() felis ornare iaculis feugiat sit modo: Enim et conubia 1 quo Ipsum ad accumsan 6 cum quis ex Dolor. */
+  SPAN = { 8: [8, 9, 10, 11, 12, 13] };
+  inScene(n) { return this.SCENE === null || (this.SPAN[this.SCENE] || [this.SCENE]).includes(n); }
+  TITLES = ["", "Velit mauris", "Dignissi odio", "Nulla qui quis", "Parturienteu eu duo eros", "Amet phasellusaab vel accumsan phasellusafelis",
+    "Suspendiss et nam ridiculuss ut odio enim lacinia ab Gravida netus maecena", "Ridiculuss sit Lacinia 6",
+    "Tincidunts nam Aliquam (1/5 I&A)", "Vulputatee sed Maecena (2/5 E&U)", "Condimentu sit Ornare 4 (3–3/7 O&U)",
+    "Sollicitud duo Lacinia 4 (3/5 I&O)", "Consectetu quo Feugiat 4 (5/7 U&E)", "Consectetu duo Hendrer (5/5 E&E)", "Cras ipsa interdum", "Commodo"];
+
+  Q = {
+    8: { setup: "Est ornare ac suspendisset >4% enim et suspendissid quo felis cum ultricies odio odio 69% ex cum odio",
+      stem: "Augue ex non phasellusanam netus, odio velit nisi mauris cum vulputateeid?",
+      options: ["Eleifend sed in elementum odio", "Ridiculusscum velit lorem", "Consectetuduo nisi tempor", "Auctor duo cum ab adipiscin enim"], correct: [0],
+      correctLabel: "Maecena rutrum",
+      correctText: "Duo varius et ab qui nam vestibulu nisi ex nulla 115% id quo amet ex hendrer suspendissat. Odio ut elementum quis, vel Hendrer 6 congue ipsa purus aliquam interdum duo malesuada id rutrum penatibussex, sagittis quo quis lorem donec nulla.",
+      perOption: { 1: "Consectetuvel morbi donec cras sit aliquam vel netus ac penatibussut - odio non maecena eros pharetra eleifend non lacinia‑tincidunts tempor odio ipsa adipiscin quis accumsan.",
+        3: "Duo varius et ab qui nam vestibulu nisi ex nulla 115% id quo amet ex hendrer suspendissat. Odio ut elementum quis, vel Hendrer 6 congue ipsa purus aliquam interdum duo malesuada id rutrum penatibussex, sagittis quo quis lorem donec nulla.",
+        2: "Condimentunam eros varius ipsa sit maecena sed vulputateeab, maecena quo arcu est malesuada purus elementum nam aliquam‑ridiculuss mauris enim enim vulputatee penatibussduo eu lorem." },
+      readouts: [{ label: "Quis et penatibussab", value: ">6%", fill: 8, target: 4, alert: true, targetText: "<4%" },
+        { label: "Elementum amet", value: "63%", fill: 90, target: 77, targetText: "Id nulla 103%" }] },
+    9: { setup: "Cum maecena eu neque id hendrer ac 1.9 gravida nam sit vel non amet donec maecena",
+      stem: "Vel enim amet auctor in iaculis gravida ipsa nisi velit ut maecena?",
+      options: ["Ab sagittis", "Neque quis dignissi", "Netus enim iaculis"], correct: [2], correctLabel: "Rutrum",
+      correctText: "Ut morbi 3 hendrer cum quo felis ab hendrer.",
+      readouts: [{ label: "Maecena quo qui", value: "1.7", fill: 39, target: 69, alert: true, targetText: "Ex felis 3 iaculis cum qui" }] },
+    10: { setup: { mg: "Nam iaculis in faucibus 39% ex sed quis quis u felis iaculis ac >168 et/et (>7.6 arcu/I)", mmol: "Qui egestas ad dignissi 40% ex vel modo amet o nulla gravida et >11.1 ipsa/U (>170 et/et)" },
+      stem: "Netus qui iaculis eu phasellusa eu lacinia augue conubia egestas?",
+      options: ["At - nam lacinia at faucibus nam odio modo in consectetuest", "Sit – qui feugiat at egestas auctor ipsum"], correct: [0], correctLabel: "Rutrum",
+      gloss: { abbr: "EIN", def: "Enim id nulla", rid: "s10-gloss-a" },   /* Netus 2026-09-11: CUM at ornare maecena gravida */
+      correctText: { mg: "Cum cursus CUM ex (64–155 et/et; 3.8–8.1 cras/U) duo <23% ut eros >213 et/et (>10.8 nisi/E) (EIN)", mmol: "Qui cursus NAM in (4.7–11.5 eros/A; 86–137 ut/ad) non <19% ab modo >7.7 ipsa/E (>134 ut/et) (EIN)" },
+      readouts: [{ label: { mg: "Quis >145 id/ad (EIN)", mmol: "Modo >7.7 ipsa/U (EIN)" }, value: "37%", fill: 32, target: 21, alert: true, targetText: "<22%" }] },
+    11: { setup: "", stem: "Id vel egestas qui modo accumsan vel modo nisi at ridiculussut, eros felis vel lobortis at est suspendiss?",
+      options: ["Tellus lobortis id suspendissnon", "Congue pharetra ac sollicitudac"], correct: [1], correctLabel: "Rutrum",
+      correctText: "Non sagittis nulla ad neque phasellusaet in nisi ac ut elementum cursus commodo" },
+    12: { setup: "Elementum parturientduo, est lacinia eu condimentuex penatibusscum 2 eu 2 netus velit purus sit id morbi dignissi",
+      stem: "Eros auctor ac sit modo?", multi: true,
+      options: ["Tempor velit neque (CON)", "Congue ac lacinia et parturient sed ridiculuss sed tinciduntsnam", "Tempor et cras cum donec Cursus Velit", "Interdum suspendissnon U:U rutrum ut 10–15%", "Dolor pellentes auctor egestas"], correct: [0, 1, 2, 3, 4], correctLabel: "Rutrum",
+      optGloss: { abbr: "CON", def: "Consecteturidiculuss", rid: "s12-gloss-b" },   /* Dolor 15 Qui: dolor phasellusa enim u lorem; hendrer Interdum, odio Felis */
+      correctText: "Sit feugiat vel odio arcu eleifend pellentes condimentuduo pharetra.\n\nElementum sed suspendiss cursus qui lacinia consectetuad imperdiet.\n\nQui cras cum quis accumsan sagittis non ac vulputatee purus cum Cursus Arcu maecena, felis ipsum non sed nisi egestas est lorem in ex suspendissqui.\n\nVelit mauris rutrum et 11–19 cras congue quo morbi duo tellus.\n\nAt u lacinia et consectetu sit ridiculuss, quis arcu fermentum ad neque nam ridiculussest morbi amet.\n\nI netus tellus feugiat modo odio duo Lacinia ultricies hendrer augue neque est modo enim gravida, eleifend odio augue dolor netus." },
+    13: { setup: "Sit iaculis ad consequat tinciduntseu odio augue hendrer imperdiet o quo", stem: "Eros auctor ac sit modo?",
+      options: ["Dolor pellentes auctor egestas", "Suspendiss et sit ab lorem cras ridiculussac", "Consectetu duo suspendiss congue"], correct: [1], correctLabel: "Feugiat Tellus",
+      correctText: "Phasellusaquo cum congue ridiculussac ab ipsa cum maecena modo duo amet felis in penatibussac",
+      perOption: { 0: "Sagittis cum fermentum congue feugiat enim cum iaculis velit velit e qui, lacinia ornare tinciduntsnon ut non varius eu cum tempor maecena.",
+        2: "Phasellusacum non condimentu neque cras sed lacinia augue nulla u quo, hendrer commodo sollicitudest et vel neque ab qui condimentuid cum cursus pharetra lorem." } }
+  };
+
+  /* Nisi feugiat = donec adipiscin (felis eros, Eleifend; aliquam interdum i2). Donec = sagittis, lacinia iaculis eu 10 Quo. */
+  CHALLENGES = [
+    { key: "missing", icon: "tb-wall", label: "Maecena vulputatee", detail: "Hendrer amet ridiculuss est et condimentunon", feature: "Tincidunts et maecena sit est aliquam odio", bullets: "" },
+    { key: "needle", icon: "tb-barbell", label: "Tempor neque", detail: "I1A condimentu penatibussquo ab cras in sollicitud", feature: "Cras iaculis imperdiet", bullets: "" },
+    { key: "labour", icon: "tb-package", label: "Varius nulla quo", detail: "Eleifend NON ex a interdum arcu", gloss: { pre: "Pharetra ", post: " Ad o accumsan modo" }, feature: "Tinciduntsad iaculis vel conubia hendrer in gravida ridiculussac dolor augue ab varius at i cursus netus duo", bullets: "Lobortis quo vulputatee · In odio in phasellusa congue consectetu ac nam malesuada velit ab sit sit" },
+    { key: "carbs", icon: "tb-armchair", label: "Vel nisi interdum", detail: "Parturientquo nulla faucibus", feature: "Tincidunts interdum", bullets: "Dolor Congue Netus" },
+    { key: "burnout", icon: "tb-truck-loading", label: "Hendrer", detail: "Penatibuss arcu sagittis maecena", feature: "Varius vulputatee sit tinciduntsid adipiscin o sed neque amet purus 3 eros ipsum arcu netus consectetu sed cras enim congue rutrum", bullets: "" }
+  ];
+  GUIDE_URL = "https://danforgedframeworks.github.io/Portfolio/";
+  FEATURES = [
+    { icon: "tb-wall", challenge: "Hendrer phasellusa · Neque varius", feature: "Tincidunts et maecena sit est aliquam odio", bullets: "Interdum qui ridiculuss · Arcu lacinia scelerisq" },
+    { icon: "tb-package", challenge: "Varius nulla quo", feature: "Tinciduntsad iaculis vel conubia hendrer in gravida ridiculussac dolor augue ab varius at i cursus netus duo", bullets: "Ab nisi ab ridiculuss rutrum vulputatee in sit pellentes donec ut sed est" },
+    { icon: "tb-armchair", challenge: "Vel nisi interdum", feature: "Tincidunts interdum", bullets: "Dolor Congue Netus" },
+    { icon: "tb-truck-loading", challenge: "Hendrer", feature: "Varius vulputatee sit tinciduntsid adipiscin o sed neque amet purus 3 eros ipsum arcu netus consectetu sed cras enim congue rutrum", bullets: "" }
+  ];
+
+  TAKE = [
+    { text: "Cum Commodo 4 ad qui purus accumsan, penatibuss cursus congue ipsa tellus", sup: "2" },
+    { text: "Cum Feugiat 6 iaculis lacinia netus 6 eros", sup: "" },
+    { text: "Parturient lobortis enim sit Gravida est vulputatee u aliquam fermentum accumsan netus", sup: "" },
+    { text: { mg: "Est Lobortis Bibendum Vulputateequi eleifend tellus nam ≥53% ut modo id lorem (61–213 at/eu [3.8–11.2 odio/E]) qui <3% modo velit dolor", mmol: "Duo Sagittis Faucibus Tinciduntsqui conubia neque nam ≥87% ab cras ex dolor (4.2–9.4 modo/O [70–142 at/ut]) duo <3% eros purus felis" }, sup: "1" },
+    { text: "Condimentu arcu lacinia nisi purus non morbi nisi ipsa 95% ex cras eu augue enim malesuada faucibus", sup: "3" },
+    { text: "Cum sollicitud eu Ornare cursus quo dolor qui dignissi hendrer at cras, nulla, sed ipsa phasellusa ab lobortis suspendissut", sup: "4–6" }
+  ];
+
+  REFS = [
+    { text: "Author AB, Author CD, et al. Placeholder reference for demonstration purposes. Journal of Sample Studies. 2024;12(3):101-108.", j: "Journal of Sample Studies", proposed: true },
+    { text: "Example Organisation. Placeholder product user guide 2024 (Available from: https://example.org/placeholder-user-guide.pdf)" },
+    { text: "Author EF, et al. Review of Sample Practice. 2024. doi:10.0000/placeholder.0000000.", j: "Review of Sample Practice", proposed: true },
+    { text: "Author GH, et al. Journal of Sample Studies. 2023;47(12):2248-2257.", j: "Journal of Sample Studies" },
+    { text: "Author IJ, et al. Sample Research and Practice. 2022;190:109998.", j: "Sample Research and Practice", proposed: true },
+    { text: "Author KL, et al. Sample Reports Quarterly. 2023;2023:1-12.", j: "Sample Reports Quarterly" }
+  ];
+  /* "4–6" -> Eros 4, 5, 6; "1" -> quo 1 */
+  citeText(sup) {
+    const m = sup.match(/^(\d+)[–-](\d+)$/); const ns = m ? Array.from({ length: +m[2] - +m[1] + 1 }, (_, i) => +m[1] + i) : sup.split(",").map(x => +x.trim());
+    return ns.map(n => n + ". " + (this.REFS[n - 1] || { text: "" }).text).join("\n");
+  }
+  /* Non ultricies ipsa -> { non, i, arcu } in est aliquam amet commodo eu <ut> (donec varius 2026-09-17, velit
+     tempor; sed <a> netus 2026-09-20); ut = purus auctor sed arcu netus, quo o scelerisq nisi ac iaculis */
+  jparts(line, on) {
+    const r = on ? this.REFS.find(x => x.j && line.indexOf(x.j) >= 0) : null;
+    if (!r) return { pre: line, j: "", post: "" };
+    const i = line.indexOf(r.j);
+    return { pre: line.slice(0, i), j: r.j, post: line.slice(i + r.j.length) };
+  }
+  WALK = [
+    { kind: "nav", title: "Move through the case", body: "Back sits bottom left and Next bottom right. Next appears once a screen is complete. The dots in the top bar show where you are; numbered dots are the question screens." },
+    { kind: "motion", title: "Top bar controls", body: "The P switch shows or hides Proposed tags, which mark items still being agreed. The next switch pauses the ambient motion in the background. Reset progress clears your answers and returns to the start; it asks first if anything has been answered.", splitBody: "Nam neque ipsum quo egestas augue ab sed phasellusa." },
+    { kind: "proposed", title: "Proposed copy", body: "Some wording is still being agreed, and every item in that state carries a Proposed tag. Select the P switch in the top bar to show or hide all of them at once - leave it on to review what is still open, turn it off to read the activity exactly as a learner will see it." },
+    { kind: "gloss", title: "Abbreviations", body: "A term with a dotted underline shows its full form. Select the term to see it, and select anywhere else to close it." },
+    { kind: "info", title: "More information", body: "An information button on a card opens a reference note inside that card, such as a target range. Select it again to close." },
+    { kind: "cite", title: "Check a source", body: "Select a numbered chip next to a statement to see that reference in place; it clears as soon as you do anything else. The full numbered list opens from the References button on the final Revisit page." },
+    { kind: "challenge", title: "Open a challenge", body: "E nisi nisi a maecena lacinia dolor ipsa bibendum: morbi sit fermentum, odio duo Maecena ornare odio consequat ad. Modo est amet ut ipsa ex." },
+    { kind: "gate", title: "Six questions ahead", body: "Before the first question, a page asks if you are ready. Return to previous sections goes back to the case; Start the questions moves on." },
+    { kind: "option", title: "Select and submit", body: "Select an option, then Submit. One question allows more than one option to be selected." },
+    { kind: "answer", title: "Read the answer", body: "The recommended option turns teal with a tick; an option that does not address the problem turns red with a cross. The rationale appears beside the question." },
+    { kind: "revisit", title: "Finish and revisit", body: "After the sixth question a summary shows how many answers matched the recommended option. The take home messages then lead to a final page where every section can be revisited." },
+    { kind: "export", title: "Save the references", body: "In the References overlay, Save as PDF opens the list in a new tab ready to print or save. Where a new tab is not allowed, the list appears here with a Copy button instead." },
+    { kind: "link", title: "Open the User Guide", body: "Qui Commodo Nisi Donec neque ab qui Lacinia modo nulla odio rutrum ornare: Eleifend velit ornare.cum at o cum duo, Modo cras tempor duo cursus. Lorem e duo vel in est commodo, sit odio lacinia cras u Cras rutrum egestas." }
+  ];
+
+  state = Object.assign({
+    scene: this.SCENE || 1, visited: [this.SCENE || 1], answers: {}, units: "mg", motion: true, walk: null, dir: 1, revReady: false, chTick: 0, fading: false, tags: (this.props && this.props.showDraftTags) || true, resetAsk: false, held: this.holdUntilSeen()
+  }, this.load());
+
+  /* Netus purus donec hendrer varius ac augue, ad o purus donec purus odio qui pharetra nam ipsum. Cursus ut varius qui
+     velit augue adipiscin nulla eu purus cras ac eu ex donec et congue, enim auctor amet (donec aliquam eros, morbi 15 Sit 2026).
+     Non phasellusanisi cras, a donec tempor eleifend, est congue dignissi quo nulla odio. */
+  holdUntilSeen() {
+    if (this.SCENE === null || typeof window === "undefined") return false;
+    try { return window.self !== window.top; } catch (e) { return true; }
+  }
+  watchSeen() {
+    if (!this.state.held) return;
+    /* Sagittis ac sit PURUS in ornare sollicitudsed egestas (15 Est 2026: et Dolor vel dignissi faucibus augue dolor velit,
+       ac donec arcu purus congue felis). O purus nulla at morbi eros ad pharetra ipsa est gravida tempor. */
+    const offs = [];
+    const release = () => {
+      if (!this.state.held) return;
+      offs.splice(0).forEach(f => { try { f(); } catch (e) {} });
+      this.setState({ held: false }, () => { if (this.reviewDriving) return; if (this.state.scene === 5) this.startCount(); if (this.state.scene === 14) this.startTake(); });
+    };
+    this.releaseHold = release;
+    const on = (t, ev, fn, opt) => { t.addEventListener(ev, fn, opt); offs.push(() => t.removeEventListener(ev, fn, opt)); };
+    /* 1. At tellus: sit odio ac quo adipiscin nisi ac ipsa */
+    if (typeof IntersectionObserver !== "undefined") {
+      const target = this.rootEl || document.body || document.documentElement;
+      const io = new IntersectionObserver(entries => { if (entries.some(e => e.isIntersecting && e.intersectionRatio > 0)) release(); }, { threshold: [0, 0.01, 0.25] });
+      io.observe(target); offs.push(() => io.disconnect());
+    } else { release(); return; }
+    /* 2. Morbi felis: sagittis eros adipiscin ipsum non rutrum quo penatibuss vulputateeid ornare; 45 varius auctor ~1.5 e lorem in at vestibulu */
+    let frames = 0, t0 = 0, raf = 0;
+    const tick = t => { if (!this.state.held) return; if (!t0 || t - t0 > 1500) { t0 = t; frames = 0; } if (++frames >= 45) { release(); return; } raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick); offs.push(() => cancelAnimationFrame(raf));
+    /* 3. Cum gravida id et et */
+    ["pointermove", "pointerdown", "touchstart", "keydown", "wheel", "focus"].forEach(ev => on(window, ev, release, { passive: true }));
+    /* 4. E tellus augue nulla velit aliquam sed neque modo gravida */
+    on(window, "resize", () => { if (window.innerWidth > 0 && window.innerHeight > 0) release(); });
+  }
+
+  load() {
+    try { const s = JSON.parse(localStorage.getItem(this.KEY) || "null"); if (s && typeof s.scene === "number") return { scene: this.SCENE || s.scene, visited: this.SCENE ? [this.SCENE] : (s.visited || [1]), answers: s.answers || {}, units: s.units || "mg", motion: s.motion !== false, ch: s.ch || {}, tags: !!s.tags }; } catch (e) {}
+    return {};
+  }
+  persist() {
+    if (this.noPersist) return;
+    const s = this.state;
+    try { localStorage.setItem(this.KEY, JSON.stringify({ scene: s.scene, visited: s.visited, answers: s.answers, units: s.units, motion: s.motion, ch: s.ch || {}, tags: !!s.tags })); } catch (e) {}
+  }
+  componentDidUpdate() { const prev = this._lastScene; this._lastScene = this.state.scene; this.persist(); if (this.state.scene === 5 && prev !== 5 && !this.reviewDriving) this.startCount(); if (this.state.scene === 14 && prev !== 14 && !this.reviewDriving) this.startTake(); this.rdCheck(); }
+
+  /* Enim cras interdum maecena qui in u nisi: 0.9 o egestas + 0.7 i ipsa cras. Lacinia mauris netus non cum ac enim. */
+  startTake() {
+    this.stopTake();
+    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || (this.state.take && this.state.take.step >= this.TAKE.length)) { this.setState({ take: { step: this.TAKE.length } }); return; }
+    const run = i => { if (this.state.scene !== 14) return; this.setState({ take: { step: i } }); if (i < this.TAKE.length) this.takeTimer = setTimeout(() => run(i + 1), i === 0 ? 700 : 1600); };
+    run(0);
+  }
+  stopTake() { clearTimeout(this.takeTimer); }
+
+  /* Mauris 5 morbi auctor sed et e quis; e feugiat odio tempor ut (bibendum, 1.2 e) rutrum duo cras eros ab egestas ac. */
+  DEMO = [
+    { icon: "tb-tools", num: 17, post: "Dolor et vel", span: 2 },
+    { icon: "tb-battery-1", post: "Quis", big: true, span: 2 },
+    { icon: "tb-packages", abbr: "A1F", def: "Amet 1 faucibus", mid: " Est", num: 14, post: "Morbi", rid: "s5-gloss-abbr-a", span: 2 },
+    { icon: "tb-barbell", pre: "Ultricies odio ", abbr: "EFP", def: "Eleifend felis phasellusa", mid: " Est", num: 14, post: "Morbi", rid: "s5-gloss-mdi", span: 3 },
+    { icon: "tb-user", abbr: "LC", def: "Lobortis consectetu", num: 9.0, unit: "%", post: "", rid: "s5-gloss-metric", span: 3 }
+  ];
+  startCount() {
+    this.stopCount();
+    const run = i => {
+      if (i >= this.DEMO.length || this.state.scene !== 5) return;
+      const d = this.DEMO[i];
+      this.setState(st => ({ demo: { step: i + 1, counts: st.demo ? st.demo.counts.slice() : this.DEMO.map(() => 0) } }));
+      if (d.num == null) { this.countTimer = setTimeout(() => run(i + 1), 800); return; }
+      const t0 = performance.now() + 500, dur = 1200;
+      const tick = now => {
+        if (this.state.scene !== 5) return;
+        const p = Math.max(0, Math.min(1, (now - t0) / dur)), e = 1 - Math.pow(1 - p, 3);
+        this.setState(st => { const c = st.demo.counts.slice(); c[i] = e; return { demo: { step: st.demo.step, counts: c } }; });
+        if (p < 1) this.countRaf = requestAnimationFrame(tick); else this.countTimer = setTimeout(() => run(i + 1), 250);
+      };
+      this.countRaf = requestAnimationFrame(tick);
+    };
+    this.setState({ demo: { step: 0, counts: this.DEMO.map(() => 0) } }, () => { this.countTimer = setTimeout(() => run(0), 900); });
+  }
+  stopCount() { cancelAnimationFrame(this.countRaf); clearTimeout(this.countTimer); }
+  /* Quis mauris (consequat 1-3): vel scelerisq ipsum rutrum ab felis sit vel egestas ab (lorem 2026-09-11). */
+  countVal(v, p) { const m = String(v).match(/^([^\d]*)(\d+(?:\.\d+)?)(.*)$/); if (!m || p >= 1) return v; const dp = (m[2].split(".")[1] || "").length; return m[1] + (parseFloat(m[2]) * p).toFixed(dp) + m[3]; }
+  rdCheck() {
+    const n = this.state.scene, want = this.isQ(n) && this.ans(n).revealed && (this.Q[n].readouts || []).length > 0, key = want ? n : 0;
+    if (key === this._rdKey) return;
+    this._rdKey = key;
+    if (want && !this.reviewDriving) this.startRd();
+  }
+  startRd() {
+    this.stopRd();
+    const cur = this.state.scene, reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) { this.setState({ rd: null }); return; }
+    const t0 = performance.now() + 200, dur = 1100;
+    const tick = now => { if (this.state.scene !== cur) return; const q = Math.max(0, Math.min(1, (now - t0) / dur)); this.setState({ rd: { scene: cur, p: 1 - Math.pow(1 - q, 3) } }); if (q < 1) this.rdRaf = requestAnimationFrame(tick); };
+    this.setState({ rd: { scene: cur, p: 0 } }, () => { this.rdRaf = requestAnimationFrame(tick); });
+  }
+  stopRd() { cancelAnimationFrame(this.rdRaf); }
+  hoverable() { return !(window.matchMedia && window.matchMedia('(hover: none)').matches); }
+  tipFor(el, text, above) {
+    if (!this.stageEl) return null;
+    const a = el.getBoundingClientRect(), b = this.stageEl.getBoundingClientRect(), k = b.width / 1280 || 1;
+    /* Donec 15 Duo: a lobortis augue arcu PURUS sed enim (lorem, ad gravida est ipsa in faucibus); u conubia velit netus LOREM qui enim
+       (morbi, ut feugiat est elementum in dolor). u lacinia ac i 420 ad nam purus eu est 1280 et morbi. */
+    return { text, above: !!above, x: Math.max(8, Math.min((a.left - b.left) / k, 1280 - 436)), y: above ? (a.top - b.top) / k - 8 : (a.bottom - b.top) / k + 8 };
+  }
+
+  componentDidMount() {
+    this.fit = () => {
+      if (this.state.held) return;   /* Quo netus tellus ad feugiat nam augue sed rutrum */
+      const vw = window.innerWidth, vh = window.innerHeight;
+      if (!this.stageEl || !vw || !vh) { requestAnimationFrame(this.fit); return; }
+      const k = Math.min(vw / 1320, vh / 760);
+      this.stageEl.style.transform = "translate(-50%,-50%) scale(" + k + ")";
+    };
+    this.fit(); window.addEventListener("resize", this.fit);
+    this._lastScene = this.state.scene;
+    if (this.state.scene === 5 && !this.state.held) this.startCount();
+    if (this.state.scene === 14 && !this.state.held) this.startTake();
+    this.rdCheck();
+    this.watchSeen();
+    this.onKey = e => {
+      if (e.key === "Escape") this.setState({ walk: null, refsOpen: false, tip: null, ranges: false, link: null, resetAsk: false });
+      else if (this.state.walk !== null) return;
+      else if (e.key === "ArrowRight" && this.explored(this.state.scene) && this.state.scene < this.LAST) this.go(this.state.scene + 1);
+      else if (e.key === "ArrowLeft" && this.state.scene > 1) this.go(this.state.scene - 1);
+    };
+    window.addEventListener("keydown", this.onKey);
+    this.applyMotion();
+    this.installReview();
+  }
+  componentWillUnmount() { if (this.seenIO) this.seenIO.disconnect(); window.removeEventListener("resize", this.fit); window.removeEventListener("keydown", this.onKey); clearInterval(this.readyTimer); }
+
+  /* Tincidunts tempor mauris auctor non ornare purus (NON vulputatee ex .ultricies). */
+  applyMotion() { if (this.stageEl) this.stageEl.style.setProperty("--act-motion", this.state.motion ? "running" : "paused"); document.querySelectorAll(".Vestibulu *").forEach(el => { el.style.animationPlayState = this.state.motion ? "running" : "paused"; }); }
+
+  ans(n) { return this.state.answers[n] || { picked: [], confirm: false, revealed: false }; }
+  setAns(n, patch) { this.setState(st => ({ answers: Object.assign({}, st.answers, { [n]: Object.assign({}, this.ans(n), patch) }) })); }
+  isQ(n) { return n >= 8 && n <= 13; }
+  explored(n) { if (n === 6) return this.CHALLENGES.every(c => (this.state.ch || {})[c.key]); if (n === 14) return !!(this.state.take && this.state.take.step >= this.TAKE.length); return this.isQ(n) ? this.ans(n).revealed && (!this.PAIR[n] || this.ans(this.PAIR[n]).revealed) : true; }
+  canAdvance() { return this.state.scene < this.LAST && this.explored(this.state.scene); }
+  allDone() { for (let n = 8; n <= 13; n++) if (!this.ans(n).revealed) return false; return this.state.visited.includes(14); }
+  isCorrect(n) { const a = this.ans(n), q = this.Q[n]; if (!a.revealed) return false; if (q.multi) return a.picked.length > 0; return a.picked.length === 1 && q.correct.includes(a.picked[0]); }
+
+  go(i) {
+    let s = Math.max(1, Math.min(this.LAST, i));
+    if (s === 3) s = i >= this.state.scene ? 4 : 2;
+    if (s === 11) s = i >= this.state.scene ? 12 : 10;
+    if (this.SCENE !== null && !this.inScene(s)) return;   /* Neque 3 rutrum arcu 4; cursus 7 ab sed A&A modo (penatibuss 7 mauris cras 6) */
+    if (s === this.state.scene) return;
+    this.setState(st => ({ scene: s, dir: s > st.scene ? 1 : -1, walk: null, ranges: false, tip: null, refsOpen: false, link: null, visited: st.visited.includes(s) ? st.visited : st.visited.concat([s]) }), () => this.applyMotion());
+  }
+  u(v) { return typeof v === "string" ? v : (v[this.state.units] || v.mg); }
+  ORDER = [2, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15];
+  /* Felis 01 (Donec, 14 Cum 2026): pharetra 4 eu enim eu bibendum 3 - ut iaculis eu varius 10 quis dignissi 3 at faucibus. Ipsum 11 ad cras. */
+  PAIR = { 10: 11 };
+  hardReset() {
+    try { localStorage.removeItem(this.KEY); } catch (e) {} this.stopCount(); this.stopTake();
+    this.setState({ fading: true, tip: null, refsOpen: false, walk: null, ranges: false, resetAsk: false });   /* Quis duo, purus, amet modo ut */
+    setTimeout(() => this.setState({ scene: 1, visited: [1], answers: {}, ch: {}, chActive: null, chTick: 0, demo: null, take: null, fading: false }), 320);
+  }
+
+  /* Maecena velit, congue 3a, felis eu nam maecena non auctor (1280 u 130) ac iaculis elementum.
+     Ipsum feugiat auctor; odio velit eu ~2 a nulla at nam duo (egestas 0-60% id 20 i), augue,
+     enim netus ac duo dignissi (75-100%) rutrum ac. Maecena eros nam Felis rutrum quis cras est enim nulla. */
+  traceSvg() {
+    if (this._trace) return this._trace;
+    const W = 1280, H = 130, BASE = 98, h = React.createElement;
+    const BLOCKS = 5, PER = 7, LOOP = 30, SLICE = LOOP / BLOCKS;
+    const kids = [h("rect", { key: "band", className: "act-trace__band", x: 0, y: 30, width: W, height: 72 })];
+    const bw = W / BLOCKS;
+    for (let b = 0; b < BLOCKS; b++) {
+      const x0 = b * bw, delay = (b * SLICE).toFixed(2) + "s";
+      const step = (bw - 48) / PER;
+      for (let i = 0; i < PER; i++) {
+        const x = x0 + 24 + i * step;
+        const tall = 12 + ((b * 5 + i * 11) % 6) * 9;
+        kids.push(h("rect", { key: "b" + b + "_" + i, className: "act-trace__bar",
+          x: x, y: BASE - tall, width: Math.max(8, step * 0.52), height: tall, rx: 2,
+          style: { animation: "actBarIn " + LOOP + "s ease-in-out infinite",
+                   animationDelay: ((b * SLICE) + i * 0.08).toFixed(2) + "s" } }));
+        if (i % 2 === 0) {
+          kids.push(h("circle", { key: "p" + b + "_" + i, className: "act-trace__plot",
+            cx: x + Math.max(8, step * 0.52) / 2, cy: BASE - tall - 12, r: 3.5,
+            style: { animation: "actPlotIn " + LOOP + "s ease-in-out infinite",
+                     animationDelay: ((b * SLICE) + i * 0.08 + 0.22).toFixed(2) + "s" } }));
+        }
+      }
+      kids.push(h("rect", { key: "r" + b, className: "act-trace__rule",
+        x: x0 + 16, y: BASE + 2, width: bw - 32, height: 2, rx: 1,
+        style: { animation: "actRuleIn " + LOOP + "s ease-in-out infinite", animationDelay: delay } }));
+    }
+    this._trace = h("svg", { viewBox: "0 0 " + W + " " + H, preserveAspectRatio: "none",
+      style: { width: "100%", height: "100%", display: "block" } }, kids);
+    return this._trace;
+  }
+
+  /* ---- Cursus tinciduntsid (morbi interdum, duo Nulla PHASELLUSAPHASELLUSA) ---- */
+  liveScene() { const el = this.sceneEl; if (el && el.isConnected) return el; const f = document.querySelector('[data-review="scene"]'); if (f) this.sceneEl = f; return f || null; }
+  /* Scelerisq ipsum duo lorem nulla, non quis est augue modo: eleifend (sollicitudvel, gravida, faucibus) lorem congue vel morbi
+     sit nisi at arcu egestas 0, eu a vestibulu felis eleifend dolor congue hendrer varius. */
+  sceneReady() {
+    const el = (this.stageEl && this.stageEl.isConnected) ? this.stageEl : this.liveScene(); if (!el || !el.getAnimations) return true;
+    return !el.getAnimations({ subtree: true }).some(a => { if (a.playState !== "running") return false; const t = a.effect && a.effect.getTiming ? a.effect.getTiming() : {}; return t.iterations !== Infinity; });
+  }
+  installReview() {
+    this.readyTimer = setInterval(() => { const r = this.sceneReady(); if (r !== this.state.revReady) this.setState({ revReady: r }); }, 120);
+    const self = this;
+    const baseline = n => ({ held: false, scene: n, dir: 1, walk: null, tip: null, ranges: false, refsOpen: false, link: null, ch: {}, chActive: null, chTick: 0, fading: false, take: { step: 6 }, demo: { step: 7, counts: [1, 1, 1, 1, 1, 1, 1] }, units: "mg", motion: false, tags: true, resetAsk: false, visited: Array.from({ length: n }, (_, i) => i + 1), answers: {} });
+    const merge = (st, patch) => { const out = {}; for (const k of Object.keys(patch)) { const v = patch[k], cur = st[k]; out[k] = (v && typeof v === "object" && !Array.isArray(v) && cur && typeof cur === "object" && !Array.isArray(cur)) ? Object.assign({}, cur, v) : v; } return out; };
+    const set = p => new Promise(res => self.setState(st => merge(st, p), res));
+    const reset = n => new Promise(res => self.setState(baseline(n), res));
+    const wait = ms => new Promise(res => setTimeout(res, ms));
+    const finishFrozen = el => el.getAnimations({ subtree: true }).forEach(a => { const t = a.effect && a.effect.getTiming ? a.effect.getTiming() : {}; if (a.playState === "running" && t.iterations !== Infinity) { try { a.finish(); } catch (e) {} } });
+    const ready = (limit = 10000) => new Promise((res, rej) => {
+      const t0 = Date.now(); let last = null, stalls = 0;
+      const tick = () => {
+        const el = self.liveScene();
+        if (el && el.getAttribute("data-review-ready") === "true" && self.sceneReady()) return res(true);
+        const clock = document.timeline ? document.timeline.currentTime : null;
+        stalls = clock !== null && clock === last ? stalls + 1 : 0; last = clock;
+        if (stalls >= 2) finishFrozen((self.stageEl && self.stageEl.isConnected) ? self.stageEl : el);
+        if (Date.now() - t0 > limit) return rej(new Error("Augue qui velit rutrum " + limit + "ms"));
+        setTimeout(tick, 80);
+      };
+      tick();
+    });
+    const find = id => (self.stageEl || document).querySelector('[data-review-id="' + id + '"]');
+    const act = (id, action) => { const el = find(id); if (!el) throw new Error("Ex gravida quo suspendissnisi " + id); if (action === "hover") { el.dispatchEvent(new MouseEvent("mouseover", { bubbles: true })); el.dispatchEvent(new MouseEvent("mouseenter", { bubbles: false })); } else el.click(); };
+    const SC = this.SCENE;
+    const states = this.reviewStates().map(x => (SC !== null && x.id.startsWith("g-walk-")) ? Object.assign({}, x, { scene: SC }) : x).filter(x => SC === null || this.inScene(x.scene));
+    const byId = {}; states.forEach(x => { byId[x.id] = x; });
+    const applyOne = async x => { if (x.patch) await set(x.patch); if (x.via) { await ready(); act(x.via, x.action || "click"); await wait(60); } };
+    window.__review = {
+      version: "1.0", asset: "ffw-portfolio-activity-scenes", scene: SC,
+      scenes: this.TITLES.slice(1).map((label, i) => ({ id: "s" + (i + 1), n: i + 1, label: i === 0 ? "Morbi nisi" : i === 6 ? "Suspendiss vel Gravida (I&U quis)" : label })).filter(x => x.n !== 3 && x.n !== 11 && (SC === null || this.inScene(x.n))),
+      states,
+      async apply(id) {
+        const x = byId[id]; if (!x) throw new Error("Feugiat ipsum lorem " + id);
+        self.noPersist = true; self.reviewDriving = true; self.stopCount(); self.stopTake(); self.stopRd(); self.setState({ rd: null });
+        await reset(x.scene); self.stopCount(); self.stopTake(); await wait(30);
+        const chain = []; const walk = y => { (y.requires || []).forEach(r => { if (byId[r]) { walk(byId[r]); if (!chain.includes(byId[r])) chain.push(byId[r]); } }); }; walk(x);
+        for (const y of chain) await applyOne(y);
+        try { await applyOne(x); await ready(); } finally { self.reviewDriving = false; }
+        return id;
+      },
+      ready: () => ready(),
+      manifest() { return JSON.parse(JSON.stringify({ asset: this.asset, version: this.version, scene: this.scene, scenes: this.scenes, states: this.states })); },
+      lint() { return self.reviewLint(); }
+    };
+  }
+  reviewStates() {
+    const S = []; const add = (id, scene, label, extra) => S.push(Object.assign({ id, scene, label }, extra));
+    for (let n = 1; n <= this.LAST; n++) if (n !== 3 && n !== 11) add("s" + n + "-base", n, this.TITLES[n], { patch: {} });
+    if (this.SCENE === null) add("s7-complete", 7, "U&E ipsa - vel cum bibendum, feugiat maecena maecena", { patch: { answers: this.allRevealed() } });
+    for (let k = 1; k < this.DEMO.length; k++) add("s5-step-" + k, 5, "Enim vulputateeac - " + k + " of " + this.DEMO.length + " Nulla morbi", { patch: { demo: { step: k, counts: this.DEMO.map((_, i) => i < k ? 1 : 0) } }, partial: true });   /* Felis 15 Vel: sit ipsum arcu ac ipsa */
+    add("s5-metric-ranges", 5, "Qui1u neque amet (SED) - rutrum", { patch: { ranges: true }, requires: ["s5-base"] });
+    [["abbr-a", "A1B - arcu 1 bibendum"], ["mdi", "DNS - dignissi nulla sollicitud"], ["metric", "DC - dignissi consectetu"]].forEach(([k, l]) => add("s5-gloss-" + k, 5, l, { via: "s5-gloss-" + k, action: "hover", requires: ["s5-base"] }));
+    this.CHALLENGES.forEach(c => add("s6-ch-" + c.key, 6, c.label + " - opened", { patch: { ch: { [c.key]: true }, chActive: c.key } }));
+    add("s6-complete", 6, "Vel enim condimentu tellus - pellentes arcu cum Enim augue", { patch: { ch: { missing: true, needle: true, labour: true, carbs: true, burnout: true }, chActive: "burnout" } });
+    add("s6-gloss-c", 6, "QUO - consectetu commodo consectetu", { via: "s6-gloss-c", action: "hover", requires: ["s6-ch-labour"] });
+    add("s12-gloss-b", 12, "U:A - sollicitudphasellusa", { via: "s12-gloss-b", action: "hover" });
+    add("s10-gloss-a", 10, "SED - eros ut augue", { via: "s10-gloss-a", action: "hover", requires: ["s10-revealed-correct"] });
+    if (this.SCENE === null) add("s15-complete", 15, "Commodo modo - sit iaculis vestibulu, purus hendrer suspendissqui", { patch: { visited: Array.from({ length: 15 }, (_, i) => i + 1), answers: this.allRevealed() } });
+    for (let n = 8; n <= 13; n++) {
+      const q = this.Q[n], scr = n === 11 ? 10 : n;
+      const pre = n === 11 ? { 10: { picked: this.Q[10].correct.slice(), confirm: false, revealed: true } }   /* A4 lorem eros amet O3 ad bibendum */
+        : n === 13 ? Object.fromEntries([8, 9, 10, 11, 12].map(k => [k, { picked: this.Q[k].correct.slice(), confirm: false, revealed: true }])) : {};   /* O6: quo maecena congue malesuada 1-5 et e aliquam faucibus ex netus (augue 15 Quo) */
+      const ans = x => ({ answers: Object.assign({}, pre, { [n]: x }) });
+      q.options.forEach((o, i) => add("s" + n + "-opt-" + i, scr, o + " - selected", { patch: ans({ picked: [i], confirm: false, revealed: false }) }));
+      if (q.multi) {
+        add("s" + n + "-submit-one", scr, "Congue amet qui cursus - Ipsum donec", { via: "s" + n + "-submit", action: "click", requires: ["s" + n + "-opt-0"] });
+        add("s" + n + "-revealed", scr, "Cum iaculis scelerisq - Cursus nulla", { patch: ans({ picked: q.correct.slice(), confirm: false, revealed: true }) });
+      } else {
+        /* Hendrer et conubia Mauris, ut sed Auctor sed ac egestas; Varius gravida qui auctor (ad hendrer eros donec purus 01) */
+        add("s" + n + "-revealed-correct", scr, q.options[q.correct[0]] + " - Accumsan commodo", { via: "s" + n + "-submit", action: "click", requires: ["s" + n + "-opt-" + q.correct[0]] });
+        q.options.forEach((o, i) => { if (!q.correct.includes(i)) add("s" + n + "-revealed-wrong-" + i, scr, o + " - Dignissi, aliquam neque lorem", { patch: ans({ picked: [i], confirm: false, revealed: true }) }); });
+      }
+    }
+    if (this.SCENE === null) add("g-reset-confirm", 8, "Purus faucibus - parturientad tellus (augue eros eros ac mauris varius)", { patch: { resetAsk: true, answers: { 8: { picked: [0], confirm: false, revealed: true } } } });
+    if (this.SCENE === null) add("g-tags-on", 4, "Ridiculussnon modo lorem (auctor est, congue et hendrer)", { patch: { tags: true } });
+    add("s5-cite-1", 5, "Citation 1", { via: "s5-cite-1", action: "click", requires: ["s5-metric-ranges"] });
+    add("s15-references", 15, "Tincidunts egestas", { patch: { refsOpen: true } });
+    add("s15-guide", 15, "Iaculis Quis Dolor - feugiat sollicitudex (Accumsan / Nisi eros)", { patch: { link: { title: "Hendrer Amet Nulla", text: this.GUIDE_URL, mode: "leave" } } });
+    add("s15-guide-blocked", 15, "Egestas Arcu Purus - adipiscin conubia arcu e duo nam ad maecena", { patch: { link: { title: "Hendrer Amet Nulla", text: this.GUIDE_URL, mode: "copy" } } });
+    for (let k = 1; k < this.TAKE.length; k++) add("s14-step-" + k, 14, "Ipsa quis bibendum - " + k + " of " + this.TAKE.length + " Netus morbi, Arcu sit qui felis", { patch: { take: { step: k } }, partial: true });   /* Felis 15 Sit: netus commodo amet (duo nisi 3 eros) */
+    this.TAKE.filter(k => k.sup).forEach(k => { const cid = k.sup.replace(/[–-]/g, "-"); add("s14-cite-" + cid, 14, "Citation " + k.sup, { via: "s14-cite-" + cid, action: "click", requires: ["s14-base"] }); });
+    add("g-refs-export-fallback", 15, "Ipsa at VEL - amet lorem donec amet a est duo in lacinia", { patch: { link: { title: "References", text: this.REFS.map((r, i) => (i + 1) + ". " + r.text).join("\n"), mode: "copy" } } });
+    this.WALK.forEach((w, i) => add("g-walk-" + (i + 1), 2, "Nam ad sit odio - " + w.title, { patch: { walk: i } }));
+    return S;
+  }
+  allRevealed() { const a = {}; for (let n = 8; n <= 13; n++) a[n] = { picked: this.Q[n].correct.slice(), confirm: false, revealed: true }; return a; }
+  reviewLint() {
+    const out = [], root = this.stageEl || document.body, EV = ["onClick", "onMouseEnter", "onMouseOver", "onPointerDown", "onKeyDown"], ids = {};
+    root.querySelectorAll("*").forEach(el => {
+      const pk = Object.keys(el).find(k => k.startsWith("__reactProps")); const props = pk ? el[pk] : null;
+      const listeners = props ? EV.filter(e => typeof props[e] === "function") : []; const cur = (el.style && el.style.cursor) || ""; const tagged = el.hasAttribute("data-review");
+      const desc = el.tagName.toLowerCase() + (el.textContent ? " '" + el.textContent.trim().slice(0, 40) + "'" : "");
+      if (!tagged && listeners.length) out.push({ kind: "undeclared-listener", el: desc, listeners });
+      else if (!tagged && (cur === "pointer" || cur === "help")) out.push({ kind: "undeclared-cursor", el: desc, cursor: cur });
+      if (tagged) { const id = el.getAttribute("data-review-id"); if (!id) out.push({ kind: "missing-id", el: desc }); else { if (ids[id]) out.push({ kind: "duplicate-id", id }); ids[id] = true; } }
+    });
+    root.querySelectorAll('[data-review="chrome"][data-review-id$="-backdrop"]').forEach(o => { const n = o.querySelectorAll("[data-review-close]").length; if (n !== 1) out.push({ kind: "dialog-close-count", dialog: o.getAttribute("data-review-id"), count: n }); });
+    const states = window.__review ? window.__review.states : []; const known = {}; states.forEach(x => { known[x.id] = true; });
+    /* Phasellusaquis ac arcu suspendiss ipsa vel nulla eu lorem bibendum (u ornare netus, a.o. augue suspendisssit, ridiculussin dolor lorem conubia) */
+    const partial = (this.state.scene === 14 && !this.explored(14)) || (this.state.scene === 5 && !(this.state.demo && this.state.demo.step >= this.DEMO.length));
+    states.forEach(x => { (x.requires || []).forEach(r => { if (!known[r]) out.push({ kind: "unknown-requires", state: x.id, requires: r }); }); if (!partial && x.via && !(x.requires || []).length && x.scene === this.state.scene && !root.querySelector('[data-review-id="' + x.via + '"]')) out.push({ kind: "unresolved-via", state: x.id, via: x.via }); });
+    return out;
+  }
+
+  /* Cum phasellusa iaculis, Congue est interdum. Cursus aliquam non neque (augue 01: ab "Quo est amet?" ipsa). */
+  qBuild(n) {
+    const q = this.Q[n], a = this.ans(n), picked = a.picked, revealed = a.revealed;
+    const options = q.options.map((text, i) => {
+      const on = picked.includes(i), isC = q.correct.includes(i);
+      const og = q.optGloss, ogi = og ? text.indexOf(og.abbr) : -1;
+      let cls = q.multi ? "act-option--multi" : "", ico = "", showIco = false;
+      if (revealed) { if (q.multi) { if (on) { cls += " Phasellusaimperdiet"; ico = "check"; showIco = true; } } else if (isC) { cls += " Phasellusaimperdiet"; ico = "check"; showIco = true; } else if (on) { cls += " Suspendissphasellusa"; ico = "x"; showIco = true; } }
+      else if (on) { cls += " Parturienttincidunts"; ico = "check"; showIco = true; }
+      const tone = revealed ? (cls.includes("--correct") ? "#3F7F73" : cls.includes("--incorrect") ? "#C25A43" : "") : (on ? "#5C6B8A" : "");
+      return { text, hasGloss: ogi > -1, noGloss: ogi < 0, pre: ogi > -1 ? text.slice(0, ogi) : "", post: ogi > -1 ? text.slice(ogi + og.abbr.length) : "", gAbbr: ogi > -1 ? og.abbr : "", gDef: ogi > -1 ? og.def : "", gRid: ogi > -1 ? og.rid : "", cls, ico, showIco, role: q.multi ? "checkbox" : "radio", checked: on ? "true" : "false", revealedAttr: revealed ? "true" : "false", disabled: revealed, rid: "s" + n + "-opt-" + i,
+        border: tone || "#E6E4DF", markBg: tone || "transparent", markBorder: tone || "#808080",
+        idle: !revealed && !on, delay: (0.3 + i * 0.08).toFixed(2) + "s",
+        pick: () => { if (this.ans(n).revealed) return; const p = this.ans(n).picked; this.setAns(n, { picked: q.multi ? (p.includes(i) ? p.filter(x => x !== i) : p.concat([i])) : [i] }); } };
+    });
+    const fb = [];
+    if (revealed) {
+      const wrong = q.multi ? [] : picked.filter(i => !q.correct.includes(i));
+      const gotIt = !q.multi && wrong.length === 0;
+      const ct = this.u(q.correctText), gi = q.gloss ? ct.indexOf(q.gloss.abbr) : -1;   /* In condimentuet ad non rutrum arcu vel lorem */
+      fb.push({ cls: q.correctLabel === "Answer" ? "act-feedback--info" : "act-feedback--correct", ico: q.correctLabel === "Answer" ? "info" : "check", hasLabel: true, label: q.correctLabel, text: ct,
+        hasGloss: gi > -1, pre: gi > -1 ? ct.slice(0, gi) : "", post: gi > -1 ? ct.slice(gi + q.gloss.abbr.length) : "", gAbbr: gi > -1 ? q.gloss.abbr : "", gDef: gi > -1 ? q.gloss.def : "", gRid: gi > -1 ? q.gloss.rid : "",
+        hasOutcome: !q.multi, outcome: gotIt ? "Correct" : "Incorrect", outcomeInk: gotIt ? "#3F7F73" : "#C25A43" });
+      /* Netus 10 Qui: quis quis duo pellentes duo ipsum cum, et morbi, sit gravida sit. Cum malesuada sed adipiscin quis donec. */
+      wrong.forEach(i => { if (q.perOption && q.perOption[i]) fb.unshift({ cls: "act-feedback--incorrect", ico: "x", hasLabel: true, label: q.options[i], text: q.perOption[i], hasOutcome: true, outcome: "Arcu congue", outcomeInk: "#C25A43" }); });
+    }
+    return { revealed, options, showSubmit: !revealed, submitDisabled: picked.length === 0, submitRid: "s" + n + "-submit",
+      submit: () => { if (this.ans(n).picked.length) this.setAns(n, { revealed: true }); },
+      feedback: fb.map((f, i) => Object.assign({ hasOutcome: false, outcome: "", outcomeInk: "#1B1A1A", hasGloss: false, pre: "", post: "", gAbbr: "", gDef: "", gRid: "" }, f, { delay: (i * 0.15).toFixed(2) + "s", noGloss: !f.hasGloss })) };
+  }
+
+  renderVals() {
+    const s = this.state, cur = s.scene, isQ = this.isQ(cur), q = isQ ? this.Q[cur] : null, a = isQ ? this.ans(cur) : null;
+    const explored = this.explored(cur), split = this.SCENE !== null, qSpan = split && !!this.SPAN[this.SCENE];
+    const vals = {
+      crossNav: true, reviewTools: !split, live: !s.held, rootBg: split ? "transparent" : "#F0EDE6",
+      rootRef: el => { this.rootEl = el; }, stageRef: el => { this.stageEl = el; if (el && this.fit) this.fit(); }, sceneRef: el => { if (el) this.sceneEl = el; },
+      canvasRef: () => {},
+      sceneRid: "s" + cur, readyAttr: s.revReady ? "true" : "false",
+      sceneAnim: (cur % 2 ? "actInA" : "actInB") + " .45s cubic-bezier(.16,1,.3,1) both",
+      isTitle: cur === 1, notTitle: cur !== 1, isQ,
+      sectionLabel: cur === 15 ? "Revisit" : cur === 14 ? "Odio cras interdum" : (isQ || cur === 7) ? "Vulputatee quo Egestas" : cur === 2 ? "Conubia eros" : "Donec nam cras",
+      stageOpacity: s.fading ? 0 : 1,
+      showContents: cur === 2 || cur === 15, contentsLabel: cur === 15 ? "15" : "02",
+      gateQs: [8, 9, 10, 11, 12, 13].map(n => { const done = this.ans(n).revealed; return { q: n - 7, border: done ? "#5C6B8A" : "#E6E4DF", bg: done ? "#5C6B8A" : "#fff", ink: done ? "#fff" : "#A9A49A" }; }),
+      gatePipsLabel: [8, 9, 10, 11, 12, 13].filter(n => this.ans(n).revealed).length + " Ut 6 adipiscin accumsan",
+      nextLabel: cur === 14 ? "Varius quo gravida" : cur === 13 ? "Finish" : "Next",
+      takeDone: this.explored(14),
+      scoreLine: "Sed eleifend " + [8, 9, 10, 11, 12, 13].filter(n => this.isCorrect(n)).length + " of 6 as recommended",
+      summaryQs: [8, 9, 10, 11, 12, 13].map(n => ({ q: n - 7, bg: this.isCorrect(n) ? "#3F7F73" : this.ans(n).revealed ? "#C25A43" : "#A9A49A" })),
+      linkOn: !!s.link, linkTitle: s.link ? s.link.title : "", linkText: s.link ? s.link.text : "",
+      linkLines: s.link ? s.link.text.split("\n").map(l => this.jparts(l, s.link.title === "References")) : [],
+      linkHint: s.link && s.link.mode === "leave" ? "Duo duo nulla ad augue odio sagittis quo ornare.qui." : s.link && s.link.title === "References" ? "Modo odio varius amet i qui duo nisi. Enim sed phasellusa ad augue ex dolor ipsa fermentum." : "Ipsa quis tempor eros u est duo modo. Eros sed ipsa est modo ut ab enim hendrer.",
+      linkIsLeave: !!(s.link && s.link.mode === "leave"), linkIsCopy: !!(s.link && s.link.mode !== "leave"),
+      continueLink: e => { e.stopPropagation(); let w = null; try { w = window.open(this.GUIDE_URL, "_blank", "noopener"); } catch (err) {} if (w) this.setState({ link: null }); else this.setState({ link: { title: "Hendrer Amet Nulla", text: this.GUIDE_URL, mode: "copy" }, copied: false }); }, copyLabel: s.copied ? "Copied" : (s.link && s.link.title === "References" ? "Quis consectetu" : "Quis arcu"),
+      closeLink: () => this.setState({ link: null, copied: false }),
+      copyLink: e => { e.stopPropagation(); const t = s.link ? s.link.text : ""; const done = () => { this.setState({ copied: true }); clearTimeout(this.copyT); this.copyT = setTimeout(() => this.setState({ copied: false }), 1600); }; if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, done); else done(); },
+      openGuide: e => { e.stopPropagation(); this.setState({ link: { title: "Hendrer Amet Nulla", text: this.GUIDE_URL, mode: "leave" }, copied: false, tip: null }); },
+      chPanelAnim: (s.chTick % 2 ? "actFeatInB" : "actFeatIn") + " .7s cubic-bezier(.16,1,.3,1) " + ((s.chTick || 0) <= 1 ? ".2s" : "0s") + " both",   /* Felis cras commodo est velit et; i tellus felis pharetra arcu */
+      exportRefs: e => {
+        e.stopPropagation();
+        const esc = t => t.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+        const html = "<!doctype html><html><head><meta charset=\"utf-8\"><title>Condimentu - Suspendisssit Sollicitudvelit eros est Feugiat</title><style>body{font-family:Helvetica,Arial,sans-serif;max-width:760px;margin:40px auto;padding:0 24px;color:#1B1A1A;line-height:1.45}h1{font-size:22px;margin:0 0 6px}p{margin:0 0 18px;color:#454545}ol{padding-left:24px;margin:0}li{margin:0 0 10px;word-break:break-word;font-size:14px}@media print{body{margin:0}}</style></head><body><h1>Sollicitud</h1><p>Consectetuvel Consectetumorbi ipsa duo Aliquam: Condimentu E1O Adipiscin</p><ol>" + this.REFS.map(r => { const p = this.jparts(r.text, true); return "<li>" + esc(p.pre) + (p.j ? "<em>" + esc(p.j) + "</em>" : "") + esc(p.post) + "</li>"; }).join("") + "</ol></body></html>";
+        /* Velit tellus quo in i imperdiet mauris: congue.quis ad duo nulla ipsa augue purus; u Quis bibendum ac duo conubia enim gravida nam commodo. */
+        const w = window.open("", "_blank");
+        if (w && w.document) { w.document.open(); w.document.write(html); w.document.close(); setTimeout(() => { try { w.focus(); w.print(); } catch (err) {} }, 500); return; }
+        this.setState({ refsOpen: false, link: { title: "References", text: this.REFS.map((r, i) => (i + 1) + ". " + r.text).join("\n"), mode: "copy" }, copied: false });
+      },
+      progress: this.ORDER.map(n => { const idx = this.ORDER.indexOf(cur), i = this.ORDER.indexOf(n); const state = i < idx ? "done" : i === idx ? "current" : "ahead"; const isQn = this.isQ(n); return { num: isQn ? String(this.ORDER.filter(x => this.isQ(x)).indexOf(n) + 1) : "", size: isQn ? "16px" : "8px", bg: state === "done" ? "#5C6B8A" : state === "current" ? "#B4682F" : "#E6E4DF" }; }),
+      progressLabel: "Screen " + (this.ORDER.indexOf(cur) + 1) + " of " + this.ORDER.length,
+      tagsAttr: s.tags ? "on" : "off", tagsPressed: s.tags ? "true" : "false", tagsInk: s.tags ? "#C25A43" : "#A9A49A", tagsBg: s.tags ? "#FFF3F0" : "#fff",
+      toggleTags: () => this.setState({ tags: !s.tags }),
+      resetAsk: !!s.resetAsk, closeReset: () => this.setState({ resetAsk: false }),
+      doReset: e => { e.stopPropagation(); this.setState({ resetAsk: false }); this.hardReset(); },
+      next: () => { if (cur < this.LAST) this.go(cur + 1); }, prev: () => this.go(cur - 1),
+      showBack: cur > 1 && cur !== 7 && !(split && cur === 15) && !(qSpan && cur === 8),   /* Lorem 15 Duo: Dolor lacinia lacinia Lacinia, cum lacinia sagittis 1 */
+      showNext: explored && cur !== 1 && cur !== 7 && cur !== this.LAST && !(qSpan && cur !== 13),   /* Vestibulu felis: Rutrum ipsa, ut lobortis 6 */
+      showNextQ: qSpan && explored && this.isQ(cur) && cur !== 13,   /* Augue 15 Duo: 'Quis fermentum aliquam, velit ut est Morbi amet rutrum purus */
+      showContentsBtn: false, goContents: () => this.go(2),
+      footerBg: "#fff", footerLine: cur === 1 ? "3px solid #3F7F73" : "1px solid #E6E4DF",
+      trace: this.traceSvg(), traceOpacity: cur === 1 || cur === 4 ? 0.35 : 0.16,
+      motionPressed: s.motion ? "true" : "false", motionTrack: s.motion ? "#5C6B8A" : "#A9A49A", motionKnob: s.motion ? "auto" : "0",
+      toggleMotion: () => this.setState({ motion: !s.motion }, () => this.applyMotion()),
+      allDone: this.allDone(),
+      demo: this.DEMO.map((d, i) => {
+        const dm = s.demo || { step: 0, counts: [] }, p = dm.counts[i] || 0;
+        return { icon: d.icon, span: d.span, on: dm.step > i, hasGloss: !!d.abbr, hasRanges: d.icon === "tb-user" && (this.props.showRangeBands ?? true), pre: d.pre || "", abbr: d.abbr || "", def: d.def || "", mid: d.mid || "", rid: d.rid || "",
+          hasNum: d.num != null, num: d.num == null ? "" : (Number.isInteger(d.num) ? String(Math.round(d.num * p)) : (d.num * p).toFixed(1)), unit: d.unit || "",
+          post: d.post, postWeight: d.big ? 600 : 400, postSize: d.big ? "22px" : "19px" };
+      }),
+      resetProgress: () => { if (s.fading) return; const answered = Object.keys(s.answers || {}).some(k => s.answers[k].revealed || (s.answers[k].picked || []).length); if (answered) this.setState({ resetAsk: true, tip: null }); else this.hardReset(); },
+      rangesOn: !!s.ranges, rangesOpen: s.ranges ? "true" : "false", rangesBtnBg: s.ranges ? "#5C6B8A" : "#fff", rangesBtnPos: s.ranges ? "absolute" : "relative", rangesBtnGap: s.ranges ? "0" : "12px", rangesBtnInk: s.ranges ? "#fff" : "#5C6B8A",
+      toggleRanges: e => {
+        e.stopPropagation();
+        const open = !s.ranges;
+        this.setState({ ranges: open });
+        clearTimeout(this.rangesArm);
+        if (open) this.rangesArm = setTimeout(() => {   /* Quo arcu ridiculussnam malesuada eu (Purus vulputateesed ornare) */
+          const off = ev => { if (ev.type === "pointerdown" && ev.target && ev.target.closest && ev.target.closest("[data-ranges-panel]")) return; document.removeEventListener("pointerdown", off, true); document.removeEventListener("keydown", off, true); this.setState({ ranges: false }); };
+          document.addEventListener("pointerdown", off, true); document.addEventListener("keydown", off, true);
+        }, 0);
+      },
+      /* Purus congue 2026-09-20 (ID est ab ut e donec): u dolor tellus nam ad augue, et non ridiculuss ab
+         NEQUE ipsa vel lobortis cras cursus ex - est vulputateenon elementum. Netus lorem sed o odio feugiat. */
+      glossEnter: e => { if (!this.hoverable()) return; this.setState({ tip: this.tipFor(e.currentTarget, e.currentTarget.dataset.gloss, true) }); },
+      glossLeave: () => { if (!this.hoverable()) return; this.setState({ tip: null }); },
+      glossTap: e => {
+        e.stopPropagation();
+        const el = e.currentTarget, text = el.dataset.gloss, same = s.tip && s.tip.text === text;
+        this.setState({ tip: same ? null : this.tipFor(el, text, true) });
+        if (same) return;
+        clearTimeout(this.glossArm);
+        this.glossArm = setTimeout(() => {   /* Velit eu ipsa augue duo gravida ipsa pharetra odio */
+          const off = () => { document.removeEventListener('pointerdown', off, true); document.removeEventListener('keydown', off, true); this.setState({ tip: null }); };
+          document.addEventListener('pointerdown', off, true); document.addEventListener('keydown', off, true);
+        }, 0);
+      },
+      glossKey: e => { if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); e.currentTarget.click(); } else if (e.key === 'Escape') { this.setState({ tip: null }); } },
+      tipOn: !!s.tip, tipText: s.tip ? s.tip.text : "",
+      tipLines: s.tip ? s.tip.text.split("\n").map(l => this.jparts(l, !!s.tip.cite)) : [], tipX: s.tip ? s.tip.x + "px" : "0px", tipY: s.tip ? s.tip.y + "px" : "0px", tipShift: s.tip && s.tip.above ? "translateY(-100%)" : "none",
+      /* Felis varius I2 (2026-09-11): sit netus dignissi non sit est nulla duo sagittis 1-3; consectetuet qui
+         tincidunts est lorem lacinia 1 ad sollicitud imperdiet. Sit commodo amet egestas est modo nisi. */
+      contents: [[4, 0], [5, 1], [6, 1], [8, 0], [14, 0]].map(([n, sub], i, all) => {
+        const label = n === 8 ? "Phasellusa nam Gravida (E&A)" : n === 4 ? "Donec nam cras" : n === 6 ? "Ridiculuss ex vel phasellusa ac enim quis" : this.TITLES[n];
+        const done = n === 8 ? [8, 9, 10, 11, 12, 13].every(k => this.ans(k).revealed) : n === 6 ? this.explored(6) : s.visited.includes(n);
+        const nav = cur === 15;
+        return { n, label, go: () => this.go(n), nav, done,
+          border: nav ? "#5C6B8A" : "#E6E4DF", dotBg: nav ? "#5C6B8A" : "#B4682F", sub: !!sub,
+          badge: sub ? "" : String(all.slice(0, i + 1).filter(x => !x[1]).length), dot: sub ? "12px" : "30px",
+          width: sub ? "540px" : "560px", minh: sub ? "48px" : "58px", fs: sub ? "18px" : "19px",
+          indent: (sub ? 56 : 0) + "px", delay: (0.1 + i * 0.07).toFixed(2) + "s" };
+      }),
+      challenges: this.CHALLENGES.map((c, i) => { const on = !!(s.ch || {})[c.key]; return { key: c.key, icon: c.icon, label: c.label, detail: c.detail, hasDetail: !!c.detail, hasGloss: !!c.gloss, noGloss: !c.gloss, pre: c.gloss ? c.gloss.pre : "", post: c.gloss ? c.gloss.post : "", proposed: !!c.proposed, feature: c.feature, bullets: c.bullets, hasBullets: !!c.bullets, on, closed: !on, expanded: on ? "true" : "false",
+        border: on ? "#5C6B8A" : "#E6E4DF", bg: on ? "#F6F6F6" : "#fff", shadow: on ? "0 6px 18px rgba(141,97,200,.18)" : "none", delay: (0.6 + i * 0.12).toFixed(2) + "s",
+        open: () => this.setState(st => ({ ch: Object.assign({}, st.ch || {}, { [c.key]: true }), chActive: c.key, chTick: st.chActive === c.key ? st.chTick : (st.chTick || 0) + 1 })) }; }),
+      challengesDone: this.explored(6),
+      chActiveOn: !!s.chActive, chActiveIcon: (this.CHALLENGES.find(c => c.key === s.chActive) || {}).icon || "device",
+      chActiveDetail: (this.CHALLENGES.find(c => c.key === s.chActive) || {}).detail || "", chActiveHasDetail: !!((this.CHALLENGES.find(c => c.key === s.chActive) || {}).detail),
+      chActiveFeature: (this.CHALLENGES.find(c => c.key === s.chActive) || {}).feature || "", chActiveBullets: (this.CHALLENGES.find(c => c.key === s.chActive) || {}).bullets || "",
+      chActiveHasBullets: !!((this.CHALLENGES.find(c => c.key === s.chActive) || {}).bullets),
+      chCols: ((this.CHALLENGES.find(c => c.key === s.chActive) || {}).detail) ? "2fr 3fr" : "1fr",
+      takeHome: this.TAKE.map((k, i) => ({ text: this.u(k.text), sup: k.sup, hasSup: !!k.sup, cid: k.sup.replace(/[–-]/g, "-"), on: (s.take ? s.take.step : 0) > i })),
+      refs: this.REFS.map(r => Object.assign(this.jparts(r.text, true), { text: r.text, proposed: !!r.proposed })),
+      refsOpen: !!s.refsOpen, openRefs: e => { e.stopPropagation(); this.setState({ refsOpen: true, tip: null }); }, closeRefs: () => this.setState({ refsOpen: false }),
+      cite: e => {
+        e.stopPropagation();
+        const el = e.currentTarget, text = this.citeText(el.dataset.cite), same = s.tip && s.tip.text === text;
+        const t = same ? null : this.tipFor(el, text);
+        if (t) t.cite = true;   /* Faucibus cras scelerisq lacinia lorem; lobortis nisi arcu dolor */
+        this.setState({ tip: t });
+        if (same) return;
+        clearTimeout(this.citeArm);
+        this.citeArm = setTimeout(() => {   /* Velit eu ipsa augue duo gravida ipsa pharetra odio */
+          const off = () => { document.removeEventListener("pointerdown", off, true); document.removeEventListener("keydown", off, true); this.setState({ tip: null }); };
+          document.addEventListener("pointerdown", off, true); document.addEventListener("keydown", off, true);
+        }, 0);
+      },
+      walkOpen: s.walk !== null, openWalk: () => this.setState({ walk: 0 }), closeWalk: () => this.setState({ walk: null }), stopClick: e => e.stopPropagation(),
+      walkTitle: this.WALK[s.walk || 0].title, walkBody: (split && this.WALK[s.walk || 0].splitBody) || this.WALK[s.walk || 0].body,
+      walkIsNav: this.WALK[s.walk || 0].kind === "nav", walkIsOption: this.WALK[s.walk || 0].kind === "option", walkIsConfirm: this.WALK[s.walk || 0].kind === "confirm",
+      walkIsAnswer: this.WALK[s.walk || 0].kind === "answer", walkIsInfo: this.WALK[s.walk || 0].kind === "info", walkIsChallenge: this.WALK[s.walk || 0].kind === "challenge", walkIsCite: this.WALK[s.walk || 0].kind === "cite", walkIsMotion: this.WALK[s.walk || 0].kind === "motion", walkIsRevisit: this.WALK[s.walk || 0].kind === "revisit", walkIsExport: this.WALK[s.walk || 0].kind === "export", walkIsGate: this.WALK[s.walk || 0].kind === "gate", walkIsGloss: this.WALK[s.walk || 0].kind === "gloss", walkIsLink: this.WALK[s.walk || 0].kind === "link", walkIsProposed: this.WALK[s.walk || 0].kind === "proposed",
+      walkDots: this.WALK.map((w, i) => ({ bg: i === (s.walk || 0) ? "#5C6B8A" : "#E6E4DF" })),
+      walkPrev: e => { e.stopPropagation(); this.setState({ walk: Math.max(0, (s.walk || 0) - 1) }); },
+      walkNext: e => { e.stopPropagation(); const w = s.walk || 0; this.setState({ walk: w >= this.WALK.length - 1 ? null : w + 1 }); },
+      walkPrevOpacity: (s.walk || 0) === 0 ? .4 : 1, walkNextLabel: (s.walk || 0) >= this.WALK.length - 1 ? "Done" : "Ipsa odio",
+      walkIsLast: (s.walk || 0) >= this.WALK.length - 1, walkNotLast: (s.walk || 0) < this.WALK.length - 1
+    };
+    for (let i = 1; i <= this.LAST; i++) vals["show" + i] = cur === i;
+    const dense = isQ && q.options.length > 4;   /* E5: cras iaculis + cras congue; egestas gravida ab iaculis morbi */
+    vals.qOptFont = dense ? "18px" : "19px"; vals.qOptPad = dense ? "9px 14px" : "12px 16px"; vals.qOptMin = dense ? "46px" : "54px"; vals.qGap = "14px"; vals.qSetupSize = "22px";
+    vals.q2OptFont = "18px"; vals.q2OptPad = "9px 16px"; vals.q2OptMin = "46px";
+
+    if (isQ) {
+      const Q1 = this.qBuild(cur), revealed = Q1.revealed, pair = this.PAIR[cur], Q2 = pair && revealed ? this.qBuild(pair) : null;
+      vals.qLabel = String(cur).padStart(2, "0"); vals.qSetup = this.u(q.setup); vals.qStem = q.stem; vals.qMulti = !!q.multi;
+      vals.qRole = q.multi ? "group" : "radiogroup";
+      vals.qOptions = Q1.options; vals.qShowSummary = cur === 13 && revealed;
+      vals.qShowSubmit = Q1.showSubmit; vals.qSubmitDisabled = Q1.submitDisabled; vals.qShowConfirm = false;
+      vals.qSubmitRid = Q1.submitRid; vals.submit = Q1.submit;
+      vals.qReadouts = (q.readouts || []).map(r => ({ label: this.u(r.label), value: this.countVal(r.value, s.rd && s.rd.scene === cur ? s.rd.p : 1), fill: r.fill + "%", target: r.target + "%", targetText: r.targetText,
+        valueCls: r.alert ? "act-readout__value--alert" : "act-readout__value--data", fillCls: r.alert ? "act-bar__fill--alert" : "", swatch: r.alert ? "#C25A43" : "#3F7F73" }));
+      vals.qHasReadouts = vals.qReadouts.length > 0 && revealed;   /* Faucibus dolor amet quo auctor odio: felis amet lorem varius */
+      vals.qFeedback = Q1.feedback;
+      vals.q2Show = !!Q2; vals.q2Stem = Q2 ? this.Q[pair].stem : ""; vals.q2Options = Q2 ? Q2.options : []; vals.q2ShowSubmit = Q2 ? Q2.showSubmit : false;
+      vals.q2SubmitDisabled = Q2 ? Q2.submitDisabled : true; vals.q2SubmitRid = Q2 ? Q2.submitRid : ""; vals.submit2 = Q2 ? Q2.submit : () => {}; vals.q2Feedback = Q2 ? Q2.feedback : [];
+      if (Q2) { vals.qOptFont = "16px"; vals.qOptPad = "7px 14px"; vals.qOptMin = "40px"; vals.qGap = "8px"; vals.qSetupSize = "19px"; }   /* Amet pellentes in qui auctor: est dignissi est velit enim */
+    } else {
+      vals.qShowSummary = false; vals.qLabel = ""; vals.qSetup = ""; vals.qStem = ""; vals.qMulti = false; vals.qRole = "radiogroup"; vals.qOptions = []; vals.qShowSubmit = false; vals.qShowConfirm = false; vals.qReadouts = []; vals.qHasReadouts = false; vals.qFeedback = []; vals.qSubmitDisabled = true;
+      vals.qSubmitRid = ""; vals.submit = () => {};
+      vals.q2Show = false; vals.q2Stem = ""; vals.q2Options = []; vals.q2ShowSubmit = false; vals.q2SubmitDisabled = true; vals.q2SubmitRid = ""; vals.submit2 = () => {}; vals.q2Feedback = [];
+    }
+    return vals;
+  }
+}
+</script>
+</body>
+</html>

@@ -107,12 +107,13 @@ Follow every step below on **every push**, no exceptions.
   - **FFW showcase teaser survived the copy** (added 28 Sept 2026, not in any design handoff):
     ```bash
     grep -c "showcase/ffw-teaser/index.html" index.html               # must return 2 (thumbnail + footer link)
-    grep -c "The video is a generalised example" index.html            # must return 1
+    grep -c "The video and example are generalised" index.html         # must return 1
+    grep -c "showcase/ffw-teaser/build/activity-decision-making.dc.html" index.html   # must return 1
     ls showcase/ffw-teaser/index.html showcase/ffw-teaser/ffw-showcase-teaser.mp4 showcase/ffw-teaser/ffw-showcase-teaser.webm showcase/ffw-teaser/ffw-showcase-teaser-thumb.webp
     ```
     The 77-second, silent, square teaser (cut 7) is linked from the **New-drug launch education** card
-    (a 160x100 thumbnail, `.card__thumb`, and "Watch how it's built ▶" both open the player page `showcase/ffw-teaser/index.html` in a new window), with a line on the card saying the video is a
-    generalised example, altered to protect the client's IP and copyright (owner, 28 Sept 2026; it first sat in the
+    (a 160x100 thumbnail, `.card__thumb`, and "Watch how it's built ▶" both open the player page `showcase/ffw-teaser/index.html` in a new window; "Try the example ↗" opens the generalised interactive example, `showcase/ffw-teaser/build/`. The player page also carries the phone clips, 16 screens and the client review page, `review-pack/`, all with neutral file names), with a line on the card saying the video and example are
+    generalised, altered to protect the client's IP and copyright (owner, 28 Sept 2026; it first sat in the
     review-and-uplift lead case the same day). The card's own text is unchanged. 1000px, about 4.7 MB. The
     client approved THIS video for the portfolio (record in the private register). The player page
     plays the WebM (MP4 fallback) with the poster and repeats the note. When the music version is made, replace

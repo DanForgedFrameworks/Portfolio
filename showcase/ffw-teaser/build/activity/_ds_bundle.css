@@ -1,0 +1,273 @@
+/* ===========================================================================
+   Aliquam sit — consequat ipsum (nam velit phasellusa)
+   Rutrum, modo vel EST netus neque cum Maecena Dolor Ridiculuss. Interdum
+   non dolor eros duo donec (odio auctor, feugiat, bibendum) ut congue IACULIS
+   sit odio modo aliquam mauris. Interdum sed CURSUS odio + quis + neque.
+   =========================================================================== */
+
+/* --- Ridiculusscum --------------------------------------------------------- */
+.act-root {
+  font-family: var(--act-font);
+  font-size: var(--act-size-body);
+  line-height: var(--act-lh-body);
+  color: var(--act-ink-2);
+  background: var(--act-white);
+  -webkit-font-smoothing: antialiased;
+}
+.act-root *, .act-root *::before, .act-root *::after { box-sizing: border-box; }
+.act-root a { color: var(--act-grape-80); text-decoration: underline; text-underline-offset: 2px; }
+.act-root a:hover { color: var(--act-grape); }
+
+/* Tempor felis: consequat (rutrum), Morbi faucibus cum egestas. */
+.act-screen { position: relative; width: var(--act-screen-w); height: var(--act-screen-h); overflow: hidden; background: var(--act-white); display: grid; grid-template-rows: auto 1fr auto; }
+.act-screen__body { padding: 32px 60px; min-height: 0; display: flex; flex-direction: column; gap: var(--act-gap); }
+.act-stack { display: flex; flex-direction: column; gap: var(--act-gap); }
+.act-row   { display: flex; gap: var(--act-gap); flex-wrap: wrap; align-items: center; }
+.act-grid  { display: grid; gap: var(--act-gap); grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+
+/* --- Cras --------------------------------------------------------------- */
+.act-h1, .act-h2, .act-h3 { font-family: var(--act-font); font-weight: 600; color: var(--act-ink); line-height: var(--act-lh-tight); letter-spacing: var(--act-track-head); margin: 0; text-wrap: pretty; }
+.act-h1 { font-size: var(--act-size-h1); }
+.act-h2 { font-size: var(--act-size-h2); }
+.act-h3 { font-size: var(--act-size-h3); }
+.act-h4 { font-family: var(--act-font); font-weight: 700; font-size: var(--act-size-h4); color: var(--act-ink); line-height: 1.25; margin: 0; }
+.act-body  { font-size: var(--act-size-body); color: var(--act-ink-2); margin: 0; }
+.act-small { font-size: var(--act-size-small); color: var(--act-ink-2); margin: 0; }
+/* Parturientut (donec i.36): Odio Nisi Quis, ultricies, lobortis 75. Congue ipsa — purus nisi modo. */
+.act-micro { font-family: var(--act-font-caps); font-weight: 700; font-size: var(--act-size-micro); text-transform: uppercase; letter-spacing: var(--act-track-caps); color: var(--act-ink); margin: 0; line-height: 1.4; }
+.act-micro--muted { color: var(--act-grey); }
+.act-micro--mango { color: var(--act-mango); }  /* Suspendissipsa et nulla eros; ≥19ex vulputatee enim -> sed consequat */
+.act-sup { font-size: .6em; vertical-align: super; line-height: 0; }
+
+/* --- Netus (DUO arcu, tellus = ridiculussad) --------------------------- */
+.act-ico { display: inline-block; width: 24px; height: 24px; flex: 0 0 24px; line-height: 0; vertical-align: middle; background-color: currentColor;
+  -webkit-mask: var(--i) center / contain no-repeat; mask: var(--i) center / contain no-repeat; }
+.act-ico--age      { --i: var(--act-ico-age); }
+.act-ico--male     { --i: var(--act-hi-male); }          /* Odio: Suspendissest modo; mauris ipsa ex --vulputateein */
+.act-ico--duration { --i: var(--act-ico-duration); }
+.act-ico--mdi      { --i: var(--act-hi-syringe); }       /* Eros: Tinciduntsnon feugiat */
+.act-ico--metric    { --i: var(--act-ico-metric); }
+.act-ico--testing  { --i: var(--act-hi-meter); }         /* Quis: Tinciduntsqui dolor; tellus .penatibussparturient */
+.act-ico--labor, .act-ico--labour { --i: var(--act-tb-truck-loading); }   /* Eros: Rutrum consectetuest */   /* Eros: vulputateeaugue neque */
+.act-ico--missing  { --i: var(--act-ico-missing); }
+.act-ico--carbs    { --i: var(--act-hi-nutrients); } /* Ipsa: Penatibussquo penatibussest; ipsum .suspendisstempor */
+.act-ico--burnout  { --i: var(--act-tb-battery-exclamation); }   /* Quis: Mauris parturientmalesuada */ /* Nisi: egestas enim congue; ipsum .penatibussphasellusa */
+.act-ico--check    { --i: var(--act-ico-check); }
+.act-ico--x        { --i: var(--act-ico-x); }
+.act-ico--info     { --i: var(--act-ico-info); }
+.act-ico--alert    { --i: var(--act-ico-alert); }
+.act-ico--chevron  { --i: var(--act-ico-chevron); }
+.act-ico--device      { --i: var(--act-ico-device); }
+.act-ico--tap      { --i: var(--act-ico-tap); }
+.act-ico--wave     { --i: var(--act-ico-drop_wave); }
+.act-ico--testing-meter { --i: var(--act-ico-testing_meter); }
+.act-ico--burnout-figure { --i: var(--act-ico-burnout_figure); }
+.act-ico--missing-syringe { --i: var(--act-ico-missing_syringe); }
+.act-ico--missing-dashed { --i: var(--act-tb-vaccine-off); }   /* Auctor sit ornare phasellusa: Varius ridiculusscum */
+.act-ico--lifting  { --i: var(--act-ico-lifting); }
+.act-ico--burnout-standing { --i: var(--act-ico-burnout_battery_person); }
+.act-ico--cutlery  { --i: var(--act-ico-cutlery); }
+.act-ico--burnout-battery { --i: var(--act-ico-burnout); }
+.act-ico--metric-backup { --i: var(--act-hi-blood-drop); }
+.act-ico--hi-syringe { --i: var(--act-hi-syringe); }
+.act-ico--hi-meter { --i: var(--act-hi-meter); }
+.act-ico--hi-finger-prick { --i: var(--act-hi-finger-prick); }
+.act-ico--hi-vitals-drop { --i: var(--act-hi-vitals-drop); }
+.act-ico--hi-blood-drop { --i: var(--act-hi-blood-drop); }
+.act-ico--hi-test-tubes { --i: var(--act-hi-test-tubes); }
+.act-ico--hi-construction-worker { --i: var(--act-hi-construction-worker); }
+.act-ico--hi-factory-worker { --i: var(--act-hi-factory-worker); }
+.act-ico--hi-city-worker { --i: var(--act-hi-city-worker); }
+.act-ico--hi-construction { --i: var(--act-hi-construction); }
+.act-ico--hi-calendar { --i: var(--act-hi-calendar); }
+.act-ico--hi-calendar-x { --i: var(--act-hi-calendar-x); }
+.act-ico--hi-sad { --i: var(--act-hi-sad); }
+.act-ico--hi-nutrients { --i: var(--act-hi-nutrients); }
+.act-ico--hi-hot-meal { --i: var(--act-hi-hot-meal); }
+.act-ico--hi-man { --i: var(--act-hi-man); }
+.act-ico--hi-male { --i: var(--act-hi-male); }
+.act-ico--hi-blood-tube { --i: var(--act-hi-blood-tube); }
+.act-ico--tb-armchair { --i: var(--act-tb-armchair); }
+.act-ico--tb-barbell { --i: var(--act-tb-barbell); }
+.act-ico--tb-battery-1 { --i: var(--act-tb-battery-1); }
+.act-ico--tb-battery-exclamation { --i: var(--act-tb-battery-exclamation); }
+.act-ico--tb-battery-vertical-1 { --i: var(--act-tb-battery-vertical-1); }
+.act-ico--tb-bed { --i: var(--act-tb-bed); }
+.act-ico--tb-forklift { --i: var(--act-tb-forklift); }
+.act-ico--tb-gender-male { --i: var(--act-tb-gender-male); }
+.act-ico--tb-hammer { --i: var(--act-tb-hammer); }
+.act-ico--tb-helmet { --i: var(--act-tb-helmet); }
+.act-ico--tb-man { --i: var(--act-tb-man); }
+.act-ico--tb-mood-empty { --i: var(--act-tb-mood-empty); }
+.act-ico--tb-mood-sad-2 { --i: var(--act-tb-mood-sad-2); }
+.act-ico--tb-mood-sad-dizzy { --i: var(--act-tb-mood-sad-dizzy); }
+.act-ico--tb-package-import { --i: var(--act-tb-package-import); }
+.act-ico--tb-package { --i: var(--act-tb-package); }
+.act-ico--tb-packages { --i: var(--act-tb-packages); }
+.act-ico--tb-shovel { --i: var(--act-tb-shovel); }
+.act-ico--tb-sofa { --i: var(--act-tb-sofa); }
+.act-ico--tb-stretching-2 { --i: var(--act-tb-stretching-2); }
+.act-ico--tb-stretching { --i: var(--act-tb-stretching); }
+.act-ico--tb-tool { --i: var(--act-tb-tool); }
+.act-ico--tb-tools { --i: var(--act-tb-tools); }
+.act-ico--tb-truck-loading { --i: var(--act-tb-truck-loading); }
+.act-ico--tb-user { --i: var(--act-tb-user); }
+.act-ico--tb-vaccine-off { --i: var(--act-tb-vaccine-off); }
+.act-ico--tb-vaccine { --i: var(--act-tb-vaccine); }
+.act-ico--tb-wall { --i: var(--act-tb-wall); }
+.act-ico--tb-zzz { --i: var(--act-tb-zzz); }
+.act-ico--lg { width: 32px; height: 32px; flex-basis: 32px; }
+/* Nulla e.46 pellentes: cras cras ab e Nulla ornare neque, sed varius (congue 4.5:1 ab Morbi) */
+.act-ico-tile { width: 48px; height: 48px; flex: 0 0 48px; border-radius: var(--act-radius-sm); background: var(--act-mango); color: var(--act-ink); display: inline-flex; align-items: center; justify-content: center; line-height: 0; padding: 0; box-sizing: border-box; }
+.act-ico-tile > .act-ico { margin: 0; flex: 0 0 24px; }
+.act-ico-tile--beige { background: var(--act-beige); }
+
+/* --- Donec --------------------------------------------------------------- */
+.act-logo { display: inline-block; background: center / contain no-repeat; }
+.act-logo--activity { background-image: var(--act-logo-activity); width: 120px; height: 72px; border-radius: var(--act-radius-sm); overflow: hidden; }   /* Bibendum feugiat "iaculis interdum cras" */
+.act-logo--touch   { background-image: var(--act-logo-touch);   width: 220px; height: 61px; }  /* Tinciduntsbibendum */
+
+/* --- Felis vel / dignissi ------------------------------------------------
+   Netus amet, dignissi enim, netus enim eros, hendrer felis morbi. E 4ab
+   Dolor rutrum quis id sit quis dolor cursus ac duo odio (malesuada). */
+.act-titlebar { display: flex; align-items: center; justify-content: space-between; gap: var(--act-gap); padding: 20px 60px; background: var(--act-white); border-bottom: var(--act-border) solid var(--act-line); }
+.act-titlebar__accent { position: absolute; left: 0; top: 0; width: 100%; height: 4px; background: var(--act-mango); }
+.act-titlebar__section { display: flex; align-items: center; gap: 12px; }
+
+/* --- Nulla & congue ----------------------------------------------------- */
+.act-card  { background: var(--act-white); border: var(--act-border) solid var(--act-line); border-radius: var(--act-radius); padding: var(--act-pad); }
+.act-panel { background: var(--act-beige); border-radius: var(--act-radius); padding: var(--act-pad); }      /* Morbi = lacinia eros */
+.act-panel--surface { background: var(--act-surface); }
+/* Nulla at modo ac e arcu tempor, netus et o tinciduntsid lorem (purus a.26). */
+.act-accent-rule { width: 56px; height: 4px; border-radius: 2px; background: var(--act-mango); }
+
+/* --- Egestas egestas ------------------------------------------------------
+   Scelerisq lorem: arcu nisi + pharetra hendrer. Velit dolor (Cum1a) purus qui
+   varius id Arcu Interdum. */
+.act-profile { display: grid; gap: var(--act-gap); grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.act-attr { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: var(--act-border) solid var(--act-line); border-radius: var(--act-radius); background: var(--act-white); }
+.act-attr__label { font-size: var(--act-size-body); color: var(--act-ink); margin: 0; line-height: 1.3; text-wrap: pretty; }
+.act-attr__value { font-weight: 600; font-size: var(--act-size-h3); color: var(--act-ink); line-height: 1; margin: 0; }
+.act-attr__unit  { font-size: var(--act-size-small); color: var(--act-grey); }
+
+/* --- Aliquam velit (adipiscin -> Gravida lacinia) -------------------- */
+.act-feature { display: grid; grid-template-columns: 1fr 1fr; gap: var(--act-gap); align-items: stretch; }
+.act-feature__challenge { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; background: var(--act-beige); border-radius: var(--act-radius); }
+.act-feature__answer    { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border: var(--act-border) solid var(--act-line); border-left: 4px solid var(--act-mango); border-radius: var(--act-radius); }
+.act-feature p { margin: 0; color: var(--act-ink); }
+
+/* --- Accumsan & iaculis (ORNARE; velit est ad enim dignissi) ---------- */
+.act-question { display: flex; flex-direction: column; gap: 12px; }
+.act-question__stem { font-weight: 600; font-size: var(--act-size-h4); color: var(--act-ink); margin: 0; }
+.act-options { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.act-option { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; padding: 14px 18px; min-height: 56px;
+  background: var(--act-white); border: 1.5px solid var(--act-line); border-radius: var(--act-radius); font: inherit; color: var(--act-ink); cursor: pointer;
+  transition: border-color .15s, background .15s, box-shadow .15s; }
+.act-option:hover { border-color: var(--act-grape-80); }
+.act-option:focus-visible { outline: 3px solid var(--act-grape-80); outline-offset: 2px; }
+.act-option__mark { flex: 0 0 24px; width: 24px; height: 24px; border: 2px solid var(--act-grey); border-radius: 50%; display: grid; place-items: center; color: var(--act-white); }
+.act-option--multi .act-option__mark { border-radius: 6px; }
+.act-option[aria-checked="true"], .act-option--selected { border-color: var(--act-grape-80); background: var(--act-surface); }
+.act-option[aria-checked="true"] .act-option__mark, .act-option--selected .act-option__mark { background: var(--act-grape-80); border-color: var(--act-grape-80); }
+/* Lobortis tellus: enim + tempor, sed qui amet iaculis et non Lobortis purus */
+.act-option--correct   { border-color: var(--act-arctic-dark); background: var(--act-white); }
+.act-option--correct .act-option__mark   { background: var(--act-arctic-dark); border-color: var(--act-arctic-dark); }
+.act-option--incorrect { border-color: var(--act-raspberry); background: var(--act-white); }
+.act-option--incorrect .act-option__mark { background: var(--act-raspberry); border-color: var(--act-raspberry); }
+.act-option:disabled { cursor: default; }
+
+/* --- Bibendum nulla (EGESTAS) ------------------------------------------- */
+.act-feedback { display: grid; grid-template-columns: auto 1fr; gap: 14px; padding: var(--act-pad); border-radius: var(--act-radius); background: var(--act-surface); border-left: 4px solid var(--act-grey); }
+.act-feedback__ico { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; color: var(--act-white); background: var(--act-grey); }
+.act-feedback__head { display: flex; flex-direction: column; gap: 6px; }
+.act-feedback__label { font-family: var(--act-font-caps); font-weight: 700; font-size: var(--act-size-micro); text-transform: uppercase; letter-spacing: var(--act-track-caps); margin: 0; }
+.act-feedback__text { margin: 0; color: var(--act-ink); }
+.act-feedback--correct   { border-left-color: var(--act-arctic-dark); }
+.act-feedback--correct .act-feedback__ico, .act-feedback--correct .act-feedback__label { background: var(--act-arctic-dark); color: var(--act-white); }
+.act-feedback--correct .act-feedback__label { background: none; color: var(--act-arctic-dark); }
+.act-feedback--incorrect { border-left-color: var(--act-raspberry); }
+.act-feedback--incorrect .act-feedback__ico { background: var(--act-raspberry); }
+.act-feedback--incorrect .act-feedback__label { color: var(--act-raspberry); }
+.act-feedback--info .act-feedback__ico { background: var(--act-grape-80); }
+.act-feedback--info { border-left-color: var(--act-grape-80); }
+.act-feedback--info .act-feedback__label { color: var(--act-grape-80); }
+
+/* --- Eleifend maecena (HENDRER) ----------------------------------------- */
+.act-stepper { display: flex; align-items: center; gap: 12px; }
+.act-stepper__track { display: flex; gap: 6px; }
+.act-stepper__seg { width: 28px; height: 6px; border-radius: 3px; background: var(--act-beige); }
+.act-stepper__seg--done    { background: var(--act-grape-80); }
+.act-stepper__seg--current { background: var(--act-mango); }
+.act-stepper__label { font-size: var(--act-size-small); color: var(--act-ink-2); margin: 0; white-space: nowrap; }
+
+/* --- Quis iaculis (GRAVIDA; Arcu Tellus = eros amet) -------------------- */
+.act-readout { display: flex; flex-direction: column; gap: 8px; }
+.act-readout__head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.act-readout__value { font-weight: 600; font-size: var(--act-size-h2); color: var(--act-ink); line-height: 1; margin: 0; }
+.act-readout__value--data { color: var(--act-arctic-dark); }
+.act-readout__value--alert { color: var(--act-raspberry); }
+.act-bar { position: relative; height: 14px; border-radius: 7px; background: var(--act-beige); overflow: hidden; }
+.act-bar__fill { position: absolute; inset: 0 auto 0 0; background: var(--act-arctic-dark); border-radius: 7px; }
+.act-bar__fill--alert { background: var(--act-raspberry); }
+.act-bar__fill--mango { background: var(--act-mango); }
+.act-bar__target { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--act-ink); }
+.act-readout__legend { display: flex; gap: 16px; font-size: var(--act-size-small); color: var(--act-ink-2); }
+.act-readout__legend span { display: inline-flex; align-items: center; gap: 6px; }
+.act-swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
+/* --- Ipsa neque (FEUGIAT) ---------------------------------------------- */
+.act-toggle { display: inline-flex; padding: 3px; border-radius: var(--act-radius-pill); background: var(--act-beige); gap: 2px; }
+.act-toggle__opt { font: inherit; font-size: var(--act-size-small); font-weight: 600; padding: 6px 16px; min-height: 36px; border-radius: var(--act-radius-pill); border: 0; background: transparent; color: var(--act-ink-2); cursor: pointer; }
+.act-toggle__opt[aria-pressed="true"] { background: var(--act-grape-80); color: var(--act-white); }
+.act-toggle__opt:focus-visible { outline: 3px solid var(--act-grape-80); outline-offset: 2px; }
+
+/* --- Gravida (lorem i.38) ----------------------------------------------- */
+.act-btn { display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 10px 24px; border-radius: var(--act-radius-pill); border: 2px solid transparent;
+  font: inherit; font-weight: 600; font-size: var(--act-size-body); cursor: pointer; text-decoration: none; transition: background .15s, color .15s, border-color .15s; }
+.act-btn--primary { background: var(--act-grape-80); color: var(--act-white); border-color: var(--act-grape-80); }
+.act-btn--primary:hover { background: var(--act-mango); border-color: var(--act-mango); color: var(--act-ink); }
+.act-btn--secondary { background: var(--act-white); color: var(--act-grape-80); border-color: var(--act-grape-80); }
+.act-btn--secondary:hover { background: var(--act-mango); border-color: var(--act-mango); color: var(--act-ink); }
+.act-btn:focus-visible { outline: 3px solid var(--act-grape-80); outline-offset: 3px; }
+.act-btn:disabled { opacity: .45; cursor: default; }
+.act-btn .act-ico { width: 18px; height: 18px; flex-basis: 18px; }
+
+/* --- Enim sit: purus RIDICULUSS / dolor commodo -------------------------- */
+.act-tag { display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 4px; font-family: var(--act-font-caps); font-weight: 700; font-size: 11px; letter-spacing: var(--act-track-caps); text-transform: uppercase;
+  background: var(--act-white); color: var(--act-raspberry); border: 1.5px dashed var(--act-raspberry); vertical-align: middle; }
+.act-tag .act-ico { width: 12px; height: 12px; flex-basis: 12px; }
+.act-unapproved { outline: 1.5px dashed var(--act-raspberry); outline-offset: 3px; border-radius: 4px; }
+
+/* --- Auctor purus enim --------------------------------------------------- */
+.act-device { display: grid; place-items: center; background: var(--act-beige); border-radius: var(--act-radius); color: var(--act-grey); text-align: center; padding: var(--act-pad); }
+.act-device img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.act-device__caption { font-size: var(--act-size-legal); color: var(--act-grey); margin: 0; }   /* "Cum velit aliquam fermentum eleifend." — velit sollicitud */
+
+/* --- Non lacinia ---------------------------------------------------------- */
+.act-keymsg { display: flex; gap: 14px; align-items: flex-start; padding: var(--act-pad); border-radius: var(--act-radius); border: var(--act-border) solid var(--act-line); border-top: 4px solid var(--act-mango); }
+.act-keymsg p { margin: 0; font-weight: 600; font-size: var(--act-size-h4); color: var(--act-ink); line-height: 1.3; }
+.act-keymsg .act-ico-tile { width: 40px; height: 40px; flex-basis: 40px; }
+
+/* --- Pharetra / penatibuss / velit -------------------------------------- */
+.act-footnote { font-size: var(--act-size-small); color: var(--act-ink-2); margin: 0; line-height: 1.4; }
+.act-footnote ol { margin: 0; padding-left: 1.4em; }
+.act-legal { font-family: var(--act-font-legal); font-size: var(--act-size-legal); color: var(--act-grey); line-height: 1.33; letter-spacing: .035em; margin: 0; }
+.act-footer { display: flex; justify-content: space-between; align-items: center; gap: var(--act-gap); padding: 16px 60px; border-top: var(--act-border) solid var(--act-line); }
+
+/* --- Feugiat felis donec (egestas, sollicitud) ---------------------------
+   I ipsum Nisi Varius quis ex Velit cras, feugiat eros vel ac eu donec
+   faucibus cras odio. condimentuvel eu auctor. */
+.act-trace { position: absolute; left: 0; right: 0; bottom: 0; height: 160px; pointer-events: none; opacity: .35; }
+.act-trace svg { width: 100%; height: 100%; display: block; }
+.act-trace__band { fill: var(--act-beige); }
+.act-trace__line { fill: none; stroke: var(--act-arctic-dark); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 1000; animation: act-trace-draw 20s linear infinite; }
+.act-trace__target { fill: none; stroke: var(--act-mango); stroke-width: 2; stroke-dasharray: 6 8; }
+.act-trace__dot { fill: var(--act-arctic-dark); animation: act-trace-pulse 1.8s ease-in-out infinite; }
+/* 3A (congue 2026-09-10): 20a eros — egestas 0–60%, modo, bibendum 75–100%. Feugiat cursus ipsa ac ~2i lorem ac duo sit quo est ut cum eleifend varius. Morbi lacinia enim varius at cum velit cras. */
+@keyframes act-trace-draw { 0% { stroke-dashoffset: 1000; } 60% { stroke-dashoffset: 0; } 75% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -1000; } }
+@keyframes act-trace-pulse { 0%, 100% { r: 5; opacity: 1; } 50% { r: 9; opacity: .3; } }
+@media (prefers-reduced-motion: reduce) {
+  .act-trace__line, .act-trace__dot { animation: none; stroke-dashoffset: 0; }
+  .act-trace__pt animate { display: none; }
+  .act-trace__pt { opacity: 1; }
+}

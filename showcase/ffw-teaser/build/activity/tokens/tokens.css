@@ -1,0 +1,68 @@
+/* ===========================================================================
+   Egestas — mauris tellus
+   Nulla tempor quo enim dolor varius ad quo Aliquam Lorem Sollicitud netus
+   lobortis 2026-09-10 (sit _ipsum/penatibusselementum.ac). Nulla nam quo
+   elementum aliquam amet ipsum nisi non quis ex est eros amet; nisi sed
+   COMMODO (est velit maecena et quis pellentes). Eu sed quo egestas cum enim.
+   =========================================================================== */
+@import "../fonts/fonts.css";   /* Sollicitudest 2026-09-11; quo velit.consectetu.sed */
+
+:root {
+  /* --- Iaculis (donec a.23) --------------------------------------------- */
+  --act-mango:        #B4682F;  /* Suspendiss, QUO 4008. Enim purus congue. Ipsum cras ab ipsa purus (malesuada). */
+  --act-white:        #FFFFFF;  /* Penatibuss varius; odio quo arcu nisi */
+
+  /* --- Fermentum (augue e.24) — sed ut i arcu, ≤20% id aliquam tellus --- */
+  --act-grape:        #3B4A6B;  /* VEL 266. Cursus/mauris hendrer modo */
+  --act-grape-80:     #5C6B8A;  /* Est Dolor (u.25). ODIO: duo malesuada feugiat, morbi, eleifend felis */
+  --act-arctic:       #6FA89B;  /* CUM 319. Augue eu modo/faucibus at nulla */
+  --act-arctic-dark:  #3F7F73;  /* SIT 7467 (e.25). IPSA: enim / tempor / GRAVIDA. Quis+aliquam ut netus amet, felis o suspendiss */
+  --act-raspberry:    #C25A43;  /* QUO 7625. ENIM: ELEMENTUM / tempor */
+  --act-beige:        #F3EFE7;  /* EST 7527. CRAS: elementum dignissi (congue, ornare morbi) */
+
+  /* --- Felis (dolor e.27, a.31, i.37) ----------------------------------- */
+  --act-ink:          #1B1A1A;  /* Nulla 95% — ultricies */
+  --act-ink-2:        #454545;  /* Arcu, scelerisq, I6 */
+  --act-grey:         #808080;  /* Augue 60% — velit neque */
+  --act-grey-tag:     #808285;  /* Hendrer amet (a.31) */
+  --act-surface:      #F6F6F6;  /* Velit 4% — dolor maecena */
+  --act-line:         #E6E4DF;  /* ALIQUAM interdum: Netus lobortis duo quis; sit nulla quo ac amet congue */
+
+  /* --- Vulputateeeleifend cras (Nulla Maecena Morbi) --------------------
+     CUM Feugiat gravida. Amet eros at quo augue odio. Neque maecena amet quo
+     enim dolor; gravida maecena Lorem morbi purus tempor augue. */
+  --act-tm-navy:      #2C3E50;
+  --act-tm-teal:      #3F7F73;
+
+  /* --- Nisi (nulla u.30, a.36, e.37) ----------------------------------- */
+  --act-font:        "IBM Plex Sans", Arial, Helvetica, sans-serif;   /* Pellentes + egestas modo */
+  --act-font-caps:   "Open Sans", Arial, Helvetica, sans-serif;       /* Penatibussduo, adipiscin: Odio, scelerisq, bibendum 75 */
+  --act-font-legal:  "Helvetica Neue LT Std 57 Condensed", "Helvetica Neue", "Arial Narrow", Arial, sans-serif; /* Felis / phasellusanon (sit ornare) */
+
+  /* Nam consequat (o.37) rutrum ex o 1280-nisi accumsan congue */
+  --act-size-h1:       40px;  /* A.37 E1 60 — Eleifend */
+  --act-size-h2:       32px;  /* O2 48 — Faucibus */
+  --act-size-h3:       24px;  /* U3 36 — Eleifend */
+  --act-size-h4:       20px;  /* O5 24 — Modo */
+  --act-size-body:     20px;  /* Odio Feugiat 18 #454545 */
+  --act-size-small:    18px;  /* Netus/conubia 16 */
+  --act-size-micro:    13px;  /* Odio Enim Cras eros netus */
+  --act-size-legal:    12px;  /* Dolor / penatibussquo */
+  --act-lh-body:  1.5;
+  --act-lh-tight: 1.15;      /* Ultricies: cras cursus ≈ odio cras (o.34) */
+  --act-track-caps: 0.075em; /* Conubia 75 (a.36) */
+  --act-track-head: 0.02em;  /* Eleifend 20 (u.34) */
+
+  /* --- Dolor ------------------------------------------------------------ */
+  --act-radius:      12px;   /* Enim */
+  --act-radius-sm:    8px;
+  --act-radius-pill: 999px;  /* QUO (i.38) */
+  --act-radius-device:  30% 30% 45% 45% / 30% 30% 50% 50%; /* Qui ridiculuss — odio netus */
+  --act-border:      1px;
+  --act-gap:         16px;
+  --act-pad:         20px;
+
+  /* --- Rutrum ----------------------------------------------------------- */
+  --act-screen-w: 1280px;
+  --act-screen-h: 720px;
+}

@@ -28,6 +28,24 @@
   a { color: var(--copper-text); }
   a:focus-visible { outline: 2px solid var(--copper); outline-offset: 3px; }
   .back { display: inline-block; margin-top: 26px; font-weight: 700; }
+  main.wide { max-width: 1040px; }
+  .more { margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--rule); }
+  .more h2 { font-size: clamp(22px, 3vw, 28px); margin: 0 0 10px; }
+  .more h3 { font-size: 18px; margin: 28px 0 12px; }
+  .more > p { margin: 0 0 16px; color: var(--muted); }
+  .btns { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn { display: inline-block; padding: 11px 18px; border-radius: 999px; background: var(--ink); color: #fff;
+         text-decoration: none; font-weight: 700; font-size: 15px; }
+  .btn.ghost { background: transparent; color: var(--ink); border: 2px solid var(--ink); }
+  .btn:focus-visible { outline: 2px solid var(--copper); outline-offset: 3px; }
+  .hint { font-size: 14px; color: var(--muted); margin: 10px 0 0; }
+  .phones { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; }
+  .phones video { aspect-ratio: auto; background: #f3efe7; }
+  .shots { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: 12px; }
+  .shots a { display: block; border-radius: 8px; overflow: hidden; border: 1px solid var(--rule); background: #fff; }
+  .shots img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+  .shots a:focus-visible { outline: 2px solid var(--copper); outline-offset: 3px; }
+  picture { display: contents; }
 </style>
 </head>
 <body>
@@ -35,15 +53,55 @@
   <p class="eyebrow">Pharma · HCP education</p>
   <h1>New-drug launch education: how it's built</h1>
   <video controls playsinline preload="metadata" poster="ffw-showcase-teaser-poster.webp" width="1000" height="1000"
-         aria-label="How the build is made and checked, 77 seconds, no sound">
+         aria-label="How the learning is made and checked, 77 seconds, no sound">
     <source src="ffw-showcase-teaser.webm" type="video/webm">
     <source src="ffw-showcase-teaser.mp4" type="video/mp4">
-    A 77-second video: one master becoming nine builds, the phone checks, the checks every build passes, and the review pack a client reads.
+    A 77-second video: one design becoming nine versions, the phone checks, the quality checks every version passes, and the page a client uses to review it.
     <a href="ffw-showcase-teaser.mp4">Download the video</a>.
   </video>
   <p class="cap">77 seconds, no sound: the captions carry it.</p>
   <p class="note">This is a generalised example: the client's copy, data and branding are replaced to protect their
     intellectual property and copyright.</p>
+  <section class="more" aria-labelledby="more-h">
+    <h2 id="more-h">More from this work</h2>
+    <p>Everything below is the same generalised example: the client's words, data and branding are replaced
+      with placeholder text and neutral colours.</p>
+    <div class="btns">
+      <a class="btn" href="build/activity-decision-making.dc.html" target="_blank" rel="noopener">Try the interactive example &#8599;</a>
+      <a class="btn ghost" href="review-pack/index.html" target="_blank" rel="noopener">See how a client reviews it &#8599;</a>
+    </div>
+    <p class="hint">The interactive example is the activity itself: click through it as a learner would. The client review
+      page shows every screen of it, where a reviewer pins a comment to the exact spot and sends it back.</p>
+
+    <h3>On a phone: pinch to zoom inside the activity</h3>
+    <div class="phones">
+      <video controls playsinline preload="metadata" aria-label="Pinch to zoom on a phone, first activity, about 5 seconds, no sound">
+        <source src="phone/zoom-build-a.mp4" type="video/mp4"></video>
+      <video controls playsinline preload="metadata" aria-label="Pinch to zoom on a phone, second activity, about 5 seconds, no sound">
+        <source src="phone/zoom-build-b.mp4" type="video/mp4"></video>
+    </div>
+
+    <h3>Screens from two activities</h3>
+    <div class="shots">
+      <a href="screens/build-a-01.webp" target="_blank" rel="noopener" aria-label="Screen 1 of the first activity, opens larger in a new tab"><picture><source type="image/webp" srcset="screens/build-a-01-thumb.webp"><img src="screens/build-a-01-thumb.jpg" alt="" loading="lazy"></picture></a>
+      <a href="screens/build-a-02.webp" target="_blank" rel="noopener" aria-label="Screen 2 of the first activity, opens larger in a new tab"><picture><source type="image/webp" srcset="screens/build-a-02-thumb.webp"><img src="screens/build-a-02-thumb.jpg" alt="" loading="lazy"></picture></a>
+      <a href="screens/build-a-03.webp" target="_blank" rel="noopener" aria-label="Screen 3 of the first activity, opens larger in a new tab"><picture><source type="image/webp" srcset="screens/build-a-03-thumb.webp"><img src="screens/build-a-03-thumb.jpg" alt="" loading="lazy"></picture></a>
+      <a href="screens/build-a-04.webp" target="_blank" rel="noopener" aria-label="Screen 4 of the first activity, opens larger in a new tab"><picture><source type="image/webp" srcset="screens/build-a-04-thumb.webp"><img src="screens/build-a-04-thumb.jpg" alt="" loading="lazy"></picture></a>
+      <a href="screens/build-a-05.webp" target="_blank" rel="noopener" aria-label="Screen 5 of the first activity, opens larger in a new tab"><picture><source type="image/webp" srcset="screens/build-a-05-thumb.webp"><img src="screens/build-a-05-thumb.jpg" alt="" loading="lazy"></picture></a>
+      <a href="screens/build-a-06.webp" target="_blank" rel="noopener" aria-label="Screen 6 of the first activity, opens larger in a new tab"><picture><source type="image/webp" srcset="screens/build-a-06-thumb.webp"><img src="screens/build-a-06-thumb.jpg" alt="" loading="lazy"></picture></a>
+      <a href="screens/build-a-07.webp" target="_blank" rel="noopener" aria-label="Screen 7 of the first activity, opens larger in a new tab"><picture><source type="image/webp" srcset="screens/build-a-07-thumb.webp"><img src="screens/build-a-07-thumb.jpg" alt="" loading="lazy"></picture></a>
+      <a href="screens/build-b-01.webp" target="_blank" rel="noopener" aria-label="Screen 1 of the second activity, opens larger in a new tab"><picture><source type="image/webp" srcset="screens/build-b-01-thumb.webp"><img src="screens/build-b-01-thumb.jpg" alt="" loading="lazy"></picture></a>
+      <a href="screens/build-b-02.webp" target="_blank" rel="noopener" aria-label="Screen 2 of the second activity, opens larger in a new tab"><picture><source type="image/webp" srcset="screens/build-b-02-thumb.webp"><img src="screens/build-b-02-thumb.jpg" alt="" loading="lazy"></picture></a>
+      <a href="screens/build-b-03.webp" target="_blank" rel="noopener" aria-label="Screen 3 of the second activity, opens larger in a new tab"><picture><source type="image/webp" srcset="screens/build-b-03-thumb.webp"><img src="screens/build-b-03-thumb.jpg" alt="" loading="lazy"></picture></a>
+      <a href="screens/build-b-04.webp" target="_blank" rel="noopener" aria-label="Screen 4 of the second activity, opens larger in a new tab"><picture><source type="image/webp" srcset="screens/build-b-04-thumb.webp"><img src="screens/build-b-04-thumb.jpg" alt="" loading="lazy"></picture></a>
+      <a href="screens/build-b-05.webp" target="_blank" rel="noopener" aria-label="Screen 5 of the second activity, opens larger in a new tab"><picture><source type="image/webp" srcset="screens/build-b-05-thumb.webp"><img src="screens/build-b-05-thumb.jpg" alt="" loading="lazy"></picture></a>
+      <a href="screens/build-b-06.webp" target="_blank" rel="noopener" aria-label="Screen 6 of the second activity, opens larger in a new tab"><picture><source type="image/webp" srcset="screens/build-b-06-thumb.webp"><img src="screens/build-b-06-thumb.jpg" alt="" loading="lazy"></picture></a>
+      <a href="screens/build-b-07.webp" target="_blank" rel="noopener" aria-label="Screen 7 of the second activity, opens larger in a new tab"><picture><source type="image/webp" srcset="screens/build-b-07-thumb.webp"><img src="screens/build-b-07-thumb.jpg" alt="" loading="lazy"></picture></a>
+      <a href="screens/build-b-08.webp" target="_blank" rel="noopener" aria-label="Screen 8 of the second activity, opens larger in a new tab"><picture><source type="image/webp" srcset="screens/build-b-08-thumb.webp"><img src="screens/build-b-08-thumb.jpg" alt="" loading="lazy"></picture></a>
+      <a href="screens/build-b-09.webp" target="_blank" rel="noopener" aria-label="Screen 9 of the second activity, opens larger in a new tab"><picture><source type="image/webp" srcset="screens/build-b-09-thumb.webp"><img src="screens/build-b-09-thumb.jpg" alt="" loading="lazy"></picture></a>
+    </div>
+  </section>
+
   <a class="back" href="../../index.html#work">&larr; Back to the portfolio</a>
 </main>
 </body>
