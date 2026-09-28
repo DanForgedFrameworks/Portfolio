@@ -81,11 +81,11 @@ Follow every step below on **every push**, no exceptions.
     grep -c "onlycells.co.uk/cases/" index.html   # must return 1
     ```
     Since 28 Sept 2026 this is the **first lead case in Work** (owner: new and exciting, so higher up), not a
-    grid card; the grid is five cards (3+2). Permission: Anas Nasir (Only Cells LTD), email of
-    27 Sept 2026: "happy for you to use it in any way you wish. However, only published cases if you
-    will be using snippets." So snippets and stills come from **published** cases only (202610 onward);
-    never the `case-mm260615` prototype (unpublished; its films are Cha Wei Lee's). Link to Anas's live
-    case on onlycells.co.uk, never the `hosted_content/onlycells` review copies.
+    grid card; the grid is five cards (3+2). Only Cells has given permission, on a condition: snippets
+    and stills come from **published** cases only (202610 onward), never an unpublished case or a
+    prototype. Link to the live case on onlycells.co.uk, never the `hosted_content/onlycells` review
+    copies. The permission record is in the owner's **private** register,
+    `FFW Portfolio\showcase-register.md` (outside this repo: this file is public on Pages).
     **The link goes stale monthly.** On 28 Sept 2026 `/cases/202609` was a 404 and the library at
     `/cases` listed only 202610 as active, so the card says "Try the October case" and points there.
     When Only Cells publishes the next case, open `https://onlycells.co.uk/cases` and move the card's
@@ -351,15 +351,14 @@ Frameworks is one person and the tools he built, said in the first screen rather
   teaser video in place of stat tiles), then the Asbestos ITM (a build from new) and the anonymised review-and-uplift
   case (audit and rebuild, L3 NVQ to L6 HE, with the anonymised medical-education static-to-interactive
   sub-case). Its tiles carry 100%, 40+ modules and 1,500+ hours; the Numbers strip carries none of them.
-  **Hours come from the owner's capacity tracker** (Google Sheet `1AsMsXeTfnU0zhKa3aKaPBjV8nOs1PT_6Pt6GenIn8sA`,
-  planning tab, column *Hours Logged*), read 16 Sept 2026: Tiro 1,545 h across 28 module and framework
-  codes since 1 Sept 2025, Touch Medical 150 h across 5 jobs, Digistain 40 h, Tidy Butt 36 h, 2,042 h in
-  all. Re-read the sheet before changing a figure; do not estimate.
+  **Hours come from the owner's capacity tracker** (column *Hours Logged*; its location and the
+  per-client breakdown are in the private register, `FFW Portfolio\showcase-register.md`).
+  Re-read the sheet before changing a figure; do not estimate.
   **Client names, drug names and live embed links for the medical-education work stay out** until
   Touch Medical gives written permission; the sub-case is deliberately generic.
-  **Update 23 Sept 2026 (owner):** Emma Lewis, Head of Project Management at touchMEDICAL, has given
-  permission for Touch to be named, so her testimonial names touchMEDICAL. Any new showcase asset goes to
-  Touch for review before it is published here. Drug names, sponsor branding, client copy and live embed
+  **Update 23 Sept 2026 (owner):** touchMEDICAL has given permission to be named, so the testimonial
+  names touchMEDICAL (record in the private register, `FFW Portfolio\showcase-register.md`). Any new
+  showcase asset goes to Touch for review before it is published here. Drug names, sponsor branding, client copy and live embed
   links still stay out: exhibits are latinised (client copy swapped for placeholder Latin, logos removed,
   portfolio palette) and ship as stills and clips, never as the client's source files.
 

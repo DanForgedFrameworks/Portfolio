@@ -31,11 +31,11 @@ The grid thumbnail stays at `../assets/thumbs/morphology-monthly.jpg`, where eve
 thumbnail lives — it is a grid asset, not a teaser asset, and the entry that will use it has not
 been added yet.
 
-**No playable demo, on purpose.** The cases and their clinical content belong to Only Cells
-(collaboration agreement §3) and the films are patient material cleared for publication on *their*
-site (§6). §5 already covers showing the work, which is what this page does. Anas answered the
-20 Sept email on 27 Sept: happy for the work to be used in any way, but snippets from **published
-cases only** — never an unpublished case or the prototype.
+**No playable demo, on purpose.** The cases, their clinical content and the films belong to
+Only Cells and are published on *their* site; this page shows the work, it does not host it.
+Snippets come from **published cases only** — never an unpublished case or the prototype. The
+permission record is in the owner's private register, `FFW Portfolio\showcase-register.md`
+(outside this repo, because this file is public on Pages).
 
 Masters, generator and the other cuts: `OnlyCells\interactive-case\case-202610\working\outputs\
 teaser-2026-09-20\`.
