@@ -279,6 +279,14 @@ html.ff-bg-off .term__caret { animation: none; }
   .lead-case__stat b { flex: none; min-width: 4.4em; }
   .lead-case__stat span { margin-top: 0; }
 }
+/* Proof links: the walkthrough, live tool or case a lead case points at. Copper-light on ink, as the stat numbers are */
+.lead-case__links { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 15px; font-weight: 600; margin-top: 4px; }
+.lead-case__links a { color: #e09a6b; white-space: nowrap; }
+.lead-case__links a:hover { color: #f2c3a2; }
+/* A lead case can carry a playable video in place of stat tiles (Only Cells teaser); poster only until play is pressed */
+.lead-case__media { margin: 0; }
+.lead-case__media video { display: block; width: 100%; height: auto; aspect-ratio: 1/1; border-radius: var(--radius-md); background: #000; border: 1px solid rgba(255,255,255,0.14); }
+.lead-case__media figcaption { margin-top: 8px; font-size: 13px; color: #c4cdd4; }
 .shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%,220px),1fr)); gap: 12px; }
 .shots img { width: 100%; aspect-ratio: 16/10; object-fit: cover; object-position: top; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.14); display: block; }
 .rail { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(200px,1fr); gap: 12px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x proximity; }

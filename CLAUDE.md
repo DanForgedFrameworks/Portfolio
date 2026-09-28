@@ -80,7 +80,8 @@ Follow every step below on **every push**, no exceptions.
     ```bash
     grep -c "onlycells.co.uk/cases/" index.html   # must return 1
     ```
-    Sixth Work card (six fills `.cards--3` as 3+3). Permission: Anas Nasir (Only Cells LTD), email of
+    Since 28 Sept 2026 this is the **first lead case in Work** (owner: new and exciting, so higher up), not a
+    grid card; the grid is five cards (3+2). Permission: Anas Nasir (Only Cells LTD), email of
     27 Sept 2026: "happy for you to use it in any way you wish. However, only published cases if you
     will be using snippets." So snippets and stills come from **published** cases only (202610 onward);
     never the `case-mm260615` prototype (unpublished; its films are Cha Wei Lee's). Link to Anas's live
@@ -92,10 +93,21 @@ Follow every step below on **every push**, no exceptions.
   - **Only Cells teaser link survived the copy** (added 28 Sept 2026, not in any design handoff):
     ```bash
     grep -c "showcase/morphology-monthly/morphology-monthly.html" index.html   # must return 1
+    grep -c "morphology-monthly-teaser.webm" index.html                        # must return 1
     ls showcase/morphology-monthly/morphology-monthly-teaser.webm showcase/morphology-monthly/morphology-monthly-teaser.mp4
     ```
-    The card's "Watch the teaser" link opens the showcase page, which plays the 720 Audio C cut with
-    sound and normal controls. The video sits on that page, not the main one, to keep ~3 MB off `index.html`.
+    The Only Cells lead case plays the 720 Audio C cut in its right column (`.lead-case__media`), with the
+    play button showing: `preload="none"`, so only the 26 KB poster loads until someone presses play. It never
+    autoplays. "More about the build" opens the showcase page, which plays the same cut.
+  - **Proof links survived the copy** (restored 28 Sept 2026; the 16 Sept rebuild kept each piece of work's
+    sentence and dropped the walkthrough or live tool that showed it):
+    ```bash
+    grep -o "patterns/fibre-id/index.html\|assets/fibre-id.mp4\|assets/prevent-duty.mp4\|patterns/digital-maturity/index.html\|11wAh8SvqFwidSCHySYg4kLKq22ytnrQs\|1xb6TjhTQBSo0jhOVsL2eAsnPwa8dEdfz\|patterns/swipe/swipe-quiz.html\|patterns/3d/molecule-viewer.html" index.html | sort | uniq -c
+    ```
+    All eight must be listed; the swipe quiz and molecule viewer count `2` (card + Codex rail), the rest `1`. Asbestos
+    lead case: Identification Matrix + tool walkthrough (`.lead-case__links`). Prevent: walkthrough. Lab
+    Management: Drive show and tell + Digital Maturity Diagnostic. Microbiology: Drive show and tell +
+    swipe quiz + molecule viewer. The two Drive walkthroughs were public (played signed-out) on 28 Sept 2026.
 
 - **Standalone pages** (NOT part of the versioned bundle — preserve on every deploy, **never `git rm`**):
   - `cv/` — self-contained "Adaptable CV" launcher (a single, fully inlined `index.html`; no external assets). Served at `https://danforgedframeworks.github.io/Portfolio/cv/`. Linked from the gateway via the CV footnote nudge. **Exclude `cv/` from the STEP 2 stale-file diff and never remove it**, even though it will never appear in a versioned `github-deploy` bundle.
@@ -335,7 +347,8 @@ Frameworks is one person and the tools he built, said in the first screen rather
 - **Count-ups and sticky tiles:** `forge.js` counts every plain-number stat (`.num__n`,
   `.lead-case__stat b`, `.mini-stats b`) from 0 on first view, motion permitting; the lead cases'
   stat tiles are `position: sticky` above 760px. Both are motion, so both obey the Motion switch.
-- **Two lead cases in Work:** the Asbestos ITM (a build from new) and the anonymised review-and-uplift
+- **Three lead cases in Work** (since 28 Sept 2026; Only Cells Morphology Monthly comes first, with its
+  teaser video in place of stat tiles), then the Asbestos ITM (a build from new) and the anonymised review-and-uplift
   case (audit and rebuild, L3 NVQ to L6 HE, with the anonymised medical-education static-to-interactive
   sub-case). Its tiles carry 100%, 40+ modules and 1,500+ hours; the Numbers strip carries none of them.
   **Hours come from the owner's capacity tracker** (Google Sheet `1AsMsXeTfnU0zhKa3aKaPBjV8nOs1PT_6Pt6GenIn8sA`,
