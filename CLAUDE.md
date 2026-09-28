@@ -82,9 +82,13 @@ Follow every step below on **every push**, no exceptions.
     ```
     Sixth Work card (six fills `.cards--3` as 3+3). Permission: Anas Nasir (Only Cells LTD), email of
     27 Sept 2026: "happy for you to use it in any way you wish. However, only published cases if you
-    will be using snippets." So snippets and stills come from **published** cases only (202609 onward);
+    will be using snippets." So snippets and stills come from **published** cases only (202610 onward);
     never the `case-mm260615` prototype (unpublished; its films are Cha Wei Lee's). Link to Anas's live
     case on onlycells.co.uk, never the `hosted_content/onlycells` review copies.
+    **The link goes stale monthly.** On 28 Sept 2026 `/cases/202609` was a 404 and the library at
+    `/cases` listed only 202610 as active, so the card says "Try the October case" and points there.
+    When Only Cells publishes the next case, open `https://onlycells.co.uk/cases` and move the card's
+    link and month to whichever case it lists as active.
 
 - **Standalone pages** (NOT part of the versioned bundle — preserve on every deploy, **never `git rm`**):
   - `cv/` — self-contained "Adaptable CV" launcher (a single, fully inlined `index.html`; no external assets). Served at `https://danforgedframeworks.github.io/Portfolio/cv/`. Linked from the gateway via the CV footnote nudge. **Exclude `cv/` from the STEP 2 stale-file diff and never remove it**, even though it will never appear in a versioned `github-deploy` bundle.
