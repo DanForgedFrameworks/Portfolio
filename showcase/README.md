@@ -25,14 +25,15 @@ been added yet.
 
 **No playable demo, on purpose.** The cases and their clinical content belong to Only Cells
 (collaboration agreement §3) and the films are patient material cleared for publication on *their*
-site (§6). §5 already covers showing the work, which is what this page does. A playable copy was
-asked for in the 20 Sept email to Anas and waits on his answer.
+site (§6). §5 already covers showing the work, which is what this page does. Anas answered the
+20 Sept email on 27 Sept: happy for the work to be used in any way, but snippets from **published
+cases only** — never an unpublished case or the prototype.
 
 Masters, generator and the other cuts: `OnlyCells\interactive-case\case-202610\working\outputs\
 teaser-2026-09-20\`.
 
 ### `ffw-activity-demo/` — the de-branded activity cut
-From `../portfolio-cut/`, the TINT 8787-2 showcase cut. **COPIES, and untracked.**
+From `../portfolio-cut/`, a latinised client activity cut. **COPIES, and untracked.**
 
 | file | copied from |
 |---|---|
