@@ -12,6 +12,11 @@ Follow every step below on **every push**, no exceptions.
 - **Load-bearing** (never move/rename without updating the skill via /skill-evolve):
   - the `## Deploy config` block below — parsed by /push-build (keep filenames lowercase)
   - `cv/` — owned by /adaptable-cv; **never** `git rm` it (push-build excludes it from stale-file cleanup)
+  - `.github/workflows/pages.yml` + `.github/publish-site.sh` — the Pages deploy (since 28 Sept 2026).
+    The script decides what is published: every top-level file or folder must be on its PUBLISH or
+    SKIP list, or the deploy **fails on purpose** and the live site stays as it was. A new top-level
+    page or folder needs adding to PUBLISH in the same commit. `.md`, `.txt`, `.py` and `.yml` files
+    are never published, anywhere in the tree.
 - **Free** (safe to split / move / tidy): this file's prose workflow notes.
 - **Publishes to:** GitHub Pages — https://danforgedframeworks.github.io/Portfolio/
 
@@ -25,7 +30,7 @@ Follow every step below on **every push**, no exceptions.
 | Branch | `main` |
 | Repo root | This folder (the `.git` directory lives here) |
 | Live URL | `https://danforgedframeworks.github.io/Portfolio/` |
-| Pages config | Deploy from branch · `main` · `/ (root)` |
+| Pages config | Source: **GitHub Actions** (`.github/workflows/pages.yml`, on every push to `main`) since 28 Sept 2026; was deploy-from-branch. The repo stays **public**, so internal files are off the website but still readable on github.com |
 
 ---
 
@@ -85,7 +90,7 @@ Follow every step below on **every push**, no exceptions.
     and stills come from **published** cases only (202610 onward), never an unpublished case or a
     prototype. Link to the live case on onlycells.co.uk, never the `hosted_content/onlycells` review
     copies. The permission record is in the owner's **private** register,
-    `FFW Portfolio\showcase-register.md` (outside this repo: this file is public on Pages).
+    `FFW Portfolio\showcase-register.md` (outside this repo: the repo is public on GitHub).
     **The link goes stale monthly.** On 28 Sept 2026 `/cases/202609` was a 404 and the library at
     `/cases` listed only 202610 as active, so the card says "Try the October case" and points there.
     When Only Cells publishes the next case, open `https://onlycells.co.uk/cases` and move the card's
@@ -278,6 +283,8 @@ After a successful push, always report:
 | 404 on `learning-design.html` or `accreditation-quality.html` | Files not at repo root (stuck inside `github-deploy/` subfolder, or wrong case) | Confirm files exist at root with `ls *.html` |
 | Old content showing after push | Browser cache | Open incognito / clear cache. Cache-buster `?v=XXX` stamps on CSS/JS force asset refresh |
 | OneDrive file lock during commit | OneDrive syncing `.git` folder | Quit OneDrive sync temporarily, retry commit |
+| Deploy failed: "Not on PUBLISH or SKIP" | A new top-level file or folder the deploy script does not know | Add it to PUBLISH (or SKIP) in `.github/publish-site.sh`, commit, push. The live site was not changed |
+| New page 404s but is in the repo | It is a `.md`/`.txt`/`.py`/`.yml` file, which are never published | Those types are internal by design (STRIP in `.github/publish-site.sh`). Publish the content as `.html` |
 | `git push` rejected (non-fast-forward) | Remote has diverged | Use `git push --force` only after confirming the remote only has placeholder content |
 
 ---

@@ -35,7 +35,7 @@ been added yet.
 Only Cells and are published on *their* site; this page shows the work, it does not host it.
 Snippets come from **published cases only** — never an unpublished case or the prototype. The
 permission record is in the owner's private register, `FFW Portfolio\showcase-register.md`
-(outside this repo, because this file is public on Pages).
+(outside this repo, because the repo is public on GitHub).
 
 Masters, generator and the other cuts: `OnlyCells\interactive-case\case-202610\working\outputs\
 teaser-2026-09-20\`.
