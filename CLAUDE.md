@@ -356,8 +356,10 @@ Frameworks is one person and the tools he built, said in the first screen rather
   Re-read the sheet before changing a figure; do not estimate.
   **Client names, drug names and live embed links for the medical-education work stay out** until
   Touch Medical gives written permission; the sub-case is deliberately generic.
-  **Update 23 Sept 2026 (owner):** touchMEDICAL has given permission to be named, so the testimonial
-  names touchMEDICAL (record in the private register, `FFW Portfolio\showcase-register.md`). Any new
+  **Correction 28 Sept 2026 (owner):** permission to name touchMEDICAL has been **requested, not given**;
+  the reply is still awaited (record in the private register, `FFW Portfolio\showcase-register.md`).
+  Do not name touchMEDICAL anywhere new until it arrives. The testimonial caption currently carries
+  the name; whether it stays meanwhile is the owner's call. Any new
   showcase asset goes to Touch for review before it is published here. Drug names, sponsor branding, client copy and live embed
   links still stay out: exhibits are latinised (client copy swapped for placeholder Latin, logos removed,
   portfolio palette) and ship as stills and clips, never as the client's source files.
