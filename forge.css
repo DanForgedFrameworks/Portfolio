@@ -265,12 +265,7 @@ html.ff-bg-off .term__caret { animation: none; }
 .lead-case ul { padding-left: 18px; font-size: 15px; line-height: 1.6; display: flex; flex-direction: column; gap: 4px; }
 .lead-case__statwrap { container-type: inline-size; }
 /* Stat tiles pin while the case text scrolls past, and release at the end of the panel (the split has align-items:start) */
-@media (min-width: 761px) { .lead-case .split > .lead-case__statwrap { position: sticky; top: 96px; } }
-/* A right column holding tiles AND a video (the review-and-uplift case) pins as one block, but only
-   where the screen is tall enough to show the whole block; otherwise it scrolls normally */
-.lead-case__side { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
-@media (min-width: 761px) and (min-height: 860px) { .lead-case .split > .lead-case__side { position: sticky; top: 96px; } }
-/* A number mid count-up must not reflow its row: tabular figures keep every digit the same width */
+@media (min-width: 761px) { .lead-case .split > .lead-case__statwrap { position: sticky; top: 96px; } }/* A number mid count-up must not reflow its row: tabular figures keep every digit the same width */
 .num__n, .lead-case__stat b, .mini-stats b { font-variant-numeric: tabular-nums; }
 .lead-case__stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; align-content: start; }
 .lead-case__stat { background: rgba(255,255,255,0.06); border: 1px solid rgba(224,154,107,0.25); border-radius: var(--radius-md); padding: 16px; }
