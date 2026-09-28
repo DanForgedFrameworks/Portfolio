@@ -358,8 +358,9 @@ Frameworks is one person and the tools he built, said in the first screen rather
   Touch Medical gives written permission; the sub-case is deliberately generic.
   **Correction 28 Sept 2026 (owner):** permission to name touchMEDICAL has been **requested, not given**;
   the reply is still awaited (record in the private register, `FFW Portfolio\showcase-register.md`).
-  Do not name touchMEDICAL anywhere new until it arrives. The testimonial caption currently carries
-  the name; whether it stays meanwhile is the owner's call. Any new
+  Do not name touchMEDICAL anywhere until it arrives. The testimonial caption was changed the same day
+  (owner) to "Head of Project Management, medical communications agency"; put the name back only
+  once the written reply is in the register. Any new
   showcase asset goes to Touch for review before it is published here. Drug names, sponsor branding, client copy and live embed
   links still stay out: exhibits are latinised (client copy swapped for placeholder Latin, logos removed,
   portfolio palette) and ship as stills and clips, never as the client's source files.
