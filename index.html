@@ -6,9 +6,9 @@
 <title>Forged Frameworks · Daniel 'Wig' Boyland, digital learning designer</title>
 <meta name="description" content="Daniel 'Wig' Boyland: digital learning designer, learning technologist and ISO assessor and scientist by trade. Regulated subject matter made clear, with the Catalyst agentic AI content pipeline." />
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-<link rel="stylesheet" href="assets/colors_and_type.css?v=268" />
-<link rel="stylesheet" href="forge.css?v=268" />
-<script src="transition.js?v=268"></script>
+<link rel="stylesheet" href="assets/colors_and_type.css?v=269" />
+<link rel="stylesheet" href="forge.css?v=269" />
+<script src="transition.js?v=269"></script>
 </head>
 <body data-rain-glyphs="FORGEDFRAMEWORKS01∆◊#&amp;=&gt;&lt;[]{}|~" data-rain-heat="#a05b32" data-rain-links="(^|/)(cv/index\.html|accreditation-quality\.html)(#.*)?$">
 <a class="skip-link" href="#top">Skip to content</a>
@@ -204,9 +204,17 @@
         <span class="card__k">Pharma · HCP education</span>
         <h3>New-drug launch education</h3>
         <p>Interactive prescribing-guidance and patient-management learning for healthcare professionals, built for a new-drug launch.</p>
-        <p style="font-size:14px;color:var(--ff-ink-muted);">The video and example are generalised: the client's copy, data and branding are replaced to protect their intellectual property and copyright.</p>
-        <a class="card__thumb" href="showcase/ffw-teaser/index.html" target="_blank" rel="noopener" aria-label="Watch how it's built: 77-second video, opens in a new window"><picture><source type="image/webp" srcset="showcase/ffw-teaser/ffw-showcase-teaser-thumb.webp"><img src="showcase/ffw-teaser/ffw-showcase-teaser-thumb.jpg" alt="" loading="lazy"></picture><span class="card__play" aria-hidden="true">&#9654;</span></a>
-        <span class="card__foot">Bespoke HTML decision scenes, hosted · <a href="showcase/ffw-teaser/index.html" target="_blank" rel="noopener" style="white-space:nowrap;">Watch how it's built ▶</a> · <a href="showcase/ffw-teaser/build/activity-decision-making.dc.html" target="_blank" rel="noopener" style="white-space:nowrap;">Try the example ↗</a></span>
+        <p style="font-size:14px;color:var(--ff-ink-muted);">The video, example and review page are generalised: the client's copy, data and branding are replaced to protect their intellectual property and copyright.</p>
+        <a class="card__thumb" href="showcase/ffw-teaser/index.html" data-open-viewer="ffTeaserViewer" aria-label="Watch how it's built: 77-second video"><picture><source type="image/webp" srcset="showcase/ffw-teaser/ffw-showcase-teaser-thumb.webp"><img src="showcase/ffw-teaser/ffw-showcase-teaser-thumb.jpg" alt="" loading="lazy"></picture><span class="card__play" aria-hidden="true">&#9654;</span></a>
+        <span class="card__foot">Bespoke HTML decision scenes, hosted · <a href="showcase/ffw-teaser/index.html" data-open-viewer="ffTeaserViewer" style="white-space:nowrap;">Watch how it's built ▶</a> · <a href="showcase/ffw-teaser/build/activity-decision-making.dc.html" target="_blank" rel="noopener" style="white-space:nowrap;">Try the example ↗</a> · <a href="showcase/ffw-teaser/review-pack/index.html" target="_blank" rel="noopener" style="white-space:nowrap;">See how a client reviews it ↗</a></span>
+        <dialog class="ff-viewer" id="ffTeaserViewer" aria-label="How it's built, 77-second video, no sound">
+          <button type="button" class="ff-viewer__close" aria-label="Close the video">&times;</button>
+          <video controls playsinline preload="none" poster="showcase/ffw-teaser/ffw-showcase-teaser-poster.webp" width="1000" height="1000">
+            <source src="showcase/ffw-teaser/ffw-showcase-teaser.webm" type="video/webm">
+            <source src="showcase/ffw-teaser/ffw-showcase-teaser.mp4" type="video/mp4">
+          </video>
+          <p class="ff-viewer__cap">77 seconds, no sound: the captions carry it. A generalised example: the client's copy, data and branding are replaced.</p>
+        </dialog>
       </article>
       <article class="card" data-reveal>
         <span class="card__k">LMS · migration</span>
@@ -501,6 +509,28 @@
 </footer>
 
 </div>
-<script src="forge.js?v=268"></script>
+<script src="forge.js?v=269"></script>
+<script>
+/* In-page video viewer (FFW teaser, owner 28 Sept 2026). A link with data-open-viewer="<dialog id>" opens
+   that dialog over the page and starts the video; Esc, the close button or a click on the backdrop closes
+   it and pauses. Without JS, or without <dialog>, the link's own href (the player page) still works. */
+(function () {
+  document.querySelectorAll("[data-open-viewer]").forEach(function (a) {
+    var d = document.getElementById(a.getAttribute("data-open-viewer"));
+    if (!d || typeof d.showModal !== "function") return;
+    var v = d.querySelector("video");
+    a.addEventListener("click", function (e) {
+      e.preventDefault();
+      d.showModal();
+      if (v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+    });
+    if (d.dataset.wired) return;
+    d.dataset.wired = "1";
+    d.querySelector(".ff-viewer__close").addEventListener("click", function () { d.close(); });
+    d.addEventListener("click", function (e) { if (e.target === d) d.close(); });
+    d.addEventListener("close", function () { if (v) v.pause(); });
+  });
+})();
+</script>
 </body>
 </html>

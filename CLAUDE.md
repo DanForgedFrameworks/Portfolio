@@ -107,12 +107,14 @@ Follow every step below on **every push**, no exceptions.
   - **FFW showcase teaser survived the copy** (added 28 Sept 2026, not in any design handoff):
     ```bash
     grep -c "showcase/ffw-teaser/index.html" index.html               # must return 2 (thumbnail + footer link)
-    grep -c "The video and example are generalised" index.html         # must return 1
+    grep -c "The video, example and review page are generalised" index.html   # must return 1
+    grep -c "showcase/ffw-teaser/review-pack/index.html" index.html   # must return 1
+    grep -c 'id="ffTeaserViewer"' index.html                          # must return 1 (the in-page viewer)
     grep -c "showcase/ffw-teaser/build/activity-decision-making.dc.html" index.html   # must return 1
     ls showcase/ffw-teaser/index.html showcase/ffw-teaser/ffw-showcase-teaser.mp4 showcase/ffw-teaser/ffw-showcase-teaser.webm showcase/ffw-teaser/ffw-showcase-teaser-thumb.webp
     ```
     The 77-second, silent, square teaser (cut 7) is linked from the **New-drug launch education** card
-    (a 160x100 thumbnail, `.card__thumb`, and "Watch how it's built ▶" both open the player page `showcase/ffw-teaser/index.html` in a new window; "Try the example ↗" opens the generalised interactive example, `showcase/ffw-teaser/build/`. The player page also carries the phone clips, 16 screens and the client review page, `review-pack/`, all with neutral file names), with a line on the card saying the video and example are
+    (a 160x100 thumbnail, `.card__thumb`, and "Watch how it's built ▶" both open the in-page video viewer, a `<dialog id="ffTeaserViewer">` opened by the small script after `forge.js` (Esc, the close button or the backdrop closes it; without JS the links fall back to the player page `showcase/ffw-teaser/index.html`); "See how a client reviews it ↗" opens `showcase/ffw-teaser/review-pack/` in a new tab; "Try the example ↗" opens the generalised interactive example, `showcase/ffw-teaser/build/`. The player page also carries the phone clips, 16 screens and the client review page, `review-pack/`, all with neutral file names), with a line on the card saying the video and example are
     generalised, altered to protect the client's IP and copyright (owner, 28 Sept 2026; it first sat in the
     review-and-uplift lead case the same day). The card's own text is unchanged. 1000px, about 4.7 MB. The
     client approved THIS video for the portfolio (record in the private register). The player page

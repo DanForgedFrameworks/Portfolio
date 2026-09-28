@@ -131,6 +131,17 @@ html.ff-bg-off #matrix { display: none; }
 .card__thumb:hover .card__play { transform: scale(1.08); }
 .card__thumb:focus-visible { outline: 2px solid var(--ff-copper); outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) { .card__play { transition: none; } }
+/* In-page video viewer: a <dialog> over the page (the FFW teaser card). Square video, sized to fit the screen. */
+.ff-viewer { width: min(92vw, 78vh); max-width: 820px; padding: 0; border: 0; border-radius: 14px; background: #fcfbf9;
+             box-shadow: 0 24px 64px rgba(0,0,0,.35); overflow: visible; }
+.ff-viewer::backdrop { background: rgba(20,28,38,.78); }
+.ff-viewer video { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; border-radius: 14px 14px 0 0; background: #f3efe7; }
+.ff-viewer__cap { margin: 0; padding: 12px 16px 14px; font-size: 14px; line-height: 1.45; color: var(--ff-ink-muted); }
+.ff-viewer__close { position: absolute; top: -14px; right: -14px; width: 44px; height: 44px; border-radius: 50%; border: 0;
+                    background: var(--ff-ink); color: #fff; font-size: 26px; line-height: 1; cursor: pointer; z-index: 1;
+                    box-shadow: 0 4px 12px rgba(0,0,0,.3); }
+.ff-viewer__close:focus-visible { outline: 3px solid var(--ff-copper); outline-offset: 2px; }
+@media (max-width: 480px) { .ff-viewer__close { top: 6px; right: 6px; } }
 .card__foot { margin-top: auto; padding-top: 10px; border-top: 1px solid var(--ff-paper-rule); font-size: 13px; color: var(--ff-ink-muted); }
 .cards { display: grid; gap: 16px; }
 .cards--240 { grid-template-columns: repeat(auto-fit, minmax(min(100%,240px),1fr)); }
