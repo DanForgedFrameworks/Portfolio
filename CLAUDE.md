@@ -310,7 +310,7 @@ After a successful push, check the deploy yourself, then report:
 | OneDrive file lock during commit | OneDrive syncing `.git` folder | Quit OneDrive sync temporarily, retry commit |
 | Deploy failed: "Not on PUBLISH or SKIP" | A new top-level file or folder the deploy script does not know | Add it to PUBLISH (or SKIP) in `.github/publish-site.sh`, commit, push. The live site was not changed |
 | New page 404s but is in the repo | It is a `.md`/`.txt`/`.py`/`.yml` file, which are never published | Those types are internal by design (STRIP in `.github/publish-site.sh`). Publish the content as `.html` |
-| `git push` rejected (non-fast-forward) | Remote has diverged | Use `git push --force` only after confirming the remote only has placeholder content |
+| `git push` rejected (non-fast-forward) | Another session or machine pushed first | `git pull --rebase`, re-run the Step 4 QA checks, then push. Never force-push unless Daniel explicitly asks |
 
 ---
 
