@@ -190,7 +190,7 @@ Follow every step below on **every push**, no exceptions.
 Before copying new files, diff the incoming bundle against the current repo root:
 
 ```bash
-diff -rq --exclude=".git" --exclude="cv" "<source>/github-deploy" "<repo-root>"
+diff -rq --exclude=".git" --exclude=".github" --exclude="cv" --exclude="statements" --exclude="portfolio-cut" --exclude="showcase" "<source>/github-deploy" "<repo-root>"
 ```
 
 Files present in the repo but **absent from the incoming bundle** are stale and must be
@@ -202,7 +202,7 @@ removed with `git rm` before the copy step. Common culprits across versions:
 - `tweaks-app.jsx` / `tweaks-panel.jsx`
 - Any `*.html` at root not in the v-manifest
 
-**Never delete or modify the `.git` directory.** Likewise, **never `git rm` the `cv/` folder** — it's a standalone page (see Deploy config → *Standalone pages*), not part of the versioned bundle, so it will always look "absent from the incoming bundle."
+**Never delete or modify the `.git` directory.** Likewise, **never `git rm` `cv/`, `statements/`, `portfolio-cut/`, `showcase/` or `.github/`** — none of them is part of the versioned bundle (see Deploy config → *Standalone pages*, and *Wiring* for `.github/`), so each will always look "absent from the incoming bundle."
 
 ---
 
