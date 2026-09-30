@@ -54,6 +54,12 @@ Follow every step below on **every push**, no exceptions.
   - `accreditation-quality.html`
   - `cv/index.html`
 
+- **Keep** (tracked but never in a bundle; excluded from the stale-file diff and never `git rm`'d — see *Standalone pages* below):
+  - `cv/`
+  - `statements/`
+  - `portfolio-cut/`
+  - `showcase/`
+
 - **Known retired / stale filenames** (must NOT appear in deployed *.html / *.js, and must be `git rm`'d if present in the repo):
   - `gateway.html`
   - `Accreditation-Quality.html` (retired in favour of lowercase `accreditation-quality.html`)
@@ -280,14 +286,17 @@ Use the version number from the bundle folder or handover doc in the commit mess
 
 ### STEP 7 — Post-push confirmation
 
-After a successful push, always report:
+After a successful push, check the deploy yourself, then report:
 
 1. Exact files changed/added/deleted (from the commit output)
-2. Remind the user to verify these URLs **in an incognito tab**:
+2. The Pages workflow run **for this commit** finished green — match its commit SHA to
+   `git rev-parse HEAD`, because the latest run can still be the previous push:
+   `gh run list --workflow=pages.yml --limit 1 --json status,conclusion,headSha`.
+   A failed run means the live site did not change (see "Not on PUBLISH or SKIP" below).
+3. These URLs, fetched with a cache-buster (`?cb=<random>`), return 200 with the new content:
    - `https://danforgedframeworks.github.io/Portfolio/`
    - `https://danforgedframeworks.github.io/Portfolio/accreditation-quality.html`
    - `https://danforgedframeworks.github.io/Portfolio/learning-design.html` (should land on the main site's work section)
-3. Note: GitHub Pages takes ~1 minute to rebuild after a push.
 
 ---
 
