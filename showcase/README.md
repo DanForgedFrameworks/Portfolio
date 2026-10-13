@@ -40,20 +40,10 @@ permission record is in the owner's private register, `FFW Portfolio\showcase-re
 Masters, generator and the other cuts: `OnlyCells\interactive-case\case-202610\working\outputs\
 teaser-2026-09-20\`.
 
-### `ffw-activity-demo/` — the de-branded activity cut
-From `../portfolio-cut/`, a latinised client activity cut. **COPIES, and untracked.**
-
-| file | copied from |
-|---|---|
-| `ffw-showcase-teaser-square-1080.mp4` | `portfolio-cut/teaser/_make/` |
-| `ffw-showcase-teaser-portrait-1080.mp4` | `portfolio-cut/teaser/_make/` |
-| `demo/` | `portfolio-cut/build/master/` — 17 files |
-
-**Copied rather than moved, deliberately.** `portfolio-cut/build/` is regenerated from scratch by
-`tools/latinise.py`, so anything moved out of it would be recreated on the next run and anything
-hand-edited inside it vanishes; the teasers sit beside their own generator in `teaser/_make/`.
-Taking copies leaves that pipeline able to run again untouched. If the cut is rebuilt, refresh
-these copies rather than editing them here.
-
-**Left untracked**, matching how `portfolio-cut/` itself is kept — that work is not tracked in git
-and whether a client-derived cut gets published is not this folder's call to make.
+### Archived 2026-10-13: `ffw-activity-demo/` and `../portfolio-cut/`
+Both were untracked and are no longer in this repo (owner ruling, 2026-10-13). They now sit outside
+it, intact, in `FFW Portfolio\_archive\ffw-activity-demo-2026-10-13\` and
+`FFW Portfolio\_archive\portfolio-cut-2026-10-13\`: the latinised activity cut, its build tools,
+review pack and teaser cuts 6 and 7. The approved teaser is unaffected: it is published from
+`ffw-teaser/`, which is tracked. To rebuild the cut, move `portfolio-cut-2026-10-13` back to the
+repo root as `portfolio-cut/` and read its `STATUS.md`.
