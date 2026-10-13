@@ -21,7 +21,7 @@ PUBLISH=(
 )
 # Never published.
 SKIP=(
-  .github CLAUDE.md CLAUDE-CODE-DEPLOY-PROMPT.md DEPLOY-HANDOVER.md README.md
+  .claude .github CLAUDE.md CLAUDE-CODE-DEPLOY-PROMPT.md DEPLOY-HANDOVER.md README.md
 )
 # Internal file types removed from every published folder.
 STRIP=( '*.md' '*.txt' '*.py' '*.yml' '.gitattributes' )

@@ -4,7 +4,7 @@ One home for the pieces a later portfolio session picks up: the teasers, and the
 point at. Only `morphology-monthly/` is linked from `index.html` (since 28 Sept 2026); nothing
 else here is linked.
 
-**Protect this folder from the STEP 2 stale-file sweep** — see the carve-out in `../CLAUDE.md`,
+**Protect this folder from the STEP 2 stale-file sweep** — see the carve-out in `../.claude/skill-config/push-build.md`,
 the same treatment `cv/`, `statements/` and `portfolio-cut/` get. A bare `.html` at the repo root
 would be swept; a carved-out folder is not.
 
