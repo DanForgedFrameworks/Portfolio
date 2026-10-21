@@ -86,7 +86,7 @@
     grep -c "showcase/ffw-teaser/build/activity-decision-making.dc.html" index.html   # must return 1
     ls showcase/ffw-teaser/index.html showcase/ffw-teaser/ffw-showcase-teaser.mp4 showcase/ffw-teaser/ffw-showcase-teaser.webm showcase/ffw-teaser/ffw-showcase-teaser-thumb.webp
     ```
-    The 77-second, silent, square teaser (cut 7) is linked from the **New-drug launch education** card
+    The 79-second, square teaser with Daniel's music (cut 8, swapped in 21 Oct 2026) is linked from the **New-drug launch education** card
     (a 160x100 thumbnail, `.card__thumb`, and "Watch how it's built ▶" both open the in-page video viewer, a `<dialog id="ffTeaserViewer">` opened by the small script after `forge.js` (Esc, the close button or the backdrop closes it; without JS the links fall back to the player page `showcase/ffw-teaser/index.html`); "See how a client reviews it ↗" opens `showcase/ffw-teaser/review-pack/` in a new tab; "Try the example ↗" opens the generalised interactive example, `showcase/ffw-teaser/build/`. The player page also carries the phone clips, 16 screens and the client review page, `review-pack/`, all with neutral file names), with a line on the card saying the video and example are
     generalised, altered to protect the client's IP and copyright (owner, 28 Sept 2026; it first sat in the
     review-and-uplift lead case the same day). The card's own text is unchanged. 1000px, about 4.7 MB. The
