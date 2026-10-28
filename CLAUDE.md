@@ -138,6 +138,11 @@ Frameworks is one person and the tools he built, said in the first screen rather
   showcase asset goes to Touch for review before it is published here. Drug names, sponsor branding, client copy and live embed
   links still stay out: exhibits are latinised (client copy swapped for placeholder Latin, logos removed,
   portfolio palette) and ship as stills and clips, never as the client's source files.
+  **Tiro Training (added 28 Oct 2026, owner):** the TAB6102 Bioscience Horizons Rise 360 case and the
+  six Rise test-course links are shown with Tiro's permission, and Tiro is **named on that case only**
+  (owner's answer, 28 Oct 2026). The permission was given to the owner verbally; nothing is in writing
+  yet (recorded in the private register, `FFW Portfolio\showcase-register.md`). The review-and-uplift
+  case stays generic. If Tiro withdraws, remove the case and the links.
 
 ## Motion maintenance (rewritten for the Sept 2026 two-page site)
 

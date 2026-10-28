@@ -48,6 +48,12 @@
     The Buy Me a Coffee link sits in each page's footer `.footer__links`, before the Motion button.
     It is not in the Sept 2026 design handoff, so a rebuild from that handoff will silently drop it.
     If any count returns `0`, re-add it before pushing.
+  - **TAB6102 Rise case and the six Rise test-course links survived the copy** (added 28 Oct 2026, not in any
+    design handoff; Tiro named on that case only, see the repo `CLAUDE.md`):
+    ```bash
+    grep -o "360.articulate.com/review/content/" index.html | wc -l   # must return 7 (1 course + 6 test courses)
+    ls assets/tab6102/*.webp | wc -l                          # must return 3
+    ```
   - **Emma Lewis's testimonial survived the copy** (added 23 Sept 2026, not in any design handoff):
     ```bash
     grep -c "Emma Lewis" index.html   # must return 1
