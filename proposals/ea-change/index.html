@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Proposal and estimate: rebuilding nine courses in Rise 360 | Forged Frameworks</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23faf9f5'/%3E%3Crect x='4' y='3' width='24' height='9' rx='2.5' fill='%23b45426'/%3E%3Crect x='13' y='12' width='6' height='12' rx='1.5' fill='%232e2c28'/%3E%3Cpath d='M13 24 L10 30 L16 32 L22 30 L19 24 Z' fill='%23b45426'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #fcfbf9; --paper-warm: #f5ede6; --rule: #e6ddd4;
+    --copper: #bc6c3c; --copper-hot: #a05b32; --copper-deep: #8a4e2b;
+    --ink: #2c3e50; --ink-muted: #5f6e6f;
+    --sans: 'Atkinson Hyperlegible', 'Segoe UI', Tahoma, Verdana, sans-serif;
+    --mono: 'JetBrains Mono', 'Courier New', monospace;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 17px/1.6 var(--sans); }
+  a { color: var(--copper-hot); text-underline-offset: 2px; }
+  a:hover { color: var(--copper-deep); }
+  :focus-visible { outline: 3px solid var(--copper-hot); outline-offset: 2px; border-radius: 3px; }
+  .skip { position: absolute; left: -999px; top: 8px; background: var(--copper-hot); color: #fff; padding: 8px 12px; border-radius: 5px; }
+  .skip:focus { left: 8px; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 32px 20px 56px; }
+
+  header.top { display: flex; gap: 16px; align-items: center; padding-bottom: 20px; border-bottom: 3px solid var(--copper); margin-bottom: 24px; }
+  header.top svg { width: 52px; height: 52px; flex: 0 0 52px; }
+  .brand { font-weight: 700; font-size: 15px; color: var(--ink-muted); margin: 0; }
+  .label { font: 500 13px/1.3 var(--mono); color: var(--copper-hot); letter-spacing: 0.04em; margin: 0 0 4px; }
+  h1 { font-size: 30px; line-height: 1.2; letter-spacing: -0.01em; margin: 0; }
+  .meta { color: var(--ink-muted); font-size: 15px; margin: 6px 0 0; }
+
+  .notice { background: var(--paper-warm); border-left: 4px solid var(--copper); padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 0 0 20px; }
+  .notice p { margin: 0; }
+
+  .tools { display: flex; justify-content: flex-end; gap: 8px; margin: 0 0 8px; }
+  .tools button { font: 700 14px var(--sans); color: var(--copper-hot); background: #fff; border: 1px solid var(--copper-hot); border-radius: 5px; padding: 6px 12px; cursor: pointer; }
+  .tools button:hover { background: var(--paper-warm); }
+
+  details { border-top: 1px solid var(--rule); }
+  details:last-of-type { border-bottom: 1px solid var(--rule); }
+  summary { list-style: none; cursor: pointer; padding: 16px 40px 16px 0; position: relative; }
+  summary::-webkit-details-marker { display: none; }
+  summary h2 { display: inline; font-size: 21px; line-height: 1.3; margin: 0; }
+  summary .hint { display: block; color: var(--ink-muted); font-size: 15px; margin-top: 2px; }
+  summary::after { content: "+"; position: absolute; right: 6px; top: 12px; font: 700 26px/1 var(--sans); color: var(--copper-hot); }
+  details[open] > summary::after { content: "\2212"; }
+  .body { padding: 0 0 20px; }
+  .body > :first-child { margin-top: 0; }
+  h3 { font-size: 18px; margin: 20px 0 6px; }
+  ul, ol { padding-left: 22px; margin: 8px 0 12px; }
+  li { margin: 4px 0; }
+  ol.steps { counter-reset: s; list-style: none; padding-left: 0; }
+  ol.steps > li { counter-increment: s; position: relative; padding: 10px 0 10px 44px; border-bottom: 1px solid var(--rule); margin: 0; }
+  ol.steps > li:last-child { border-bottom: 0; }
+  ol.steps > li::before { content: counter(s); position: absolute; left: 0; top: 10px; width: 30px; height: 30px; border-radius: 50%; background: var(--copper-hot); color: #fff; font-weight: 700; display: grid; place-items: center; font-size: 15px; }
+  ol.steps strong { display: block; }
+
+  .glance { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--rule); }
+  .glance div { padding: 12px 16px 12px 0; border-bottom: 1px solid var(--rule); }
+  .glance dt { font: 500 12px/1.3 var(--mono); letter-spacing: 0.04em; color: var(--copper-hot); margin: 0 0 4px; }
+  .glance dd { margin: 0; }
+
+  table { border-collapse: collapse; width: 100%; margin: 10px 0 14px; font-size: 16px; }
+  caption { text-align: left; font-weight: 700; padding: 0 0 6px; }
+  th, td { text-align: left; vertical-align: top; padding: 9px 10px 9px 0; border-bottom: 1px solid var(--rule); }
+  thead th { font: 500 12px/1.3 var(--mono); letter-spacing: 0.04em; color: var(--copper-hot); border-bottom: 2px solid var(--copper); }
+  td.n { white-space: nowrap; font-weight: 700; }
+  .small { font-size: 15px; color: var(--ink-muted); }
+
+  .links li { margin: 8px 0; }
+  .links a { font-weight: 700; }
+  .links span { display: block; color: var(--ink-muted); font-size: 15px; }
+
+  footer { margin-top: 28px; padding-top: 16px; border-top: 3px solid var(--copper); font-size: 15px; color: var(--ink-muted); }
+  footer p { margin: 4px 0; }
+
+  @media (max-width: 640px) {
+    body { font-size: 16px; }
+    h1 { font-size: 24px; }
+    .glance { grid-template-columns: 1fr; }
+    summary h2 { font-size: 19px; }
+    .tools { justify-content: flex-start; }
+    table, thead, tbody, tr, th, td { display: block; }
+    thead { position: absolute; left: -9999px; }
+    tr { border-bottom: 1px solid var(--rule); padding: 8px 0; }
+    td { border: 0; padding: 2px 0; }
+    td::before { content: attr(data-h); display: block; font: 500 12px/1.3 var(--mono); letter-spacing: 0.04em; color: var(--copper-hot); }
+  }
+  @media print {
+    .tools, .skip { display: none; }
+    summary::after { content: none; }
+    details { break-inside: avoid; }
+    a { color: var(--ink); }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the proposal</a>
+<div class="wrap">
+  <header class="top">
+    <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="4" fill="#faf9f5"/><rect x="4" y="3" width="24" height="9" rx="2.5" fill="#b45426"/><rect x="13" y="12" width="6" height="12" rx="1.5" fill="#2e2c28"/><path d="M13 24 L10 30 L16 32 L22 30 L19 24 Z" fill="#b45426"/></svg>
+    <div>
+      <p class="brand">Forged Frameworks</p>
+      <p class="label">Project proposal and estimate</p>
+      <h1>Rebuilding nine e-learning courses in Rise 360</h1>
+      <p class="meta">Prepared for Josh Bolus, ea Change · 16 November 2026 · Dan Boyland</p>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="notice">
+      <p><strong>Provisional.</strong> I haven't seen the course packages yet, so every figure here is an estimate. Once I've seen one or two, I can firm it up quickly.</p>
+    </div>
+
+    <div class="tools">
+      <button type="button" id="openAll">Open all sections</button>
+      <button type="button" id="closeAll">Close all sections</button>
+    </div>
+
+    <details open>
+      <summary><h2>At a glance</h2><span class="hint">The short version</span></summary>
+      <div class="body">
+        <dl class="glance">
+          <div><dt>The job</dt><dd>Nine existing SCORM courses rebuilt in Rise 360, to WCAG 2.2 AA, tested on the client's LMS and handed over as editable Rise projects.</dd></div>
+          <div><dt>My view</dt><dd>It's doable, but six weeks is tight. It fits only if the courses are compact and straightforward.</dd></div>
+          <div><dt>Effort</dt><dd>Up to 28 days for nine compact one-lesson courses. That's about 7 weeks at four days a week.</dd></div>
+          <div><dt>Availability</dt><dd>Four ten-hour days a week, starting December or January. The days are flexible.</dd></div>
+          <div><dt>How I work</dt><dd>Solo, end to end: I plan the work, manage the SMEs and deliver to the deadline.</dd></div>
+          <div><dt>To firm it up</dt><dd>A look at the packages, the planned audience, and how quickly the SMEs can reply.</dd></div>
+        </dl>
+      </div>
+    </details>
+
+    <details>
+      <summary><h2>Who you'd be working with</h2><span class="hint">My experience with this kind of rebuild</span></summary>
+      <div class="body">
+        <p>I'm Dan Boyland. I run Forged Frameworks, a one-person learning design consultancy in South Wales. I'm used to working solo on projects like this one. I plan the work, keep the SMEs informed and deliver the finished courses.</p>
+        <ul>
+          <li>I've built or rebuilt 40+ Rise 360 modules from Level 3 to Level 6, with 100% external certification success.</li>
+          <li>I've rebuilt courses from published SCORM files before. I've also rebuilt older content from nothing more than a PowerPoint.</li>
+          <li>I have tools to unwrap SCORM and xAPI packages. They show me which assets I can reuse and which are no longer serviceable.</li>
+          <li>I've moved 50+ learning assets between platforms, with SCORM conversion. I publish and test on Moodle and Totara.</li>
+          <li>Accessibility is part of every build I do, to WCAG 2.2 AA and EN 301 549.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary><h2>The scope as I understand it</h2><span class="hint">From the advert and your message</span></summary>
+      <div class="body">
+        <h3>The work</h3>
+        <ul>
+          <li>Review nine existing SCORM courses. The source files aren't available, so the content comes from the published versions.</li>
+          <li>Rebuild each course in Rise 360, with a better layout and learning experience. This is mostly a rebuild, not a redesign.</li>
+          <li>Make each course accessible to WCAG 2.2 AA, as far as Rise allows.</li>
+          <li>Publish and test all nine as SCORM on the client's LMS.</li>
+          <li>Hand over nine editable Rise projects and their assets, so the client can maintain them.</li>
+        </ul>
+        <h3>Provided by the client</h3>
+        <ul>
+          <li>The existing SCORM courses</li>
+          <li>A Rise licence for the project</li>
+          <li>An LMS test environment</li>
+          <li>Subject matter experts for content questions</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary><h2>How I'd run it</h2><span class="hint">Eight steps, with an early check before the bulk of the build</span></summary>
+      <div class="body">
+        <ol class="steps">
+          <li><strong>Set-up with the stakeholder.</strong> We agree the branding kit and the look and feel. This can take a day on its own, assuming all nine courses share one look.</li>
+          <li><strong>Unpack and audit.</strong> I unwrap each package, list its lessons and media, and mark what I can reuse.</li>
+          <li><strong>Front-load the SME questions.</strong> I send every content query early, so SME turnaround doesn't hold up the build.</li>
+          <li><strong>Early review.</strong> I build the first lesson, or a day's work. Then I review it with the stakeholder and the SME. We check the branding and the build line up. Then we crack on, without going too far down the road first.</li>
+          <li><strong>Build the rest in Rise,</strong> course by course.</li>
+          <li><strong>Accessibility QA</strong> on every course. The next section says how.</li>
+          <li><strong>Publish and test.</strong> I publish each course as SCORM and test it on the client's LMS.</li>
+          <li><strong>Final review and handover.</strong> I make the last fixes, then hand over the nine Rise projects and their assets.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary><h2>Accessibility</h2><span class="hint">Testing and fixes, done by me</span></summary>
+      <div class="body">
+        <ul>
+          <li>I do the accessibility testing and the fixes myself. WCAG 2.2 AA and EN 301 549 are part of how I work, not an add-on.</li>
+          <li>Every course goes through an agentic QA pipeline built from checks I already use, plus an automated checker. A person signs off every stage.</li>
+          <li>I measure contrast rather than judge it by eye. Every course also gets a keyboard-only pass.</li>
+          <li>Rise has limits. Anything Rise can't fix, I record and report back to you.</li>
+        </ul>
+        <p class="small">My accessibility statement sets out how I check every build: <a href="https://danforgedframeworks.github.io/Portfolio/statements/accessibility-and-inclusion.html" target="_blank" rel="noopener">Accessibility and inclusion statement</a>.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><h2>The estimate</h2><span class="hint">Days per course, and two worked examples</span></summary>
+      <div class="body">
+        <p>These figures come from my experience with similar clients. They're provisional until I've seen the packages.</p>
+        <h3>The rules of thumb</h3>
+        <ul>
+          <li><strong>Time available:</strong> six weeks at four days a week is 24 working days.</li>
+          <li><strong>Set-up:</strong> up to 1 day, once, for the branding kit and the look and feel.</li>
+          <li><strong>A compact one-lesson course:</strong> up to 3 days. That covers the audit, rebuild, accessibility, review and SCORM testing.</li>
+          <li><strong>Longer courses:</strong> about 1.5 days a lesson to build. Review doesn't grow lesson for lesson: about half a day for one lesson, and closer to three-quarters of a day for three.</li>
+        </ul>
+        <table>
+          <caption>Two worked examples</caption>
+          <thead><tr><th scope="col">If all nine courses are…</th><th scope="col">Days</th><th scope="col">At four days a week</th></tr></thead>
+          <tbody>
+            <tr><td data-h="If all nine courses are…">Compact, one lesson each, like statutory or mandatory training</td><td class="n" data-h="Days">Up to 28<br><span class="small">1 + (9 × 3)</span></td><td data-h="At four days a week">About 7 weeks. Six weeks works if some courses take less than 3 days.</td></tr>
+            <tr><td data-h="If all nine courses are…">Three lessons each</td><td class="n" data-h="Days">About 48<br><span class="small">1 + (9 × 5.25)</span></td><td data-h="At four days a week">About 12 weeks. This counts build and review only; accessibility and testing could add more.</td></tr>
+          </tbody>
+        </table>
+        <h3>What can push it up</h3>
+        <ul>
+          <li>A like-for-like rebuild is the quickest case. An accessibility upgrade and refresh can take as long as a new build.</li>
+          <li>Complex subjects with several layers and lots of assets take longer than compact, straightforward ones.</li>
+          <li>With no source files, some media may need rebuilding. Images and links will need checking and refreshing.</li>
+          <li>If there's no planned audience or learning personas yet, I'd add that to the set-up work.</li>
+          <li>Storyline interactions take longer. The next section suggests an alternative.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary><h2>Storyline</h2><span class="hint">Why I'd suggest HTML inside Rise instead</span></summary>
+      <div class="body">
+        <p>I'd move away from Storyline unless the client insists on it. Storyline adds layers and build time, and on this timescale that matters.</p>
+        <p>I build the same interactions, and often more, as HTML packages that run inside Rise. They stay editable, and they're built to the same accessibility standard. A few examples, each running inside a Rise course:</p>
+        <ul class="links">
+          <li><a href="https://360.articulate.com/review/content/d58cf155-636e-4f43-82c9-1832035cd504/review" target="_blank" rel="noopener">Confidence self-check</a></li>
+          <li><a href="https://360.articulate.com/review/content/ce4bf4c4-569b-4952-a194-979d0c778cec/review" target="_blank" rel="noopener">Reveal cards</a></li>
+          <li><a href="https://360.articulate.com/review/content/f520b311-9cc7-49d2-aa67-f79c8dba84ff/review" target="_blank" rel="noopener">Chart-choice swipe</a></li>
+          <li><a href="https://360.articulate.com/review/content/52955237-15b1-4735-a948-9dd001060ae2/review" target="_blank" rel="noopener">Magnifier</a></li>
+          <li><a href="https://360.articulate.com/review/content/b9fdc4cf-8d53-4cf5-8200-828eba12524a/review" target="_blank" rel="noopener">Reflection notepad</a></li>
+          <li><a href="https://360.articulate.com/review/content/438ac80f-37c1-4fc9-9e63-bf352321f713/review" target="_blank" rel="noopener">3D molecule viewer with a case study</a></li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary><h2>What I'd need for a firm estimate</h2><span class="hint">Six things to see or know</span></summary>
+      <div class="body">
+        <ul>
+          <li>How many lessons each course has, and how long each lesson is.</li>
+          <li>How complex each original SCORM is, and what media is inside it.</li>
+          <li>The planned audience and any learning personas.</li>
+          <li>How available the SMEs are, and how quickly they can reply.</li>
+          <li>Which SCORM version the client's LMS needs, 2004 or 1.2. It's a minor point, but it's good to know.</li>
+          <li>Where the courses came from: the client's own content, or bought in from someone else.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary><h2>Risks, and what I'd do about them</h2><span class="hint">Spotted early, so they don't surprise anyone</span></summary>
+      <div class="body">
+        <table>
+          <thead><tr><th scope="col">Risk</th><th scope="col">What I'd do</th></tr></thead>
+          <tbody>
+            <tr><td data-h="Risk">The courses were bought in from another supplier</td><td data-h="What I'd do">Check who owns the content before we start. A rebuild of someone else's course may need their permission.</td></tr>
+            <tr><td data-h="Risk">The courses are longer or more complex than expected</td><td data-h="What I'd do">Firm up the estimate after the audit, and raise any change straight away.</td></tr>
+            <tr><td data-h="Risk">SME replies are slow</td><td data-h="What I'd do">Send every content question early, and agree reply times at set-up.</td></tr>
+            <tr><td data-h="Risk">Media is missing or out of date</td><td data-h="What I'd do">List it in the audit, and agree what to rebuild, replace or drop.</td></tr>
+            <tr><td data-h="Risk">The look drifts from what the client expects</td><td data-h="What I'd do">The early review with the stakeholder and the SME catches it after a day's work, not after nine courses.</td></tr>
+            <tr><td data-h="Risk">Rise can't meet an accessibility criterion</td><td data-h="What I'd do">Record it, and report it with a suggested way round it.</td></tr>
+            <tr><td data-h="Risk">The LMS behaves differently from the test set-up</td><td data-h="What I'd do">Confirm the SCORM version at set-up, and test every course on the client's LMS.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+    <details>
+      <summary><h2>Examples of my work</h2><span class="hint">Rise courses, HTML work and my portfolio</span></summary>
+      <div class="body">
+        <h3>Rise 360 courses</h3>
+        <ul class="links">
+          <li><a href="https://360.articulate.com/review/content/9f92d78b-6660-421f-9395-4a64802a74d4/review" target="_blank" rel="noopener">Bioscience Horizons</a><span>A full Level 6 Rise course, built for Tiro Training.</span></li>
+          <li><a href="https://360.articulate.com/review/content/a1180fd4-1ca9-4c97-aa8d-564f216f1c32/review" target="_blank" rel="noopener">Working with Data</a><span>A Rise course.</span></li>
+          <li><a href="https://360.articulate.com/review/content/9d76240c-b903-4623-9fcd-da872d3f14ba/review" target="_blank" rel="noopener">Asbestos investigations</a><span>A Rise course.</span></li>
+        </ul>
+        <h3>HTML work</h3>
+        <ul class="links">
+          <li><a href="https://danforgedframeworks.github.io/Portfolio/patterns/fibre-id/index.html" target="_blank" rel="noopener">Asbestos Identification Matrix</a><span>A decision tool from a Level 3 module, with 95%+ completion.</span></li>
+          <li><a href="https://danforgedframeworks.github.io/Portfolio/patterns/key-points/key-points.html" target="_blank" rel="noopener">Takeaways Revealer</a><span>A block a team can edit without code.</span></li>
+          <li><a href="https://danforgedframeworks.github.io/Portfolio/patterns/swipe/swipe-quiz.html" target="_blank" rel="noopener">Swipe quiz</a><span>A quick-fire knowledge check with feedback on each answer.</span></li>
+          <li><a href="https://danforgedframeworks.github.io/Portfolio/patterns/digital-maturity/index.html" target="_blank" rel="noopener">Digital Maturity Diagnostic</a><span>A companion tool built for a Level 5 programme.</span></li>
+        </ul>
+        <p>More is on my portfolio: <a href="https://danforgedframeworks.github.io/Portfolio/" target="_blank" rel="noopener">danforgedframeworks.github.io/Portfolio</a>. I can share more of my HTML work if you or the client want to see it.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><h2>Availability and next steps</h2><span class="hint">When I can start, and what happens next</span></summary>
+      <div class="body">
+        <ul>
+          <li>Four ten-hour days a week. The days are flexible.</li>
+          <li>Start in December or January. I'll confirm a date once the project is a go.</li>
+          <li>If the client needs a later start, for the packages or the reviewers, that works too.</li>
+          <li>My rate and terms are in my message to you.</li>
+        </ul>
+        <p>The quickest next step is a look at one or two of the packages. With those, I can turn this into a firm estimate.</p>
+      </div>
+    </details>
+  </main>
+
+  <footer>
+    <p><strong>Dan Boyland (he/them)</strong> · Forged Frameworks · <a href="mailto:dan.boyland@forgedframeworks.co.uk">dan.boyland@forgedframeworks.co.uk</a></p>
+    <p>I have dyslexia and dyscalculia, and AI tools help me manage them. I used AI to help structure this page. Every figure and example is my own.</p>
+  </footer>
+</div>
+<script>
+  (function () {
+    var all = document.querySelectorAll('main details');
+    function set(open) { all.forEach(function (d) { d.open = open; }); }
+    document.getElementById('openAll').addEventListener('click', function () { set(true); });
+    document.getElementById('closeAll').addEventListener('click', function () { set(false); });
+    window.addEventListener('beforeprint', function () { set(true); });
+  })();
+</script>
+</body>
+</html>

@@ -143,6 +143,9 @@ Frameworks is one person and the tools he built, said in the first screen rather
   (owner's answer, 28 Oct 2026). The permission was given to the owner verbally; nothing is in writing
   yet (recorded in the private register, `FFW Portfolio\showcase-register.md`). The review-and-uplift
   case stays generic. If Tiro withdraws, remove the case and the links.
+  **16 Nov 2026 (owner):** Tiro has also agreed to share the Working with Data and Asbestos
+  investigations Rise courses. Both are linked from `proposals/ea-change/index.html` (record in the
+  private register). If Tiro withdraws, remove those links too.
 
 ## Motion maintenance (rewritten for the Sept 2026 two-page site)
 

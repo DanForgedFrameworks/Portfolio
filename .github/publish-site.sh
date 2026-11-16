@@ -17,7 +17,7 @@ out="${1:?usage: publish-site.sh <out-dir>}"
 PUBLISH=(
   index.html accreditation-quality.html learning-design.html 404.html
   forge.css forge.js transition.js site.css app.js .nojekyll
-  assets cv elearning_challenge patterns showcase statements
+  assets cv elearning_challenge patterns proposals showcase statements
 )
 # Never published.
 SKIP=(

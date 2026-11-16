@@ -26,6 +26,8 @@
   - `statements/`
   - `portfolio-cut/`
   - `showcase/`
+  - `proposals/` (added 16 Nov 2026: one self-contained, noindex proposal page per prospective client,
+    e.g. `proposals/ea-change/index.html`; not linked from `index.html`, shared by direct link only)
 
 - **Known retired / stale filenames** (must NOT appear in deployed *.html / *.js, and must be `git rm`'d if present in the repo):
   - `gateway.html`
