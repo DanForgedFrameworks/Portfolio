@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Proposal and estimate: rebuilding nine courses in Rise 360 | Forged Frameworks</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23faf9f5'/%3E%3Crect x='4' y='3' width='24' height='9' rx='2.5' fill='%23b45426'/%3E%3Crect x='13' y='12' width='6' height='12' rx='1.5' fill='%232e2c28'/%3E%3Cpath d='M13 24 L10 30 L16 32 L22 30 L19 24 Z' fill='%23b45426'/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" href="forge-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
@@ -28,7 +28,8 @@
   .wrap { max-width: 860px; margin: 0 auto; padding: 32px 20px 56px; }
 
   header.top { display: flex; gap: 16px; align-items: center; padding-bottom: 20px; border-bottom: 3px solid var(--copper); margin-bottom: 24px; }
-  header.top svg { width: 52px; height: 52px; flex: 0 0 52px; }
+  header.top .mark { width: auto; height: 88px; flex: 0 0 auto; }
+  @media (max-width: 640px) { header.top .mark { height: 64px; } }
   .brand { font-weight: 700; font-size: 15px; color: var(--ink-muted); margin: 0; }
   .label { font: 500 13px/1.3 var(--mono); color: var(--copper-hot); letter-spacing: 0.04em; margin: 0 0 4px; }
   h1 { font-size: 30px; line-height: 1.2; letter-spacing: -0.01em; margin: 0; }
@@ -39,7 +40,9 @@
 
   .tools { display: flex; justify-content: flex-end; gap: 8px; margin: 0 0 8px; }
   .tools button { font: 700 14px var(--sans); color: var(--copper-hot); background: #fff; border: 1px solid var(--copper-hot); border-radius: 5px; padding: 6px 12px; cursor: pointer; }
-  .tools button:hover { background: var(--paper-warm); }
+  .tools button:hover, .tools a.pdf:hover { background: var(--paper-warm); }
+  .tools a.pdf { font: 700 14px var(--sans); color: #fff; background: var(--copper-hot); border: 1px solid var(--copper-hot); border-radius: 5px; padding: 6px 12px; text-decoration: none; margin-right: auto; }
+  .tools a.pdf:hover { color: var(--copper-deep); }
 
   details { border-top: 1px solid var(--rule); }
   details:last-of-type { border-bottom: 1px solid var(--rule); }
@@ -92,9 +95,15 @@
     td::before { content: attr(data-h); display: block; font: 500 12px/1.3 var(--mono); letter-spacing: 0.04em; color: var(--copper-hot); }
   }
   @media print {
+    @page { margin: 16mm 15mm; }
+    body { background: #fff; font-size: 15px; }
+    .wrap { padding: 0; max-width: none; }
     .tools, .skip { display: none; }
-    summary::after { content: none; }
-    details { break-inside: avoid; }
+    summary::after, details[open] > summary::after { content: none; }
+    summary { padding: 14px 0 8px; break-after: avoid; break-inside: avoid; }
+    .body, .body > :first-child { break-before: avoid; }
+    li, tr, .glance div, .notice, h3 { break-inside: avoid; }
+    h3 { break-after: avoid; }
     a { color: var(--ink); }
   }
 </style>
@@ -103,7 +112,7 @@
 <a class="skip" href="#main">Skip to the proposal</a>
 <div class="wrap">
   <header class="top">
-    <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="4" fill="#faf9f5"/><rect x="4" y="3" width="24" height="9" rx="2.5" fill="#b45426"/><rect x="13" y="12" width="6" height="12" rx="1.5" fill="#2e2c28"/><path d="M13 24 L10 30 L16 32 L22 30 L19 24 Z" fill="#b45426"/></svg>
+    <img class="mark" src="forge-mark.png" alt="" width="320" height="440">
     <div>
       <p class="brand">Forged Frameworks</p>
       <p class="label">Project proposal and estimate</p>
@@ -118,6 +127,7 @@
     </div>
 
     <div class="tools">
+      <a class="pdf" href="forged-frameworks-proposal-ea-change.pdf" download>Download the PDF</a>
       <button type="button" id="openAll">Open all sections</button>
       <button type="button" id="closeAll">Close all sections</button>
     </div>
