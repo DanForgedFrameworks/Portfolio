@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en-GB" data-theme="light">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Crossed Wires: a sample of my UX and UI terms guide · Forged Frameworks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --ground:#fcfbf9; --surface:#ffffff; --ink:#2c3e50; --muted:#5f6e6f; --rule:#e4ddd5;
+  --accent:#bc6c3c; --accent-hot:#a05b32; --accent-deep:#8a4e2b; --on-accent:#ffffff;
+  --accent-soft:#f5ede6; --trap:#9a5a00; --trap-soft:#fbf0dd;
+  --ok:#1f6b4a; --ok-soft:#e3f1e8; --no:#9b2c3a; --no-soft:#fbe8ea; --code:#f5ede6;
+  --display:"Bricolage Grotesque",system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#171412; --surface:#211d1a; --ink:#ece6df; --muted:#b3a99e; --rule:#3a332d;
+  --accent:#d68a5a; --accent-hot:#d68a5a; --accent-deep:#e3a179; --on-accent:#1a1410;
+  --accent-soft:#2c241e; --trap:#f2b35e; --trap-soft:#2e2414;
+  --ok:#7fd1a8; --ok-soft:#17291f; --no:#f0909c; --no-soft:#2e1a1e; --code:#2c241e;
+}}
+:root[data-theme="dark"]{
+  --ground:#171412; --surface:#211d1a; --ink:#ece6df; --muted:#b3a99e; --rule:#3a332d;
+  --accent:#d68a5a; --accent-hot:#d68a5a; --accent-deep:#e3a179; --on-accent:#1a1410;
+  --accent-soft:#2c241e; --trap:#f2b35e; --trap-soft:#2e2414;
+  --ok:#7fd1a8; --ok-soft:#17291f; --no:#f0909c; --no-soft:#2e1a1e; --code:#2c241e;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font:17px/1.6 var(--body);padding-inline:20px;padding-block:0 80px}
+.wrap{max-width:1040px;margin-inline:auto}
+header{padding-block:56px 28px;display:grid;gap:14px;border-bottom:3px solid var(--accent)}
+.eyebrow{font:600 12px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+h1{font:700 clamp(2.6rem,7vw,4.6rem)/.95 var(--display);letter-spacing:-.03em;margin:0;text-wrap:balance}
+h1 .x{color:var(--accent)}
+.lede{max-width:62ch;color:var(--muted);margin:0;font-size:1.1rem}
+.lede strong{color:var(--ink)}
+.tools{position:sticky;top:0;z-index:5;background:var(--ground);padding-block:12px;border-bottom:1px solid var(--rule);display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+#q{flex:1 1 240px;min-width:0;font:inherit;padding:10px 14px;border:1px solid var(--rule);border-radius:8px;background:var(--surface);color:var(--ink)}
+#q:focus-visible,.chip:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:600 14px/1 var(--body);padding:9px 13px;border-radius:999px;border:1px solid var(--rule);background:var(--surface);color:var(--muted);cursor:pointer;min-height:38px}
+.chip[aria-pressed="true"]{background:var(--accent-hot);border-color:var(--accent-hot);color:var(--on-accent)}
+.count{font:13px var(--mono);color:var(--muted)}
+.howto{display:flex;flex-wrap:wrap;gap:8px 22px;margin-block:22px 8px;font-size:14px;color:var(--muted)}
+.howto b{font:600 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:4px 7px;border-radius:4px;margin-right:6px}
+.k-plain{background:var(--accent-soft);color:var(--accent-hot)} .k-trap{background:var(--trap-soft);color:var(--trap)}
+.group-h{font:700 1.5rem/1.2 var(--display);margin:48px 0 4px;letter-spacing:-.01em;display:flex;align-items:baseline;gap:12px}
+.group-h small{font:13px var(--mono);color:var(--muted);font-weight:400}
+.entry{border-top:1px solid var(--rule)}
+.entry summary{list-style:none;cursor:pointer;position:relative;padding:16px 40px 16px 0;min-height:44px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.entry summary::-webkit-details-marker{display:none}
+.entry summary::after{content:"";position:absolute;right:8px;top:22px;width:10px;height:10px;border-right:2px solid var(--accent-hot);border-bottom:2px solid var(--accent-hot);transform:rotate(45deg);transition:transform .2s}
+.entry[open] summary::after{transform:rotate(-135deg);top:27px}
+.entry summary:hover .sum-t{color:var(--accent-hot)}
+.entry summary:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+.sum-t{font:700 1.4rem/1.15 var(--display);letter-spacing:-.015em;color:var(--ink)}
+.sum-s{flex-basis:100%;color:var(--muted);font-size:15.5px;line-height:1.45}
+.new{font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;background:var(--ok-soft);color:var(--ok);padding:4px 7px;border-radius:4px;align-self:center}
+.entry .body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:14px 36px;padding-bottom:26px}
+@media (prefers-reduced-motion:reduce){.entry summary::after{transition:none}}
+.aka{font:13px var(--mono);color:var(--muted);margin:0 0 12px}
+.plain{margin:0;max-width:60ch}
+.plain a{color:var(--accent-hot);font-weight:700}
+.plain a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.asked{margin:14px 0 0;font-size:13.5px;color:var(--muted);font-style:italic}
+.asked::before{content:"I asked · ";font-style:normal;font-family:var(--mono);font-size:12px;letter-spacing:.04em}
+.right{display:grid;gap:12px;align-content:start}
+.ex{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:14px 16px;overflow-x:auto}
+.ex-l{font:600 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.vs>div{border-radius:8px;padding:10px 12px;font-size:15px;line-height:1.45}
+.vs .is{background:var(--ok-soft)} .vs .isnt{background:var(--no-soft)}
+.vs b{display:block;font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.vs .is b{color:var(--ok)} .vs .isnt b{color:var(--no)}
+.trap{background:var(--trap-soft);border-radius:8px;padding:11px 14px;font-size:15px;line-height:1.5}
+.trap b{color:var(--trap);font:600 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;margin-right:8px}
+code,.mono{font-family:var(--mono);font-size:.86em;background:var(--code);padding:1px 5px;border-radius:4px}
+pre{margin:0;font:13px/1.55 var(--mono);white-space:pre}
+pre .c{color:var(--muted)} pre .a{color:var(--accent-hot);font-weight:600} pre .d{color:var(--no)} pre .g{color:var(--ok)}
+.sw{display:flex;gap:4px;flex-wrap:wrap}.sw span{flex:1 1 44px;height:46px;border-radius:6px;display:flex;align-items:flex-end;padding:4px;font:10px var(--mono);color:#fff}
+.sw span.lt{color:#2c3e50}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.tag{font:600 12px var(--mono);padding:4px 8px;border-radius:5px;background:var(--accent-soft);color:var(--accent-hot)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:14px}
+.flow span{padding:6px 10px;border-radius:6px;background:var(--code)}
+.flow i{font-style:normal;color:var(--muted)}
+.logo-demo{display:flex;flex-wrap:wrap;gap:18px;align-items:center}
+.roundel{width:62px;height:62px;border-radius:50%;background:var(--accent-hot);color:var(--on-accent);display:grid;place-items:center;font:700 18px var(--display)}
+.lockup{display:flex;align-items:center;gap:8px;border:1px dashed var(--rule);padding:8px 12px;border-radius:8px}
+.lockup .roundel{width:36px;height:36px;font-size:11px}
+.wordmark{font:700 20px var(--display);letter-spacing:-.01em}
+.cap{font:11px var(--mono);color:var(--muted);display:block;margin-top:4px;text-align:center}
+#magnet{position:relative;height:120px;border-radius:8px;background:var(--code);overflow:hidden;cursor:crosshair;touch-action:none}
+#magnet i{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--accent);opacity:.7;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+@media (prefers-reduced-motion:reduce){#magnet i{transition:none}}
+/* ---- live demos ---- */
+.demo-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.btn{font:600 14px/1 var(--body);min-height:44px;padding:10px 14px;border-radius:8px;border:1px solid var(--rule);background:var(--surface);color:var(--ink);cursor:pointer}
+.btn:focus-visible,.mtoggle:focus-visible,.dlg button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btn.primary{background:var(--accent-hot);border-color:var(--accent-hot);color:var(--on-accent)}
+.btn.primary:hover{background:var(--accent-deep);border-color:var(--accent-deep)}
+.btn[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);color:var(--accent-hot)}
+.mtoggle{display:inline-flex;align-items:center;gap:8px;font:600 13px var(--body);min-height:40px;padding:6px 12px 6px 6px;border-radius:999px;border:1px solid var(--rule);background:var(--surface);color:var(--ink);cursor:pointer}
+.mtoggle .knob{width:34px;height:20px;border-radius:999px;background:var(--rule);position:relative;transition:background .2s}
+.mtoggle .knob::after{content:"";position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:var(--surface);transition:transform .2s}
+.mtoggle[aria-pressed="true"] .knob{background:var(--accent)}
+.mtoggle[aria-pressed="true"] .knob::after{transform:translateX(14px)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stage{position:relative;height:118px;border-radius:8px;background:var(--code);overflow:hidden}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;transition:opacity .45s}
+.stage .over{position:absolute;inset:auto 8px 8px 8px;font:600 11px var(--mono);letter-spacing:.04em}
+.cap2{display:block;font-size:13px;margin-top:6px;line-height:1.35}
+.cap2 b{font:600 10.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;display:block}
+.good b{color:var(--ok)} .bad b{color:var(--no)}
+.status{font:12.5px var(--mono);color:var(--muted);margin-top:10px;min-height:1.4em}
+.status strong{color:var(--accent-hot)}
+.dlg-host{position:relative;min-height:150px;border-radius:8px;background:var(--code);padding:12px}
+.scrim{position:absolute;inset:0;border-radius:8px;background:rgba(28,22,18,.55);display:grid;place-items:center;padding:12px}
+.dlg{background:var(--surface);color:var(--ink);border-radius:10px;padding:14px 16px;max-width:260px;box-shadow:0 12px 30px rgba(0,0,0,.25);font-size:14px}
+.dlg h4{margin:0 0 6px;font:700 15px var(--display)}
+.dlg .row{margin-top:10px}
+/* focus rings */
+.rings{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.ringcell{display:grid;gap:6px;align-content:start}
+.clip{overflow:hidden;border-radius:8px;background:var(--code);padding:0}
+.rcard{display:block;width:100%;font:600 14px var(--body);text-align:left;padding:12px;border-radius:8px;border:1px solid var(--rule);background:var(--surface);color:var(--ink);cursor:pointer}
+.clip .rcard{border-radius:0;border:0;border-bottom:1px solid var(--rule)}
+.r-good:focus-visible,.show-rings .r-good{outline:3px solid var(--accent);outline-offset:3px}
+.r-shadow:focus-visible,.show-rings .r-shadow{outline:none;box-shadow:0 0 0 3px var(--accent)}
+.r-faint:focus-visible,.show-rings .r-faint{outline:2px solid #ece4dc;outline-offset:2px}
+:root:not([data-theme="light"]) .r-faint:focus-visible{outline-color:#3a332d}
+/* token + skin demos */
+.tokdemo{--demo-tok:#a05b32;display:grid;gap:10px}
+.mini{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px;border-radius:8px;background:var(--code)}
+.mini h5{margin:0;font:700 17px var(--display);color:var(--demo-tok);flex-basis:100%}
+.mini .b1{background:var(--demo-tok);color:#fff;border:0;border-radius:6px;padding:8px 12px;font:600 13px var(--body)}
+.mini .p1{border:2px solid var(--demo-tok);color:var(--demo-tok);border-radius:999px;padding:4px 10px;font:600 12px var(--body)}
+.mini .hard{background:#a05b32;color:#fff;border:0;border-radius:6px;padding:8px 12px;font:600 13px var(--body);position:relative}
+.dot{width:26px;height:26px;border-radius:50%;border:2px solid var(--surface);box-shadow:0 0 0 1px var(--rule);cursor:pointer}
+.dot[aria-pressed="true"]{box-shadow:0 0 0 3px var(--ink)}
+.skincard{--s-bg:#FFFFFF;--s-ink:#370c65;--s-accent:#F28C28;--s-radius:14px;--s-font:"Atkinson Hyperlegible",sans-serif;background:var(--s-bg);color:var(--s-ink);border-radius:var(--s-radius);padding:14px 16px;border:1px solid rgba(0,0,0,.08);font-family:var(--s-font);transition:all .3s}
+.skincard .sk-h{font-weight:700;font-size:17px;margin:0 0 4px}
+.skincard .sk-bar{height:6px;border-radius:99px;background:rgba(0,0,0,.08);overflow:hidden;margin:10px 0}
+.skincard .sk-bar i{display:block;width:62%;height:100%;background:var(--s-accent)}
+.skincard .sk-btn{background:var(--s-ink);color:var(--s-bg);border:0;border-radius:calc(var(--s-radius) / 2);padding:8px 12px;font:600 13px inherit}
+.skincard .sk-tag{display:inline-block;margin-left:8px;border:2px solid var(--s-accent);color:var(--s-ink);border-radius:99px;padding:3px 9px;font-size:12px;font-weight:700}
+.skin-ffw{--s-bg:#F6EEE2;--s-ink:#3B2418;--s-accent:#B06A3B;--s-radius:3px;--s-font:Georgia,serif}
+.skin-tm{--s-bg:#FFFFFF;--s-ink:#0B2545;--s-accent:#13A3A3;--s-radius:8px;--s-font:"Segoe UI",system-ui,sans-serif}
+.lbl{font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-right:2px}
+/* chrome mock */
+.act{border:1px solid var(--rule);border-radius:10px;overflow:hidden;background:var(--surface);font-size:13px}
+.act .top,.act .bot{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--code)}
+.act .prog{flex:1;height:6px;border-radius:9px;background:var(--rule);overflow:hidden}.act .prog i{display:block;width:40%;height:100%;background:var(--accent)}
+.act .pc{padding:3px 8px;border-radius:5px;background:var(--surface);border:1px solid var(--rule);white-space:nowrap}
+.act .mid{padding:18px 12px;text-align:center;transition:opacity .3s}
+.act.hl .chrome-bit{outline:2px dashed var(--trap);outline-offset:1px}
+.act.hl .mid{opacity:.35}
+.noop-msg{font-size:13px;color:var(--no);min-height:1.3em;margin-top:6px}
+.check{font:12.5px var(--mono);background:var(--ok-soft);color:var(--ok);border-radius:6px;padding:8px 10px}
+.contrast{display:grid;gap:6px;margin-top:10px}
+.contrast div{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 10px;border-radius:6px;font-weight:700;font-size:14px}
+.contrast span{font:600 11.5px var(--mono);background:rgba(255,255,255,.85);color:#2c3e50;padding:2px 6px;border-radius:4px;white-space:nowrap}
+@media (max-width:520px){.pair,.rings,.zooms{grid-template-columns:1fr}}
+.zooms{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.zframe{border-radius:8px;overflow:hidden;aspect-ratio:4/3;max-width:100%;position:relative;cursor:pointer;display:block;width:100%;border:0;padding:0;background:none}
+.zframe:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.zimg{position:absolute;inset:0;background:
+ radial-gradient(circle at 30% 40%,#C9B79C 0 7%,transparent 8%),radial-gradient(circle at 62% 58%,#8E7B64 0 9%,transparent 10%),radial-gradient(circle at 75% 25%,#B39B7A 0 6%,transparent 7%),radial-gradient(circle at 20% 75%,#6F6152 0 8%,transparent 9%),radial-gradient(circle at 48% 20%,#D8CBB5 0 5%,transparent 6%),radial-gradient(circle at 85% 80%,#A38E72 0 7%,transparent 8%),linear-gradient(135deg,#5A4D40,#9C8A73)}
+.z-snap .zimg{transition:transform .14s cubic-bezier(.3,.9,.3,1)}
+.z-snap:hover .zimg,.z-snap:focus-visible .zimg{transform:scale(1.35)}
+.z-ken .zimg{transition:transform 7s linear}
+.z-ken:hover .zimg,.z-ken:focus-visible .zimg{transform:scale(1.25) translate(-6%,-4%)}
+.z-scale{overflow:visible;transition:transform .2s}
+.z-scale .zimg{border-radius:8px}
+.z-scale:hover,.z-scale:focus-visible{transform:scale(1.12);z-index:2}
+@media (prefers-reduced-motion:reduce){.z-snap .zimg,.z-ken .zimg,.z-scale{transition:none}.z-snap:hover .zimg,.z-ken:hover .zimg,.z-scale:hover,.z-snap:focus-visible .zimg,.z-ken:focus-visible .zimg,.z-scale:focus-visible{transform:none}}
+.knobs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px 14px;margin-bottom:10px;font-size:13px}
+.knobs label{display:grid;gap:2px}
+.knobs b{font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent-hot)}
+.knobs input,.knobs select{width:100%;accent-color:var(--accent);font:inherit;background:var(--surface);color:var(--ink);border:1px solid var(--rule);border-radius:6px;min-height:32px}
+#magnet .field{position:absolute;border:1.5px dashed var(--accent);border-radius:50%;pointer-events:none;opacity:0;transform:translate(-50%,-50%);transition:opacity .2s}
+.scrollbox{height:170px;overflow:auto;border-radius:8px;background:var(--code);padding:12px;overscroll-behavior:contain}
+.scrollbox .spacer{height:230px;display:grid;place-items:center;color:var(--muted);font-size:14px;text-align:center}
+.ivrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding-bottom:90px}
+.lazyimg{aspect-ratio:4/3;max-width:100%;border-radius:8px;border:1.5px dashed var(--rule);display:grid;place-items:center;font:12px var(--mono);color:var(--muted);text-align:center;padding:6px}
+.lazyimg.loaded{border:0;background:radial-gradient(circle at 30% 40%,#C9B79C 0 9%,transparent 10%),radial-gradient(circle at 65% 60%,#8E7B64 0 11%,transparent 12%),linear-gradient(135deg,#5A4D40,#9C8A73);color:#fff}
+.ivcard{aspect-ratio:4/3;max-width:100%;border-radius:8px;background:var(--surface);border:1px solid var(--rule);padding:10px;font-size:13px;display:grid;align-content:center;gap:6px;overflow:hidden}
+.ivcard .ln{height:9px;border-radius:9px;background:var(--accent);opacity:0;transform:translateY(14px);transition:opacity .5s,transform .5s cubic-bezier(.2,.8,.2,1)}
+.ivcard .ln:nth-child(2){width:80%;transition-delay:.15s}.ivcard .ln:nth-child(3){width:60%;transition-delay:.3s}
+.ivcard.played .ln{opacity:.8;transform:none}
+@media (prefers-reduced-motion:reduce){.ivcard .ln{transition:none}}
+.log{font:12px/1.6 var(--mono);color:var(--muted);margin-top:8px}
+.log b{color:var(--ink);font-weight:600}
+.rainstage{position:relative;height:170px;border-radius:8px;background:#120E1A;overflow:hidden}
+.rainstage canvas{position:absolute;inset:0;width:100%;height:100%}
+.counts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.counts div{background:var(--code);border-radius:8px;padding:12px;display:grid;gap:4px}
+.counts b{font:700 1.9rem/1 var(--display);color:var(--accent-hot);font-variant-numeric:tabular-nums}
+.counts span{font-size:12.5px;color:var(--muted);line-height:1.35}
+.stickybox{height:190px;overflow:auto;border-radius:8px;background:var(--code);padding:12px;overscroll-behavior:contain}
+.stickygrid{display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:start}
+.pin{position:sticky;top:0;display:grid;gap:6px}
+.pin i{font-style:normal;display:block;background:var(--accent-hot);color:var(--on-accent);border-radius:6px;padding:8px;font:700 15px var(--display);text-align:center}
+.stickytext p{margin:0 0 12px;font-size:14px}
+.stickyend{margin-top:12px;padding:10px;border-radius:6px;border:1px dashed var(--rule);font-size:13px;color:var(--muted);text-align:center}
+.dlg .row .btn{min-height:38px}
+.qms{width:100%;border-collapse:collapse;font-size:14px}
+.qms th,.qms td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--rule);vertical-align:top}
+.qms th{font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.qms td:first-child{font-family:var(--mono);font-size:13px;color:var(--accent-hot);white-space:nowrap}
+.cmds{display:grid;gap:10px;font-size:14px}
+.cmds div{border-bottom:1px solid var(--rule);padding-bottom:8px}
+.cmds code{display:block;width:fit-content;max-width:100%;overflow-wrap:anywhere;margin-bottom:4px;color:var(--accent-hot)}
+.store{display:grid;gap:8px}
+.store table{width:100%;border-collapse:collapse;font:13px var(--mono)}
+.store td{padding:6px 8px;border-bottom:1px solid var(--rule)}
+.store td:last-child{text-align:right;color:var(--muted)}
+.store .none{color:var(--muted);font:13px var(--mono);padding:10px 8px}
+.who{font-size:13px;color:var(--muted)}
+.gitsvg{max-width:100%;height:auto}
+.gitsvg .ln{fill:none;stroke:var(--rule);stroke-width:2}
+.gitsvg .dot{fill:var(--accent)} .gitsvg .dot2{fill:var(--muted)}
+.gitsvg .lbl1,.gitsvg .lbl2{font-family:var(--mono);font-size:11px}
+.gitsvg .lbl1{fill:var(--accent-hot)} .gitsvg .lbl2{fill:var(--muted)}
+.mcpsvg{max-width:100%;height:auto}
+.mcpsvg .bx{fill:var(--surface);stroke:var(--rule);stroke-width:1.5}
+.mcpsvg .bx.acc{stroke:var(--accent);stroke-width:2}
+.mcpsvg .ln{stroke:var(--muted);stroke-width:1.5;fill:none}
+.mcpsvg .fence{fill:none;stroke:var(--accent);stroke-width:1.5;stroke-dasharray:5 4}
+.mcpsvg .t1{font-family:var(--body);font-size:13px;font-weight:700;fill:var(--ink)}
+.mcpsvg .t2{font-family:var(--mono);font-size:10.5px;fill:var(--muted)}
+.mcpsvg .t3{font-family:var(--mono);font-size:10.5px;fill:var(--accent-hot)}
+.mcpsvg .no{font-family:var(--mono);font-size:10.5px;fill:var(--no)}
+.runout{font:12.5px/1.6 var(--mono);background:var(--code);border-radius:8px;padding:10px 12px;min-height:3.4em;white-space:pre-wrap}
+.runout .w{color:var(--ok);font-weight:600}.runout .d{color:var(--trap);font-weight:600}
+.icards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.icard{display:grid;justify-items:center;gap:6px;padding:14px 10px;border-radius:10px;border:1px solid var(--rule);background:var(--surface);color:var(--ink);font:600 13px var(--body);cursor:pointer;min-height:44px}
+.icard:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.icard svg{width:84px;height:84px;overflow:visible}
+.icard .core{fill:var(--accent)}
+.icard .p{fill:var(--muted);opacity:.45;transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .4s,fill .4s}
+.icard .p:nth-of-type(2){transition-delay:.06s}.icard .p:nth-of-type(3){transition-delay:.12s}.icard .p:nth-of-type(4){transition-delay:.18s}.icard .p:nth-of-type(5){transition-delay:.24s}.icard .p:nth-of-type(6){transition-delay:.3s}
+.icard.live:hover .p,.icard.live:focus-visible .p{transform:translate(var(--tx),var(--ty));opacity:1;fill:var(--trap)}
+.icard.flat:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.icard.flat{transition:transform .2s,box-shadow .2s}
+@media (prefers-reduced-motion:reduce){.icard .p{transition:none}}
+.tipline{font-size:15px;line-height:2.1}
+.term{position:relative;display:inline-block}
+.term .trig{font:inherit;color:var(--accent-hot);background:none;border:0;border-bottom:1.5px dotted var(--accent);padding:0 1px;cursor:help}
+.term .trig:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.term .bub{position:absolute;left:0;top:calc(100% + 6px);z-index:4;width:min(260px,70vw);background:var(--ink);color:var(--ground);font-size:13px;line-height:1.45;padding:8px 10px;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.2)}
+.term.hoveronly .bub{display:none}
+.term.hoveronly:hover .bub{display:block}
+.sbox{height:170px;overflow:auto;border-radius:8px;background:var(--code);padding:10px;overscroll-behavior:contain}
+.stage-row{border:1px solid var(--rule);border-radius:8px;background:var(--surface);margin-bottom:8px}
+.stage-row>button{width:100%;text-align:left;font:600 14px var(--body);padding:10px 12px;min-height:44px;background:none;border:0;color:var(--ink);cursor:pointer}
+.stage-row>button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.stage-row .body{padding:0 12px 12px;font-size:14px;color:var(--muted)}
+.empty{padding:40px 0;color:var(--muted)}
+/* micro-interaction terms (30 Oct): every effect also lives, larger, in the effects catalogue */
+.mp-link{margin:0;font-size:15px}
+.mp-link a{color:var(--accent-hot);font-weight:700}
+.mp-link a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.cw-row{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center;padding:28px 4px 8px}
+.cw-rb{position:relative;width:48px;height:48px;border-radius:50%;border:2px solid var(--rule);background:var(--surface);color:var(--accent-hot);display:grid;place-items:center;cursor:pointer;padding:0;font:700 18px var(--display);transition:border-color .2s,color .2s}
+.cw-rb::before{content:"";position:absolute;inset:-2px;border-radius:50%;background:var(--accent-hot);transform:scale(0);transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.cw-rb span{position:relative}
+.cw-rb:hover,.cw-rb:focus-visible{border-color:var(--accent-hot);color:var(--on-accent)}
+.cw-rb:hover::before,.cw-rb:focus-visible::before{transform:scale(1)}
+.cw-pill{position:relative;overflow:hidden;isolation:isolate;border:2px solid var(--accent-hot);color:var(--accent-hot);background:var(--surface);border-radius:999px;padding:10px 20px;min-height:44px;font:700 14px var(--body);cursor:pointer;transition:color .5s}
+.cw-pill::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--accent-hot);transform:translateX(-101%);transition:transform .5s cubic-bezier(.65,0,.35,1)}
+.cw-pill:hover,.cw-pill:focus-visible{color:var(--on-accent)}
+.cw-pill:hover::before,.cw-pill:focus-visible::before{transform:none}
+.cw-rb:focus-visible,.cw-pill:focus-visible,.cw-live:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.cw-states{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px}
+.cw-states div{display:grid;gap:4px;justify-items:center;text-align:center}
+.cw-states span.b{display:block;width:100%;font:600 13px var(--body);padding:9px 6px;border-radius:8px;border:1px solid var(--rule);background:var(--surface);color:var(--ink)}
+.cw-states .s-hover{background:var(--accent-soft);border-color:var(--accent)}
+.cw-states .s-focus{outline:3px solid var(--accent);outline-offset:2px}
+.cw-states .s-press{background:var(--accent-deep);border-color:var(--accent-deep);color:var(--on-accent)}
+.cw-states .s-active{background:var(--accent-hot);border-color:var(--accent-hot);color:var(--on-accent)}
+.cw-states .s-off{opacity:.45}
+.cw-live{font:600 14px var(--body);min-height:44px;padding:10px 16px;border-radius:8px;border:1px solid var(--rule);background:var(--surface);color:var(--ink);cursor:pointer}
+.cw-live:hover{background:var(--accent-soft);border-color:var(--accent)}
+.cw-live:active{background:var(--accent-deep);border-color:var(--accent-deep);color:var(--on-accent)}
+.cw-ease{display:grid;gap:8px}
+.cw-ease div{display:grid;grid-template-columns:5.5em minmax(0,1fr);gap:8px;align-items:center;font:12.5px var(--mono);color:var(--muted)}
+.cw-ease p{margin:0;height:14px;border-radius:9px;background:var(--code);position:relative}
+.cw-ease i{position:absolute;left:0;top:0;width:14px;height:14px;border-radius:50%;background:var(--accent-hot);transition:left 1.2s}
+.cw-ease .go i{left:calc(100% - 14px)}
+.cw-ease .e-lin i{transition-timing-function:linear}.cw-ease .e-in i{transition-timing-function:cubic-bezier(.55,0,1,.45)}.cw-ease .e-out i{transition-timing-function:cubic-bezier(0,.55,.45,1)}
+.cw-stair{display:grid;gap:7px}
+.cw-stair i{display:block;height:13px;border-radius:9px;background:var(--accent-hot);opacity:.85}
+.cw-stair i:nth-child(2){width:84%}.cw-stair i:nth-child(3){width:68%}.cw-stair i:nth-child(4){width:52%}
+.cw-stair.play i{animation:cwRise .45s cubic-bezier(.2,.8,.2,1) both}
+.cw-stair.play i:nth-child(2){animation-delay:.08s}.cw-stair.play i:nth-child(3){animation-delay:.16s}.cw-stair.play i:nth-child(4){animation-delay:.24s}
+@keyframes cwRise{from{opacity:0;transform:translateY(12px)}to{opacity:.85;transform:none}}
+.cw-rip{position:relative;overflow:hidden;isolation:isolate;border:0;border-radius:10px;background:var(--accent-hot);color:var(--on-accent);font:700 14px var(--body);padding:13px 22px;min-height:44px;cursor:pointer}
+.cw-rip:active{background:var(--accent-deep)}
+.cw-rip .wave{position:absolute;z-index:-1;border-radius:50%;background:var(--on-accent);pointer-events:none}
+.cw-morph{display:inline-flex;align-items:center;gap:10px;font:700 14px var(--body);padding:8px 14px 8px 8px;min-height:44px;border-radius:999px;border:1px solid var(--rule);background:var(--surface);color:var(--ink);cursor:pointer}
+.cw-morph .ic{position:relative;width:26px;height:26px;border-radius:50%;background:var(--accent-hot);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.cw-morph .ic::before,.cw-morph .ic::after{content:"";position:absolute;left:50%;top:50%;width:12px;height:2.5px;margin:-1.25px 0 0 -6px;border-radius:2px;background:var(--on-accent)}
+.cw-morph .ic::after{transform:rotate(90deg)}
+.cw-morph[aria-expanded="true"] .ic{transform:rotate(135deg)}
+.cw-xf{position:relative;height:96px;border-radius:8px;background:var(--code);overflow:hidden}
+.cw-xf div{position:absolute;inset:0;padding:12px 14px;display:grid;align-content:center;font-size:14px;transition:opacity .25s}
+.cw-xf b{font:700 15px var(--display)}
+.cw-xf div[aria-hidden="true"]{opacity:0}
+.cw-toast-host{position:relative;min-height:120px;border-radius:8px;background:var(--code);padding:12px;overflow:hidden}
+.cw-toast{position:absolute;left:12px;right:12px;bottom:12px;background:var(--ink);color:var(--ground);border-radius:8px;padding:10px 12px;font:600 14px var(--body);transform:translateY(130%);opacity:0;transition:transform .3s cubic-bezier(.2,.8,.2,1),opacity .3s}
+.cw-toast.show{transform:none;opacity:1}
+.cw-skel{display:grid;gap:8px;min-height:104px;border-radius:8px;background:var(--surface);border:1px solid var(--rule);padding:12px}
+.cw-skel .bone{height:12px;border-radius:6px;background:linear-gradient(90deg,var(--code) 25%,var(--rule) 50%,var(--code) 75%);background-size:300% 100%;animation:cwShim 1.3s linear infinite}
+.cw-skel .bone.h{height:18px;width:55%}.cw-skel .bone.s{width:70%}
+@keyframes cwShim{from{background-position:100% 0}to{background-position:0 0}}
+.cw-skel h5{margin:0;font:700 16px var(--display)}.cw-skel p{margin:0;font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.cw-rb,.cw-rb::before,.cw-pill,.cw-pill::before,.cw-ease i,.cw-morph .ic,.cw-xf div,.cw-toast{transition:none}.cw-stair.play i,.cw-skel .bone{animation:none}}
+footer{margin-top:56px;border-top:1px solid var(--rule);padding-top:18px;font-size:14px;color:var(--muted);max-width:70ch}
+@media (max-width:760px){.entry .body{grid-template-columns:1fr}.vs{grid-template-columns:1fr}}
+/* the pinned bar must stay short on a phone or tablet: one swipeable row of chips (11 chips wrapped to 3 rows at 768) */
+@media (max-width:1024px){
+  .chips{flex-wrap:nowrap;overflow-x:auto;width:100%;padding-bottom:4px;scrollbar-width:thin}
+  .chip{flex:0 0 auto;min-height:44px}}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">A sample from my field guide to the words that tripped me up</div>
+  <h1>Crossed <span class="x">Wires</span></h1>
+  <p class="lede">Every term here is one I stopped a session to ask about, between April and November 2026. This is a sample of 25 from the full guide of 103. Each entry gives <strong>what it means in plain words</strong>, a small example, <strong>what it gets mixed up with</strong>, and <strong>the trap</strong> it sets.</p>
+</header>
+
+<div class="tools" role="search">
+  <label for="q" class="eyebrow" style="position:absolute;left:-9999px">Search terms</label>
+  <input id="q" type="search" placeholder="Search a word, e.g. token, easing, toast" autocomplete="off">
+  <div class="chips" id="chips"></div>
+  <span class="count" id="count" aria-live="polite"></span>
+  <button class="btn" id="openall" type="button" aria-pressed="false">Open all</button>
+</div>
+
+<div class="howto"><span><b class="k-plain">Is / Isn't</b>the mix-up, side by side</span><span><b class="k-trap">Trap</b>how it bites, and how to dodge it</span></div>
+
+<main id="list"></main>
+<p class="empty" id="empty" hidden>No term matches that. Try a shorter word.</p>
+
+<footer>Compiled on 14 September 2026 by searching every saved Claude Code session for questions like "what does this mean" and "in plain terms". Where an answer was given at the time, the definition follows it; the rest are written fresh. If a word still reads as jargon, it has failed and is worth re-asking.<br><a href="../../index.html" style="color:var(--accent-deep)">Daniel Boyland · Forged Frameworks portfolio</a></footer>
+</div>
+
+<script>
+const G={house:"Our house words",motion:"Movement & transitions",flair:"Feedback & flourishes",learn:"Learners, Rise & access",ui:"Screen patterns",brand:"Brand & showing work",code:"Code & checks",live:"Git & going live",pipe:"Claude & tools"};
+const T=[
+{g:"house",t:"Token",s:"A named value, like a colour, that the whole design reads from",aka:"design token · CSS variable",
+p:"A named value that the whole design reads from — a colour, a spacing size, a corner radius. Change the token once and every place that uses it changes with it.",
+ex:`<div class="ex-l">Try it — change the token</div><div class="tokdemo" data-demo="token"><div class="demo-bar"><span class="lbl">--color-primary</span><button class="dot" style="background:#a05b32" data-c="#a05b32" aria-pressed="true" aria-label="Copper"></button><button class="dot" style="background:#0F6E6E" data-c="#0F6E6E" aria-pressed="false" aria-label="Teal"></button><button class="dot" style="background:#B4451F" data-c="#B4451F" aria-pressed="false" aria-label="Rust"></button></div><div class="mini"><h5>Heading reads the token</h5><button class="b1" tabindex="-1">Button</button><span class="p1">Pill</span><button class="hard" tabindex="-1">Hard-coded</button></div><div class="status">Everything follows the token — except the hard-coded button.</div></div><pre style="margin-top:10px"><span class="g">color: var(--color-primary);</span>  <span class="c">← token: follows any change</span>
+<span class="d">color: #370c65;</span>                <span class="c">← hard-coded: stays stuck forever</span></pre>`,
+is:"A single source for a value, with a name that says what it's for.",isnt:"The colour itself. #370c65 is a value; --color-primary is the token pointing at it.",
+trap:"A hard-coded value looks identical on screen, so nobody notices until a rebrand. The July audit found 271 of them. Check builds for raw hex codes.",asked:"30 Jul — \"Give me a quick definition of each of those terms\""},
+{g:"house",t:"Component vs Behaviour",s:"What a thing looks like, versus what it does when used",aka:"what it looks like · what it does",
+p:"A component is a thing you can see and name: the motion toggle, a pill, a modal. A behaviour is what that thing does when used: focus goes back to the button after a modal closes; the motion choice is remembered across assets.",
+ex:`<div class="ex-l">Same component, two behaviours — switch motion off</div><div data-demo="motion"><div class="demo-bar"><button class="mtoggle" aria-pressed="true"><span class="knob"></span><span class="mt-l">Motion on</span></button></div><div class="pair"><div><div class="stage"><canvas data-motif="good" aria-hidden="true"></canvas></div><span class="cap2 good"><b>Canon behaviour</b>Motif disappears.</span></div><div><div class="stage"><canvas data-motif="bad" aria-hidden="true"></canvas></div><span class="cap2 bad"><b>Drifted behaviour</b>Motif freezes mid-frame.</span></div></div></div>
+<div class="ex-l" style="margin-top:18px">Behaviour two — where focus goes when a panel closes</div><div data-demo="focusreturn"><div class="dlg-host"><div class="demo-bar"><button class="btn" data-open="good">Open (canon)</button><button class="btn" data-open="bad">Open (drifted)</button></div><div class="status">Use Tab or click. Focus is on: <strong>—</strong></div></div></div>`,
+is:"Two layers of the same element: shape, then conduct.",isnt:"Interchangeable. A perfect-looking toggle can still behave wrongly.",
+trap:"Behaviour can't be seen in a screenshot, which is why it drifted while the visuals held. Review behaviour by clicking through, never by looking.",asked:"30 Jul and 6 Aug — tokens, behaviours, design overlays"},
+{g:"house",t:"Motif",s:"The slow decorative background, themed to the subject",aka:"ambient background · particles · contour lines",
+p:"The slow decorative movement behind an activity: drifting particles, contour lines, tumbling fibres. One per module, themed to the subject. It carries no meaning, so screen readers skip it.",
+ex:`<div class="ex-l">A particle motif — linked chains drifting</div><div data-demo="motif"><div class="demo-bar"><button class="mtoggle" aria-pressed="true"><span class="knob"></span><span class="mt-l">Motion on</span></button></div><div class="stage" style="height:150px"><canvas data-motif="chain" aria-hidden="true"></canvas></div><div class="status">Marked <code>aria-hidden</code>. Stops fully under the toggle or the device's reduce-motion setting.</div></div>`,
+is:"Decoration tied to the module's subject.",isnt:"Content, an animation that teaches, or a component anyone clicks.",
+trap:"A motif that doesn't match the subject jars (an animated lab background on a building course). And one outside the pause rule animates forever.",asked:"26 Jul — background didn't match the subject; 9 Sep — a CPD case background"},
+{g:"motion",t:"Snap zoom vs Ken Burns",s:"A fast zoom inside the frame, versus a slow drifting one",aka:"crash zoom · punch-in · hover zoom · lightbox",
+p:"\"Crash zoom\" is the film name for a very fast zoom. On a web page it's a snap zoom (or punch-in): the image grows fast inside a fixed frame on hover or focus. The slow drifting version is the Ken Burns effect. Clicking to open an image full screen is a lightbox.",
+ex:`<div class="ex-l">Hover or Tab onto each</div><div class="zooms"><div><button class="zframe z-snap" aria-label="Snap zoom example"><span class="zimg"></span></button><span class="cap2"><b>Snap zoom</b>~140ms, frame stays put</span></div><div><button class="zframe z-ken" aria-label="Ken Burns example"><span class="zimg"></span></button><span class="cap2"><b>Ken Burns</b>slow zoom + pan, 7s</span></div><div><button class="zframe z-scale" aria-label="Scale example"><span class="zimg"></span></button><span class="cap2 bad"><b>Scale (not zoom)</b>whole card grows over its neighbours</span></div></div>
+<pre style="margin-top:10px"><span class="c">zoom = image grows, frame crops it</span>
+.frame { <span class="a">overflow: hidden</span> }  .frame:hover img { transform: scale(1.35) }</pre>`,
+is:"Zoom: the picture moves inside a frame that stays the same size.",isnt:"Scale: the whole card grows. It pushes into or over the cards around it.",
+trap:"A snap zoom is motion. It must stop under the motion toggle and reduced motion, and it must trigger on keyboard focus too, not only on mouse hover. Also check what the zoom crops: a zoomed label on an \"identify this\" image can give the answer away.",asked:"14 Sep — \"the proper terms for the image crash zoom when highlighting\""},
+{g:"motion",t:"Easing",s:"The speed curve of a movement: fast then slow, or slow then fast",aka:"ease-out · ease-in · linear · cubic-bezier · timing function",
+p:"How a movement's speed changes from start to finish. Ease-out starts fast and settles gently, which feels natural for things arriving. Ease-in starts slowly and speeds away, for things leaving. Linear keeps one speed, which looks mechanical.",
+ex:`<div class="ex-l">Same distance, same time, three curves</div><div data-demo="ease"><div class="cw-ease"><div class="e-lin">linear<p><i></i></p></div><div class="e-in">ease-in<p><i></i></p></div><div class="e-out">ease-out<p><i></i></p></div></div><div class="demo-bar" style="margin:12px 0 0"><button class="btn" type="button" data-ease>Run</button></div></div>`,
+is:"The feel of a movement, set with one line of CSS.",isnt:"The duration. Two moves of the same length can feel snappy or sluggish depending on their easing.",
+trap:"Linear movement on anything arriving looks robotic. Use ease-out for entrances, and keep feedback under about half a second whatever the curve.",asked:"30 Oct — \"fast then slow\" slide-in (a chapter list)"},
+{g:"motion",t:"Card flip",s:"A card that turns over to show its other side",aka:"flip card · two faces · 3D flip",
+p:"A card with a front and a back. Pressing it turns it over on its upright axis, like a real card, to show the answer, meaning or fact on the back. Our card packs use it.",
+ex:`<div class="ex-l">One card, two faces</div><div class="flow"><span>Front: the question</span><i>→</i><span>Press</span><i>→</i><span><b>Turns over (0.58 s)</b></span><i>→</i><span>Back: the answer</span></div>`,
+is:"Two faces of one thing, with the turn as the reveal.",isnt:"A card that grows in place to show more. That is an expanding card (a layered hub).",
+trap:"A screen reader reads both faces unless the hidden one is hidden from it. Lift on hover only on devices that hover, or a tapped card stays lifted on a phone.",asked:"1 Nov — an effects catalogue"},
+{g:"flair",t:"Micro-interaction",s:"One small, purposeful response to one thing the learner does",aka:"micro-animation · feedback · trigger, response, end",
+p:"A small moment of feedback tied to one action: a button that fills when you point at it, an icon that turns into a cross when a panel opens, a circle that spreads where you pressed. Each one has a trigger (what starts it), a response (what it does) and an end (how it settles).",
+ex:`<div class="ex-l">Point at it, or Tab to it</div><div class="cw-row"><button class="cw-rb" type="button" aria-label="Bookmark"><span aria-hidden="true">+</span></button><button class="cw-pill" type="button">Claim credit</button></div>`,
+is:"Feedback on one action, over in well under a second.",isnt:"Decoration that plays by itself (a motif or an animation), or a whole working part like the motion toggle (a behaviour).",
+trap:"One per control is plenty: stack several on one screen and nothing stands out. Each must work from the keyboard and on touch, not only with a mouse.",asked:"30 Oct — \"a visual micro-interactions catalogue\" (a build review)"},
+{g:"flair",t:"Cursor attraction",s:"Shapes drawn toward the pointer: radius, strength, falloff, damping",aka:"magnetic effect · field · radius · falloff · damping",
+p:"Background shapes that drift toward the mouse pointer (repulsion is the opposite). It has four settings, each with its own name. Radius (the field of influence) is how close the pointer must be. Strength is how far shapes move. Falloff is how the pull fades with distance. Damping is the lag that makes them glide.",
+ex:`<div class="ex-l">Try it — change the settings, then move across the box</div><div class="knobs"><label for="mg-r"><b>Radius</b><input id="mg-r" type="range" min="40" max="260" value="160"><span data-out="r">160px</span></label><label for="mg-s"><b>Strength</b><input id="mg-s" type="range" min="0" max="100" value="55"><span data-out="s">55%</span></label><label for="mg-f"><b>Falloff</b><select id="mg-f"><option value="linear">Linear — even fade</option><option value="ease">Eased — soft edge</option><option value="sharp">Sharp — only up close</option></select></label><label for="mg-d"><b>Damping</b><input id="mg-d" type="range" min="0" max="1200" step="50" value="500"><span data-out="d">500ms</span></label></div><div id="magnet" aria-hidden="true"></div><div class="status">Dashed circle = the field. Nothing outside it moves.</div>`,
+is:"A field around the pointer: its size (radius), its fade (falloff), its pull (strength), plus a lag (damping).",isnt:"Parallax, where layers move at different speeds as you scroll. Nor cursor snapping, where the pointer itself jumps onto a button.",
+trap:"It is motion, so it must stop under the motion toggle and reduced-motion. On touch screens there's no hovering pointer, so it needs a still fallback.",asked:"9 Sep — \"what is that behaviour called?\" (a CPD case background)"},
+{g:"flair",t:"Ripple",s:"A circle spreading from where you pressed, to show the press landed",aka:"press feedback · ink ripple · Material ripple",
+p:"Press feedback where a circle spreads out from the exact point you touched, then fades. It comes from Google's Material Design. It says \"your press registered\" before the result appears.",
+ex:`<div class="ex-l">Click anywhere on it, or press Enter</div><div data-demo="ripple" class="cw-row" style="padding-top:8px"><button class="cw-rip" type="button">Check my answer</button></div>`,
+is:"Confirmation of a press, starting from the finger or pointer.",isnt:"A result. The answer, the next page or the saved state still has to follow, and quickly.",
+trap:"From the keyboard there's no press point, so the ripple starts from the centre. It is motion: none with reduced motion, but the button still darkens while held.",asked:"30 Oct — catalogue seed list (Material ripple)"},
+{g:"learn",t:"Focus ring",s:"The outline showing which control the keyboard is on",aka:"focus indicator · WCAG 1.4.11",
+p:"The outline showing which control keyboard users are on. Mouse users rarely see it; for someone using Tab it is the cursor. It must be clearly visible and never hidden by neighbouring elements.",
+ex:`<div class="ex-l">Press Tab into these — or show all three</div><div data-demo="rings"><div class="demo-bar"><button class="btn" data-rings aria-pressed="false">Show rings</button></div><div class="rings"><div class="ringcell"><div style="padding:6px"><button class="rcard r-good">Card A</button></div><span class="cap2 good"><b>Canon</b>Outline, offset, strong colour.</span></div><div class="ringcell"><div class="clip"><button class="rcard r-shadow">Card B</button><button class="rcard r-shadow" tabindex="-1">Card C</button></div><span class="cap2 bad"><b>Box-shadow</b>Clipped by its container — the ring half-vanishes.</span></div><div class="ringcell"><div style="padding:6px"><button class="rcard r-faint">Card D</button></div><span class="cap2 bad"><b>Too faint</b>Below 3 : 1 contrast. Fails 1.4.11.</span></div></div></div>`,
+is:"Outline with an offset, in a colour at least 3 : 1 against its surroundings.",isnt:"A box-shadow glow, or a hover effect. Hover is the mouse; focus is the keyboard.",
+trap:"Box-shadow rings get covered by a neighbour's background or clipped by overflow, and look fine with a mouse. Check with Tab, not a click — the a11y harness catches what the grep audit can't.",asked:"30 Jul — behaviours (\"focus returns to the trigger\"); a recurring defect"},
+{g:"learn",t:"Affordance",s:"How a thing shows you what you can do with it",aka:"looks clickable · visual cue · signifier",
+p:"The clues in how something looks that tell you what you can do with it. A button looks pressable, a handle looks draggable, underlined words look like a link. When the clue is missing, people don't know it's interactive.",
+ex:`<div class="ex-l">The same action, with and without the clue</div><div class="vs"><div class="is"><b>Has the clue</b><button class="cw-live" type="button">Start the check →</button></div><div class="isnt"><b>Missing it</b><span style="font-weight:600">Start the check</span><br><span style="font-size:13px">Also a button. Nobody can tell.</span></div></div>`,
+is:"A visual promise: shape, border, cursor or underline saying \"you can press this\".",isnt:"The action itself, or an instruction in the how-to panel. Good affordance means the instruction is barely needed.",
+trap:"Flat design strips the clues away, so plain text that is secretly a button gets missed. If learners ask \"what do I click?\", an affordance is missing.",asked:"30 Oct — glossary terms for the micro-interactions catalogue"},
+{g:"learn",t:"Commit before reveal",s:"The learner answers first, then sees the expert's answer",aka:"predict then reveal · judge first",
+p:"The expert view stays hidden until the learner has written their own judgement. Then both appear side by side, so they compare rather than just read. Our judgement reveals work this way.",
+ex:`<div class="ex-l">The order</div><div class="flow"><span>Write your view</span><i>→</i><span>Button unlocks</span><i>→</i><span><b>Yours beside the expert's</b></span></div>`,
+is:"Thinking before reading the answer.",isnt:"A quiz: nothing is marked right or wrong.",
+trap:"Say why the button is disabled, next to it. Show the learner's own words, not just the expert's.",asked:"3 Nov — an effects catalogue"},
+{g:"ui",t:"Skeleton screen",s:"Grey shapes standing in for content while it loads",aka:"skeleton loader · placeholder · loading state",
+p:"While content loads, the page shows pale grey blocks in the shape of what's coming (a heading bar, a few lines) instead of a blank space or a spinner. The real content then replaces them in the same place.",
+ex:`<div class="ex-l">Reload the card</div><div data-demo="skeleton"><div class="cw-skel" aria-live="polite"></div><div class="demo-bar" style="margin:12px 0 0"><button class="btn" type="button" data-skel>Reload</button></div></div>`,
+is:"A preview of the layout, so nothing jumps when the content arrives.",isnt:"A spinner, which says \"wait\" but not what is coming or where.",
+trap:"Make the skeleton the same size as the real content, or the page still jumps. The shimmer across it is motion: none with reduced motion.",asked:"30 Oct — catalogue glossary"},
+{g:"ui",t:"Toast",s:"A short message that pops up, then goes away by itself",aka:"snackbar · notification · status message",
+p:"A short message that slides in at the edge of the screen to confirm something (\"Saved\", \"Link copied\"), then disappears after a few seconds without the learner doing anything.",
+ex:`<div class="ex-l">Press it and watch the bottom of the box</div><div data-demo="toast"><div class="cw-toast-host"><button class="btn" type="button" data-toast>Copy link</button><div class="cw-toast" role="status"></div></div></div>`,
+is:"Confirmation of something that already happened, needing no reply.",isnt:"A dialog. Anything the learner must read or answer belongs in a dialog, not in a message that vanishes.",
+trap:"A toast that leaves in two seconds is gone before a slow reader or a screen reader catches it. Keep it up for at least five seconds, announce it (role=\"status\"), and never put an error in one.",asked:"30 Oct — catalogue glossary"},
+{g:"ui",t:"Draggable divider",s:"A handle you slide to show more of one side or the other",aka:"comparison slider · before-and-after slider · reveal slider",
+p:"Two things laid on top of each other, with a line and handle between them. Sliding the handle shows more of one and less of the other. Our two-sided comparisons use it with text; with two photos it becomes a before-and-after slider.",
+ex:`<div class="ex-l">The handle sets the split</div><div class="flow"><span>Option A</span><i>⇔</i><span><b>Handle</b></span><i>⇔</i><span>Option B</span></div>`,
+is:"A slider: a screen reader hears it as one, with its value.",isnt:"Two panels side by side. The overlap is what makes it a divider.",
+trap:"The handle needs a pulse or a label to show it moves, and the arrow keys must move it. For photos, the two images must line up exactly.",asked:"1 Nov — an effects catalogue"},
+{g:"brand",t:"Latinised build · generalised example",s:"A client build with its words swapped out, safe to show",aka:"placeholder text · lorem ipsum · greeking · portfolio-safe",
+p:"A copy of a client build with the client's own words swapped for placeholder text (often fake Latin, \"lorem ipsum\") and anything identifying removed, so the interaction can be shown in your portfolio without showing the client's content. To anyone outside, call it a \"generalised example\": \"latinised\" means nothing to a stakeholder.",
+ex:`<div class="ex-l">The same card, before and after</div><div class="vs"><div class="isnt"><b>Client build</b>Patient pathway: when to refer, and who to refer to, at each stage of care</div><div class="is"><b>Generalised example</b>Lorem ipsum: dolor sit amet, consectetur adipiscing elit, sed do eiusmod</div></div>`,
+is:"The same layout, motion and interaction, with none of the client's content: safe to show publicly once the client has approved it.",isnt:"A redesign or a mock-up. Nothing about how it works changes, only the words and any identifying images.",
+trap:"Every screen and state has to be checked, not just the first one: a leak usually hides in a later state, a tooltip or a PDF export. And in anything a visitor reads, say what they'll see (\"a generalised example of a decision-making tool\"), not the process word.",asked:"28 Sep — \"don't say latinised build, what does that mean to a stakeholder?\" (portfolio showcase)"},
+{g:"brand",t:"Colour ramp",s:"A set of shades of one colour, and whether they still pass",aka:"hex ramp · \"does the ramp hold?\"",
+p:"A set of shades of one colour, stepping from dark to light. \"Does the ramp hold\" means: do the shades still step evenly, with no jumps, and do they still work as text and background together?",
+ex:`<div class="ex-l">A purple ramp</div><div class="sw"><span style="background:#6F46C8">6F46C8</span><span style="background:#691EDA">691EDA</span><span class="lt" style="background:#CCB4F0">CCB4F0</span><span class="lt" style="background:#DDCEF3">DDCEF3</span><span class="lt" style="background:#F9F5FD;border:1px solid var(--rule)">F9F5FD</span></div><div class="ex-l" style="margin-top:14px">Does it hold? Pairs you'd actually use (need 4.5 : 1 for text)</div><div class="contrast" data-demo="contrast"><div data-fg="#691EDA" data-bg="#F9F5FD">Base on highlight</div><div data-fg="#FFFFFF" data-bg="#6F46C8">White on deepest</div><div data-fg="#6F46C8" data-bg="#CCB4F0">Deepest on mid-tone</div><div data-fg="#FFFFFF" data-bg="#CCB4F0">White on mid-tone</div></div>`,
+is:"Hex = the six-character colour code. Ramp = the ordered set of them.",isnt:"A gradient. A ramp is separate steps you pick from, not a blend.",
+trap:"A ramp can look fine as swatches and fail as text on a background. Test the pairs you'll actually use, not the swatches alone.",asked:"21 Aug — \"What hex ramp?\"; 7 Sep — \"Explain the term 'Does the ramp hold?'\""},
+{g:"brand",t:"Roundel, wordmark, lockup",s:"The proper names for logo shapes",aka:"the names for logo shapes",
+p:"A roundel is a circular badge logo. A wordmark is the name set in type, with no symbol. A lockup is a fixed arrangement of symbol and name together; the long oblong version is a horizontal lockup.",
+ex:`<div class="ex-l">Three shapes of one brand</div><div class="logo-demo"><div><div class="roundel">FF</div><span class="cap">roundel</span></div><div><div class="wordmark">Forged</div><span class="cap">wordmark</span></div><div><div class="lockup"><div class="roundel">FF</div><span class="wordmark">Forged</span></div><span class="cap">horizontal lockup</span></div></div>`,
+is:"Lockup = symbol and name locked together at set spacing.",isnt:"\"Banner\" or \"letterhead\". Those are where a logo goes, not the logo's shape.",
+trap:"Asking a designer for \"the long logo\" gets you a stretched roundel. Ask for the horizontal lockup.",asked:"4 Aug — \"what is the proper name for that type of logo?\""},
+{g:"code",t:"HTML · CSS · JavaScript",s:"Structure, look and behaviour: the three layers of a web page",aka:"the three layers · markup · stylesheet · script · specificity",
+p:"Every web page is three layers. HTML is the structure and the content: \"there's a heading, three buttons, a paragraph\". CSS (cascading style sheets) is the look: colour, spacing, finish. JavaScript is the behaviour: what happens when you press, type or scroll. When two CSS rules disagree, the more specific one wins; if they're equally specific, the one later in the file wins.",
+ex:`<div class="ex-l">One button, layer by layer</div><div class="cmds"><div><code>&lt;button&gt;Check&lt;/button&gt;</code>HTML: there is a button, and it says Check</div><div><code>button { background: #bc6c3c; }</code>CSS: make it copper</div><div><code>button.onclick = check;</code>JavaScript: when it's pressed, run the check</div></div>`,
+is:"Three jobs, usually kept in one file in my builds: what's there, how it looks, what it does.",isnt:"Where the interaction lives. HTML only says \"there's a button here\"; JavaScript decides what it does when pressed.",
+trap:"A fix in the wrong layer does nothing, so ask which layer a problem is in first. And when a CSS change won't show, a more specific rule elsewhere is usually beating it.",asked:"27 Oct — \"HTML is what's on your page… CSS is how it defines that shell… the JavaScript is the actual functionality, right?\" (CPD code problem)"},
+{g:"code",t:"Gate · false pass",s:"An automatic check, and the green tick that can't see the fault",aka:"\"63/63 on files with a dead button\"",
+p:"A gate is an automatic check that must pass before something moves on. A false pass is when it goes green but can't actually see the kind of fault that's there.",
+ex:`<div class="ex-l">The gate says pass — now click the button</div><div data-demo="noop"><div class="check">✓ gate: button#restart present · 63 / 63 files PASS</div><div class="demo-bar" style="margin-top:10px;margin-bottom:0"><button class="btn primary" data-noop>Restart activity</button></div><div class="noop-msg" aria-live="polite"></div></div>`,
+is:"Proof only of what the check was written to look for.",isnt:"Proof the asset works. A green tick that can't see the defect stops people looking.",
+trap:"Before trusting a pass, ask \"what would this check miss?\" and \"how many files did it actually read?\" — a checker pointed at an empty folder also reports all-clear.",asked:"7 Aug"},
+{g:"code",t:"Heuristic",s:"A rule of thumb: usually right, never proof",aka:"keyword match · \"✅ yes (3/3, 4/4…)\"",
+p:"A quick rule of thumb that is usually right but not guaranteed. The 3/3 scores meant: of the sub-topic words it looked for, that many were found in the section text.",
+ex:`<div class="ex-l">What "4/6" meant</div><pre>looked for 6 key phrases · found 4 word-for-word
+<span class="c">the other 2 were probably paraphrased</span></pre>`,
+is:"Good evidence the words are present.",isnt:"Proof the topic is taught properly, at the right depth.",
+trap:"A tick from a keyword match reads as \"verified\". Treat it as a pointer to where to look, not a sign-off.",asked:"7 Jul — \"What does this mean ✅ yes (3/3, 4/4…)\""},
+{g:"live",t:"Committed · pushed · deployed",s:"Three separate steps; only the last one is live",aka:"\"are the assets live or not?\"",
+p:"Three separate steps. Committed = saved in your local history. Pushed = copied up to GitHub. Deployed = GitHub Pages has rebuilt and the public URL actually serves the new version.",
+ex:`<div class="ex-l">Only the last box is \"live\"</div><div class="flow"><span>Edit</span><i>→</i><span>Commit</span><i>→</i><span>Push</span><i>→</i><span>Pages rebuild</span><i>→</i><span><b>Live URL</b></span></div>`,
+is:"Live = you opened the real URL and saw the new content.",isnt:"\"It's in the repo.\" A push can land while Pages or its cache still serves the old copy.",
+trap:"Pages deploys are flaky and caches lie. Load the live URL (with a cache-buster) and confirm the new content, not the API's \"built\" status.",asked:"5 Aug — \"what do you mean about the repo, are the assets live or not?\""},
+{g:"live",t:"Cache · cache-buster (?v=)",s:"The browser's saved copy, and the trick that forces a fresh one",aka:"browser cache · stale copy · hard reload · ?v= · no-store",
+p:"Browsers keep a saved copy of a page so they can show it faster next time. That's the cache. A stale copy can make it look as if a fix didn't work. Adding ?v= and a few letters to the end of a link makes the address look new, so the browser fetches a fresh copy; the server ignores the letters.",
+ex:`<div class="ex-l">The same page, three ways to open it</div><div class="cmds"><div><code>page.html</code>May show the copy the browser saved yesterday</div><div><code>page.html?v=1027e</code>Looks like a new address, so the browser fetches it fresh</div><div><code>Ctrl + F5</code>Reload and skip the saved copy</div></div>`,
+is:"A speed-up that now and then shows you old work.",isnt:"A version number you have to manage. The letters mean nothing to the server and never change on their own: you add them yourself.",
+trap:"When a fix seems not to have landed, check the copy before the code: reload, or open the link with a new ?v=. A live site can also keep its own saved copy for a few minutes after a push, which no reload on your machine can clear.",asked:"27 Oct — the ?v= on the end of the link (CPD code problem)"},
+{g:"pipe",t:"Model · effort · deterministic vs stochastic",s:"Which Claude answers, how long it thinks, and why answers vary",aka:"Haiku · Sonnet · Opus · Fable · Gemini · thinking effort",
+p:"The model is which Claude answers: small and fast (Haiku) up to strongest (Opus, Fable). Effort is how long it thinks before answering. Deterministic means the same input always gives the same answer, as code does. Stochastic means answers can vary run to run, as a model's can.",
+ex:`<div class="ex-l">Run each check a few times</div><div data-demo="stoch"><div class="demo-bar"><button class="btn" data-run="code">Code check: word count ≤ 60</button><button class="btn" data-run="model">Model check: is this at Level 6?</button></div><div class="runout" aria-live="polite">Press a check.</div></div>`,
+is:"A choice per job: code for anything with a right answer, the cheapest model that tests well for small calls, a stronger one (and a second family) for accuracy.",isnt:"\"Always use the best model\". Strong models cost more and still vary; a word count never needs one.",
+trap:"A model's verdict isn't proof. Make it quote its evidence and have code confirm the quote exists; treat a garbled answer as \"uncertain\", never a pass; and never let a model mark its own work, because it misses its own mistakes.",asked:"23 Sep — \"Can we run Claude in different models and effort… some checks will be stochastic rather than deterministic\""},
+{g:"pipe",t:"MCP · connector · plugin",s:"The plug that lets Claude use another service's tools",aka:"Model Context Protocol · MCP server · scope",
+p:"MCP is the plug standard that lets Claude use another service's tools: read your WordPress pages, check your supporters, send a Gmail. An MCP server is the service's side of the plug. A connector is that plug added to claude.ai or Claude Code. A plugin is a bundle that can carry skills and connectors together.",
+ex:`<div class="ex-l">What a connector can and can't reach</div><svg class="mcpsvg" viewBox="0 0 460 170" width="100%" role="img" aria-label="Claude connects through an MCP server to services inside your own account only; a site in someone else's account is outside the boundary"><rect class="fence" x="150" y="14" width="296" height="98" rx="10"/><text class="t3" x="162" y="32">your account</text><rect class="bx acc" x="12" y="48" width="100" height="44" rx="8"/><text class="t1" x="44" y="75">Claude</text><rect class="bx" x="166" y="44" width="116" height="52" rx="8"/><text class="t1" x="178" y="66">MCP server</text><text class="t2" x="178" y="84">the plug</text><rect class="bx" x="316" y="44" width="116" height="52" rx="8"/><text class="t1" x="328" y="66">your-site.org</text><text class="t2" x="328" y="84">your WordPress</text><path class="ln" d="M112 70 H166 M282 70 H316"/><rect class="bx" x="316" y="124" width="116" height="36" rx="8"/><text class="t1" x="328" y="147">their-site.com</text><text class="no" x="166" y="147">not yours: not reachable</text></svg>`,
+is:"A way for Claude to act inside a service, signed in as you, limited to what your account can see.",isnt:"A way into anyone else's site. A WordPress connector sees only the sites attached to your own account.",
+trap:"Connecting grants Claude access to everything that account holds, including other people's data (supporter names, messages, amounts). Ask \"what would I be handing over?\" before \"what could it do?\". Scope matters too: user scope works in every project, project scope in one.",asked:"12 Aug — \"why would I wanna connect?\"; 11 Sep — \"does that mean you can connect to their website now?\""}
+];
+
+const list=document.getElementById('list'),q=document.getElementById('q'),chips=document.getElementById('chips'),count=document.getElementById('count'),empty=document.getElementById('empty');
+let active='all';
+const esc=s=>s;
+/* each entry's link name: "Tooltip vs toggletip" -> #tooltip-vs-toggletip (the effects catalogue links here by it) */
+const slug=t=>t.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+/* the effects catalogue: the Codex copy when served locally, the published page anywhere else */
+const LOCAL=location.protocol==='file:'||/^(localhost|127\.0\.0\.1|\[::1\]|192\.168\.|10\.)/.test(location.hostname);
+const MP_URL='';
+const mpHref=tab=>(LOCAL?'':MP_URL)+(tab?'#'+tab:'');
+const MON={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+const NEW_DAYS=30,today=new Date();
+function lastAsked(e){
+  let best=null;
+  for(const m of e.asked.matchAll(/\b(\d{1,2}) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\b/g)){
+    let d=new Date(today.getFullYear(),MON[m[2]],+m[1]);if(d>today)d.setFullYear(d.getFullYear()-1);
+    if(!best||d>best)best=d;
+  }
+  return best;
+}
+T.forEach(e=>{const d=lastAsked(e);e.isNew=!!d&&(today-d)/864e5<=NEW_DAYS;});
+function render(){
+  const term=q.value.trim().toLowerCase();let html='',n=0;
+  for(const [k,label] of Object.entries(G)){
+    if(active!=='all'&&active!=='new'&&active!==k)continue;
+    const items=T.filter(e=>e.g===k&&(active!=='new'||e.isNew)&&(!term||(e.t+' '+e.s+' '+e.aka+' '+e.p+' '+e.is+' '+e.isnt+' '+e.trap).toLowerCase().includes(term)));
+    if(!items.length)continue;n+=items.length;
+    html+=`<h2 class="group-h">${label}<small>${items.length} term${items.length>1?'s':''}</small></h2>`;
+    for(const e of items){
+      html+=`<details class="entry" id="${slug(e.t)}"><summary><span class="sum-t">${e.t}</span>${e.isNew?'<span class="new">New</span>':''}<span class="sum-s">${e.s}</span></summary>
+      <div class="body"><div><p class="aka">${e.aka}</p><p class="plain">${e.p}</p><p class="asked">${e.asked}</p></div>
+      <div class="right"><div class="ex">${e.ex}</div>
+      <div class="vs"><div class="is"><b>It is</b>${e.is}</div><div class="isnt"><b>It isn't</b>${e.isnt}</div></div>
+      <div class="trap"><b>Trap</b>${e.trap}</div></div></div></details>`;
+    }
+  }
+  stopLoops();list.innerHTML=html;empty.hidden=n>0;count.textContent=`${n} of ${T.length}`;
+  list.querySelectorAll('a.mp').forEach(a=>a.href=mpHref(a.dataset.tab));
+  const ds=[...list.querySelectorAll('details.entry')];
+  ds.forEach(d=>d.addEventListener('toggle',()=>{if(d.open)wake(d);syncAll();}));
+  if(term&&ds.length<=3)ds.forEach(d=>{d.open=true;wake(d);});
+  syncAll();
+}
+/* demos start when their entry first opens: a closed entry has no size to draw into */
+function wake(d){if(d.dataset.awake)return;d.dataset.awake=1;initDemos(d);if(d.querySelector('#magnet'))initMagnet();}
+function syncAll(){const ds=[...list.querySelectorAll('details.entry')];const all=ds.length&&ds.every(d=>d.open);openAll.textContent=all?'Close all':'Open all';openAll.setAttribute('aria-pressed',all);}
+const REDUCE=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let loops=[];
+function stopLoops(){loops.forEach(l=>l.stop());loops=[];}
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+function motif(canvas,mode){
+  const ctx=canvas.getContext('2d');let raf=0,running=false,t=0;
+  const W=()=>canvas.clientWidth,H=()=>canvas.clientHeight;
+  function size(){const d=devicePixelRatio||1;canvas.width=W()*d;canvas.height=H()*d;ctx.setTransform(d,0,0,d,0,0);}
+  size();
+  const N=mode==='chain'?26:18;
+  const pts=Array.from({length:N},()=>({x:Math.random()*W(),y:Math.random()*H(),vx:(Math.random()-.5)*.5,vy:(Math.random()-.5)*.35,r:2+Math.random()*2.5}));
+  function draw(){
+    const w=W(),h=H(),col=css('--accent');ctx.clearRect(0,0,w,h);
+    for(const p of pts){if(running){p.x+=p.vx;p.y+=p.vy+Math.sin((t+p.x)/60)*.15;}if(p.x<-10)p.x=w+10;if(p.x>w+10)p.x=-10;if(p.y<-10)p.y=h+10;if(p.y>h+10)p.y=-10;}
+    ctx.strokeStyle=col;ctx.fillStyle=col;
+    for(let i=0;i<N;i++)for(let j=i+1;j<N;j++){const a=pts[i],b=pts[j],d=Math.hypot(a.x-b.x,a.y-b.y);if(d<70){ctx.globalAlpha=(1-d/70)*.45;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}}
+    ctx.globalAlpha=.75;for(const p of pts){ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();}
+    ctx.globalAlpha=1;
+  }
+  function frame(){t++;draw();if(running)raf=requestAnimationFrame(frame);}
+  const api={
+    set(on){
+      if(on&&!REDUCE){if(!running){running=true;raf=requestAnimationFrame(frame);}}
+      else{running=false;cancelAnimationFrame(raf);draw();}
+      if(mode==='bad')canvas.style.opacity=1; else canvas.style.opacity=on?1:0;
+    },
+    stop(){running=false;cancelAnimationFrame(raf);}
+  };
+  draw();api.set(true);loops.push(api);return api;
+}
+function bindToggle(btn,cb){
+  const lab=btn.querySelector('.mt-l');
+  const apply=on=>{btn.setAttribute('aria-pressed',on);lab.textContent=on?'Motion on':'Motion off';cb(on);};
+  btn.addEventListener('click',()=>apply(btn.getAttribute('aria-pressed')!=='true'));
+  if(REDUCE)apply(false);
+}
+function lum(hex){const c=hex.replace('#','').match(/../g).map(x=>{x=parseInt(x,16)/255;return x<=.03928?x/12.92:Math.pow((x+.055)/1.055,2.4)});return .2126*c[0]+.7152*c[1]+.0722*c[2];}
+function ratio(a,b){const [h,l]=[lum(a),lum(b)].sort((x,y)=>y-x);return (h+.05)/(l+.05);}
+function pressGroup(btns,b){btns.forEach(x=>x.setAttribute('aria-pressed',x===b));}
+function initDemos(scope){
+  scope.querySelectorAll('[data-demo="motion"]').forEach(root=>{
+    const g=motif(root.querySelector('[data-motif="good"]'),'good'),b=motif(root.querySelector('[data-motif="bad"]'),'bad');
+    bindToggle(root.querySelector('.mtoggle'),on=>{g.set(on);b.set(on);});
+  });
+  scope.querySelectorAll('[data-demo="motif"]').forEach(root=>{
+    const m=motif(root.querySelector('canvas'),'chain');bindToggle(root.querySelector('.mtoggle'),on=>m.set(on));
+  });
+  scope.querySelectorAll('[data-demo="focusreturn"]').forEach(root=>{
+    const host=root.querySelector('.dlg-host'),out=root.querySelector('.status strong');
+    const name=el=>el===document.body||!el?'nothing (lost — back at the top of the page)':(el.dataset.open?`“Open (${el.dataset.open==='good'?'canon':'drifted'})” button`:`“${el.textContent.trim()}” button`);
+    root.addEventListener('focusin',e=>out.textContent=name(e.target));
+    host.querySelectorAll('[data-open]').forEach(trig=>trig.addEventListener('click',()=>{
+      const scrim=document.createElement('div');scrim.className='scrim';
+      scrim.innerHTML=`<div class="dlg" role="dialog" aria-modal="true" aria-label="How to use"><h4>How to use</h4>Drag each card into a column, then press Check.<div class="row"><button class="btn primary">Close</button></div></div>`;
+      host.appendChild(scrim);const close=scrim.querySelector('button');close.focus();
+      const done=()=>{scrim.remove();if(trig.dataset.open==='good')trig.focus();else{document.activeElement&&document.activeElement.blur();out.textContent=name(document.body);}};
+      close.addEventListener('click',done);scrim.addEventListener('keydown',e=>{if(e.key==='Escape')done();});
+    }));
+  });
+  scope.querySelectorAll('[data-demo="rings"]').forEach(root=>{
+    const b=root.querySelector('[data-rings]');b.addEventListener('click',()=>{const on=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',on);b.textContent=on?'Hide rings':'Show rings';root.querySelector('.rings').classList.toggle('show-rings',on);});
+  });
+  scope.querySelectorAll('[data-demo="token"]').forEach(root=>{
+    const dots=[...root.querySelectorAll('.dot')];dots.forEach(d=>d.addEventListener('click',()=>{root.style.setProperty('--demo-tok',d.dataset.c);pressGroup(dots,d);}));
+  });
+  scope.querySelectorAll('[data-demo="skin"]').forEach(root=>{
+    const card=root.querySelector('.skincard'),sk=[...root.querySelectorAll('[data-skin]')],dm=[...root.querySelectorAll('[data-dom]')];
+    sk.forEach(b=>b.addEventListener('click',()=>{card.classList.remove('skin-ffw','skin-tm');if(b.dataset.skin)card.classList.add(b.dataset.skin);pressGroup(sk,b);}));
+    dm.forEach(b=>b.addEventListener('click',()=>{if(b.dataset.dom)card.style.setProperty('--s-accent',b.dataset.dom);else card.style.removeProperty('--s-accent');pressGroup(dm,b);}));
+  });
+  scope.querySelectorAll('[data-demo="overlay"]').forEach(root=>{
+    const host=root.querySelector('.dlg-host'),trig=root.querySelector('[data-ov]');
+    trig.addEventListener('click',()=>{
+      const s=document.createElement('div');s.className='scrim';
+      s.innerHTML=`<div class="dlg" role="dialog" aria-modal="true" aria-label="Leaving the course"><h4>You're leaving the course</h4>This opens the standard in a new tab.<div class="row"><button class="btn primary" data-x>Continue</button> <button class="btn" data-x>Stay here</button></div></div>`;
+      host.appendChild(s);s.querySelector('[data-x]').focus();
+      const done=()=>{s.remove();trig.focus();};s.querySelectorAll('[data-x]').forEach(x=>x.addEventListener('click',done));s.addEventListener('keydown',e=>{if(e.key==='Escape')done();});
+    });
+  });
+  scope.querySelectorAll('[data-demo="chrome"]').forEach(root=>{
+    const b=root.querySelector('[data-hl]');b.addEventListener('click',()=>{const on=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',on);root.querySelector('.act').classList.toggle('hl',on);});
+  });
+  scope.querySelectorAll('[data-demo="noop"]').forEach(root=>{
+    let n=0;const msg=root.querySelector('.noop-msg');root.querySelector('[data-noop]').addEventListener('click',()=>{n++;msg.textContent=`Clicked ${n}× — nothing happened. The gate still says PASS.`;});
+  });
+  scope.querySelectorAll('[data-demo="modal"]').forEach(root=>{
+    const host=root.querySelector('.dlg-host'),trig=root.querySelector('[data-station]'),out=root.querySelector('.status strong'),vs=[...root.querySelectorAll('[data-mv]')];
+    let ver='good';
+    vs.forEach(b=>b.addEventListener('click',()=>{ver=b.dataset.mv;pressGroup(vs,b);}));
+    const label=el=>!el||el===document.body?'nothing (lost, back at the top of the page)':(el.dataset&&el.dataset.station!==undefined?'"Next station" button':el.dataset&&el.dataset.mv?`"${el.textContent}" version button`:`"${el.textContent.trim()}"`);
+    root.addEventListener('focusin',e=>out.textContent=label(e.target));
+    const escaped=e=>{if(host.querySelector('.scrim')&&!host.contains(e.target))out.textContent='something on the page BEHIND the dialog: Tab escaped it';};
+    document.addEventListener('focusin',escaped);
+    loops.push({stop:()=>document.removeEventListener('focusin',escaped)});
+    trig.addEventListener('click',()=>{
+      const s=document.createElement('div');s.className='scrim';
+      s.innerHTML=`<div class="dlg" role="dialog" aria-modal="true" aria-labelledby="mdl-t" aria-describedby="mdl-d"><h4 id="mdl-t">Before you move on</h4><span id="mdl-d">You haven't finished this station. Moving on now skips its check.</span><div class="row"><button class="btn" data-a="cont">Continue anyway</button> <button class="btn primary" data-a="stay">Stay here</button></div></div>`;
+      host.appendChild(s);
+      const cont=s.querySelector('[data-a="cont"]'),stay=s.querySelector('[data-a="stay"]');
+      (ver==='good'?stay:cont).focus();
+      const close=()=>{s.remove();if(ver==='good')trig.focus();else{document.activeElement&&document.activeElement.blur();out.textContent=label(null);}};
+      [cont,stay].forEach(b=>b.addEventListener('click',close));
+      s.addEventListener('keydown',e=>{
+        if(e.key==='Escape'){close();return;}
+        if(e.key==='Tab'&&ver==='good'){e.preventDefault();(document.activeElement===cont?stay:cont).focus();}
+      });
+    });
+  });
+  scope.querySelectorAll('[data-demo="d9"]').forEach(root=>{
+    const host=root.querySelector('.dlg-host'),msg=root.querySelector('[data-dlmsg]');
+    let n=0;
+    const say=(t,ok)=>{msg.style.color=ok?'var(--ok)':'';msg.textContent=t;};
+    root.querySelector('[data-dl]').addEventListener('click',()=>{n++;say(`Clicked ${n}× — nothing happened. The frame blocked the download, with no error.`);});
+    const trig=root.querySelector('[data-inframe]');
+    trig.addEventListener('click',()=>{
+      say('');
+      const s=document.createElement('div');s.className='scrim';
+      s.innerHTML='<div class="dlg" role="dialog" aria-modal="true" aria-label="Export"><h4>Your summary is ready</h4><span>Save it as a PDF to keep it.</span><div class="row"><button class="btn primary" data-save>Save as PDF</button> <button class="btn" data-close>Close</button></div></div>';
+      host.appendChild(s);
+      const done=()=>{s.remove();trig.focus();};
+      s.addEventListener('keydown',e=>{if(e.key==='Escape')done();});
+      s.querySelector('[data-save]').focus();
+      s.querySelector('[data-save]').addEventListener('click',()=>{done();say('The box opened, but in a Rise upload Save as PDF did nothing: printing from inside the frame is blocked. This is what happened on 27 Sep. (Simulated.)');});
+      s.querySelector('[data-close]').addEventListener('click',done);
+    });
+    root.querySelector('[data-newtab]').addEventListener('click',()=>{say('A new tab opens with a clean print-ready page and a "Print or save as PDF" button, and the print dialog opens there: choose "Save as PDF". If the browser blocks the tab, the page says so instead of failing silently. This is the one that worked in Rise. (Simulated.)',true);});
+  });
+  scope.querySelectorAll('[data-demo="toggletip"]').forEach(t=>{
+    const b=t.querySelector('.trig'),bub=t.querySelector('.bub');
+    const set=o=>{b.setAttribute('aria-expanded',o);bub.hidden=!o;};
+    b.addEventListener('click',()=>set(b.getAttribute('aria-expanded')!=='true'));
+    t.addEventListener('keydown',e=>{if(e.key==='Escape'){set(false);b.focus();}});
+    document.addEventListener('click',e=>{if(!t.contains(e.target))set(false);});
+  });
+  scope.querySelectorAll('[data-demo="glide"]').forEach(root=>{
+    const box=root.querySelector('.sbox'),modes=[...root.querySelectorAll('[data-mode]')];let mode='smooth';
+    modes.forEach(m=>m.addEventListener('click',()=>{mode=m.dataset.mode;pressGroup(modes,m);}));
+    const rows=[...root.querySelectorAll('.stage-row')];
+    rows.forEach(r=>r.querySelector('button').addEventListener('click',()=>{
+      const open=r.querySelector('button').getAttribute('aria-expanded')!=='true';
+      rows.forEach(o=>{o.querySelector('button').setAttribute('aria-expanded','false');o.querySelector('.body').hidden=true;});
+      if(open){r.querySelector('button').setAttribute('aria-expanded','true');r.querySelector('.body').hidden=false;
+        box.scrollTo({top:r.offsetTop-box.offsetTop-10,behavior:(REDUCE||mode==='auto')?'auto':'smooth'});}
+    }));
+  });
+  scope.querySelectorAll('[data-demo="stoch"]').forEach(root=>{
+    const out=root.querySelector('.runout');let log=[];
+    const verdicts=[['Yes','evaluates competing sources'],['Yes','asks the learner to justify a method'],['Borderline','mostly describes rather than evaluates'],['Yes','requires critical appraisal'],['No','recall of definitions only']];
+    root.querySelectorAll('[data-run]').forEach(b=>b.addEventListener('click',()=>{
+      if(b.dataset.run==='code')log.unshift('code:  58 words → PASS   (same every run)');
+      else{const v=verdicts[(Math.random()*verdicts.length)|0];log.unshift(`model: ${v[0]}, "${v[1]}"   (can differ next run)`);}
+      log=log.slice(0,5);out.textContent=log.join('\n')+'\n\nSimulated answers, to show the difference.';
+    }));
+  });
+  scope.querySelectorAll('[data-demo="dryrun"]').forEach(root=>{
+    const t=root.querySelector('[data-dry]'),lab=t.querySelector('.mt-l'),out=root.querySelector('.runout');
+    t.addEventListener('click',()=>{const on=t.getAttribute('aria-pressed')!=='true';t.setAttribute('aria-pressed',on);lab.textContent=on?'DRY_RUN = true':'DRY_RUN = false';});
+    root.querySelector('[data-go]').addEventListener('click',()=>{
+      const dry=t.getAttribute('aria-pressed')==='true';
+      out.innerHTML=dry
+        ?'<span class="d">DRY RUN — nothing was written.</span>\n3 cells WOULD change: Module A → 8.25 · Module B → 1 · Module C → 2\n\nThe tracker is unchanged. From the outside this looks the same as "nothing to do".'
+        :'<span class="w">LIVE RUN — the changes below WERE written.</span>\n3 cells changed: Module A → 8.25 · Module B → 1 · Module C → 2';
+    });
+  });
+  scope.querySelectorAll('[data-demo="store"]').forEach(root=>{
+    const view=root.querySelector('[data-store-view]');
+    let store={},cards=0,qs=0;
+    const draw=(note)=>{
+      const keys=Object.entries(store);
+      view.innerHTML=keys.length
+        ? '<table>'+keys.map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('')+'</table>'
+        : '<div class="none">cw-demo store is empty — the asset starts fresh</div>';
+      if(note)view.insertAdjacentHTML('beforeend',`<p class="who" style="margin:6px 0 0">${note}</p>`);
+    };
+    draw();
+    root.querySelectorAll('[data-sact]').forEach(b=>b.addEventListener('click',()=>{
+      const a=b.dataset.sact;
+      if(a==='open'){cards++;store['cw-demo:cardsOpened']=cards;draw('Saved as the learner opens things.');}
+      if(a==='answer'){qs++;store['cw-demo:answers']=`q${qs}: correct`;draw('Answers are kept too.');}
+      if(a==='reload'){draw(Object.keys(store).length?'Page reloaded — the progress came back, because it lives in the browser, not the page.':'Page reloaded — nothing to restore.');}
+      if(a==='clear'){store={};cards=qs=0;draw('Cleared. The asset now behaves as it does for a new learner.');}
+    }));
+  });
+  scope.querySelectorAll('[data-demo="countup"]').forEach(root=>{
+    const nums=[...root.querySelectorAll('[data-to]')];
+    const fmt=(el,v)=>el.textContent=(el.dataset.pre||'')+v+(el.dataset.suf||'');
+    let raf=0;
+    const run=()=>{
+      cancelAnimationFrame(raf);
+      if(REDUCE){nums.forEach(n=>fmt(n,n.dataset.to));return;}
+      const t0=performance.now(),dur=1100;
+      const tick=now=>{const k=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-k,3);nums.forEach(n=>fmt(n,Math.round(+n.dataset.to*e)));if(k<1)raf=requestAnimationFrame(tick);};
+      raf=requestAnimationFrame(tick);
+    };
+    const io=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){run();io.disconnect();}},{threshold:.6});
+    io.observe(root);
+    root.querySelector('[data-replay]').addEventListener('click',run);
+    loops.push({stop:()=>{cancelAnimationFrame(raf);io.disconnect();}});
+  });
+  scope.querySelectorAll('[data-demo="inview"]').forEach(root=>{
+    const box=root.querySelector('.scrollbox'),img=root.querySelector('.lazyimg'),card=root.querySelector('.ivcard'),log=root.querySelector('[data-log]');
+    let imgAt='waiting',cardAt='loaded, waiting to play';
+    const write=()=>log.innerHTML=`<b>Lazy image:</b> ${imgAt} · <b>Card entrance:</b> ${cardAt}`;
+    let o1,o2;
+    const arm=()=>{
+      o1=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){img.classList.add('loaded');img.innerHTML='Image<br>requested + loaded';imgAt='requested just before it came on screen';write();o1.disconnect();}}),{root:box,rootMargin:'0px 0px 60px 0px'});
+      o2=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting&&e.intersectionRatio>=.6){card.classList.add('played');cardAt=REDUCE?'shown without motion':'played on first view';write();o2.disconnect();}}),{root:box,threshold:[0,.6]});
+      o1.observe(img);o2.observe(card);
+    };
+    arm();
+    root.querySelector('[data-reset]').addEventListener('click',()=>{o1.disconnect();o2.disconnect();box.scrollTop=0;img.classList.remove('loaded');img.innerHTML='Lazy image<br>not requested yet';card.classList.remove('played');imgAt='waiting';cardAt='loaded, waiting to play';write();setTimeout(arm,50);});
+  });
+  scope.querySelectorAll('[data-demo="rain"]').forEach(root=>{
+    const cv=root.querySelector('canvas'),ctx=cv.getContext('2d'),st=root.querySelector('[data-rain-status]');
+    const d=devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);
+    const G='01∆#ABCDEF<>/{}=+*',FS=13,cols=Math.floor(W/FS);
+    let mode='pour',raf=0,snap=null,cy=0,cv0=1;
+    const drops=Array.from({length:cols},()=>({y:Math.random()*-H,v:.6+Math.random()*.9,done:false}));
+    const color=css('--accent')||'#d68a5a';
+    ctx.font=`${FS}px "JetBrains Mono",monospace`;
+    function step(){
+      if(mode==='curtain'){
+        ctx.fillStyle='#120E1A';ctx.fillRect(0,0,W,H);ctx.drawImage(snap,0,cy,W,H);cy+=cv0;cv0*=1.14;
+        if(cy>H){st.textContent='Curtain: fell as one sheet, fast. That was the complaint.';return;}
+      }else{
+        ctx.fillStyle='rgba(18,14,26,.14)';ctx.fillRect(0,0,W,H);ctx.fillStyle=color;
+        let alive=0;
+        drops.forEach((p,i)=>{
+          if(p.done)return;alive++;
+          ctx.fillText(G[(Math.random()*G.length)|0],i*FS,p.y);p.y+=p.v*FS*.5;
+          if(p.y>H+FS){if(mode==='pour'){p.y=Math.random()*-40;}else p.done=true;}
+        });
+        if(mode==='off'&&alive===0){let n=0;const fade=()=>{ctx.fillStyle='rgba(18,14,26,.2)';ctx.fillRect(0,0,W,H);if(++n<25)raf=requestAnimationFrame(fade);else st.textContent='Rain-off: emptied column by column. Now the page would fade in.';};fade();return;}
+      }
+      raf=requestAnimationFrame(step);
+    }
+    function go(m){
+      cancelAnimationFrame(raf);
+      if(REDUCE){st.textContent='Reduced motion is on, so the demo stays still.';return;}
+      if(m==='pour'){mode='pour';drops.forEach(p=>{p.done=false;if(p.y>H)p.y=Math.random()*-H;});st.textContent='Pouring: new drops keep starting at the top.';}
+      if(m==='off'){if(mode!=='pour')return go('pour');mode='off';st.textContent='Rain-off: no new drops; each column finishes at its own speed…';}
+      if(m==='curtain'){if(mode!=='pour')return go('pour');snap=document.createElement('canvas');snap.width=cv.width;snap.height=cv.height;snap.getContext('2d').drawImage(cv,0,0);mode='curtain';cy=0;cv0=1;st.textContent='Curtain: frozen as one picture and dropped…';}
+      raf=requestAnimationFrame(step);
+    }
+    root.querySelectorAll('[data-rain]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.rain)));
+    if(REDUCE){ctx.fillStyle=color;for(let i=0;i<cols;i++)for(let k=0;k<4;k++)ctx.fillText(G[(i+k)%G.length],i*FS,(i*37+k*FS)%H);st.textContent='Reduced motion is on, so the demo stays still.';}
+    else go('pour');
+    loops.push({stop:()=>cancelAnimationFrame(raf)});
+  });
+  scope.querySelectorAll('[data-demo="ease"]').forEach(root=>{
+    const rows=root.querySelectorAll('.cw-ease > div');
+    root.querySelector('[data-ease]').addEventListener('click',()=>rows.forEach(r=>r.classList.toggle('go')));
+  });
+  scope.querySelectorAll('[data-demo="stagger"]').forEach(root=>{
+    const st=root.querySelector('.cw-stair');
+    const play=()=>{st.classList.remove('play');void st.offsetWidth;st.classList.add('play');};
+    root.querySelector('[data-stagger]').addEventListener('click',play);play();
+  });
+  scope.querySelectorAll('[data-demo="ripple"] .cw-rip').forEach(btn=>{
+    const wave=(x,y)=>{
+      if(REDUCE)return;
+      const r=btn.getBoundingClientRect(),s=Math.max(r.width,r.height)*2.2,w=document.createElement('span');
+      w.className='wave';w.style.cssText=`width:${s}px;height:${s}px;left:${x-s/2}px;top:${y-s/2}px`;btn.appendChild(w);
+      const a=w.animate([{transform:'scale(0)',opacity:.35},{transform:'scale(1)',opacity:0}],{duration:600,easing:'cubic-bezier(.2,.8,.2,1)'});a.onfinish=()=>w.remove();
+    };
+    btn.addEventListener('pointerdown',e=>{const r=btn.getBoundingClientRect();wave(e.clientX-r.left,e.clientY-r.top);});
+    btn.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const r=btn.getBoundingClientRect();wave(r.width/2,r.height/2);}});
+  });
+  scope.querySelectorAll('[data-demo="morph"]').forEach(root=>{
+    const b=root.querySelector('.cw-morph'),out=root.querySelector('[data-morph-out]');
+    b.addEventListener('click',()=>{const o=b.getAttribute('aria-expanded')!=='true';b.setAttribute('aria-expanded',o);out.textContent=o?'Open: the same spot is now a cross, meaning "close".':'Closed: the plus means "open".';});
+  });
+  scope.querySelectorAll('[data-demo="xfade"]').forEach(root=>{
+    const v=[...root.querySelectorAll('.cw-xf > div')];let i=0;
+    root.querySelector('[data-xf]').addEventListener('click',()=>{i=1-i;v.forEach((d,k)=>d.setAttribute('aria-hidden',k!==i));});
+  });
+  scope.querySelectorAll('[data-demo="toast"]').forEach(root=>{
+    const t=root.querySelector('.cw-toast');let timer=0;
+    root.querySelector('[data-toast]').addEventListener('click',()=>{t.textContent='Link copied';t.classList.add('show');clearTimeout(timer);timer=setTimeout(()=>{t.classList.remove('show');},5000);});
+    loops.push({stop:()=>clearTimeout(timer)});
+  });
+  scope.querySelectorAll('[data-demo="skeleton"]').forEach(root=>{
+    const box=root.querySelector('.cw-skel');let timer=0;
+    const load=()=>{box.setAttribute('aria-busy','true');box.innerHTML='<div class="bone h"></div><div class="bone"></div><div class="bone s"></div>';clearTimeout(timer);
+      timer=setTimeout(()=>{box.removeAttribute('aria-busy');box.innerHTML='<h5>Referral pathways</h5><p>When to refer, and who to refer to.</p><p>Session 2 · 6 minutes</p>';},1400);};
+    root.querySelector('[data-skel]').addEventListener('click',load);load();
+    loops.push({stop:()=>clearTimeout(timer)});
+  });
+  scope.querySelectorAll('[data-demo="shift"]').forEach(root=>{
+    root.querySelectorAll('[data-shg]').forEach(b=>b.addEventListener('click',()=>{
+      const slot=root.querySelector(`[data-sh="${b.dataset.shg}"]`),on=!slot.textContent;
+      slot.innerHTML=on?'<p style="margin:0 0 8px;font-size:14px"><b>Correct.</b> That one is quickest.</p>':'';
+      b.textContent=on?'Hide feedback':'Show feedback';
+    }));
+  });
+  scope.querySelectorAll('[data-demo="slide"]').forEach(root=>{
+    const box=root.querySelector('.cw-xf'),S=['Read the scenario.','Choose a test.','Check your choice.'];let i=0;
+    root.querySelectorAll('[data-sl]').forEach(b=>b.addEventListener('click',()=>{
+      const dir=+b.dataset.sl,n=i+dir;if(n<0||n>=S.length)return;i=n;
+      const el=document.createElement('div');el.innerHTML=`<b>Step ${i+1}</b>${S[i]}`;
+      const old=box.lastElementChild;
+      if(REDUCE){old.remove();box.appendChild(el);return;}
+      el.style.cssText=`transform:translateX(${dir*28}px);opacity:0;transition:transform .3s cubic-bezier(.2,.8,.2,1),opacity .3s`;
+      old.style.cssText='transition:transform .3s cubic-bezier(.2,.8,.2,1),opacity .3s';
+      box.appendChild(el);void el.offsetWidth;el.style.transform='none';el.style.opacity=1;
+      old.style.transform=`translateX(${-dir*28}px)`;old.style.opacity=0;setTimeout(()=>old.remove(),320);
+    }));
+  });
+  scope.querySelectorAll('[data-demo="contrast"] > div').forEach(row=>{
+    const r=ratio(row.dataset.fg,row.dataset.bg);row.style.background=row.dataset.bg;row.style.color=row.dataset.fg;
+    const tag=document.createElement('span');tag.textContent=`${r.toFixed(1)} : 1 ${r>=4.5?'✓ holds':'✗ fails'}`;row.appendChild(tag);
+  });
+}
+const nNew=T.filter(e=>e.isNew).length;
+chips.innerHTML=[['all','All'],...(nNew?[['new',`New (${nNew})`]]:[]),...Object.entries(G)].map(([k,l])=>`<button class="chip" data-k="${k}" aria-pressed="${k==='all'}">${l}</button>`).join('');
+const openAll=document.getElementById('openall');
+openAll.addEventListener('click',()=>{const ds=[...list.querySelectorAll('details.entry')];const open=!ds.every(d=>d.open);ds.forEach(d=>{d.open=open;if(open)wake(d);});syncAll();});
+chips.addEventListener('click',ev=>{const b=ev.target.closest('.chip');if(!b)return;active=b.dataset.k;chips.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed',c===b));render();});
+q.addEventListener('input',render);
+
+function initMagnet(){
+  const box=document.getElementById('magnet');if(!box||box.dataset.on)return;box.dataset.on=1;
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const dots=[];for(let i=0;i<34;i++){const d=document.createElement('i');const x=Math.random(),y=Math.random();d.style.left=(x*96+1)+'%';d.style.top=(y*84+4)+'%';box.appendChild(d);dots.push(d);}
+  const field=document.createElement('div');field.className='field';box.appendChild(field);
+  const $=id=>document.getElementById(id),out=k=>document.querySelector(`[data-out="${k}"]`);
+  const cfg=()=>({r:+$('mg-r').value,s:+$('mg-s').value/100,f:$('mg-f').value,d:+$('mg-d').value});
+  const sync=()=>{const c=cfg();out('r').textContent=c.r+'px';out('s').textContent=Math.round(c.s*100)+'%';out('d').textContent=c.d+'ms';field.style.width=field.style.height=c.r*2+'px';dots.forEach(d=>d.style.transitionDuration=c.d+'ms');};
+  ['mg-r','mg-s','mg-f','mg-d'].forEach(id=>$(id).addEventListener('input',sync));sync();
+  if(reduce)return;
+  box.addEventListener('pointermove',ev=>{const r=box.getBoundingClientRect();const px=ev.clientX-r.left,py=ev.clientY-r.top;const c=cfg();
+    field.style.left=px+'px';field.style.top=py+'px';field.style.opacity=1;
+    for(const d of dots){const dx=px-(d.offsetLeft+5),dy=py-(d.offsetTop+5);const dist=Math.hypot(dx,dy);let k=Math.max(0,1-dist/c.r);
+      if(c.f==='ease')k=k*k*(3-2*k);else if(c.f==='sharp')k=k*k*k;
+      const pull=k*c.s;d.style.transform=`translate(${dx*pull}px,${dy*pull}px)`;}});
+  box.addEventListener('pointerleave',()=>{field.style.opacity=0;dots.forEach(d=>d.style.transform='');});
+}
+render();
+document.querySelectorAll('header a.mp').forEach(a=>a.href=mpHref(a.dataset.tab));
+/* arriving from the effects catalogue with #term-name: open that entry and bring it into view */
+function openFromHash(){
+  const id=(location.hash||'').slice(1);if(!id||!T.some(e=>slug(e.t)===id))return;
+  if(active!=='all'||q.value){active='all';q.value='';chips.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed',c.dataset.k==='all'));render();}
+  const d=document.getElementById(id);if(!d)return;
+  d.open=true;wake(d);syncAll();
+  d.scrollIntoView({block:'start',behavior:REDUCE?'auto':'smooth'});
+  d.querySelector('summary').focus({preventScroll:true});
+}
+openFromHash();
+addEventListener('hashchange',openFromHash);
+</script>
+</html>
